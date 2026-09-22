@@ -9,7 +9,7 @@ function _initSora() {
   'use strict';
 
   // 1. Elements Cache
-  const loaderPage = document.getElementById('page');
+  const loaderPage = document.getElementById('page') || document.querySelector('.loader-container');
   const navLinks = document.querySelectorAll('.nav-minimal-link');
   const sections = document.querySelectorAll('.page-section');
   const bgWrapper = document.getElementById('bgWrapper');

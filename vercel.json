@@ -1,5 +1,10 @@
 {
   "version": 2,
+  "name": "sora",
+  "alias": [
+    "sora.vercel.app",
+    "sorae.tokyo"
+  ],
   "framework": null,
   "buildCommand": "npm run build",
   "outputDirectory": "dist",

@@ -133,10 +133,15 @@ npm run security:scan
 
 ---
 
-## 🌐 Cloud Deployment
+## 🌐 Cloud Deployment & Domains
+
+- **Official Domain**: [https://sorae.tokyo](https://sorae.tokyo)
+- **Vercel Production**: [https://sora.vercel.app](https://sora.vercel.app)
 
 ### Vercel
 Configuration is pre-set in `vercel.json`:
+- `name`: `sora`
+- `alias`: `["sora.vercel.app", "sorae.tokyo"]`
 - `buildCommand`: `npm run build`
 - `outputDirectory`: `dist`
 - Security headers and SPA rewrites are handled natively.

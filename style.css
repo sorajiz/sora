@@ -1452,8 +1452,9 @@ ul {
 }
 
 /* ==========================================================================
-   ENTRANCE LOADING SCREEN (UIVERSE.IO BY dimasptrautmaa - SORA SILVER/WHITE)
+   ENTRANCE LOADING SCREEN (UIVERSE.IO BY Leoodaviid)
    ========================================================================== */
+.loader-container,
 #page {
   position: fixed;
   top: 0;
@@ -1464,7 +1465,7 @@ ul {
   justify-content: center;
   align-items: center;
   background-color: #030406;
-  background-image: radial-gradient(circle at center, rgba(32, 37, 48, 0.4) 0%, rgba(3, 4, 6, 0.98) 75%);
+  background-image: radial-gradient(circle at center, rgba(32, 37, 48, 0.45) 0%, rgba(3, 4, 6, 0.98) 75%);
   z-index: 9999999;
   transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
@@ -1472,121 +1473,35 @@ ul {
   cursor: pointer;
 }
 
+.loader-container.loaded,
 #page.loaded {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
 
-#container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  width: 240px;
-  height: 240px;
-  perspective: 900px;
-}
-
-#h3 {
-  color: #ffffff;
-  font-family: var(--font-body, -apple-system, BlinkMacSystemFont, sans-serif);
-  font-size: 13px;
-  font-weight: 600;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  text-shadow: 0 0 14px rgba(255, 255, 255, 0.8), 0 0 28px rgba(255, 255, 255, 0.4);
-  position: relative;
-  z-index: 2;
-  animation: soraLoaderPulse 1.8s ease-in-out infinite alternate;
-}
-
-@keyframes soraLoaderPulse {
-  0% {
-    opacity: 0.55;
-    letter-spacing: 0.24em;
-  }
-  100% {
-    opacity: 1;
-    letter-spacing: 0.32em;
-  }
-}
-
-#ring {
-  width: 190px;
-  height: 190px;
-  border: 1px solid transparent;
+.loader {
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  position: absolute;
-  pointer-events: none;
-  box-sizing: border-box;
+  animation: spin 1s linear infinite;
 }
 
-/* Ring 1 - Pure Brilliant White Orbit */
-#ring:nth-child(1),
-#container > div:nth-child(1) {
-  border-bottom: 8px solid #ffffff;
-  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.85)) drop-shadow(0 0 24px rgba(255, 255, 255, 0.4));
-  animation: rotate1 2s linear infinite;
-}
-
-@keyframes rotate1 {
-  from {
-    transform: rotateX(50deg) rotateZ(110deg);
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+    box-shadow: 0 -1.5px 0 rgba(255, 255, 255, 0.95), 0 -3px 8px rgba(255, 255, 255, 0.45);
   }
-  to {
-    transform: rotateX(50deg) rotateZ(470deg);
+
+  50% {
+    transform: rotate(180deg);
+    box-shadow: 0 -1.5px 0 rgba(255, 255, 255, 0.95), 0 -3px 8px rgba(255, 255, 255, 0.45);
+  }
+
+  100% {
+    transform: rotate(360deg);
+    box-shadow: 0 -1.5px 0 rgba(255, 255, 255, 0.95), 0 -3px 8px rgba(255, 255, 255, 0.45);
   }
 }
 
-/* Ring 2 - High-Sheen Platinum Silver Orbit */
-#ring:nth-child(2),
-#container > div:nth-child(2) {
-  border-bottom: 8px solid rgba(224, 230, 240, 0.9);
-  filter: drop-shadow(0 0 10px rgba(210, 222, 238, 0.6));
-  animation: rotate2 2s linear infinite;
-}
-
-@keyframes rotate2 {
-  from {
-    transform: rotateX(20deg) rotateY(50deg) rotateZ(20deg);
-  }
-  to {
-    transform: rotateX(20deg) rotateY(50deg) rotateZ(380deg);
-  }
-}
-
-/* Ring 3 - Frosted Metallic Slate Gray Orbit */
-#ring:nth-child(3),
-#container > div:nth-child(3) {
-  border-bottom: 8px solid rgba(162, 172, 185, 0.85);
-  filter: drop-shadow(0 0 8px rgba(162, 172, 185, 0.5));
-  animation: rotate3 2s linear infinite;
-}
-
-@keyframes rotate3 {
-  from {
-    transform: rotateX(40deg) rotateY(130deg) rotateZ(450deg);
-  }
-  to {
-    transform: rotateX(40deg) rotateY(130deg) rotateZ(90deg);
-  }
-}
-
-/* Ring 4 - Frosted Chrome Pearl White Orbit */
-#ring:nth-child(4),
-#container > div:nth-child(4) {
-  border-bottom: 8px solid rgba(245, 245, 252, 0.95);
-  filter: drop-shadow(0 0 14px rgba(255, 255, 255, 0.75));
-  animation: rotate4 2s linear infinite;
-}
-
-@keyframes rotate4 {
-  from {
-    transform: rotateX(70deg) rotateZ(270deg);
-  }
-  to {
-    transform: rotateX(70deg) rotateZ(630deg);
-  }
-}
 
