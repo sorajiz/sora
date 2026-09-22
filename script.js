@@ -42,44 +42,58 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 4. Mobile Menu Toggle
-  if (mobileToggle && navMenu) {
-    mobileToggle.addEventListener('click', (e) => {
-      e.stopPropagation();
-      navMenu.classList.toggle('open');
-    });
+  // 4. Instant Tap & Touch Responsiveness ("Bấm ăn hơn")
+  navLinks.forEach((link) => {
+    link.addEventListener('pointerdown', () => {
+      link.style.transform = 'scale(0.93)';
+    }, { passive: true });
 
-    document.addEventListener('click', (e) => {
-      if (!navMenu.contains(e.target) && !mobileToggle.contains(e.target) && navMenu.classList.contains('open')) {
-        navMenu.classList.remove('open');
-      }
-    });
-  }
+    const resetScale = () => {
+      link.style.transform = '';
+    };
 
-  // 5. Interactive Silk Wave Mouse Parallax
-  let mouseX = 0;
-  let mouseY = 0;
-  let currentX = 0;
-  let currentY = 0;
-
-  window.addEventListener('mousemove', (e) => {
-    const { innerWidth, innerHeight } = window;
-    mouseX = (e.clientX / innerWidth - 0.5) * 45; // Max 45px shift
-    mouseY = (e.clientY / innerHeight - 0.5) * 35; // Max 35px shift
+    link.addEventListener('pointerup', resetScale, { passive: true });
+    link.addEventListener('pointercancel', resetScale, { passive: true });
+    link.addEventListener('pointerleave', resetScale, { passive: true });
   });
 
-  const animateParallax = () => {
-    currentX += (mouseX - currentX) * 0.08;
-    currentY += (mouseY - currentY) * 0.08;
+  // 5. Interactive Silk Wave Mouse Parallax (Optimized: Desktop only, stops at rest)
+  const isFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (isFinePointer && bgWrapper) {
+    let mouseX = 0;
+    let mouseY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let rafId = null;
 
-    if (bgWrapper) {
+    const animateParallax = () => {
+      const diffX = mouseX - currentX;
+      const diffY = mouseY - currentY;
+
+      currentX += diffX * 0.08;
+      currentY += diffY * 0.08;
+
       bgWrapper.style.setProperty('--parallax-x', `${currentX.toFixed(2)}px`);
       bgWrapper.style.setProperty('--parallax-y', `${currentY.toFixed(2)}px`);
-    }
 
-    requestAnimationFrame(animateParallax);
-  };
-  animateParallax();
+      // Continue animating while there is movement
+      if (Math.abs(diffX) > 0.05 || Math.abs(diffY) > 0.05) {
+        rafId = requestAnimationFrame(animateParallax);
+      } else {
+        rafId = null;
+      }
+    };
+
+    window.addEventListener('mousemove', (e) => {
+      const { innerWidth, innerHeight } = window;
+      mouseX = (e.clientX / innerWidth - 0.5) * 40;
+      mouseY = (e.clientY / innerHeight - 0.5) * 30;
+
+      if (!rafId) {
+        rafId = requestAnimationFrame(animateParallax);
+      }
+    }, { passive: true });
+  }
 
   // 6. Copy Email Address to Clipboard
   if (btnCopyEmail && emailAddress) {
