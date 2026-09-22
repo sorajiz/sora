@@ -69,8 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const animateParallax = () => {
-    currentX += (mouseX - currentX) * 0.05;
-    currentY += (mouseY - currentY) * 0.05;
+    currentX += (mouseX - currentX) * 0.08;
+    currentY += (mouseY - currentY) * 0.08;
 
     if (bgWrapper) {
       bgWrapper.style.setProperty('--parallax-x', `${currentX.toFixed(2)}px`);
