@@ -1,8 +1,11 @@
-<!-- Persistent Luminous Flow & Silver Silk Wave Background -->
-<div class="bg-wrapper" id="bgWrapper">
-  <div class="bg-silk-layer" id="bgSilk"></div>
-  <div class="bg-luminous-flow" id="bgLuminous"></div>
-  <div class="bg-cursor-spotlight" id="bgSpotlight"></div>
-  <div class="bg-shimmer-layer"></div>
-  <div class="bg-mesh-overlay"></div>
+<!-- Liquid Obsidian Silk Engine — WebGL1 GLSL Shader -->
+<div class="bg-wrapper" id="bgWrapper" aria-hidden="true">
+  <!-- LAYER 0: Pure dark base gradient -->
+  <div class="bg-base-slate"></div>
+
+  <!-- LAYER 1: Liquid Obsidian Silk WebGL Canvas (High-Performance Shader) -->
+  <canvas class="bg-flow-canvas" id="bgFlowCanvas" data-sora-auto-scale></canvas>
+
+  <!-- LAYER 2: Cinematic edge vignette -->
+  <div class="bg-vignette-depth"></div>
 </div>

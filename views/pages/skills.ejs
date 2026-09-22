@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <%- include('../partials/head') %>
 <body>
   <%- include('../partials/background') %>
@@ -8,89 +8,60 @@
   <!-- Left-Aligned Editorial Main Content: SKILLS -->
   <main class="main-content">
     <div class="container page-wrapper skills-wrapper">
-      <p class="page-category reveal-1">02 / Competencies</p>
-      
-      <h1 class="page-headline reveal-2">
-        <em>Technical Arsenal.</em>
+      <h1 class="page-headline page-headline-white reveal-1">
+        <em>Core Competencies</em>
       </h1>
 
-      <p class="editorial-serif-lead reveal-3">
-        <em>A curated toolchain and engineering stack optimized for responsiveness, stability, and scale.</em>
+      <p class="editorial-serif-lead reveal-2">
+        <em>Tổng hợp những kỹ năng và công nghệ mình đã tích lũy và ứng dụng trong các dự án thực tế.</em>
       </p>
 
-      <div class="skills-text-grid reveal-4">
-        <!-- Group 1 -->
-        <div class="skill-text-group">
-          <h3>Frontend Engineering</h3>
-          <div class="skill-text-list">
-            <div class="skill-text-item">
-              <span class="skill-item-title">Modern HTML5 &amp; Semantic Web</span>
-              <span class="skill-item-desc">Accessible, search-indexed, structured foundations</span>
-            </div>
-            <div class="skill-text-item">
-              <span class="skill-item-title">Glassmorphic CSS3 Architecture</span>
-              <span class="skill-item-desc">Custom properties, fluid clamping, 60fps GPU acceleration</span>
-            </div>
-            <div class="skill-text-item">
-              <span class="skill-item-title">JavaScript (ES6+) &amp; DOM Lifecycle</span>
-              <span class="skill-item-desc">Asynchronous execution, event bus, magnetic interactions</span>
-            </div>
-            <div class="skill-text-item">
-              <span class="skill-item-title">Kinetic Typography &amp; Motion</span>
-              <span class="skill-item-desc">Spring curves, parallax depth, buttery micro-animations</span>
-            </div>
+      <div class="vibe-skills-list reveal-3">
+        <div class="vibe-skill-item">
+          <div class="vibe-skill-header">
+            <span class="vibe-skill-name">Write Prompt</span>
+            <span class="vibe-skill-pct">75%</span>
+          </div>
+          <div class="vibe-skill-bar">
+            <div class="vibe-skill-fill" style="width: 75%;"></div>
           </div>
         </div>
 
-        <!-- Group 2 -->
-        <div class="skill-text-group">
-          <h3>Backend &amp; Bot Systems</h3>
-          <div class="skill-text-list">
-            <div class="skill-text-item">
-              <span class="skill-item-title">Node.js Runtime</span>
-              <span class="skill-item-desc">Event-driven, non-blocking I/O architectures</span>
-            </div>
-            <div class="skill-text-item">
-              <span class="skill-item-title">Discord.js Ecosystem</span>
-              <span class="skill-item-desc">Slash commands, interaction collectors, custom embeds</span>
-            </div>
-            <div class="skill-text-item">
-              <span class="skill-item-title">REST APIs &amp; Webhook Handlers</span>
-              <span class="skill-item-desc">Secure payload parsing, rate-limiting, external syncing</span>
-            </div>
-            <div class="skill-text-item">
-              <span class="skill-item-title">Process Automation</span>
-              <span class="skill-item-desc">Customer ticketing pipelines, audit trails, server tools</span>
-            </div>
+        <div class="vibe-skill-item">
+          <div class="vibe-skill-header">
+            <span class="vibe-skill-name">Build Website With AI</span>
+            <span class="vibe-skill-pct">55%</span>
+          </div>
+          <div class="vibe-skill-bar">
+            <div class="vibe-skill-fill" style="width: 55%;"></div>
           </div>
         </div>
 
-        <!-- Group 3 -->
-        <div class="skill-text-group">
-          <h3>Infrastructure &amp; Toolchain</h3>
-          <div class="skill-text-list">
-            <div class="skill-text-item">
-              <span class="skill-item-title">Git &amp; GitHub Architecture</span>
-              <span class="skill-item-desc">Branching workflows, version tags, automated hooks</span>
-            </div>
-            <div class="skill-text-item">
-              <span class="skill-item-title">Vercel Edge Platform</span>
-              <span class="skill-item-desc">Clean routing, zero cold starts, global CDN caching</span>
-            </div>
-            <div class="skill-text-item">
-              <span class="skill-item-title">EJS Templating Engine</span>
-              <span class="skill-item-desc">Component modularity, DRY partials, static compilation</span>
-            </div>
-            <div class="skill-text-item">
-              <span class="skill-item-title">Agentic Tooling &amp; Superpowers</span>
-              <span class="skill-item-desc">Systematic TDD workflows and rapid pair programming</span>
-            </div>
+        <div class="vibe-skill-item">
+          <div class="vibe-skill-header">
+            <span class="vibe-skill-name">Build Bot Discord</span>
+            <span class="vibe-skill-pct">92%</span>
+          </div>
+          <div class="vibe-skill-bar">
+            <div class="vibe-skill-fill" style="width: 92%;"></div>
+          </div>
+        </div>
+
+        <div class="vibe-skill-item">
+          <div class="vibe-skill-header">
+            <span class="vibe-skill-name">API Gateway &amp; API Connections</span>
+            <span class="vibe-skill-pct">35%</span>
+          </div>
+          <div class="vibe-skill-bar">
+            <div class="vibe-skill-fill" style="width: 35%;"></div>
           </div>
         </div>
       </div>
     </div>
   </main>
 
-  <script src="script.js"></script>
+  <script>
+<%- inlineJs %>
+  </script>
 </body>
 </html>

@@ -4,14 +4,514 @@
   <title><%= title %></title>
   <meta name="description" content="<%= description %>" />
 
-  <!-- Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✦</text></svg>">
+  <!-- Favicon: Gothic Chrome Heart Cross -->
+  <link rel="icon" type="image/png" href="<%= typeof faviconDataUri !== 'undefined' ? faviconDataUri : '/assets/favicon.png' %>">
+  <link rel="shortcut icon" type="image/png" href="/assets/favicon.png">
+  <link rel="apple-touch-icon" href="/assets/favicon.png">
 
-  <!-- Google Fonts: Instrument Serif (Editorial Luxury Italic) & Plus Jakarta Sans -->
+  <!-- Google Fonts: Instrument Serif & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <!-- Stylesheet -->
-  <link rel="stylesheet" href="style.css" />
+  <!-- Ultra-Fast Inlined Design System -->
+  <style id="sora-core-style">
+<%- inlineCss %>
+  </style>
+
+  <!-- SORA PERFORMANCE ENGINE X2 (Adaptive 60 FPS Governor) -->
+  <script src="/js/sora-performance-x2.js" defer></script>
+  <!-- SORA DEVTOOLS GUARD v2.0 -->
+  <script src="/js/sora-devtools-guard.js" defer></script>
+
+  <!--
+    ╔══════════════════════════════════════════════════════════════════════╗
+    ║  LUMINOUS PEARL FLOW ENGINE — WebGL1 GLSL Shader                     ║
+    ║  Black void · Pearl-white luminous ribbons · Layered soft bloom          ║
+    ║  Adapted from LiquidFlowCanvas.jsx — React → Vanilla JS port       ║
+    ║  WebGL1 fallback to Canvas2D · Eco-adaptive · Tab-pause · 60fps    ║
+    ╚══════════════════════════════════════════════════════════════════════╝
+  -->
+  <script id="sora-bg-engine">
+  (function () {
+    'use strict';
+
+    /* ── Quality Detection ── */
+    const isMobile    = /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent)
+                        || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const lowCores    = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
+    const lowMemory   = navigator.deviceMemory && navigator.deviceMemory <= 4;
+    const isEco       = isMobile || lowCores || lowMemory;
+
+    const DPR_CAP     = isEco ? 0.9 : Math.min(window.devicePixelRatio || 1, 1.2);
+    const FPS         = isEco ? 35 : 60;
+    const FRAME_MS    = 1000 / FPS;
+    const ZOOM        = 1.0;
+
+    /* ── GLSL Vertex Shader (full-screen quad) ── */
+    const VS = `
+      attribute vec2 a_position;
+      void main() {
+        gl_Position = vec4(a_position, 0.0, 1.0);
+      }
+    `;
+    /* ── GLSL Fragment Shader — Graphite Silver Luminous Flow ──
+       Premium monochrome target:
+       · Deep graphite / black base
+       · Gray is the dominant flow color
+       · White is used only for narrow highlights and edge glints
+       · Smaller / cleaner ribbons to avoid the overexposed white wash
+       · Layered silver mist + thin luminous filaments for depth
+       · Slow cinematic movement, WebGL1-safe
+    ── */
+    const FS = `
+      precision mediump float;
+      uniform vec2  u_resolution;
+      uniform float u_time;
+      uniform vec2  u_mouse;
+      uniform float u_quality;
+      uniform float u_zoom;
+
+      float gaussian(float d, float k) {
+        return exp(-d * d * k);
+      }
+
+      /* Soft, gentle pearl-silver filament (dịu nhẹ, êm mắt, thanh lịch) */
+      vec3 filament(float d, float strength) {
+        float core = gaussian(d, 2800.0);
+        float glow = gaussian(d,  320.0);
+        float halo = gaussian(d,   60.0);
+
+        vec3 softWhite  = vec3(0.78, 0.80, 0.85);
+        vec3 pearlTone  = vec3(0.68, 0.70, 0.75);
+        vec3 silverHalo = vec3(0.54, 0.56, 0.60);
+
+        return strength * (
+          softWhite  * core * 0.60 +
+          pearlTone  * glow * 0.30 +
+          silverHalo * halo * 0.12
+        );
+      }
+
+      /* Translucent silk ribbon with muted, serene satin ripples */
+      vec3 ribbon(float d, float halfWidth, float strength) {
+        float ad = abs(d);
+        float body = 1.0 - smoothstep(0.0, halfWidth, ad);
+        body = body * body * (3.0 - 2.0 * body);
+
+        float edgeDistance = abs(ad - halfWidth * 0.80);
+        float edge = gaussian(edgeDistance, 1800.0);
+        float inner = gaussian(d, 60.0);
+
+        vec3 softEdge   = vec3(0.78, 0.80, 0.85);
+        vec3 silverGlow = vec3(0.66, 0.68, 0.72);
+        vec3 silkBody   = vec3(0.42, 0.44, 0.48);
+
+        return strength * (
+          softEdge   * edge  * 0.45 +
+          silverGlow * inner * 0.24 +
+          silkBody   * body  * 0.18
+        );
+      }
+
+      void main() {
+        vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+        vec2 p = uv * 2.0 - 1.0;
+        p.x *= u_resolution.x / u_resolution.y;
+        p /= max(u_zoom, 0.1);
+
+        float t = u_time * (u_quality > 0.5 ? 0.115 : 0.085);
+        float x = p.x;
+        float y = p.y;
+
+        /* Refined studio gray background with light pearl tone (not too dark) */
+        float centerMist = exp(-dot(p * vec2(0.72, 1.08), p * vec2(0.72, 1.08)) * 1.25);
+        vec3 col = vec3(0.325, 0.340, 0.365);
+        col += vec3(0.080, 0.085, 0.095) * centerMist;
+
+        /* ── ACCUMULATE SILK RIBBONS & FILAMENTS ────────────────────── */
+        vec3 flow = vec3(0.0);
+
+        /* ── PRIMARY SILVER RIBBON ─────────────────────────────────────── */
+        float yMain = -0.075
+                    - 0.285 * sin(x * 0.84 + 0.40 + t * 0.72)
+                    - 0.052 * sin(x * 2.05 - 0.55 - t * 0.34);
+        float dMain = y - yMain;
+
+        flow += ribbon(dMain, 0.110, 0.52);
+        flow += filament(dMain + 0.072, 0.28);
+        flow += filament(dMain - 0.081, 0.34);
+
+        /* A soft graphite fold riding beside the primary ribbon. */
+        float yFoldA = yMain + 0.118
+                     + 0.031 * sin(x * 2.48 + 1.06 + t * 0.39);
+        float dFoldA = y - yFoldA;
+        flow += ribbon(dFoldA, 0.060, 0.25);
+        flow += filament(dFoldA - 0.038, 0.16);
+
+        /* Lower companion sheet: dimmer and broader for layered depth. */
+        float yFoldB = yMain - 0.155
+                     + 0.040 * sin(x * 1.78 - 1.35 - t * 0.27);
+        float dFoldB = y - yFoldB;
+        flow += ribbon(dFoldB, 0.075, 0.20);
+        flow += filament(dFoldB + 0.048, 0.13);
+
+        /* ── MID CROSSING ARC ──────────────────────────────────────────── */
+        float yCross = 0.105
+                     + 0.205 * sin(x * 0.91 + 2.28 - t * 0.44)
+                     + 0.024 * sin(x * 2.86 + 0.24 + t * 0.24);
+        float dCross = y - yCross;
+
+        flow += ribbon(dCross + 0.025, 0.045, 0.16);
+        flow += filament(dCross, 0.30);
+
+        /* ── TOP SILVER SWEEP ──────────────────────────────────────────── */
+        float yTop = 0.63
+                   + 0.135 * sin(x * 0.61 - 0.86 + t * 0.31)
+                   + 0.020 * sin(x * 1.90 + 1.60 - t * 0.19);
+        float dTop = y - yTop;
+
+        flow += filament(dTop, 0.22);
+        flow += ribbon(dTop + 0.036, 0.030, 0.10);
+
+        /* ── LOWER GHOST FLOW ──────────────────────────────────────────── */
+        float yLow = -0.70
+                   + 0.132 * sin(x * 0.72 + 0.18 - t * 0.20)
+                   - 0.030 * sin(x * 1.94 - 0.72 + t * 0.17);
+        float dLow = y - yLow;
+
+        flow += ribbon(dLow, 0.055, 0.15);
+        flow += filament(dLow + 0.032, 0.10);
+
+        /* ── FINE HAIRLINE DETAILS ─────────────────────────────────────── */
+        float yFine1 = 0.30 + 0.155 * sin(x * 0.76 + 2.73 + t * 0.25);
+        float yFine2 = -0.34 + 0.165 * sin(x * 0.88 + 1.18 - t * 0.18);
+        float yFine3 = 0.48 + 0.105 * sin(x * 0.68 - 1.16 + t * 0.16);
+
+        flow += filament(y - yFine1, 0.12);
+        flow += filament(y - yFine2, 0.09);
+        flow += filament(y - yFine3, 0.07);
+
+        /* Small, very subtle pearl-silver bloom at ribbon crossing (êm dịu) */
+        vec2 bloomCenter = vec2(0.38, -0.09);
+        float bloom = gaussian(length(p - bloomCenter), 5.5) * 0.020;
+        flow += vec3(0.74, 0.76, 0.80) * bloom;
+
+        /* ── TEXT ZONE CONTRAST CLEARANCE ──────────────────────────────── */
+        float textDist = length(max(vec2(0.0), vec2(-p.x - 0.12, abs(p.y + 0.08) - 0.45)));
+        float ribbonScale = clamp(textDist * 1.5 + 0.55, 0.55, 1.0);
+
+        col += flow * ribbonScale;
+
+        /* Gentle vignette to maintain an elegant studio gray perimeter */
+        float vignette = 1.0 - dot(uv - 0.5, uv - 0.5) * 0.20;
+        col *= clamp(vignette, 0.90, 1.0);
+
+        /* Soft highlight compression allows luminous whites */
+        col = col / (vec3(1.0) + col * 0.14);
+        col = pow(max(col, 0.0), vec3(0.98));
+
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `;
+
+    /* ── State ── */
+    let gl = null, program = null, timeU = null, resU = null, mouseU = null, qualU = null, zoomU = null;
+    let canvas = null;
+    let ctx2d = null;
+    let isWebGL = false;
+    let width = 0, height = 0;
+    let startTime = 0, lastFrameTime = 0, rafId = null;
+    let visible = true;
+    const mouse = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5 };
+
+    /* ── Shader compile helper with error logging ── */
+    function compile(src, type) {
+      const s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+        console.warn('[Sora BG] Shader compile failed:', gl.getShaderInfoLog(s));
+        gl.deleteShader(s);
+        return null;
+      }
+      return s;
+    }
+
+    /* ── WebGL Builder & Context Restorer ── */
+    function buildWebGL() {
+      if (!canvas) return;
+      try {
+        gl = canvas.getContext('webgl', {
+              alpha: false, antialias: false, depth: false,
+              stencil: false, preserveDrawingBuffer: false,
+              powerPreference: isEco ? 'low-power' : 'high-performance'
+            })
+          || canvas.getContext('experimental-webgl', { alpha: false, antialias: false });
+        if (gl) isWebGL = true;
+      } catch(e) { isWebGL = false; }
+
+      if (isWebGL) {
+        const vs = compile(VS, gl.VERTEX_SHADER);
+        const fs = compile(FS, gl.FRAGMENT_SHADER);
+        if (!vs || !fs) {
+          isWebGL = false;
+        } else {
+          program = gl.createProgram();
+          gl.attachShader(program, vs);
+          gl.attachShader(program, fs);
+          gl.linkProgram(program);
+
+          if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+            console.warn('[Sora BG] Program link failed:', gl.getProgramInfoLog(program));
+            isWebGL = false;
+          } else {
+            gl.useProgram(program);
+
+            const buf = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+            gl.bufferData(gl.ARRAY_BUFFER,
+              new Float32Array([-1,-1, 1,-1, -1,1,  -1,1, 1,-1, 1,1]),
+              gl.STATIC_DRAW);
+
+            const pos = gl.getAttribLocation(program, 'a_position');
+            gl.enableVertexAttribArray(pos);
+            gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+
+            timeU  = gl.getUniformLocation(program, 'u_time');
+            resU   = gl.getUniformLocation(program, 'u_resolution');
+            mouseU = gl.getUniformLocation(program, 'u_mouse');
+            qualU  = gl.getUniformLocation(program, 'u_quality');
+            zoomU  = gl.getUniformLocation(program, 'u_zoom');
+          }
+        }
+      }
+
+      if (!isWebGL) {
+        try {
+          ctx2d = canvas.getContext('2d', { alpha: false, desynchronized: true });
+        } catch(e) {}
+      }
+    }
+
+    /* ── Single Frame Drawing (Instant Frame Execution) ── */
+    function drawScene(now) {
+      if (!canvas) return;
+      const tSec = (now - startTime) * 0.001;
+
+      if (isWebGL && gl && program) {
+        gl.uniform1f(timeU,  tSec);
+        gl.uniform2f(resU,   canvas.width, canvas.height);
+        gl.uniform2f(mouseU, Math.max(0, Math.min(1, mouse.x)),
+                             Math.max(0, Math.min(1, mouse.y)));
+        gl.uniform1f(qualU,  isEco ? 0.0 : 1.0);
+        gl.uniform1f(zoomU,  ZOOM);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+      } else if (ctx2d && canvas) {
+        const W = canvas.width;
+        const H = canvas.height;
+        const tt = tSec * 0.115;
+
+        ctx2d.setTransform(1, 0, 0, 1, 0, 0);
+        ctx2d.globalCompositeOperation = 'source-over';
+
+        const bg = ctx2d.createRadialGradient(
+          W * 0.50, H * 0.48, 0,
+          W * 0.50, H * 0.48, Math.max(W, H) * 0.78
+        );
+        bg.addColorStop(0, '#585c66');
+        bg.addColorStop(0.52, '#474b55');
+        bg.addColorStop(1, '#383b44');
+        ctx2d.fillStyle = bg;
+        ctx2d.fillRect(0, 0, W, H);
+
+        function flowPath(baseY, amp1, freq1, phase) {
+          const steps = isEco ? 46 : 84;
+          for (let i = 0; i <= steps; i++) {
+            const nx = i / steps;
+            const xx = nx * W;
+            const normalizedX = nx * 2 - 1;
+            const yy = H * (
+              baseY +
+              amp1 * Math.sin(normalizedX * freq1 + phase + tt) +
+              0.018 * Math.sin(normalizedX * 5.4 - phase * 0.62 - tt * 0.65)
+            );
+            if (i === 0) ctx2d.moveTo(xx, yy);
+            else ctx2d.lineTo(xx, yy);
+          }
+        }
+
+        function drawFlow(baseY, amp1, freq1, phase, widthPx, alpha, blurPx, rgb) {
+          ctx2d.save();
+          ctx2d.globalCompositeOperation = 'screen';
+          ctx2d.beginPath();
+          flowPath(baseY, amp1, freq1, phase);
+          ctx2d.lineCap = 'round';
+          ctx2d.lineJoin = 'round';
+          ctx2d.strokeStyle = `rgba(${rgb},${alpha})`;
+          ctx2d.lineWidth = widthPx * DPR_CAP;
+          ctx2d.shadowColor = `rgba(${rgb},${Math.min(0.55, alpha + 0.10)})`;
+          ctx2d.shadowBlur = blurPx * DPR_CAP;
+          ctx2d.stroke();
+          ctx2d.restore();
+        }
+
+        drawFlow(0.53, 0.142, 2.08, 0.45, 34, 0.14, 24, '185,190,200');
+        drawFlow(0.64, 0.112, 1.83, 1.20, 19, 0.11, 18, '170,175,185');
+        drawFlow(0.41, 0.094, 2.34, 2.05, 14, 0.10, 16, '195,200,210');
+
+        drawFlow(0.53, 0.142, 2.08, 0.45, 1.8, 0.28, 8, '210,215,225');
+        drawFlow(0.42, 0.098, 2.24, 2.03, 1.5, 0.22, 6, '202,208,218');
+        drawFlow(0.23, 0.064, 1.58, 4.05, 1.2, 0.18, 5, '195,200,210');
+        drawFlow(0.79, 0.074, 1.72, 0.92, 1.0, 0.14, 5, '190,195,205');
+
+        const safe = ctx2d.createRadialGradient(
+          W * 0.50, H * 0.51, 0,
+          W * 0.50, H * 0.51, Math.min(W, H) * 0.34
+        );
+        safe.addColorStop(0, 'rgba(0,0,0,0.11)');
+        safe.addColorStop(0.72, 'rgba(0,0,0,0.035)');
+        safe.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx2d.globalCompositeOperation = 'source-over';
+        ctx2d.fillStyle = safe;
+        ctx2d.fillRect(0, 0, W, H);
+      }
+    }
+
+    /* ── Safe Resizing: Threshold filter + Debounce + Instant Frame Render ── */
+    let resizeTimer = null;
+    function applyResize() {
+      if (!canvas) return;
+      const nw = Math.max(1, Math.round((window.innerWidth  || 1) * DPR_CAP));
+      const nh = Math.max(1, Math.round((window.innerHeight || 1) * DPR_CAP));
+      if (Math.abs(canvas.width - nw) < 8 && Math.abs(canvas.height - nh) < 8) return;
+      canvas.width  = nw;
+      canvas.height = nh;
+      width  = window.innerWidth;
+      height = window.innerHeight;
+      if (isWebGL && gl) {
+        gl.viewport(0, 0, nw, nh);
+      }
+      // Render 1 frame immediately! Prevents any blank canvas waiting for RAF
+      drawScene(performance.now());
+    }
+
+    function handleResize() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(applyResize, 120);
+    }
+
+    /* ── Init ── */
+    function init() {
+      canvas = document.getElementById('bgFlowCanvas');
+      if (!canvas) return;
+
+      buildWebGL();
+
+      /* WebGL context loss & restore lifecycle — prevents freeze & black screen */
+      canvas.addEventListener('webglcontextlost', (e) => {
+        e.preventDefault();
+        if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      }, false);
+
+      canvas.addEventListener('webglcontextrestored', () => {
+        buildWebGL();
+        if (isWebGL && gl) {
+          gl.viewport(0, 0, canvas.width, canvas.height);
+          drawScene(performance.now());
+        }
+        if (visible && !rafId) {
+          lastFrameTime = performance.now();
+          rafId = requestAnimationFrame(frame);
+        }
+      }, false);
+
+      /* Perform initial layout & render immediate frame */
+      applyResize();
+
+      window.addEventListener('resize',            handleResize, { passive: true });
+      window.addEventListener('orientationchange', handleResize, { passive: true });
+
+      /* SoraPerformance Engine X2 — Dynamic Canvas Auto-Scale Integration */
+      canvas.addEventListener('sora:canvasresize', () => {
+        width  = window.innerWidth;
+        height = window.innerHeight;
+        if (isWebGL && gl) gl.viewport(0, 0, canvas.width, canvas.height);
+        drawScene(performance.now());
+      }, { passive: true });
+
+      if (window.SoraPerformance && typeof window.SoraPerformance.registerRenderer === 'function') {
+        window.SoraPerformance.registerRenderer('soraBackground', (perf) => {
+          if (isWebGL && gl && program && qualU) {
+            gl.uniform1f(qualU, perf.quality === 'low' ? 0.0 : 1.0);
+          }
+        });
+      }
+
+      /* Mouse / touch (Y flipped for GL convention) */
+      window.addEventListener('mousemove', (e) => {
+        mouse.tx = Math.max(0, Math.min(1, e.clientX / (width  || 1)));
+        mouse.ty = Math.max(0, Math.min(1, 1 - e.clientY / (height || 1)));
+      }, { passive: true });
+      window.addEventListener('touchmove', (e) => {
+        if (e.touches && e.touches[0]) {
+          mouse.tx = Math.max(0, Math.min(1, e.touches[0].clientX / (width  || 1)));
+          mouse.ty = Math.max(0, Math.min(1, 1 - e.touches[0].clientY / (height || 1)));
+        }
+      }, { passive: true });
+
+      /* Tab visibility — pause/resume (single RAF loop guarantee) */
+      document.addEventListener('visibilitychange', () => {
+        visible = !document.hidden;
+        if (visible) {
+          if (!rafId) {
+            lastFrameTime = performance.now();
+            rafId = requestAnimationFrame(frame);
+          }
+        } else {
+          if (rafId) {
+            cancelAnimationFrame(rafId);
+            rafId = null;
+          }
+        }
+      });
+
+      startTime = lastFrameTime = performance.now();
+      if (!rafId) {
+        rafId = requestAnimationFrame(frame);
+      }
+    }
+
+    /* ── Guaranteed Single Render Loop ── */
+    function frame(now) {
+      rafId = null;
+      if (!visible) return;
+
+      const elapsed = now - lastFrameTime;
+      if (elapsed < FRAME_MS) {
+        rafId = requestAnimationFrame(frame);
+        return;
+      }
+      lastFrameTime = now - (elapsed % FRAME_MS);
+
+      /* Velvety smooth mouse interpolation */
+      mouse.x += (mouse.tx - mouse.x) * 0.05;
+      mouse.y += (mouse.ty - mouse.y) * 0.05;
+
+      drawScene(now);
+
+      if (!rafId) {
+        rafId = requestAnimationFrame(frame);
+      }
+    }
+
+    /* ── Boot ── */
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+  })();
+  </script>
 </head>
