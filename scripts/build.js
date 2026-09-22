@@ -9,8 +9,8 @@ const pagesDir = path.join(viewsDir, 'pages');
 const pages = [
   {
     name: 'index',
-    title: 'Sora | Fluid Interfaces & Intelligent Systems',
-    description: 'Personal portfolio of Sora (sorajiz) - Creative Developer & Bot Architect.',
+    title: 'Sora | Hello Everyone',
+    description: 'Personal portfolio of Sora (sorajiz) - Nơi kỹ thuật đỉnh cao, chủ nghĩa tối giản hiện đại và sự sáng tạo giao hòa.',
     activePage: 'home'
   },
   {
