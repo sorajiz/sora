@@ -63,12 +63,12 @@ app.use(
 // Removed 'unsafe-eval' - JavaScript runtime is pure AST without dynamic Function/eval
 const cspDirectives = {
   defaultSrc: ["'self'"],
-  scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+  scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://va.vercel-scripts.com"],
   styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
   fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
   imgSrc: ["'self'", "data:", "blob:", "https:"],
   mediaSrc: ["'self'", "data:", "blob:"],
-  connectSrc: ["'self'", "ws:", "wss:", "http:", "https:"],
+  connectSrc: ["'self'", "ws:", "wss:", "http:", "https:", "https://va.vercel-scripts.com"],
   objectSrc: ["'none'"],
   baseUri: ["'self'"],
   formAction: ["'self'"],
@@ -279,6 +279,17 @@ app.get(['/manifest.json', '/site.webmanifest'], (req, res) => {
   const manifestDist = path.join(DIST_DIR, 'manifest.json');
   const targetRoot = fs.existsSync(manifestDist) ? DIST_DIR : __dirname;
   res.sendFile('manifest.json', { root: targetRoot, dotfiles: 'allow' });
+});
+
+// Vercel Web Analytics Local Sandbox Endpoint (production runs on Vercel Edge automatically)
+app.get('/_vercel/insights/script.js', (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=3600');
+  res.send('/* [Vercel Web Analytics Local Sandbox] */ (function(){ window.va = window.va || function(){ (window.vaq = window.vaq || []).push(arguments); }; })();');
+});
+
+app.post(['/_vercel/insights/view', '/_vercel/insights/event'], (req, res) => {
+  res.json({ ok: true, source: 'local-dev' });
 });
 
 // ----------------------------------------------------------------------------

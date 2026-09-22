@@ -284,6 +284,11 @@ function _initSora() {
         history.pushState({ route: targetRoute }, '', pageInfo.path);
       }
 
+      // Track SPA page navigation for Vercel Web Analytics (@vercel/analytics)
+      if (typeof window.va === 'function') {
+        window.va('event', { name: 'pageview', route: targetRoute });
+      }
+
       bindContactActions();
       isNavigating = false;
     }, 140);
