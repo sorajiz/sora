@@ -40,7 +40,7 @@ const pages = [
 
 const sharedData = {
   author: 'Sora',
-  siteUrl: 'https://sorae.tokyo',
+  siteUrl: 'https://sorastation.vercel.app',
   telegramUrl: 'https://t.me/ixzplr',
   telegramUsername: '@ixzplr',
   discordUrl: 'https://discord.com/users/1265702432701284395',

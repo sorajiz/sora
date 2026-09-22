@@ -6,7 +6,7 @@ const build = require('./build');
 const projectRoot = path.join(__dirname, '..');
 const distDir = path.join(projectRoot, 'dist');
 const staleArtifact = path.join(distDir, 'stale-build-artifact.txt');
-const siteUrl = 'https://sorae.tokyo';
+const siteUrl = 'https://sorastation.vercel.app';
 
 const expectedPages = [
   { file: 'index.html', path: '/', title: 'Sora — Portfolio' },
@@ -40,7 +40,7 @@ async function run() {
   }
 
   const robots = fs.readFileSync(path.join(distDir, 'robots.txt'), 'utf8');
-  assert.ok(robots.includes('Sitemap: https://sorae.tokyo/sitemap.xml'), 'robots.txt must advertise the production sitemap');
+  assert.ok(robots.includes('Sitemap: https://sorastation.vercel.app/sitemap.xml'), 'robots.txt must advertise the production sitemap');
 
   const sitemap = fs.readFileSync(path.join(distDir, 'sitemap.xml'), 'utf8');
   for (const page of expectedPages) {

@@ -19,7 +19,7 @@ const server = app.listen(testPort, '127.0.0.1', async () => {
         const ct = res.headers['content-type'] || '';
         if (!ct.includes('text/html')) return 'Content-Type must be text/html';
         if (!body.includes('<title>Sora — Portfolio</title>')) return 'Missing <title>Sora — Portfolio</title>';
-        if (!body.includes('<link rel="canonical" href="https://sorae.tokyo/">')) return 'Missing canonical link';
+        if (!body.includes('<link rel="canonical" href="https://sorastation.vercel.app/">')) return 'Missing canonical link';
         if (!body.includes('id="sora-bg-engine"')) return 'Missing WebGL GLSL shader engine';
         if (!body.includes('/js/sora-performance-x2.js')) return 'Missing sora-performance-x2.js tag';
         if (!body.includes('/js/sora-devtools-guard.js')) return 'Missing sora-devtools-guard.js tag';
@@ -217,7 +217,7 @@ const server = app.listen(testPort, '127.0.0.1', async () => {
       path: '/robots.txt',
       expectedStatus: 200,
       validate: (res, body) => {
-        if (!body.includes('Sitemap: https://sorae.tokyo/sitemap.xml')) return 'Missing sitemap reference';
+        if (!body.includes('Sitemap: https://sorastation.vercel.app/sitemap.xml')) return 'Missing sitemap reference';
         return null;
       }
     },
@@ -226,8 +226,8 @@ const server = app.listen(testPort, '127.0.0.1', async () => {
       path: '/sitemap.xml',
       expectedStatus: 200,
       validate: (res, body) => {
-        if (!body.includes('<loc>https://sorae.tokyo/</loc>')) return 'Missing root URL in sitemap';
-        if (!body.includes('<loc>https://sorae.tokyo/contact</loc>')) return 'Missing contact URL in sitemap';
+        if (!body.includes('<loc>https://sorastation.vercel.app/</loc>')) return 'Missing root URL in sitemap';
+        if (!body.includes('<loc>https://sorastation.vercel.app/contact</loc>')) return 'Missing contact URL in sitemap';
         return null;
       }
     },
