@@ -9,6 +9,7 @@ function _initSora() {
   'use strict';
 
   // 1. Elements Cache
+  const loaderPage = document.getElementById('page');
   const navLinks = document.querySelectorAll('.nav-minimal-link');
   const sections = document.querySelectorAll('.page-section');
   const bgWrapper = document.getElementById('bgWrapper');
@@ -16,6 +17,48 @@ function _initSora() {
   const musicToggleBtn = document.getElementById('musicToggleBtn');
   const equalizerBars = document.getElementById('equalizerBars');
   const isFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  let startAudioPlayback = null;
+
+  // 1a. Entrance Loading Screen Handler
+  function initLoadingScreen() {
+    if (!loaderPage) return;
+
+    let isDismissed = false;
+    function dismiss() {
+      if (isDismissed) return;
+      isDismissed = true;
+      loaderPage.classList.add('loaded');
+      if (typeof startAudioPlayback === 'function') {
+        startAudioPlayback();
+      }
+      setTimeout(() => {
+        if (loaderPage.parentElement) {
+          loaderPage.style.display = 'none';
+        }
+      }, 750);
+    }
+
+    loaderPage.addEventListener('click', () => {
+      dismiss();
+    });
+
+    const minDisplay = 850;
+    const start = Date.now();
+    function scheduleDismiss() {
+      const elapsed = Date.now() - start;
+      const delay = Math.max(0, minDisplay - elapsed);
+      setTimeout(dismiss, delay);
+    }
+
+    if (document.readyState === 'complete') {
+      scheduleDismiss();
+    } else {
+      window.addEventListener('load', scheduleDismiss);
+      setTimeout(dismiss, 2400);
+    }
+  }
+
+  initLoadingScreen();
 
   // Route Mapping Table
   const ROUTE_MAP = {
@@ -272,13 +315,12 @@ function _initSora() {
     });
   });
 
-  // 6. Ambient Music Player Engine (On-Demand Loading, 45% Volume)
+  // 6. Ambient Music Player Engine (Autoplay on Entry, 45% Volume)
   if (bgAudio) {
     function ensureAudioSource() {
       if (!bgAudio.src || bgAudio.src === '' || bgAudio.src === window.location.href) {
         const audioSrc = bgAudio.getAttribute('data-src') || '/music/crush.mp3';
         bgAudio.src = audioSrc;
-        bgAudio.load();
       }
     }
 
@@ -295,9 +337,36 @@ function _initSora() {
       }
     }
 
+    startAudioPlayback = function() {
+      ensureAudioSource();
+      bgAudio.volume = 0.45;
+      const playPromise = bgAudio.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          updateAudioUi(true);
+        }).catch(() => {
+          // Autoplay deferred by browser policy - unlock on first user gesture
+          const unlock = () => {
+            bgAudio.volume = 0.45;
+            bgAudio.play().then(() => updateAudioUi(true)).catch(() => {});
+            ['click', 'touchstart', 'keydown', 'scroll'].forEach((evt) => {
+              window.removeEventListener(evt, unlock);
+            });
+          };
+          ['click', 'touchstart', 'keydown', 'scroll'].forEach((evt) => {
+            window.addEventListener(evt, unlock, { once: true, passive: true });
+          });
+        });
+      }
+    };
+
+    // Attempt instant autoplay immediately on load
+    startAudioPlayback();
+
     if (musicToggleBtn) {
       musicToggleBtn.addEventListener('click', (e) => {
         e.preventDefault();
+        e.stopPropagation();
         ensureAudioSource();
         if (bgAudio.paused) {
           bgAudio.volume = 0.45;
