@@ -2,7 +2,6 @@
   "version": 2,
   "name": "sora",
   "alias": [
-    "sora.vercel.app",
     "sorae.tokyo"
   ],
   "framework": null,
