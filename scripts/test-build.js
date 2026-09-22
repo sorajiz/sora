@@ -47,6 +47,13 @@ async function run() {
     assert.ok(sitemap.includes(`<loc>${siteUrl}${page.path}</loc>`), `sitemap.xml must include ${page.path}`);
   }
 
+  const manifest = fs.readFileSync(path.join(distDir, 'manifest.json'), 'utf8');
+  assert.ok(manifest.includes('"display": "standalone"'), 'manifest.json must have standalone display');
+  assert.ok(manifest.includes('"name": "Sora'), 'manifest.json must have app name');
+
+  assert.ok(fs.existsSync(path.join(distDir, 'music', 'crush.webm')), 'crush.webm must exist in dist/music');
+  assert.ok(fs.existsSync(path.join(distDir, 'music', 'crush.mp3')), 'crush.mp3 must exist in dist/music');
+
   const workflow = fs.readFileSync(
     path.join(projectRoot, '.github', 'workflows', 'security-scan.yml'),
     'utf8'
@@ -62,7 +69,7 @@ async function run() {
     'TruffleHog must derive the commit range from the GitHub event'
   );
 
-  console.log('✅ Build contract tests passed: clean dist, SEO artifacts, and CI security config are valid.');
+  console.log('✅ Build contract tests passed: clean dist, SEO artifacts, PWA manifest, audio assets, and CI security config are valid.');
 }
 
 run().catch((error) => {

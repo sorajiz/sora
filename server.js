@@ -193,10 +193,10 @@ app.use(
       if (filePath.endsWith('.html')) {
         // HTML is always validated with ETag (instant 304 if unchanged)
         res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
-      } else if (filePath.match(/\.(jpg|jpeg|png|gif|webp|svg|ico|woff|woff2|ttf|mp3|wav|ogg)$/i)) {
+      } else if (filePath.match(/\.(jpg|jpeg|png|gif|webp|svg|ico|woff|woff2|ttf|mp3|webm|wav|ogg)$/i)) {
         // Static media cached with stale-while-revalidate for freshness
         res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
-      } else if (filePath.endsWith('.css') || filePath.endsWith('.js')) {
+      } else if (filePath.endsWith('.css') || filePath.endsWith('.js') || filePath.endsWith('.json') || filePath.endsWith('.webmanifest')) {
         res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
       }
     }
@@ -270,6 +270,15 @@ app.get('/favicon.png', (req, res) => {
   const rootDir = fs.existsSync(favDist) ? DIST_DIR : __dirname;
   const relPath = fs.existsSync(favDist) ? path.join('assets', 'favicon.png') : path.join('assets', 'favicon.png');
   res.sendFile(relPath, { root: rootDir, dotfiles: 'allow' });
+});
+
+// Web App Manifest (PWA) endpoint
+app.get(['/manifest.json', '/site.webmanifest'], (req, res) => {
+  res.setHeader('Content-Type', 'application/manifest+json; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=86400');
+  const manifestDist = path.join(DIST_DIR, 'manifest.json');
+  const targetRoot = fs.existsSync(manifestDist) ? DIST_DIR : __dirname;
+  res.sendFile('manifest.json', { root: targetRoot, dotfiles: 'allow' });
 });
 
 // ----------------------------------------------------------------------------

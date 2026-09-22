@@ -318,7 +318,8 @@ function _initSora() {
   // 6. Ambient Music Player Engine (Autoplay on Entry, 45% Volume)
   if (bgAudio) {
     function ensureAudioSource() {
-      if (!bgAudio.src || bgAudio.src === '' || bgAudio.src === window.location.href) {
+      const hasSources = bgAudio.querySelectorAll('source').length > 0;
+      if (!hasSources && (!bgAudio.src || bgAudio.src === '' || bgAudio.src === window.location.href)) {
         const audioSrc = bgAudio.getAttribute('data-src') || '/music/crush.mp3';
         bgAudio.src = audioSrc;
       }

@@ -49,5 +49,8 @@
   </div>
 </header>
 
-<!-- Background Audio Asset (Instant stream: preload="auto", starts on entry) -->
-<audio id="bgAudio" loop preload="auto" src="/music/crush.mp3" data-src="/music/crush.mp3"></audio>
+<!-- Background Audio Asset (Adaptive Multi-Codec: WebM Opus ~3.4MB for mobile 3G/4G, MP3 ~3.8MB universal fallback) -->
+<audio id="bgAudio" loop preload="auto" data-src="/music/crush.mp3">
+  <source src="/music/crush.webm" type="audio/webm">
+  <source src="/music/crush.mp3" type="audio/mpeg">
+</audio>

@@ -183,17 +183,22 @@ async function build() {
   }
 
   // Step 7: Copy audio assets
-  const srcMusic = path.join(projectRoot, 'music', 'crush.mp3');
-  if (fs.existsSync(srcMusic)) {
-    copyFileIfExists(srcMusic, path.join(distMusicDir, 'crush.mp3'));
-    console.log('  ✓ Copied crush.mp3 -> dist/music/');
-  }
+  const audioFiles = ['crush.mp3', 'crush.webm'];
+  audioFiles.forEach((file) => {
+    const srcMusic = path.join(projectRoot, 'music', file);
+    if (fs.existsSync(srcMusic)) {
+      copyFileIfExists(srcMusic, path.join(distMusicDir, file));
+      console.log(`  ✓ Copied ${file} -> dist/music/`);
+    }
+  });
 
-  // Step 8: Copy deployment rules to dist
+  // Step 8: Copy deployment rules & PWA manifest to dist
   copyFileIfExists(path.join(projectRoot, '_redirects'), path.join(distDir, '_redirects'));
   copyFileIfExists(path.join(projectRoot, '_routes.json'), path.join(distDir, '_routes.json'));
   copyFileIfExists(path.join(projectRoot, 'robots.txt'), path.join(distDir, 'robots.txt'));
   copyFileIfExists(path.join(projectRoot, 'sitemap.xml'), path.join(distDir, 'sitemap.xml'));
+  copyFileIfExists(path.join(projectRoot, 'manifest.json'), path.join(distDir, 'manifest.json'));
+  console.log('  ✓ Copied manifest.json (PWA) -> dist/');
 
   // Step 9: Honeypot script and style to dist
   const honeypotCode = `/* 🚫 [SECURITY HONEYPOT] Direct file inspection strictly prohibited. */

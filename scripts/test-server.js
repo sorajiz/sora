@@ -232,7 +232,41 @@ const server = app.listen(testPort, '127.0.0.1', async () => {
       }
     },
 
-    // 8. Non-existent Asset 404
+    // 8. PWA Manifest & Adaptive Audio Streams
+    {
+      name: 'Web App Manifest (/manifest.json)',
+      path: '/manifest.json',
+      expectedStatus: 200,
+      validate: (res, body) => {
+        const ct = res.headers['content-type'] || '';
+        if (!ct.includes('json')) return `Expected JSON content-type for manifest, got: ${ct}`;
+        if (!body.includes('Sora')) return 'Missing app name in manifest.json';
+        if (!body.includes('standalone')) return 'Missing standalone display in manifest.json';
+        return null;
+      }
+    },
+    {
+      name: 'Adaptive Audio Stream WebM (/music/crush.webm)',
+      path: '/music/crush.webm',
+      expectedStatus: 200,
+      validate: (res) => {
+        const ct = res.headers['content-type'] || '';
+        if (!ct.includes('webm')) return `Expected audio/webm content-type, got: ${ct}`;
+        return null;
+      }
+    },
+    {
+      name: 'Universal Audio Stream MP3 (/music/crush.mp3)',
+      path: '/music/crush.mp3',
+      expectedStatus: 200,
+      validate: (res) => {
+        const ct = res.headers['content-type'] || '';
+        if (!ct.includes('mpeg') && !ct.includes('mp3')) return `Expected audio/mpeg content-type, got: ${ct}`;
+        return null;
+      }
+    },
+
+    // 9. Non-existent Asset 404
     {
       name: 'Missing Asset Fast 404',
       path: '/assets/non-existent-image.png',
