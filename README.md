@@ -47,17 +47,19 @@ sora/
 │   ├── js/
 │   ├── music/
 │   └── *.html
-├── js/                          # Public script copies (mirrored from .src/)
 ├── music/                       # Audio assets (crush.mp3)
 ├── scripts/
 │   ├── build.js                 # Production compiler & dist bundler
 │   ├── obfuscate.js             # Eval-free AST minification & protection
 │   ├── security-check.js        # Secret & token pattern scanner
-│   ├── test-server.js           # 19-point integration & security test suite
+│   ├── test-build.js            # Build contract, SEO & clean dist test
+│   ├── test-server.js           # Comprehensive integration & security test suite
 │   └── watch.js                 # Development watcher
 ├── views/
 │   ├── pages/                   # Modular EJS templates (index, intro, skills, contact)
 │   └── partials/                # Partials (head, header, background, etc.)
+├── robots.txt                   # Search engine crawl directives & sitemap reference
+├── sitemap.xml                  # XML Sitemap for sorae.tokyo
 ├── server.js                    # Express 5 production server with Helmet & Gzip
 ├── vercel.json                  # Vercel deployment config (outputDirectory: "dist")
 ├── _redirects                   # Cloudflare Pages SPA rewrite rules

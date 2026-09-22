@@ -8,7 +8,7 @@
     "watch": "node scripts/watch.js",
     "start": "node server.js",
     "server": "node server.js",
-    "test": "node scripts/test-server.js",
+    "test": "node scripts/test-build.js && node scripts/test-server.js",
     "security:scan": "node scripts/security-check.js"
   },
   "keywords": [

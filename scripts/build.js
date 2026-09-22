@@ -10,25 +10,29 @@ const pagesDir = path.join(viewsDir, 'pages');
 const pages = [
   {
     name: 'index',
-    title: 'Sora',
+    path: '/',
+    title: 'Sora — Portfolio',
     description: 'Sora - Nơi để mình giới thiệu về bản thân và khám phá các AI (Vibe AI), phát triển Bot Discord và Website.',
     activePage: 'home'
   },
   {
     name: 'intro',
-    title: 'Sora',
+    path: '/intro',
+    title: 'Giới thiệu | Sora',
     description: 'Đam mê với Vibe AI, website design, interaction và phát triển Node.js, Python, Bot Discord',
     activePage: 'intro'
   },
   {
     name: 'skills',
-    title: 'Sora',
+    path: '/skills',
+    title: 'Kỹ năng | Sora',
     description: 'Tổng hợp những kỹ năng và công nghệ mình đã tích lũy và ứng dụng trong các dự án thực tế.',
     activePage: 'skills'
   },
   {
     name: 'contact',
-    title: 'Sora',
+    path: '/contact',
+    title: 'Liên hệ | Sora',
     description: 'Nếu bạn muốn trò chuyện hoặc tìm hiểu thêm về mình, hãy ghé qua các trang mạng xã hội và website cá nhân, hoặc nhắn tin cho mình bất cứ lúc nào nha',
     activePage: 'contact'
   }
@@ -36,6 +40,7 @@ const pages = [
 
 const sharedData = {
   author: 'Sora',
+  siteUrl: 'https://sorae.tokyo',
   telegramUrl: 'https://t.me/ixzplr',
   telegramUsername: '@ixzplr',
   discordUrl: 'https://discord.com/users/1265702432701284395',
@@ -70,15 +75,29 @@ function copyFileIfExists(src, dest) {
   return false;
 }
 
+function resetDistDirectory() {
+  const resolvedRoot = path.resolve(projectRoot);
+  const resolvedDist = path.resolve(distDir);
+  const expectedDist = path.join(resolvedRoot, 'dist');
+
+  if (resolvedDist !== expectedDist || path.dirname(resolvedDist) !== resolvedRoot) {
+    throw new Error(`Refusing to clean unsafe build directory: ${resolvedDist}`);
+  }
+
+  fs.rmSync(resolvedDist, { recursive: true, force: true });
+  fs.mkdirSync(resolvedDist, { recursive: true });
+}
+
 async function build() {
   const buildHash = 'sora-prod-v2'; // Fixed hash for 100% deterministic build reproducibility
   console.log(`⚡ Compiling Production Distribution into dist/ (Deterministic buildHash: ${buildHash})...`);
 
-  // Step 1: Ensure dist directory tree exists
+  // Step 1: Recreate a clean dist directory tree
   const distAssetsDir = path.join(distDir, 'assets');
   const distJsDir = path.join(distDir, 'js');
   const distMusicDir = path.join(distDir, 'music');
 
+  resetDistDirectory();
   [distDir, distAssetsDir, distJsDir, distMusicDir].forEach(dir => {
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -120,6 +139,7 @@ async function build() {
     const data = {
       ...sharedData,
       ...page,
+      canonicalUrl: new URL(page.path, `${sharedData.siteUrl}/`).toString(),
       buildHash,
       inlineCss,
       inlineJs,
@@ -172,6 +192,8 @@ async function build() {
   // Step 8: Copy deployment rules to dist
   copyFileIfExists(path.join(projectRoot, '_redirects'), path.join(distDir, '_redirects'));
   copyFileIfExists(path.join(projectRoot, '_routes.json'), path.join(distDir, '_routes.json'));
+  copyFileIfExists(path.join(projectRoot, 'robots.txt'), path.join(distDir, 'robots.txt'));
+  copyFileIfExists(path.join(projectRoot, 'sitemap.xml'), path.join(distDir, 'sitemap.xml'));
 
   // Step 9: Honeypot script and style to dist
   const honeypotCode = `/* 🚫 [SECURITY HONEYPOT] Direct file inspection strictly prohibited. */

@@ -18,7 +18,8 @@ const server = app.listen(testPort, '127.0.0.1', async () => {
       validate: (res, body) => {
         const ct = res.headers['content-type'] || '';
         if (!ct.includes('text/html')) return 'Content-Type must be text/html';
-        if (!body.includes('<title>Sora</title>')) return 'Missing <title>Sora</title>';
+        if (!body.includes('<title>Sora — Portfolio</title>')) return 'Missing <title>Sora — Portfolio</title>';
+        if (!body.includes('<link rel="canonical" href="https://sorae.tokyo/">')) return 'Missing canonical link';
         if (!body.includes('id="sora-bg-engine"')) return 'Missing WebGL GLSL shader engine';
         if (!body.includes('/js/sora-performance-x2.js')) return 'Missing sora-performance-x2.js tag';
         if (!body.includes('/js/sora-devtools-guard.js')) return 'Missing sora-devtools-guard.js tag';
@@ -210,7 +211,28 @@ const server = app.listen(testPort, '127.0.0.1', async () => {
       }
     },
 
-    // 7. Non-existent Asset 404
+    // 7. SEO Directives & Sitemap
+    {
+      name: 'Robots TXT (/robots.txt)',
+      path: '/robots.txt',
+      expectedStatus: 200,
+      validate: (res, body) => {
+        if (!body.includes('Sitemap: https://sorae.tokyo/sitemap.xml')) return 'Missing sitemap reference';
+        return null;
+      }
+    },
+    {
+      name: 'XML Sitemap (/sitemap.xml)',
+      path: '/sitemap.xml',
+      expectedStatus: 200,
+      validate: (res, body) => {
+        if (!body.includes('<loc>https://sorae.tokyo/</loc>')) return 'Missing root URL in sitemap';
+        if (!body.includes('<loc>https://sorae.tokyo/contact</loc>')) return 'Missing contact URL in sitemap';
+        return null;
+      }
+    },
+
+    // 8. Non-existent Asset 404
     {
       name: 'Missing Asset Fast 404',
       path: '/assets/non-existent-image.png',
