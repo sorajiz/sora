@@ -347,14 +347,19 @@ function _initSora() {
         }).catch(() => {
           // Autoplay deferred by browser policy - unlock on first user gesture
           const unlock = () => {
-            bgAudio.volume = 0.45;
-            bgAudio.play().then(() => updateAudioUi(true)).catch(() => {});
-            ['click', 'touchstart', 'keydown', 'scroll'].forEach((evt) => {
-              window.removeEventListener(evt, unlock);
+            if (bgAudio.paused) {
+              ensureAudioSource();
+              bgAudio.volume = 0.45;
+              bgAudio.play().then(() => updateAudioUi(true)).catch(() => {});
+            }
+            ['pointerdown', 'mousedown', 'touchstart', 'touchend', 'click', 'keydown'].forEach((evt) => {
+              window.removeEventListener(evt, unlock, true);
+              document.removeEventListener(evt, unlock, true);
             });
           };
-          ['click', 'touchstart', 'keydown', 'scroll'].forEach((evt) => {
-            window.addEventListener(evt, unlock, { once: true, passive: true });
+          ['pointerdown', 'mousedown', 'touchstart', 'touchend', 'click', 'keydown'].forEach((evt) => {
+            window.addEventListener(evt, unlock, { once: true, capture: true, passive: true });
+            document.addEventListener(evt, unlock, { once: true, capture: true, passive: true });
           });
         });
       }
