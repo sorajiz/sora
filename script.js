@@ -6,17 +6,17 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Elements Cache
-  const navPills = document.querySelectorAll('.nav-pill');
+  const navLinks = document.querySelectorAll('.nav-minimal-link, .nav-pill');
   const btnCopyEmail = document.getElementById('btnCopyEmail');
   const emailAddress = document.getElementById('emailAddress');
   const bgWrapper = document.getElementById('bgWrapper');
   const bgSpotlight = document.getElementById('bgSpotlight');
 
-  // 2. Active Pill State Matching
+  // 2. Active Link State Matching
   const currentPath = window.location.pathname;
 
-  navPills.forEach((pill) => {
-    const href = pill.getAttribute('href');
+  navLinks.forEach((link) => {
+    const href = link.getAttribute('href');
     if (!href) return;
 
     if (
@@ -26,26 +26,26 @@ document.addEventListener('DOMContentLoaded', () => {
       (currentPath.includes('skills') && href.includes('skills')) ||
       (currentPath.includes('contact') && href.includes('contact'))
     ) {
-      navPills.forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
+      navLinks.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
     }
   });
 
   // 3. Instant Tap & Touch Responsiveness ("Bấm ăn hơn")
-  navPills.forEach((pill) => {
-    pill.addEventListener('pointerdown', () => {
-      pill.style.transform = 'scale(0.92)';
+  navLinks.forEach((link) => {
+    link.addEventListener('pointerdown', () => {
+      link.style.transform = 'scale(0.95)';
     }, { passive: true });
 
     const resetScale = () => {
-      if (!pill.matches(':hover')) {
-        pill.style.transform = '';
+      if (!link.matches(':hover')) {
+        link.style.transform = '';
       }
     };
 
-    pill.addEventListener('pointerup', resetScale, { passive: true });
-    pill.addEventListener('pointercancel', resetScale, { passive: true });
-    pill.addEventListener('pointerleave', resetScale, { passive: true });
+    link.addEventListener('pointerup', resetScale, { passive: true });
+    link.addEventListener('pointercancel', resetScale, { passive: true });
+    link.addEventListener('pointerleave', resetScale, { passive: true });
   });
 
   // 4. Magnetic Floating Island Pills (Desktop Physics)
