@@ -147,20 +147,61 @@ ul {
   100% { opacity: 0.85; }
 }
 
+/* ==========================================================================
+   LUMINOUS FLOW EFFECT (RADIANT FLUID LIGHT & IRIDESCENT AMBIENCE)
+   ========================================================================== */
+.bg-luminous-flow {
+  position: absolute;
+  top: -25%;
+  left: -25%;
+  width: 150%;
+  height: 150%;
+  background: 
+    radial-gradient(ellipse 70% 50% at 20% 30%, rgba(255, 255, 255, 0.7) 0%, rgba(224, 236, 248, 0.35) 45%, transparent 70%),
+    radial-gradient(ellipse 60% 55% at 80% 70%, rgba(240, 246, 255, 0.6) 0%, rgba(210, 226, 245, 0.25) 50%, transparent 75%),
+    radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.45) 0%, transparent 60%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(219, 227, 236, 0) 50%, rgba(245, 249, 255, 0.35) 100%);
+  mix-blend-mode: overlay;
+  filter: blur(48px);
+  animation: luminousFlowAnimation 12s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  pointer-events: none;
+}
+
+@keyframes luminousFlowAnimation {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    opacity: 0.75;
+  }
+  35% {
+    transform: translate3d(28px, -20px, 0) scale(1.08) rotate(1.8deg);
+    opacity: 0.95;
+  }
+  70% {
+    transform: translate3d(-24px, 26px, 0) scale(1.04) rotate(-1.2deg);
+    opacity: 0.82;
+  }
+  100% {
+    transform: translate3d(18px, 14px, 0) scale(1.1) rotate(2.2deg);
+    opacity: 0.98;
+  }
+}
+
 .bg-mesh-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     180deg,
-    rgba(219, 227, 236, 0.2) 0%,
-    rgba(219, 227, 236, 0.05) 40%,
-    rgba(203, 213, 225, 0.2) 85%,
-    rgba(195, 206, 220, 0.5) 100%
+    rgba(219, 227, 236, 0.15) 0%,
+    rgba(219, 227, 236, 0.04) 40%,
+    rgba(203, 213, 225, 0.15) 85%,
+    rgba(195, 206, 220, 0.45) 100%
   );
 }
 
 /* ==========================================================================
-   CENTERED FLOATING PILL HEADER (ONLY 4 NAV TABS)
+   SEPARATED FLOATING ISLAND PILLS (4 INDEPENDENT TABS WITH ICONS)
    ========================================================================== */
 .header {
   position: fixed;
@@ -168,81 +209,92 @@ ul {
   left: 0;
   width: 100%;
   z-index: 1000;
-  padding: clamp(14px, 2.5vh, 24px) 0;
+  padding: clamp(14px, 2.5vh, 22px) 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  pointer-events: none; /* Allows click-through outside the pill */
+  pointer-events: none;
 }
 
-.header-container {
+.header-nav-container {
   display: flex;
   justify-content: center;
   align-items: center;
   width: auto;
 }
 
-/* Pure Floating Glass Pill */
-.nav-menu {
+/* Separated Islands Container (No outer border/capsule) */
+.nav-island-group {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.6vw, 14px);
+  background: transparent;
   pointer-events: auto;
-  background: var(--glass-nav-bg);
-  backdrop-filter: blur(var(--glass-blur)) saturate(190%);
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(190%);
-  border: 1px solid var(--glass-nav-border);
-  padding: 3px 5px;
-  border-radius: var(--radius-pill);
-  box-shadow: 
-    0 8px 24px -4px rgba(15, 23, 42, 0.06),
-    0 2px 8px -2px rgba(15, 23, 42, 0.03),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.95);
-  display: flex;
-  align-items: center;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.nav-menu:hover {
-  box-shadow: 
-    0 12px 32px -4px rgba(15, 23, 42, 0.1),
-    0 4px 12px -2px rgba(15, 23, 42, 0.04),
-    inset 0 1px 1.5px 0 rgba(255, 255, 255, 1);
-}
-
-.nav-list {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-}
-
-.nav-link {
+/* Individual Floating Glass Pill */
+.nav-pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 34px;
-  padding: 5px 15px;
+  gap: 7px;
+  min-height: 36px;
+  padding: 6px 16px;
+  font-family: var(--font-body);
   font-size: 0.82rem;
   font-weight: 700;
   color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(20px) saturate(190%);
+  -webkit-backdrop-filter: blur(20px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.82);
   border-radius: var(--radius-pill);
+  box-shadow: 
+    0 6px 18px -3px rgba(15, 23, 42, 0.05),
+    0 1px 3px 0 rgba(15, 23, 42, 0.02),
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.95);
   transition: all var(--transition-fast);
   touch-action: manipulation;
-  -webkit-user-select: none;
   user-select: none;
+  -webkit-user-select: none;
 }
 
-.nav-link:hover {
+.nav-pill:hover {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.85);
+  border-color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 
+    0 10px 24px -4px rgba(15, 23, 42, 0.08),
+    inset 0 1px 2px 0 rgba(255, 255, 255, 1);
 }
 
-.nav-link.active {
+.nav-pill.active {
   color: #ffffff;
   background: #050811;
-  box-shadow: 0 2px 10px rgba(5, 8, 17, 0.25);
+  border-color: rgba(5, 8, 17, 0.9);
+  box-shadow: 
+    0 6px 18px rgba(5, 8, 17, 0.28),
+    inset 0 1px 1px rgba(255, 255, 255, 0.25);
 }
 
-.nav-link:active {
-  transform: scale(0.94);
-  background: #0f172a;
+.nav-pill.active .nav-icon {
+  stroke: #ffffff;
+}
+
+.nav-pill:active {
+  transform: scale(0.93) translateY(0);
+}
+
+.nav-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  stroke: currentColor;
+  transition: transform var(--transition-fast);
+}
+
+.nav-pill:hover .nav-icon {
+  transform: scale(1.08);
 }
 
 /* ==========================================================================
@@ -563,14 +615,20 @@ ul {
     padding: 10px 0;
   }
 
-  .nav-menu {
-    padding: 2.5px 3.5px;
+  .nav-island-group {
+    gap: 6px;
   }
 
-  .nav-link {
-    min-height: 30px;
-    padding: 4px 11px;
-    font-size: 0.78rem;
+  .nav-pill {
+    min-height: 32px;
+    padding: 5px 11px;
+    font-size: 0.76rem;
+    gap: 5px;
+  }
+
+  .nav-icon {
+    width: 13px;
+    height: 13px;
   }
 
   .main-content {
@@ -588,8 +646,18 @@ ul {
 }
 
 @media (max-width: 380px) {
-  .nav-link {
-    padding: 3px 8px;
-    font-size: 0.72rem;
+  .nav-island-group {
+    gap: 4px;
+  }
+
+  .nav-pill {
+    padding: 4px 8px;
+    font-size: 0.71rem;
+    gap: 4px;
+  }
+
+  .nav-icon {
+    width: 12px;
+    height: 12px;
   }
 }

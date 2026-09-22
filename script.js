@@ -10,21 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 2. Elements Cache
-  const navLinks = document.querySelectorAll('.nav-link');
-  const mobileToggle = document.getElementById('mobileToggle');
-  const navMenu = document.getElementById('navMenu');
+  const navPills = document.querySelectorAll('.nav-pill, .nav-link');
   const btnCopyEmail = document.getElementById('btnCopyEmail');
   const emailAddress = document.getElementById('emailAddress');
-  const contactForm = document.getElementById('contactForm');
-  const formFeedback = document.getElementById('formFeedback');
-  const liveClock = document.getElementById('liveClock');
   const bgWrapper = document.getElementById('bgWrapper');
 
   // 3. Highlight Active Nav Link based on Current URL
   const currentPath = window.location.pathname;
-  let activeFound = false;
 
-  navLinks.forEach((link) => {
+  navPills.forEach((link) => {
     const href = link.getAttribute('href');
     if (!href) return;
 
@@ -36,16 +30,15 @@ document.addEventListener('DOMContentLoaded', () => {
       (currentPath.includes('skills') && href.includes('skills')) ||
       (currentPath.includes('contact') && href.includes('contact'))
     ) {
-      navLinks.forEach(l => l.classList.remove('active'));
+      navPills.forEach(l => l.classList.remove('active'));
       link.classList.add('active');
-      activeFound = true;
     }
   });
 
   // 4. Instant Tap & Touch Responsiveness ("Bấm ăn hơn")
-  navLinks.forEach((link) => {
+  navPills.forEach((link) => {
     link.addEventListener('pointerdown', () => {
-      link.style.transform = 'scale(0.93)';
+      link.style.transform = 'scale(0.92)';
     }, { passive: true });
 
     const resetScale = () => {
