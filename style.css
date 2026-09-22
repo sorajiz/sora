@@ -348,6 +348,10 @@ body.mouse-active .bg-cursor-spotlight {
   text-align: left;
 }
 
+.hero-wrapper {
+  transform: translateY(clamp(-32px, -4.5vh, -55px));
+}
+
 /* ==========================================================================
    STAGGERED TEXT REVEAL (SNAPPY & HARDWARE-ACCELERATED)
    ========================================================================== */
@@ -392,7 +396,7 @@ body.mouse-active .bg-cursor-spotlight {
 }
 
 .hero-title {
-  margin: 0 0 16px 0;
+  margin: 0 0 clamp(24px, 3.5vh, 40px) 0;
   font-family: var(--font-serif);
   font-size: clamp(54px, 8.2vw, 120px);
   font-style: italic;
@@ -416,17 +420,17 @@ body.mouse-active .bg-cursor-spotlight {
 }
 
 .hero-clean-lead {
-  margin-top: 16px;
-  margin-bottom: 20px;
+  margin-top: 0;
+  margin-bottom: clamp(22px, 3.2vh, 36px);
   font-family: var(--font-body);
-  font-size: clamp(17px, 1.6vw, 22px);
+  font-size: clamp(17px, 1.65vw, 22px);
   font-style: normal;
   font-weight: 600;
-  line-height: 1.4;
-  letter-spacing: -0.015em;
+  line-height: 1.6;
+  letter-spacing: -0.012em;
   color: #0f172a;
   -webkit-font-smoothing: antialiased;
-  max-width: 680px;
+  max-width: 740px;
 }
 
 .hero-serif-lead {
@@ -445,11 +449,11 @@ body.mouse-active .bg-cursor-spotlight {
 
 .hero-desc {
   font-family: var(--font-body);
-  font-size: 0.94rem;
+  font-size: clamp(0.92rem, 1.1vw, 1.02rem);
   color: #334155;
   font-weight: 500;
-  line-height: 1.75;
-  max-width: 600px;
+  line-height: 1.85;
+  max-width: 680px;
 }
 
 /* ==========================================================================
@@ -717,10 +721,15 @@ body.mouse-active .bg-cursor-spotlight {
     padding-bottom: 32px;
   }
 
+  .hero-wrapper {
+    transform: translateY(-20px);
+  }
+
   .hero-title {
     font-size: clamp(42px, 11vw, 62px);
     line-height: 0.88;
     letter-spacing: -0.05em;
+    margin-bottom: 20px;
   }
 
   .page-headline {
@@ -736,7 +745,12 @@ body.mouse-active .bg-cursor-spotlight {
 
   .hero-clean-lead {
     font-size: clamp(15px, 4.2vw, 18px);
-    line-height: 1.45;
+    line-height: 1.55;
+    margin-bottom: 20px;
+  }
+
+  .hero-desc {
+    line-height: 1.75;
   }
 }
 

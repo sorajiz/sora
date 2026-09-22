@@ -10,7 +10,7 @@ const pages = [
   {
     name: 'index',
     title: 'Sora | Hello Everyone',
-    description: 'Personal portfolio of Sora (sorajiz) - Nơi kỹ thuật đỉnh cao, chủ nghĩa tối giản hiện đại và sự sáng tạo giao hòa.',
+    description: 'Sora - Nơi để mình giới thiệu về bản thân và khám phá các AI (Vibe AI), phát triển Bot Discord và Website.',
     activePage: 'home'
   },
   {
