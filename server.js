@@ -272,6 +272,16 @@ app.get('/favicon.png', (req, res) => {
   res.sendFile(relPath, { root: rootDir, dotfiles: 'allow' });
 });
 
+// OpenGraph & Discord Rich Banner endpoint
+app.get(['/banner.png', '/assets/banner.png'], (req, res) => {
+  res.setHeader('Content-Type', 'image/png');
+  res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
+  const bannerDist = path.join(DIST_DIR, 'assets', 'banner.png');
+  const rootDir = fs.existsSync(bannerDist) ? DIST_DIR : __dirname;
+  const relPath = fs.existsSync(bannerDist) ? path.join('assets', 'banner.png') : path.join('assets', 'banner.png');
+  res.sendFile(relPath, { root: rootDir, dotfiles: 'allow' });
+});
+
 // Web App Manifest (PWA) endpoint
 app.get(['/manifest.json', '/site.webmanifest'], (req, res) => {
   res.setHeader('Content-Type', 'application/manifest+json; charset=utf-8');

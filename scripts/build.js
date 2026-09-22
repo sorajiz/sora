@@ -156,7 +156,7 @@ async function build() {
   }
 
   // Step 5: Copy static assets to dist/assets
-  const assetFiles = ['favicon.ico', 'favicon.png', 'luminous-flow.png'];
+  const assetFiles = ['favicon.ico', 'favicon.png', 'luminous-flow.png', 'banner.png', 'banner.jpg'];
   assetFiles.forEach(file => {
     const src = path.join(projectRoot, 'assets', file);
     if (fs.existsSync(src)) {
@@ -164,9 +164,11 @@ async function build() {
     }
   });
 
-  // Direct root favicon copies in dist/
+  // Direct root asset copies in dist/
   copyFileIfExists(path.join(projectRoot, 'assets', 'favicon.ico'), path.join(distDir, 'favicon.ico'));
   copyFileIfExists(path.join(projectRoot, 'assets', 'favicon.png'), path.join(distDir, 'favicon.png'));
+  copyFileIfExists(path.join(projectRoot, 'assets', 'banner.png'), path.join(distDir, 'banner.png'));
+  console.log('  ✓ Copied banner.png -> dist/assets/ & dist/');
 
   // Step 6: Pipeline for performance and devtools guard scripts (Source of truth: .src/ -> dist/js/)
   const srcPerf = path.join(projectRoot, '.src', 'sora-performance-x2.js');

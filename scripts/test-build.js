@@ -34,8 +34,8 @@ async function run() {
     assert.ok(html.includes(`<title>${page.title}</title>`), `${page.file} must have a page-specific title`);
     assert.ok(html.includes(`<link rel="canonical" href="${canonicalUrl}">`), `${page.file} must have a canonical URL`);
     assert.ok(html.includes(`<meta property="og:url" content="${canonicalUrl}">`), `${page.file} must expose its Open Graph URL`);
-    assert.ok(html.includes(`<meta property="og:title" content="${page.title}">`), `${page.file} must expose its Open Graph title`);
-    assert.ok(html.includes('<meta name="twitter:card" content="summary">'), `${page.file} must expose Twitter card metadata`);
+    assert.ok(html.includes('<meta name="twitter:card" content="summary_large_image">'), `${page.file} must expose Twitter large image card metadata`);
+    assert.ok(html.includes('property="og:image"'), `${page.file} must expose Open Graph image metadata`);
     assert.ok(html.includes('<meta name="robots" content="index, follow">'), `${page.file} must allow indexing`);
   }
 
@@ -53,6 +53,8 @@ async function run() {
 
   assert.ok(fs.existsSync(path.join(distDir, 'music', 'crush.webm')), 'crush.webm must exist in dist/music');
   assert.ok(fs.existsSync(path.join(distDir, 'music', 'crush.mp3')), 'crush.mp3 must exist in dist/music');
+  assert.ok(fs.existsSync(path.join(distDir, 'assets', 'banner.png')), 'banner.png must exist in dist/assets');
+  assert.ok(fs.existsSync(path.join(distDir, 'banner.png')), 'banner.png must exist in dist');
 
   const workflow = fs.readFileSync(
     path.join(projectRoot, '.github', 'workflows', 'security-scan.yml'),

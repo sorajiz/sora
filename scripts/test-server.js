@@ -265,6 +265,16 @@ const server = app.listen(testPort, '127.0.0.1', async () => {
         return null;
       }
     },
+    {
+      name: 'OpenGraph Rich Banner (/banner.png)',
+      path: '/banner.png',
+      expectedStatus: 200,
+      validate: (res) => {
+        const ct = res.headers['content-type'] || '';
+        if (!ct.includes('png') && !ct.includes('image')) return `Expected image/png content-type, got: ${ct}`;
+        return null;
+      }
+    },
 
     // 9. Non-existent Asset 404
     {
