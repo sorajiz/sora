@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head') %>
+<body>
+  <%- include('../partials/background') %>
+  <%- include('../partials/header') %>
+
+  <!-- Left-Aligned Editorial Main Content: CONTACT -->
+  <main class="main-content">
+    <div class="container page-wrapper contact-wrapper">
+      <p class="page-category reveal-1">03 / Reach Out</p>
+      
+      <h1 class="page-headline reveal-2">
+        <em>Get In Touch.</em>
+      </h1>
+
+      <p class="editorial-serif-lead reveal-3">
+        <em>Open for Discord bot architectures, modern web engineering, and creative digital collaborations.</em>
+      </p>
+
+      <div class="contact-direct-list reveal-4">
+        <div class="contact-direct-item">
+          <span class="contact-label">Email</span>
+          <span class="contact-value">
+            <span id="emailAddress"><%= email %></span>
+            <button class="inline-copy-btn" id="btnCopyEmail" title="Copy email address">Copy</button>
+          </span>
+        </div>
+
+        <div class="contact-direct-item">
+          <span class="contact-label">Discord</span>
+          <span class="contact-value"><%= discord %></span>
+        </div>
+
+        <div class="contact-direct-item">
+          <span class="contact-label">GitHub</span>
+          <span class="contact-value">
+            <a href="<%= githubUrl %>" target="_blank" rel="noopener noreferrer">github.com/<%= githubUsername %></a>
+          </span>
+        </div>
+
+        <div class="contact-direct-item">
+          <span class="contact-label">Location</span>
+          <span class="contact-location"><%= location %></span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Floating Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
