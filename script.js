@@ -1,6 +1,6 @@
 /**
- * SORA PROFILE - INTERACTIVE JAVASCRIPT
- * Handles animations, smooth navigation, copy toast, and parallax
+ * SORA - PURE GLASS INTERACTIVE LOGIC
+ * Handles animations, mouse parallax, multi-page nav state, copy toast, and interactions
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -10,9 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 2. Elements Cache
-  const header = document.getElementById('header');
   const navLinks = document.querySelectorAll('.nav-link');
-  const sections = document.querySelectorAll('section.section');
   const mobileToggle = document.getElementById('mobileToggle');
   const navMenu = document.getElementById('navMenu');
   const btnCopyEmail = document.getElementById('btnCopyEmail');
@@ -22,67 +20,35 @@ document.addEventListener('DOMContentLoaded', () => {
   const liveClock = document.getElementById('liveClock');
   const bgWrapper = document.getElementById('bgWrapper');
 
-  // 3. Header Scroll Effect
-  const handleScroll = () => {
-    if (window.scrollY > 40) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
-    }
+  // 3. Highlight Active Nav Link based on Current URL
+  const currentPath = window.location.pathname;
+  let activeFound = false;
 
-    // Active Section Detection (ScrollSpy for 4 Tabs: Home, Intro, Skills, Contact)
-    let currentSection = 'home';
-    const scrollPosition = window.scrollY + 180;
-
-    sections.forEach((section) => {
-      const sectionTop = section.offsetTop;
-      const sectionHeight = section.offsetHeight;
-      if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-        currentSection = section.getAttribute('id');
-      }
-    });
-
-    navLinks.forEach((link) => {
-      if (link.getAttribute('data-section') === currentSection) {
-        link.classList.add('active');
-      } else {
-        link.classList.remove('active');
-      }
-    });
-  };
-
-  window.addEventListener('scroll', handleScroll, { passive: true });
-  handleScroll();
-
-  // 4. Smooth Nav Link Click
   navLinks.forEach((link) => {
-    link.addEventListener('click', (e) => {
-      const targetId = link.getAttribute('href');
-      if (targetId && targetId.startsWith('#')) {
-        e.preventDefault();
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-          const offsetTop = targetElement.offsetTop - 70;
-          window.scrollTo({
-            top: offsetTop,
-            behavior: 'smooth'
-          });
-        }
-      }
-      // Close mobile menu if open
-      if (navMenu.classList.contains('open')) {
-        navMenu.classList.remove('open');
-      }
-    });
+    const href = link.getAttribute('href');
+    if (!href) return;
+
+    // Check match for root / index.html or other pages
+    if (
+      (currentPath.endsWith(href)) ||
+      ((currentPath === '/' || currentPath.endsWith('/') || currentPath === '') && (href === 'index.html' || href === '/')) ||
+      (currentPath.includes('intro') && href.includes('intro')) ||
+      (currentPath.includes('skills') && href.includes('skills')) ||
+      (currentPath.includes('contact') && href.includes('contact'))
+    ) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+      activeFound = true;
+    }
   });
 
-  // 5. Mobile Toggle
+  // 4. Mobile Menu Toggle
   if (mobileToggle && navMenu) {
-    mobileToggle.addEventListener('click', () => {
+    mobileToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
       navMenu.classList.toggle('open');
     });
 
-    // Close on click outside
     document.addEventListener('click', (e) => {
       if (!navMenu.contains(e.target) && !mobileToggle.contains(e.target) && navMenu.classList.contains('open')) {
         navMenu.classList.remove('open');
@@ -90,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 6. Interactive Silk Wave Mouse Parallax
+  // 5. Interactive Silk Wave Mouse Parallax
   let mouseX = 0;
   let mouseY = 0;
   let currentX = 0;
@@ -98,13 +64,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('mousemove', (e) => {
     const { innerWidth, innerHeight } = window;
-    // Normalized between -1 and 1
-    mouseX = (e.clientX / innerWidth - 0.5) * 40; // Max 40px shift
-    mouseY = (e.clientY / innerHeight - 0.5) * 30; // Max 30px shift
+    mouseX = (e.clientX / innerWidth - 0.5) * 45; // Max 45px shift
+    mouseY = (e.clientY / innerHeight - 0.5) * 35; // Max 35px shift
   });
 
   const animateParallax = () => {
-    // Smooth lerp (linear interpolation)
     currentX += (mouseX - currentX) * 0.05;
     currentY += (mouseY - currentY) * 0.05;
 
@@ -117,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   animateParallax();
 
-  // 7. Copy Email Address to Clipboard
+  // 6. Copy Email Address to Clipboard
   if (btnCopyEmail && emailAddress) {
     btnCopyEmail.addEventListener('click', async () => {
       const email = emailAddress.textContent.trim();
@@ -132,7 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
           if (window.lucide) window.lucide.createIcons();
         }, 2500);
       } catch (err) {
-        // Fallback
         const textarea = document.createElement('textarea');
         textarea.value = email;
         document.body.appendChild(textarea);
@@ -144,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 8. Contact Form Interaction
+  // 7. Contact Form Interaction
   if (contactForm && formFeedback) {
     contactForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -157,14 +120,19 @@ document.addEventListener('DOMContentLoaded', () => {
         formFeedback.classList.add('active');
         if (window.lucide) window.lucide.createIcons();
         showToast('✨ Message received! Thanks for reaching out.');
-      }, 700);
+      }, 600);
     });
   }
 
-  // 9. Toast Notification System
+  // 8. Toast Notification System
   function showToast(message) {
-    const container = document.getElementById('toastContainer');
-    if (!container) return;
+    let container = document.getElementById('toastContainer');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'toastContainer';
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+    }
 
     const toast = document.createElement('div');
     toast.className = 'toast';
@@ -185,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 3200);
   }
 
-  // 10. Live UTC Clock
+  // 9. Live UTC Clock
   const updateClock = () => {
     if (!liveClock) return;
     const now = new Date();
