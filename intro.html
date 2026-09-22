@@ -14,21 +14,18 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- Icons via Lucide -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  
   <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Persistent Animated Silk Background -->
+  <!-- Persistent Animated Silver Silk Wave Background (Image 2) -->
   <div class="bg-wrapper" id="bgWrapper">
     <div class="bg-silk-layer" id="bgSilk"></div>
     <div class="bg-shimmer-layer"></div>
     <div class="bg-mesh-overlay"></div>
   </div>
 
-  <!-- Pure Glass Header Navigation -->
+  <!-- Minimalist Glass Header Navigation -->
   <header class="header" id="header">
     <div class="container header-container">
       <a href="index.html" class="brand-logo">
@@ -40,28 +37,16 @@
       <nav class="nav-menu" id="navMenu">
         <ul class="nav-list">
           <li class="nav-item">
-            <a href="index.html" class="nav-link">
-              <i data-lucide="home" class="nav-icon"></i>
-              <span>Home</span>
-            </a>
+            <a href="index.html" class="nav-link">Home</a>
           </li>
           <li class="nav-item">
-            <a href="intro.html" class="nav-link active">
-              <i data-lucide="user" class="nav-icon"></i>
-              <span>Intro</span>
-            </a>
+            <a href="intro.html" class="nav-link active">Intro</a>
           </li>
           <li class="nav-item">
-            <a href="skills.html" class="nav-link">
-              <i data-lucide="code" class="nav-icon"></i>
-              <span>Skills</span>
-            </a>
+            <a href="skills.html" class="nav-link">Skills</a>
           </li>
           <li class="nav-item">
-            <a href="contact.html" class="nav-link">
-              <i data-lucide="mail" class="nav-icon"></i>
-              <span>Contact</span>
-            </a>
+            <a href="contact.html" class="nav-link">Contact</a>
           </li>
         </ul>
       </nav>
@@ -70,86 +55,50 @@
         <a href="https://github.com/Mezy310" target="_blank" rel="noopener noreferrer" class="btn-icon" title="GitHub Profile">
           <svg class="icon-github" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
         </a>
-        <a href="contact.html" class="btn btn-primary btn-sm">
-          <span>Let's Talk</span>
-          <i data-lucide="arrow-up-right" class="btn-icon-end"></i>
-        </a>
         <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">
-          <i data-lucide="menu" id="menuIcon"></i>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Main Content Area: INTRO -->
+  <!-- Left-Aligned Minimalist Text-Only Main Content: INTRO -->
   <main class="main-content">
-    <div class="container page-wrapper">
-      <div class="page-header">
-        <span class="page-tag">01 / Profile</span>
-        <h1 class="page-title">About <span class="text-gradient">Sora</span></h1>
-        <p class="page-description">
-          Passionate about coding, digital aesthetics, and turning creative ideas into functional reality.
-        </p>
-      </div>
+    <div class="container page-wrapper intro-wrapper">
+      <p class="page-category reveal-1">01 / Profile</p>
+      
+      <h1 class="page-headline reveal-2">About Sora.</h1>
 
-      <div class="intro-grid">
-        <!-- Main Bio Glass Card -->
-        <div class="intro-card glass-panel main-bio">
-          <div class="bio-header">
-            <div class="avatar-ring">
-              <div class="avatar-inner">
-                <span class="avatar-char">S</span>
-              </div>
-            </div>
-            <div class="bio-title-group">
-              <h2 class="bio-name">Sora</h2>
-              <span class="bio-role">Creator • Developer • Problem Solver</span>
-            </div>
-          </div>
+      <p class="editorial-lead reveal-3">
+        I am a developer and creator dedicated to building high-performance systems and expressive web interfaces. My focus centers on building reliable automation tools, Discord ecosystem architectures, and clean digital experiences.
+      </p>
 
-          <p class="bio-text">
-            I specialize in crafting clean codebases and modern web experiences with obsessive attention to detail. Whether it's designing fluid glassmorphism interfaces or engineering scalable Discord bot architectures like <strong>ZyX-Bot</strong>, my priority is always delivering dependable functionality paired with a mesmerizing visual presence.
+      <div class="text-section-grid reveal-4">
+        <div class="text-block">
+          <h3>Discord &amp; Automation Architecture</h3>
+          <p>
+            Architect of <strong>ZyX-Bot</strong> and complex automation handlers. From custom ticketing workflows and interactive embeds to moderation pipelines and store ordering mechanisms, I engineer backend systems that run with high stability.
           </p>
-
-          <div class="bio-tags">
-            <span class="bio-tag"><i data-lucide="sparkles"></i> Clean Architecture</span>
-            <span class="bio-tag"><i data-lucide="shield-check"></i> High Reliability</span>
-            <span class="bio-tag"><i data-lucide="palette"></i> Modern UI/UX</span>
-            <span class="bio-tag"><i data-lucide="cpu"></i> Automation First</span>
-          </div>
         </div>
 
-        <!-- Feature Highlight Cards -->
-        <div class="intro-features">
-          <div class="feature-card glass-panel">
-            <div class="feature-icon"><i data-lucide="terminal"></i></div>
-            <div class="feature-content">
-              <h3>Bot & Backend Systems</h3>
-              <p>Engineering responsive Discord bots featuring command handlers, ticketing workflows, moderation systems, and order management.</p>
-            </div>
-          </div>
+        <div class="text-block">
+          <h3>Modern Web Experiences</h3>
+          <p>
+            Crafting lightweight, responsive interfaces where typography, kinetic fluidity, and performance harmoniously meet. Dedicated to minimalist aesthetics and zero-bloat code.
+          </p>
+        </div>
 
-          <div class="feature-card glass-panel">
-            <div class="feature-icon"><i data-lucide="layout"></i></div>
-            <div class="feature-content">
-              <h3>Modern Web Frontend</h3>
-              <p>Building responsive, elegant user interfaces with pure glassmorphism, micro-animations, and fast performance optimized for Vercel.</p>
-            </div>
-          </div>
-
-          <div class="feature-card glass-panel">
-            <div class="feature-icon"><i data-lucide="workflow"></i></div>
-            <div class="feature-content">
-              <h3>Workflow & Deployment</h3>
-              <p>Leveraging Git, CI/CD automation, and modern dev tools to ensure smooth continuous delivery from repository to production.</p>
-            </div>
-          </div>
+        <div class="text-block">
+          <h3>Continuous Delivery Philosophy</h3>
+          <p>
+            Code should be maintainable, self-documenting, and ready to ship. Leveraging Git workflows, automated pipelines, and Vercel edge infrastructure to iterate swiftly.
+          </p>
         </div>
       </div>
     </div>
   </main>
 
-  <!-- Pure Glass Footer -->
+  <!-- Minimalist Footer -->
   <footer class="footer">
     <div class="container footer-container">
       <div class="footer-left">
@@ -157,7 +106,7 @@
         <span class="footer-copy">© 2026 Sora. All rights reserved.</span>
       </div>
       <div class="footer-right">
-        <span class="badge-vercel"><i data-lucide="triangle" class="vercel-icon"></i> Hosted on Vercel</span>
+        <span class="footer-note">Hosted on Vercel</span>
         <span class="live-clock" id="liveClock">00:00:00 UTC</span>
       </div>
     </div>
