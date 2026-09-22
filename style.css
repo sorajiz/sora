@@ -1452,7 +1452,7 @@ ul {
 }
 
 /* ==========================================================================
-   ENTRANCE LOADING SCREEN (UIVERSE.IO BY Leoodaviid - PURE BLACK FRAMED EDITION)
+   ENTRANCE LOADING SCREEN (SORA BESPOKE VIETNAMESE LUXURY GATEWAY)
    ========================================================================== */
 .loader-container,
 #page {
@@ -1467,7 +1467,7 @@ ul {
   background: #000000 !important;
   background-color: #000000 !important;
   z-index: 9999999;
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.75s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
   user-select: none;
   cursor: pointer;
@@ -1485,55 +1485,101 @@ ul {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 90%;
-  max-width: 350px;
-  padding: 38px 28px 32px 28px;
-  background: rgba(15, 17, 21, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 18px;
+  width: 92%;
+  max-width: 480px;
+  padding: 44px 36px 36px 36px;
+  background: rgba(14, 16, 21, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 22px;
   box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.95),
-    inset 0 1px 0 rgba(255, 255, 255, 0.16);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+    0 30px 80px rgba(0, 0, 0, 0.95),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 0 40px rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
   text-align: center;
+  box-sizing: border-box;
+}
+
+.loader-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 14px;
+  margin-bottom: 24px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.loader-badge .badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #52e19f;
+  box-shadow: 0 0 8px #52e19f;
+  animation: badgeDotPulse 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes badgeDotPulse {
+  0% {
+    opacity: 0.5;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+.loader-spinner-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
 }
 
 .loader {
-  width: 48px;
-  height: 48px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin-bottom: 2px;
 }
 
 @keyframes spin {
   0% {
     transform: rotate(0deg);
-    box-shadow: 0 -2px 0 #ffffff, 0 -4px 10px rgba(255, 255, 255, 0.7);
+    box-shadow: 0 -2.5px 0 #ffffff, 0 -5px 14px rgba(255, 255, 255, 0.8), inset 0 2px 0 rgba(255, 255, 255, 0.25);
   }
 
   50% {
     transform: rotate(180deg);
-    box-shadow: 0 -2px 0 #ffffff, 0 -4px 10px rgba(255, 255, 255, 0.7);
+    box-shadow: 0 -2.5px 0 #ffffff, 0 -5px 14px rgba(255, 255, 255, 0.8), inset 0 2px 0 rgba(255, 255, 255, 0.25);
   }
 
   100% {
     transform: rotate(360deg);
-    box-shadow: 0 -2px 0 #ffffff, 0 -4px 10px rgba(255, 255, 255, 0.7);
+    box-shadow: 0 -2.5px 0 #ffffff, 0 -5px 14px rgba(255, 255, 255, 0.8), inset 0 2px 0 rgba(255, 255, 255, 0.25);
   }
 }
 
 .loader-heading {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 32px;
-  font-weight: 400;
-  line-height: 1.2;
+  font-family: var(--font-body);
+  font-style: normal;
+  font-size: clamp(22px, 3.2vw, 26px);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
   color: #ffffff;
-  margin-top: 14px;
+  margin-top: 16px;
   margin-bottom: 8px;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.85);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -1541,24 +1587,35 @@ ul {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  color: rgba(255, 255, 255, 0.55);
+  gap: 4px;
+  color: rgba(255, 255, 255, 0.65);
   font-family: var(--font-body);
-  font-size: 12px;
+  font-size: 13.5px;
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.55;
   letter-spacing: -0.01em;
-  animation: subtextBreathe 2.4s ease-in-out infinite alternate;
+  margin-bottom: 22px;
 }
 
-@keyframes subtextBreathe {
-  0% {
-    opacity: 0.5;
-  }
-  100% {
-    opacity: 0.95;
-  }
+.loader-footer-metrics {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.03em;
 }
+
+.loader-footer-metrics .metric-sep {
+  opacity: 0.4;
+}
+
 
 
 
