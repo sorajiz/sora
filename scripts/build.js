@@ -168,7 +168,8 @@ async function build() {
   copyFileIfExists(path.join(projectRoot, 'assets', 'favicon.ico'), path.join(distDir, 'favicon.ico'));
   copyFileIfExists(path.join(projectRoot, 'assets', 'favicon.png'), path.join(distDir, 'favicon.png'));
   copyFileIfExists(path.join(projectRoot, 'assets', 'banner.png'), path.join(distDir, 'banner.png'));
-  console.log('  ✓ Copied banner.png -> dist/assets/ & dist/');
+  copyFileIfExists(path.join(projectRoot, 'assets', 'banner.jpg'), path.join(distDir, 'banner.jpg'));
+  console.log('  ✓ Copied banner.png & banner.jpg -> dist/assets/ & dist/');
 
   // Step 6: Pipeline for performance and devtools guard scripts (Source of truth: .src/ -> dist/js/)
   const srcPerf = path.join(projectRoot, '.src', 'sora-performance-x2.js');
