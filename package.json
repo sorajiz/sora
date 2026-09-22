@@ -1,0 +1,19 @@
+{
+  "name": "sora",
+  "version": "1.0.0",
+  "description": "Personal profile & portfolio of Sora (Mezy310)",
+  "scripts": {
+    "dev": "serve .",
+    "start": "serve ."
+  },
+  "keywords": [
+    "portfolio",
+    "profile",
+    "sora",
+    "mezy310",
+    "discord-bot",
+    "developer"
+  ],
+  "author": "Mezy310",
+  "license": "MIT"
+}

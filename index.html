@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sora | Creative Developer & Bot Architect</title>
+  <meta name="description" content="Personal portfolio and profile of Sora (Mezy310) - Creative Developer, Discord Bot Architect & UI Enthusiast." />
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
+  
+  <!-- Fonts: Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Icons via Lucide -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Dynamic Animated Background -->
+  <div class="bg-wrapper" id="bgWrapper">
+    <div class="bg-silk-layer" id="bgSilk"></div>
+    <div class="bg-shimmer-layer"></div>
+    <div class="bg-mesh-overlay"></div>
+  </div>
+
+  <!-- Glassmorphic Header Navigation -->
+  <header class="header" id="header">
+    <div class="container header-container">
+      <a href="#home" class="brand-logo">
+        <span class="logo-sparkle">✦</span>
+        <span class="logo-text">SORA</span>
+        <span class="logo-tag">dev</span>
+      </a>
+
+      <!-- 4 Core Navigation Links -->
+      <nav class="nav-menu" id="navMenu">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="#home" class="nav-link active" data-section="home">
+              <i data-lucide="home" class="nav-icon"></i>
+              <span>Home</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#intro" class="nav-link" data-section="intro">
+              <i data-lucide="user" class="nav-icon"></i>
+              <span>Intro</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#skills" class="nav-link" data-section="skills">
+              <i data-lucide="code" class="nav-icon"></i>
+              <span>Skills</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#contact" class="nav-link" data-section="contact">
+              <i data-lucide="mail" class="nav-icon"></i>
+              <span>Contact</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <a href="https://github.com/Mezy310" target="_blank" rel="noopener noreferrer" class="btn-icon" title="GitHub Profile">
+          <svg class="icon-github" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        </a>
+        <a href="#contact" class="btn btn-primary btn-sm">
+          <span>Let's Talk</span>
+          <i data-lucide="arrow-up-right" class="btn-icon-end"></i>
+        </a>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation">
+          <i data-lucide="menu" id="menuIcon"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main class="main-content">
+    
+    <!-- SECTION 1: HOME (HERO) -->
+    <section class="section hero-section" id="home">
+      <div class="container hero-container">
+        <div class="hero-badge fade-in">
+          <span class="status-indicator"></span>
+          <span class="badge-text">Available for projects & bot development</span>
+        </div>
+
+        <h1 class="hero-title fade-in delay-1">
+          Crafting <span class="text-gradient">Fluid Experiences</span> & Intelligent Systems.
+        </h1>
+
+        <p class="hero-subtitle fade-in delay-2">
+          Hi, I'm <strong class="highlight-name">Sora (Mezy)</strong>. A passionate developer building intuitive web interfaces, reliable Discord bots, and automated digital solutions.
+        </p>
+
+        <div class="hero-actions fade-in delay-3">
+          <a href="#intro" class="btn btn-primary">
+            <span>Explore Profile</span>
+            <i data-lucide="arrow-down"></i>
+          </a>
+          <a href="#contact" class="btn btn-glass">
+            <i data-lucide="send"></i>
+            <span>Get in Touch</span>
+          </a>
+        </div>
+
+        <!-- Quick Highlight Metrics -->
+        <div class="hero-metrics fade-in delay-4">
+          <div class="metric-card glass-panel">
+            <div class="metric-icon"><i data-lucide="bot"></i></div>
+            <div class="metric-info">
+              <span class="metric-number">ZyX-Bot</span>
+              <span class="metric-label">Discord Architecture</span>
+            </div>
+          </div>
+          <div class="metric-card glass-panel">
+            <div class="metric-icon"><i data-lucide="layers"></i></div>
+            <div class="metric-info">
+              <span class="metric-number">Fullstack</span>
+              <span class="metric-label">Clean UI & Logic</span>
+            </div>
+          </div>
+          <div class="metric-card glass-panel">
+            <div class="metric-icon"><i data-lucide="zap"></i></div>
+            <div class="metric-info">
+              <span class="metric-number">Vercel Ready</span>
+              <span class="metric-label">High Speed & CD</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: INTRO -->
+    <section class="section intro-section" id="intro">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">01 / Profile</span>
+          <h2 class="section-title">About <span class="text-gradient">Myself</span></h2>
+          <p class="section-description">
+            Passionate about coding, digital aesthetics, and turning creative ideas into functional reality.
+          </p>
+        </div>
+
+        <div class="intro-grid">
+          <!-- Bio Glass Card -->
+          <div class="intro-card glass-panel main-bio">
+            <div class="bio-header">
+              <div class="avatar-ring">
+                <div class="avatar-inner">
+                  <span class="avatar-char">S</span>
+                </div>
+              </div>
+              <div class="bio-title-group">
+                <h3 class="bio-name">Mezy310 / Sora</h3>
+                <span class="bio-role">Creator • Developer • Problem Solver</span>
+              </div>
+            </div>
+
+            <p class="bio-text">
+              I love engineering clean codebases and modern web experiences with attention to detail. Whether it's crafting responsive web frontends with fluid animations or developing feature-packed Discord automation systems like <strong>ZyX-Bot</strong>, my goal is always to combine top-notch functionality with silky smooth visual aesthetics.
+            </p>
+
+            <div class="bio-tags">
+              <span class="bio-tag"><i data-lucide="sparkles"></i> Clean Architecture</span>
+              <span class="bio-tag"><i data-lucide="shield-check"></i> High Reliability</span>
+              <span class="bio-tag"><i data-lucide="palette"></i> Modern UI/UX</span>
+              <span class="bio-tag"><i data-lucide="cpu"></i> Automation First</span>
+            </div>
+          </div>
+
+          <!-- Feature Cards -->
+          <div class="intro-features">
+            <div class="feature-card glass-panel">
+              <div class="feature-icon"><i data-lucide="terminal"></i></div>
+              <div class="feature-content">
+                <h4>Bot & Backend Systems</h4>
+                <p>Developing robust Discord bots featuring command handlers, ticketing workflows, moderation systems, and order management.</p>
+              </div>
+            </div>
+
+            <div class="feature-card glass-panel">
+              <div class="feature-icon"><i data-lucide="layout"></i></div>
+              <div class="feature-content">
+                <h4>Modern Web Frontend</h4>
+                <p>Creating responsive, elegant user interfaces with glassmorphism, micro-animations, and fast performance optimized for Vercel.</p>
+              </div>
+            </div>
+
+            <div class="feature-card glass-panel">
+              <div class="feature-icon"><i data-lucide="workflow"></i></div>
+              <div class="feature-content">
+                <h4>Workflow & Deployment</h4>
+                <p>Leveraging Git, CI/CD automation, and modern dev tools to ensure smooth continuous delivery from repository to production.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: SKILLS -->
+    <section class="section skills-section" id="skills">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">02 / Competencies</span>
+          <h2 class="section-title">Technical <span class="text-gradient">Arsenal</span></h2>
+          <p class="section-description">
+            The core tools, languages, and frameworks I use to bring software to life.
+          </p>
+        </div>
+
+        <div class="skills-grid">
+          <!-- Skill Category 1: Frontend -->
+          <div class="skill-category glass-panel">
+            <div class="category-header">
+              <div class="category-icon"><i data-lucide="code-2"></i></div>
+              <h3>Frontend & Design</h3>
+            </div>
+            <div class="skill-list">
+              <div class="skill-item">
+                <div class="skill-meta">
+                  <span class="skill-name">HTML5 & Semantic Structure</span>
+                  <span class="skill-level">Advanced</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="width: 95%;"></div></div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-meta">
+                  <span class="skill-name">CSS3 & Modern Glassmorphism</span>
+                  <span class="skill-level">Advanced</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="width: 90%;"></div></div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-meta">
+                  <span class="skill-name">JavaScript (ES6+)</span>
+                  <span class="skill-level">Proficient</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="width: 85%;"></div></div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-meta">
+                  <span class="skill-name">UI Animation & Parallax</span>
+                  <span class="skill-level">Proficient</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="width: 88%;"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Skill Category 2: Backend & Bots -->
+          <div class="skill-category glass-panel">
+            <div class="category-header">
+              <div class="category-icon"><i data-lucide="server"></i></div>
+              <h3>Backend & Automation</h3>
+            </div>
+            <div class="skill-list">
+              <div class="skill-item">
+                <div class="skill-meta">
+                  <span class="skill-name">Node.js Runtime</span>
+                  <span class="skill-level">Proficient</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="width: 88%;"></div></div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-meta">
+                  <span class="skill-name">Discord.js & Bot Architecture</span>
+                  <span class="skill-level">Advanced</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="width: 92%;"></div></div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-meta">
+                  <span class="skill-name">RESTful APIs & Webhooks</span>
+                  <span class="skill-level">Proficient</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="width: 85%;"></div></div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-meta">
+                  <span class="skill-name">Asynchronous Logic & Handlers</span>
+                  <span class="skill-level">Advanced</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="width: 90%;"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Skill Category 3: Tools & Deploy -->
+          <div class="skill-category glass-panel">
+            <div class="category-header">
+              <div class="category-icon"><i data-lucide="cpu"></i></div>
+              <h3>Tools & Ecosystem</h3>
+            </div>
+            <div class="skill-list">
+              <div class="skill-item">
+                <div class="skill-meta">
+                  <span class="skill-name">Git & GitHub Workflow</span>
+                  <span class="skill-level">Advanced</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="width: 90%;"></div></div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-meta">
+                  <span class="skill-name">Vercel Deployment & Hosting</span>
+                  <span class="skill-level">Proficient</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="width: 92%;"></div></div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-meta">
+                  <span class="skill-name">VS Code / Antigravity IDE</span>
+                  <span class="skill-level">Expert</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="width: 95%;"></div></div>
+              </div>
+              <div class="skill-item">
+                <div class="skill-meta">
+                  <span class="skill-name">Superpowers & Agentic Workflows</span>
+                  <span class="skill-level">Active</span>
+                </div>
+                <div class="skill-bar"><div class="skill-fill" style="width: 85%;"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: CONTACT -->
+    <section class="section contact-section" id="contact">
+      <div class="container">
+        <div class="section-header text-center">
+          <span class="section-tag">03 / Reach Out</span>
+          <h2 class="section-title">Get In <span class="text-gradient">Touch</span></h2>
+          <p class="section-description">
+            Interested in working together, commissioning a bot, or have an inquiry? Let's connect!
+          </p>
+        </div>
+
+        <div class="contact-grid">
+          <!-- Left Info Column -->
+          <div class="contact-info glass-panel">
+            <h3>Let's create something remarkable.</h3>
+            <p class="contact-subtext">
+              I am open to new collaborations, freelance projects, bot development commissions, and web design ideas.
+            </p>
+
+            <div class="contact-methods">
+              <div class="contact-method-item">
+                <div class="method-icon"><svg class="icon-github" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg></div>
+                <div class="method-details">
+                  <span class="method-label">GitHub</span>
+                  <a href="https://github.com/Mezy310" target="_blank" rel="noopener noreferrer" class="method-link">
+                    github.com/Mezy310 <i data-lucide="external-link" class="icon-inline"></i>
+                  </a>
+                </div>
+              </div>
+
+              <div class="contact-method-item">
+                <div class="method-icon"><i data-lucide="mail"></i></div>
+                <div class="method-details">
+                  <span class="method-label">Email</span>
+                  <div class="email-copy-group">
+                    <span class="method-value" id="emailAddress">wheijgwa@gmail.com</span>
+                    <button class="btn-copy" id="btnCopyEmail" title="Copy email address">
+                      <i data-lucide="copy"></i>
+                      <span>Copy</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="contact-method-item">
+                <div class="method-icon"><i data-lucide="message-square"></i></div>
+                <div class="method-details">
+                  <span class="method-label">Discord</span>
+                  <span class="method-value">@mezy310</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="status-box">
+              <div class="status-dot"></div>
+              <span>Based in Vietnam • Available Worldwide</span>
+            </div>
+          </div>
+
+          <!-- Right Interactive Form Column -->
+          <div class="contact-form-wrapper glass-panel">
+            <form id="contactForm" class="contact-form" onsubmit="return false;">
+              <div class="form-group">
+                <label for="formName">Your Name</label>
+                <div class="input-container">
+                  <i data-lucide="user" class="input-icon"></i>
+                  <input type="text" id="formName" placeholder="What's your name?" required />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="formEmail">Email Address</label>
+                <div class="input-container">
+                  <i data-lucide="mail" class="input-icon"></i>
+                  <input type="email" id="formEmail" placeholder="your.email@example.com" required />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="formSubject">Subject</label>
+                <div class="input-container">
+                  <i data-lucide="tag" class="input-icon"></i>
+                  <input type="text" id="formSubject" placeholder="Project Inquiry / Discord Bot / Hello" required />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="formMessage">Message</label>
+                <div class="input-container">
+                  <i data-lucide="message-circle" class="input-icon textarea-icon"></i>
+                  <textarea id="formMessage" rows="4" placeholder="Tell me about your project or idea..." required></textarea>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-block" id="btnSubmitForm">
+                <span>Send Message</span>
+                <i data-lucide="send"></i>
+              </button>
+            </form>
+            
+            <div class="form-feedback" id="formFeedback">
+              <i data-lucide="check-circle" class="success-icon"></i>
+              <h4>Thank you for reaching out!</h4>
+              <p>Your message has been captured. I'll get back to you promptly.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Sleek Minimal Footer -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-left">
+        <span class="footer-logo">✦ SORA</span>
+        <span class="footer-copy">© 2026 Sora (Mezy310). All rights reserved.</span>
+      </div>
+      <div class="footer-right">
+        <span class="badge-vercel"><i data-lucide="triangle" class="vercel-icon"></i> Hosted on Vercel</span>
+        <span class="live-clock" id="liveClock">00:00:00 UTC</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Main JavaScript File -->
+  <script src="script.js"></script>
+</body>
+</html>
