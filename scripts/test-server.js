@@ -55,6 +55,37 @@ const server = app.listen(testPort, '127.0.0.1', async () => {
       }
     },
     {
+      name: 'Discord Subdomain Host Routing (/ with Host: discord.sorae.tokyo)',
+      path: '/',
+      expectedStatus: 200,
+      headers: { 'Host': 'discord.sorae.tokyo' },
+      validate: (res, body) => {
+        if (!body.includes("Sora&#39;s Station") && !body.includes("Sora's Station")) return "Missing Sora's Station title";
+        if (!body.includes('https://discord.gg/YzEaab34kV')) return 'Missing Discord server invite link';
+        if (!body.includes('https://discord.sorae.tokyo/')) return 'Missing canonical discord URL';
+        return null;
+      }
+    },
+    {
+      name: 'Main Domain Host Routing (/ with Host: sorae.tokyo)',
+      path: '/',
+      expectedStatus: 200,
+      headers: { 'Host': 'sorae.tokyo' },
+      validate: (res, body) => {
+        if (!body.includes('<title>Sora — Portfolio</title>')) return 'Main domain must serve Sora Portfolio';
+        return null;
+      }
+    },
+    {
+      name: 'Discord Clean Route (/discord)',
+      path: '/discord',
+      expectedStatus: 200,
+      validate: (res, body) => {
+        if (!body.includes("Sora&#39;s Station") && !body.includes("Sora's Station")) return "Missing Sora's Station";
+        return null;
+      }
+    },
+    {
       name: 'Health API (/health)',
       path: '/health',
       expectedStatus: 200,

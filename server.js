@@ -210,7 +210,8 @@ const PAGES = {
   home: 'index.html',
   intro: 'intro.html',
   skills: 'skills.html',
-  contact: 'contact.html'
+  contact: 'contact.html',
+  discord: 'discord.html'
 };
 
 function serveHtmlPage(fileName, res) {
@@ -218,13 +219,21 @@ function serveHtmlPage(fileName, res) {
   let targetRoot = DIST_DIR;
 
   if (!fs.existsSync(targetPath)) {
-    targetPath = path.join(__dirname, fileName);
-    targetRoot = __dirname;
+    fileName = PAGES.home;
+    targetPath = path.join(DIST_DIR, PAGES.home);
   }
 
   if (!fs.existsSync(targetPath)) {
-    fileName = PAGES.home;
-    targetRoot = fs.existsSync(path.join(DIST_DIR, PAGES.home)) ? DIST_DIR : __dirname;
+    try {
+      const build = require('./scripts/build');
+      build();
+    } catch (e) {
+      console.error('Auto-build failed in serveHtmlPage:', e);
+    }
+  }
+
+  if (!fs.existsSync(targetPath)) {
+    return res.status(404).type('text/plain').send('404 Not Found: Page not found.');
   }
 
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
@@ -233,8 +242,24 @@ function serveHtmlPage(fileName, res) {
     root: targetRoot,
     dotfiles: 'allow',
     etag: true
+  }, (err) => {
+    if (err && !res.headersSent) {
+      console.error(`⚠️ [Server Error sending ${fileName}]:`, err.message);
+      res.status(500).type('text/plain').send('500 Internal Server Error: Please try again shortly.');
+    }
   });
 }
+
+// Hostname-based routing for discord subdomain (e.g. discord.sorae.tokyo)
+app.use((req, res, next) => {
+  const host = (req.hostname || req.headers.host || '').toLowerCase();
+  if (host.startsWith('discord.')) {
+    if (req.path === '/' || req.path === '/index' || req.path === '/index.html' || req.path === '/discord' || req.path === '/discord.html') {
+      return serveHtmlPage(PAGES.discord, res);
+    }
+  }
+  next();
+});
 
 // Clean route bindings
 app.get(['/', '/index', '/index.html'], (req, res) => {
@@ -251,6 +276,10 @@ app.get(['/skills', '/skills.html'], (req, res) => {
 
 app.get(['/contact', '/contact.html'], (req, res) => {
   serveHtmlPage(PAGES.contact, res);
+});
+
+app.get(['/discord', '/discord.html'], (req, res) => {
+  serveHtmlPage(PAGES.discord, res);
 });
 
 // Favicon endpoints (served cleanly from dist/assets/ or assets/)
@@ -345,7 +374,7 @@ if (require.main === module) {
     console.log(` ⚡ Compression:     ACTIVE (Gzip/Brotli on-the-fly)`);
     console.log(` 🛡️ Helmet Security: ACTIVE (CSP: No 'unsafe-eval')`);
     console.log(` 🔒 Rate Limiting:   ACTIVE (Whitelisted for localhost)`);
-    console.log(` 📦 Clean Routes:    /, /intro, /skills, /contact`);
+    console.log(` 📦 Clean Routes:    /, /intro, /skills, /contact, /discord`);
     console.log('======================================================\n');
   });
 

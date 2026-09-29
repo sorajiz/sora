@@ -10,14 +10,11 @@ const watchTargets = [
 ];
 
 let isBuilding = false;
-let pendingBuild = false;
 let debounceTimer = null;
+let lastBuildTime = Date.now();
 
 async function triggerBuild(changedFile) {
-  if (isBuilding) {
-    pendingBuild = true;
-    return;
-  }
+  if (isBuilding) return;
 
   isBuilding = true;
   console.log(`\n⚡ [Auto-Watch] Change detected in: ${changedFile ? path.basename(changedFile) : 'project'}`);
@@ -26,15 +23,14 @@ async function triggerBuild(changedFile) {
   try {
     const start = Date.now();
     await build();
+    lastBuildTime = Date.now();
     console.log(`✅ [Auto-Watch] All website pages updated in ${Date.now() - start}ms!`);
   } catch (err) {
     console.error('❌ [Auto-Watch] Rebuild failed:', err);
   } finally {
-    isBuilding = false;
-    if (pendingBuild) {
-      pendingBuild = false;
-      triggerBuild(changedFile);
-    }
+    setTimeout(() => {
+      isBuilding = false;
+    }, 500);
   }
 }
 
@@ -45,6 +41,7 @@ function startWatching() {
 
   // Initial build
   build().then(() => {
+    lastBuildTime = Date.now();
     console.log('🚀 Initial stealth build ready. Waiting for edits...');
   });
 
@@ -52,14 +49,15 @@ function startWatching() {
     if (!fs.existsSync(targetPath)) return;
 
     fs.watch(targetPath, { recursive: true }, (eventType, filename) => {
-      if (filename && (filename.endsWith('.html') || filename.includes('.git') || filename.includes('node_modules'))) {
+      if (isBuilding) return;
+      if (filename && (filename.endsWith('.html') || filename.includes('.git') || filename.includes('node_modules') || filename.startsWith('.'))) {
         return;
       }
 
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(() => {
         triggerBuild(filename || targetPath);
-      }, 150);
+      }, 300);
     });
   });
 }

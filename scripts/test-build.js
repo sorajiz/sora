@@ -39,6 +39,11 @@ async function run() {
     assert.ok(html.includes('<meta name="robots" content="index, follow">'), `${page.file} must allow indexing`);
   }
 
+  const discordHtml = fs.readFileSync(path.join(distDir, 'discord.html'), 'utf8');
+  assert.ok(discordHtml.includes("Sora's Station"), 'discord.html must include community title');
+  assert.ok(discordHtml.includes('<link rel="canonical" href="https://discord.sorae.tokyo/">'), 'discord.html must have subdomain canonical URL');
+  assert.ok(discordHtml.includes('https://discord.gg/YzEaab34kV'), 'discord.html must link to Discord server');
+
   const robots = fs.readFileSync(path.join(distDir, 'robots.txt'), 'utf8');
   assert.ok(robots.includes('Sitemap: https://sorastation.vercel.app/sitemap.xml'), 'robots.txt must advertise the production sitemap');
 

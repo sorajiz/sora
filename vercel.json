@@ -10,11 +10,32 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "discord.sorae.tokyo"
+        }
+      ],
+      "destination": "/discord.html"
+    },
+    {
+      "source": "/((?!assets|js|music|favicon|.*\\..*).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "discord.sorae.tokyo"
+        }
+      ],
+      "destination": "/discord.html"
+    },
     { "source": "/favicon.ico", "destination": "/assets/favicon.ico" },
     { "source": "/favicon.png", "destination": "/assets/favicon.png" },
     { "source": "/intro", "destination": "/intro.html" },
     { "source": "/skills", "destination": "/skills.html" },
     { "source": "/contact", "destination": "/contact.html" },
+    { "source": "/discord", "destination": "/discord.html" },
     { "source": "/((?!assets|js|music|favicon|.*\\..*).*)", "destination": "/index.html" }
   ],
   "headers": [
@@ -61,7 +82,7 @@
       ]
     },
     {
-      "source": "/(.*\\.html|/|/intro|/skills|/contact)",
+      "source": "/(.*\\.html|/|/intro|/skills|/contact|/discord)",
       "headers": [
         {
           "key": "Cache-Control",

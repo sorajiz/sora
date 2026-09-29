@@ -155,6 +155,29 @@ async function build() {
     console.log(`  ✓ Built dist/${page.name}.html`);
   }
 
+  // Step 4b: Render Dedicated Discord Landing Page strictly into dist/
+  const discordTemplate = path.join(viewsDir, 'discord.ejs');
+  if (fs.existsSync(discordTemplate)) {
+    const discordData = {
+      ...sharedData,
+      title: "Sora's Station — Discord Community",
+      description: "A small place for creativity, community and connection. Join Sora's Station on Discord.",
+      canonicalUrl: 'https://discord.sorae.tokyo/',
+      discordServerInvite: 'https://discord.gg/YzEaab34kV',
+      siteUrl: 'https://discord.sorae.tokyo',
+      profileUrl: 'https://sorae.tokyo',
+      faviconDataUri,
+      buildHash
+    };
+
+    const discordRendered = await ejs.renderFile(discordTemplate, discordData, {
+      root: viewsDir
+    });
+
+    fs.writeFileSync(path.join(distDir, 'discord.html'), discordRendered, 'utf8');
+    console.log('  ✓ Built dist/discord.html');
+  }
+
   // Step 5: Copy static assets to dist/assets
   const assetFiles = ['favicon.ico', 'favicon.png', 'luminous-flow.png', 'banner.png', 'banner.jpg'];
   assetFiles.forEach(file => {
