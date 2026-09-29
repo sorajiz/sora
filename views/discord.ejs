@@ -91,35 +91,63 @@
       padding: clamp(20px, 4vw, 48px) 20px;
     }
 
-    /* ── BACKGROUND ── */
+    /* ── BACKGROUND (EXACT MATCH PROFILE SORA) ── */
     .bg-wrapper {
       position: fixed;
-      inset: 0;
+      top: 0;
+      left: 0;
       width: 100vw;
       height: 100vh;
       z-index: 0;
       pointer-events: none;
       overflow: hidden;
+      background-color: #3b3e47;
       contain: strict;
     }
 
-    #sora-bg-canvas {
+    .bg-base-slate {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse 160% 110% at 50% 20%,
+        #4a4e58 0%,
+        #3b3e47 55%,
+        #2f323a 100%
+      );
+    }
+
+    .bg-flow-canvas {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
       display: block;
+      mix-blend-mode: normal;
+      opacity: 1;
+      pointer-events: none;
+      background: radial-gradient(
+        circle at 50% 45%,
+        #4a4e58 0%,
+        #3b3e47 50%,
+        #2f323a 100%
+      );
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
 
-    .bg-film-grain {
+    .bg-vignette-depth {
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse at 50% 40%, rgba(255, 255, 255, 0.035) 0%, transparent 75%);
-      mix-blend-mode: overlay;
+      background: radial-gradient(
+        ellipse 85% 75% at 50% 50%,
+        transparent 40%,
+        rgba(20, 22, 28, 0.45) 85%,
+        rgba(15, 17, 22, 0.75) 100%
+      );
       pointer-events: none;
     }
 
-    /* ── HORIZONTAL GLASS CONTAINER ── */
+    /* ── LIQUID GLASS HORIZONTAL CONTAINER ── */
     .discord-horizontal-glass {
       position: relative;
       z-index: 10;
@@ -127,18 +155,24 @@
       max-width: 860px;
       display: flex;
       flex-direction: row;
-      border-radius: 28px;
-      background: rgba(47, 50, 58, 0.48);
-      backdrop-filter: blur(28px) saturate(180%);
-      -webkit-backdrop-filter: blur(28px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: 32px;
+      background: radial-gradient(
+        135% 120% at 15% 10%,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0.018) 65%,
+        rgba(0, 0, 0, 0.12) 100%
+      );
+      backdrop-filter: blur(36px) saturate(210%) brightness(108%);
+      -webkit-backdrop-filter: blur(36px) saturate(210%) brightness(108%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       box-shadow:
-        0 40px 95px -20px rgba(0, 0, 0, 0.85),
-        0 16px 36px rgba(0, 0, 0, 0.28),
-        0 0 0 1px rgba(255, 255, 255, 0.07),
-        inset 0 1px 1px rgba(255, 255, 255, 0.32);
+        0 35px 95px -15px rgba(0, 0, 0, 0.78),
+        0 14px 34px rgba(0, 0, 0, 0.24),
+        inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.65),
+        inset 0 -1.5px 2px 0 rgba(255, 255, 255, 0.14),
+        inset 1.5px 0 2px 0 rgba(255, 255, 255, 0.28);
       overflow: hidden;
-      animation: glassCardIn 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: liquidGlassIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       transition: box-shadow 0.4s ease, border-color 0.4s ease;
     }
 
@@ -148,28 +182,35 @@
       inset: 0;
       pointer-events: none;
       background: radial-gradient(
-        750px circle at var(--mouse-x) var(--mouse-y),
-        rgba(255, 255, 255, 0.08),
+        650px circle at var(--mouse-x) var(--mouse-y),
+        rgba(255, 255, 255, 0.14),
         transparent 50%
       );
       z-index: 1;
-      opacity: 0.85;
+      opacity: 0.9;
       transition: opacity 0.3s ease;
     }
 
-    .glass-ambient-backdrop {
+    .discord-horizontal-glass::after {
+      content: "";
       position: absolute;
-      top: -30%;
-      right: -10%;
-      width: 480px;
-      height: 480px;
-      background: radial-gradient(circle, rgba(88, 101, 242, 0.16) 0%, rgba(34, 197, 94, 0.05) 45%, transparent 70%);
-      filter: blur(60px);
+      top: 0;
+      left: 8%;
+      right: 8%;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.75) 35%,
+        rgba(255, 255, 255, 0.95) 50%,
+        rgba(255, 255, 255, 0.75) 65%,
+        transparent 100%
+      );
       pointer-events: none;
-      z-index: 0;
+      z-index: 2;
     }
 
-    @keyframes glassCardIn {
+    @keyframes liquidGlassIn {
       from {
         opacity: 0;
         transform: translateY(24px) scale(0.98);
@@ -187,7 +228,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      border-right: 1px solid rgba(255, 255, 255, 0.075);
+      border-right: 1px solid rgba(255, 255, 255, 0.10);
       position: relative;
       z-index: 2;
     }
@@ -204,21 +245,22 @@
       position: relative;
       width: 72px;
       height: 72px;
-      border-radius: 21px;
-      background: linear-gradient(135deg, rgba(55, 61, 76, 0.9), rgba(20, 23, 31, 0.95));
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.35);
       flex-shrink: 0;
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
+      backdrop-filter: blur(14px);
     }
     .guild-icon-image {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 20px;
+      border-radius: 21px;
       display: block;
       transform: scale(1.035);
       transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -270,7 +312,7 @@
     }
     .editorial-desc {
       font-size: 0.94rem;
-      color: rgba(203, 213, 225, 0.72);
+      color: rgba(203, 213, 225, 0.75);
       font-weight: 400;
       line-height: 1.65;
       max-width: 360px;
@@ -353,24 +395,25 @@
       gap: 8px;
       padding: 12px 20px;
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.14);
       border-radius: 9999px;
       color: rgba(255, 255, 255, 0.88);
       font-family: var(--font-sans);
       font-size: 0.88rem;
       font-weight: 600;
       text-decoration: none;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
       transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
       user-select: none;
     }
     .btn-timework-link:hover {
       background: rgba(255, 255, 255, 0.11);
-      border-color: rgba(255, 255, 255, 0.24);
+      border-color: rgba(255, 255, 255, 0.26);
       color: #ffffff;
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.4);
     }
     .btn-tw-icon {
       width: 16px;
@@ -383,7 +426,7 @@
     .glass-right-panel {
       flex: 0 0 320px;
       padding: 40px 32px;
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.012));
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.008));
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -397,7 +440,7 @@
       font-weight: 700;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.38);
+      color: rgba(255, 255, 255, 0.4);
       margin-bottom: -10px;
     }
 
@@ -410,26 +453,30 @@
     .stat-item-box {
       position: relative;
       overflow: hidden;
-      background: rgba(255, 255, 255, 0.045);
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
       padding: 16px 18px;
       display: flex;
       align-items: center;
       gap: 15px;
-      transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25), 0 8px 24px rgba(0, 0, 0, 0.15);
+      transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
     }
     .stat-item-box::before {
       content: "";
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 45%);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), transparent 50%);
     }
     .stat-item-box:hover {
-      background: rgba(255, 255, 255, 0.068);
-      border-color: rgba(255, 255, 255, 0.16);
-      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.065);
+      border-color: rgba(255, 255, 255, 0.22);
+      transform: translateY(-2px);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 14px 32px rgba(0, 0, 0, 0.25);
     }
 
     .stat-badge-icon {
@@ -440,6 +487,7 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      backdrop-filter: blur(10px);
     }
     .stat-badge-icon.members {
       background: rgba(88, 101, 242, 0.16);
@@ -460,7 +508,7 @@
     }
     .stat-label-text {
       font-size: 0.72rem;
-      color: #728096;
+      color: rgba(203, 213, 225, 0.65);
       font-weight: 600;
       letter-spacing: 0.02em;
       text-transform: uppercase;
@@ -498,7 +546,7 @@
 
     /* Perks */
     .perks-panel {
-      border-top: 1px solid rgba(255, 255, 255, 0.065);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
       padding-top: 18px;
     }
     .perks-list-clean {
@@ -531,13 +579,13 @@
     @media (max-width: 760px) {
       .discord-horizontal-glass {
         flex-direction: column;
-        border-radius: 25px;
+        border-radius: 26px;
         max-width: 480px;
       }
       .glass-left-panel {
         padding: 34px 28px 28px;
         border-right: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.075);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       }
       .glass-right-panel {
         flex: none;
@@ -608,17 +656,21 @@
     }
   </style>
 
-  <!-- WebGL Background Engine -->
+  <!-- WebGL Background Engine (Exact Match with Profile sorae.tokyo) -->
   <script id="sora-bg-engine">
     (function () {
       "use strict";
+
       var isMobile = /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent)
         || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-      var isEco = isMobile || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4)
-        || (navigator.deviceMemory && navigator.deviceMemory <= 4);
+      var lowCores = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
+      var lowMemory = navigator.deviceMemory && navigator.deviceMemory <= 4;
+      var isEco = isMobile || lowCores || lowMemory;
+
       var DPR_CAP = isEco ? 0.9 : Math.min(window.devicePixelRatio || 1, 1.2);
       var FPS = isEco ? 35 : 60;
       var FRAME_MS = 1000 / FPS;
+      var ZOOM = 1.0;
 
       var VS = "attribute vec2 a_position; void main(){gl_Position=vec4(a_position,0.0,1.0);}";
       var FS = [
@@ -626,140 +678,161 @@
         "uniform vec2 u_resolution; uniform float u_time; uniform vec2 u_mouse;",
         "uniform float u_quality; uniform float u_zoom;",
         "float gaussian(float d,float k){return exp(-d*d*k);}",
-        "vec3 filament(float d,float s){",
-        "  float core=gaussian(d,2800.);float glow=gaussian(d,320.);float halo=gaussian(d,60.);",
-        "  return s*(vec3(.78,.80,.85)*core*.60+vec3(.68,.70,.75)*glow*.30+vec3(.54,.56,.60)*halo*.12);}",
-        "vec3 ribbon(float d,float hw,float s){",
-        "  float ad=abs(d);float body=1.-smoothstep(0.,hw,ad);body=body*body*(3.-2.*body);",
-        "  float edge=gaussian(abs(ad-hw*.8),1800.);float inner=gaussian(d,60.);",
-        "  return s*(vec3(.78,.80,.85)*edge*.45+vec3(.66,.68,.72)*inner*.24+vec3(.42,.44,.48)*body*.18);}",
+        "vec3 filament(float d,float strength){",
+        "  float core=gaussian(d,2800.0); float glow=gaussian(d,320.0); float halo=gaussian(d,60.0);",
+        "  vec3 softWhite=vec3(0.78,0.80,0.85); vec3 pearlTone=vec3(0.68,0.70,0.75); vec3 silverHalo=vec3(0.54,0.56,0.60);",
+        "  return strength*(softWhite*core*0.60+pearlTone*glow*0.30+silverHalo*halo*0.12);",
+        "}",
+        "vec3 ribbon(float d,float halfWidth,float strength){",
+        "  float ad=abs(d); float body=1.0-smoothstep(0.0,halfWidth,ad); body=body*body*(3.0-2.0*body);",
+        "  float edgeDistance=abs(ad-halfWidth*0.80); float edge=gaussian(edgeDistance,1800.0); float inner=gaussian(d,60.0);",
+        "  vec3 softEdge=vec3(0.78,0.80,0.85); vec3 silverGlow=vec3(0.66,0.68,0.72); vec3 silkBody=vec3(0.42,0.44,0.48);",
+        "  return strength*(softEdge*edge*0.45+silverGlow*inner*0.24+silkBody*body*0.18);",
+        "}",
         "void main(){",
-        "  vec2 uv=gl_FragCoord.xy/u_resolution.xy; vec2 p=uv*2.-1.;",
-        "  p.x*=u_resolution.x/u_resolution.y; p/=max(u_zoom,.1);",
-        "  float t=u_time*(u_quality>.5?.115:.085); float x=p.x; float y=p.y;",
-        "  float cm=exp(-dot(p*vec2(.72,1.08),p*vec2(.72,1.08))*1.25);",
-        "  vec3 col=vec3(.325,.340,.365)+vec3(.080,.085,.095)*cm; vec3 flow=vec3(0.);",
-        "  float yM=-.075-.285*sin(x*.84+.40+t*.72)-.052*sin(x*2.05-.55-t*.34); float dM=y-yM;",
-        "  flow+=ribbon(dM,.110,.52)+filament(dM+.072,.28)+filament(dM-.081,.34);",
-        "  float yA=yM+.118+.031*sin(x*2.48+1.06+t*.39); float dA=y-yA;",
-        "  flow+=ribbon(dA,.060,.25)+filament(dA-.038,.16);",
-        "  float yB=yM-.155+.040*sin(x*1.78-1.35-t*.27); float dB=y-yB;",
-        "  flow+=ribbon(dB,.075,.20)+filament(dB+.048,.13);",
-        "  float yC=.105+.205*sin(x*.91+2.28-t*.44)+.045*cos(x*1.62-.85+t*.24); float dC=y-yC;",
-        "  flow+=ribbon(dC,.085,.38)+filament(dC+.054,.22)+filament(dC-.058,.24);",
-        "  float yMs=-.02+.170*sin(x*.55+1.45+t*.28); flow+=vec3(.58,.60,.64)*gaussian(y-yMs,2.8)*.12;",
-        "  float vig=clamp(1.-dot(p*vec2(.55,.78),p*vec2(.55,.78))*.35,0.,1.);",
-        "  gl_FragColor=vec4(clamp((col+flow)*vig,0.,1.),1.);}",
+        "  vec2 uv=gl_FragCoord.xy/u_resolution.xy; vec2 p=uv*2.0-1.0;",
+        "  p.x*=u_resolution.x/u_resolution.y; p/=max(u_zoom,0.1);",
+        "  float t=u_time*(u_quality>0.5?0.115:0.085); float x=p.x; float y=p.y;",
+        "  float centerMist=exp(-dot(p*vec2(0.72,1.08),p*vec2(0.72,1.08))*1.25);",
+        "  vec3 col=vec3(0.325,0.340,0.365); col+=vec3(0.080,0.085,0.095)*centerMist;",
+        "  vec3 flow=vec3(0.0);",
+        "  float yMain=-0.075-0.285*sin(x*0.84+0.40+t*0.72)-0.052*sin(x*2.05-0.55-t*0.34); float dMain=y-yMain;",
+        "  flow+=ribbon(dMain,0.110,0.52)+filament(dMain+0.072,0.28)+filament(dMain-0.081,0.34);",
+        "  float yFoldA=yMain+0.118+0.031*sin(x*2.48+1.06+t*0.39); float dFoldA=y-yFoldA;",
+        "  flow+=ribbon(dFoldA,0.060,0.25)+filament(dFoldA-0.038,0.16);",
+        "  float yFoldB=yMain-0.155+0.040*sin(x*1.78-1.35-t*0.27); float dFoldB=y-yFoldB;",
+        "  flow+=ribbon(dFoldB,0.075,0.20)+filament(dFoldB+0.048,0.13);",
+        "  float yCross=0.105+0.205*sin(x*0.91+2.28-t*0.44)+0.024*sin(x*2.86+0.24+t*0.24); float dCross=y-yCross;",
+        "  flow+=ribbon(dCross+0.025,0.045,0.16)+filament(dCross,0.30);",
+        "  float yTop=0.63+0.135*sin(x*0.61-0.86+t*0.31)+0.020*sin(x*1.90+1.60-t*0.19); float dTop=y-yTop;",
+        "  flow+=filament(dTop,0.22)+ribbon(dTop+0.036,0.030,0.10);",
+        "  float yLow=-0.70+0.132*sin(x*0.72+0.18-t*0.20)-0.030*sin(x*1.94-0.72+t*0.17); float dLow=y-yLow;",
+        "  flow+=ribbon(dLow,0.055,0.15)+filament(dLow+0.032,0.10);",
+        "  float yFine1=0.30+0.155*sin(x*0.76+2.73+t*0.25); float yFine2=-0.34+0.165*sin(x*0.88+1.18-t*0.18); float yFine3=0.48+0.105*sin(x*0.68-1.16+t*0.16);",
+        "  flow+=filament(y-yFine1,0.12)+filament(y-yFine2,0.09)+filament(y-yFine3,0.07);",
+        "  vec2 bloomCenter=vec2(0.38,-0.09); float bloom=gaussian(length(p-bloomCenter),5.5)*0.020;",
+        "  flow+=vec3(0.74,0.76,0.80)*bloom;",
+        "  col+=flow;",
+        "  float vignette=1.0-dot(uv-0.5,uv-0.5)*0.20; col*=clamp(vignette,0.90,1.0);",
+        "  col=col/(vec3(1.0)+col*0.14); col=pow(max(col,0.0),vec3(0.98));",
+        "  gl_FragColor=vec4(col,1.0);",
+        "}"
       ].join("");
 
-      var canvas, gl, program, uRes, uTime, uMouse, uQual, uZoom;
+      var canvas = null, gl = null, program = null;
+      var timeU = null, resU = null, mouseU = null, qualU = null, zoomU = null;
       var startTime = 0, lastFrameTime = 0, rafId = null, isWebGL = false, visible = true;
-      var mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+      var mouse = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5 };
 
-      function mkShader(type, src) {
-        var shader = gl.createShader(type);
-        gl.shaderSource(shader, src);
-        gl.compileShader(shader);
-        return gl.getShaderParameter(shader, gl.COMPILE_STATUS) ? shader : null;
+      function compile(src, type) {
+        var s = gl.createShader(type);
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null;
       }
 
-      function buildGL() {
-        var opts = { alpha: false, depth: false, stencil: false, antialias: false, powerPreference: isEco ? "low-power" : "default" };
-        gl = canvas.getContext("webgl", opts) || canvas.getContext("experimental-webgl", opts);
-        if (!gl) return false;
+      function buildWebGL() {
+        if (!canvas) return;
+        try {
+          gl = canvas.getContext("webgl", { alpha: false, antialias: false, depth: false, stencil: false })
+            || canvas.getContext("experimental-webgl", { alpha: false, antialias: false });
+          if (gl) isWebGL = true;
+        } catch(e) { isWebGL = false; }
 
-        var vs = mkShader(gl.VERTEX_SHADER, VS);
-        var fs = mkShader(gl.FRAGMENT_SHADER, FS);
-        if (!vs || !fs) return false;
+        if (isWebGL) {
+          var vs = compile(VS, gl.VERTEX_SHADER);
+          var fs = compile(FS, gl.FRAGMENT_SHADER);
+          if (!vs || !fs) {
+            isWebGL = false;
+          } else {
+            program = gl.createProgram();
+            gl.attachShader(program, vs);
+            gl.attachShader(program, fs);
+            gl.linkProgram(program);
+            if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+              isWebGL = false;
+            } else {
+              gl.useProgram(program);
+              var buf = gl.createBuffer();
+              gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+              gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+              var pos = gl.getAttribLocation(program, "a_position");
+              gl.enableVertexAttribArray(pos);
+              gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
 
-        program = gl.createProgram();
-        gl.attachShader(program, vs);
-        gl.attachShader(program, fs);
-        gl.linkProgram(program);
-        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return false;
-
-        var buf = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
-
-        var aPos = gl.getAttribLocation(program, "a_position");
-        gl.enableVertexAttribArray(aPos);
-        gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
-
-        gl.useProgram(program);
-        uRes = gl.getUniformLocation(program, "u_resolution");
-        uTime = gl.getUniformLocation(program, "u_time");
-        uMouse = gl.getUniformLocation(program, "u_mouse");
-        uQual = gl.getUniformLocation(program, "u_quality");
-        uZoom = gl.getUniformLocation(program, "u_zoom");
-
-        gl.uniform1f(uQual, isEco ? 0.0 : 1.0);
-        gl.uniform1f(uZoom, 1.0);
-        return true;
-      }
-
-      function resize() {
-        if (!isWebGL || !canvas) return;
-        var w = window.innerWidth, h = window.innerHeight;
-        var dw = Math.floor(w * DPR_CAP), dh = Math.floor(h * DPR_CAP);
-        if (canvas.width !== dw || canvas.height !== dh) {
-          canvas.width = dw; canvas.height = dh;
-          gl.viewport(0, 0, dw, dh);
-          gl.uniform2f(uRes, dw, dh);
+              timeU  = gl.getUniformLocation(program, "u_time");
+              resU   = gl.getUniformLocation(program, "u_resolution");
+              mouseU = gl.getUniformLocation(program, "u_mouse");
+              qualU  = gl.getUniformLocation(program, "u_quality");
+              zoomU  = gl.getUniformLocation(program, "u_zoom");
+            }
+          }
         }
       }
 
-      function render(now) {
-        if (!visible || !isWebGL) return;
-        if (now - lastFrameTime < FRAME_MS) {
-          rafId = requestAnimationFrame(render);
-          return;
+      function applyResize() {
+        if (!canvas) return;
+        var nw = Math.max(1, Math.round((window.innerWidth || 1) * DPR_CAP));
+        var nh = Math.max(1, Math.round((window.innerHeight || 1) * DPR_CAP));
+        if (Math.abs(canvas.width - nw) < 8 && Math.abs(canvas.height - nh) < 8) return;
+        canvas.width = nw;
+        canvas.height = nh;
+        if (isWebGL && gl) {
+          gl.viewport(0, 0, nw, nh);
         }
-        lastFrameTime = now;
-        var elapsed = (now - startTime) * 0.001;
+        draw(performance.now());
+      }
 
+      function draw(now) {
+        if (!canvas || !isWebGL || !gl || !program) return;
+        var tSec = (now - startTime) * 0.001;
         mouse.x += (mouse.tx - mouse.x) * 0.05;
         mouse.y += (mouse.ty - mouse.y) * 0.05;
 
-        gl.uniform1f(uTime, elapsed);
-        gl.uniform2f(uMouse, mouse.x, mouse.y);
+        gl.uniform1f(timeU, tSec);
+        gl.uniform2f(resU, canvas.width, canvas.height);
+        gl.uniform2f(mouseU, mouse.x, mouse.y);
+        gl.uniform1f(qualU, isEco ? 0.0 : 1.0);
+        gl.uniform1f(zoomU, ZOOM);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
-        rafId = requestAnimationFrame(render);
+      }
+
+      function loop(now) {
+        if (!visible || !isWebGL) return;
+        if (now - lastFrameTime >= FRAME_MS) {
+          lastFrameTime = now;
+          draw(now);
+        }
+        rafId = requestAnimationFrame(loop);
       }
 
       document.addEventListener("DOMContentLoaded", function () {
-        canvas = document.getElementById("sora-bg-canvas");
+        canvas = document.getElementById("bgFlowCanvas");
         if (!canvas) return;
 
-        isWebGL = buildGL();
-        if (!isWebGL) {
-          canvas.style.display = "none";
-          return;
-        }
-
+        buildWebGL();
         startTime = performance.now();
         lastFrameTime = startTime;
-        resize();
-        window.addEventListener("resize", resize, { passive: true });
+        applyResize();
+
+        window.addEventListener("resize", applyResize, { passive: true });
+        window.addEventListener("mousemove", function (e) {
+          mouse.tx = Math.max(0, Math.min(1, e.clientX / (window.innerWidth || 1)));
+          mouse.ty = Math.max(0, Math.min(1, 1 - e.clientY / (window.innerHeight || 1)));
+        }, { passive: true });
 
         document.addEventListener("visibilitychange", function () {
           visible = !document.hidden;
           if (visible && isWebGL) {
             lastFrameTime = performance.now();
-            rafId = requestAnimationFrame(render);
+            rafId = requestAnimationFrame(loop);
           } else if (rafId) {
             cancelAnimationFrame(rafId);
+            rafId = null;
           }
         });
 
-        if (!isMobile) {
-          window.addEventListener("mousemove", function (e) {
-            mouse.tx = (e.clientX / window.innerWidth) * 2 - 1;
-            mouse.ty = -(e.clientY / window.innerHeight) * 2 + 1;
-          }, { passive: true });
-        }
-
-        rafId = requestAnimationFrame(render);
+        rafId = requestAnimationFrame(loop);
       });
     })();
   </script>
@@ -767,14 +840,15 @@
 
 <body class="discord-page">
 
-  <!-- Background -->
-  <%- include('./partials/background') %>
+  <!-- Background (Pure match with Profile sorae.tokyo) -->
+  <div class="bg-wrapper" id="bgWrapper" aria-hidden="true">
+    <div class="bg-base-slate"></div>
+    <canvas class="bg-flow-canvas" id="bgFlowCanvas" data-sora-auto-scale></canvas>
+    <div class="bg-vignette-depth"></div>
+  </div>
 
-  <!-- MAIN CARD -->
+  <!-- MAIN CARD: LIQUID GLASS -->
   <main class="discord-horizontal-glass" id="discordGlassFrame" aria-label="Sora's Station Discord Server">
-    
-    <!-- Ambient Banner Backlight inside Glass -->
-    <div class="glass-ambient-backdrop" aria-hidden="true"></div>
 
     <!-- LEFT PANEL: Brand, Tagline, Invite CTA -->
     <section class="glass-left-panel" aria-label="Server Information">
@@ -912,7 +986,7 @@
 
   </main>
 
-  <!-- Interactive Glass Sheen Tracking -->
+  <!-- Interactive Liquid Sheen Tracking -->
   <script>
     (function () {
       "use strict";
@@ -939,7 +1013,6 @@
         event.stopPropagation();
         var invite = button.getAttribute("data-invite") || "https://discord.gg/YzEaab34kV";
         
-        // Dynamically trigger anchor click with target="_blank"
         var link = document.createElement("a");
         link.href = invite;
         link.target = "_blank";
