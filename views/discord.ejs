@@ -124,7 +124,7 @@
       position: relative;
       z-index: 10;
       width: 100%;
-      max-width: 880px;
+      max-width: 860px;
       display: flex;
       flex-direction: row;
       border-radius: 28px;
@@ -183,7 +183,7 @@
     /* ── LEFT PANEL ── */
     .glass-left-panel {
       flex: 1 1 0;
-      padding: 42px 38px;
+      padding: 44px 40px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -197,14 +197,14 @@
       display: flex;
       align-items: center;
       gap: 18px;
-      margin-bottom: 24px;
+      margin-bottom: 26px;
     }
 
     .guild-avatar-container {
       position: relative;
-      width: 70px;
-      height: 70px;
-      border-radius: 20px;
+      width: 72px;
+      height: 72px;
+      border-radius: 21px;
       background: linear-gradient(135deg, rgba(55, 61, 76, 0.9), rgba(20, 23, 31, 0.95));
       border: 1px solid rgba(255, 255, 255, 0.18);
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.12);
@@ -218,7 +218,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 19px;
+      border-radius: 20px;
       display: block;
       transform: scale(1.035);
       transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -255,11 +255,11 @@
 
     /* Hero Text */
     .editorial-hero-text {
-      margin-bottom: 26px;
+      margin-bottom: 28px;
       text-align: left;
     }
     .editorial-title {
-      font-size: clamp(1.85rem, 3.1vw, 2.35rem);
+      font-size: clamp(1.85rem, 3.2vw, 2.45rem);
       line-height: 1.18;
       font-weight: 800;
       letter-spacing: -0.03em;
@@ -269,11 +269,11 @@
       text-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
     }
     .editorial-desc {
-      font-size: 0.93rem;
+      font-size: 0.94rem;
       color: rgba(203, 213, 225, 0.72);
       font-weight: 400;
-      line-height: 1.62;
-      max-width: 380px;
+      line-height: 1.65;
+      max-width: 360px;
     }
 
     /* Actions Group */
@@ -291,15 +291,15 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 11px;
-      padding: 12px 24px;
+      gap: 12px;
+      padding: 13px 26px;
       background: #ffffff;
       color: #0c0d12;
       border: none;
       outline: none;
       border-radius: 9999px;
       font-family: var(--font-sans);
-      font-size: 0.94rem;
+      font-size: 0.96rem;
       font-weight: 700;
       text-decoration: none;
       letter-spacing: 0.01em;
@@ -330,8 +330,8 @@
       outline-offset: 4px;
     }
     .btn-join-discord-icon {
-      width: 19px;
-      height: 19px;
+      width: 20px;
+      height: 20px;
       fill: currentColor;
       flex-shrink: 0;
     }
@@ -345,38 +345,32 @@
       transform: translateX(3px);
     }
 
-    /* Secondary Action: Time Works Pill Button */
-    .btn-timeworks-action {
+    /* Subdomain Link: Time Works */
+    .btn-timework-link {
       appearance: none;
-      -webkit-appearance: none;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
       gap: 8px;
-      padding: 12px 18px;
+      padding: 12px 20px;
       background: rgba(255, 255, 255, 0.05);
-      color: rgba(255, 255, 255, 0.88);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      outline: none;
       border-radius: 9999px;
+      color: rgba(255, 255, 255, 0.88);
       font-family: var(--font-sans);
       font-size: 0.88rem;
       font-weight: 600;
-      cursor: pointer;
+      text-decoration: none;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
       user-select: none;
     }
-    .btn-timeworks-action:hover {
-      background: rgba(255, 255, 255, 0.10);
+    .btn-timework-link:hover {
+      background: rgba(255, 255, 255, 0.11);
       border-color: rgba(255, 255, 255, 0.24);
       color: #ffffff;
       transform: translateY(-2px);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-    }
-    .btn-timeworks-action:active {
-      transform: translateY(0);
     }
     .btn-tw-icon {
       width: 16px;
@@ -384,71 +378,16 @@
       stroke: #818cf8;
       flex-shrink: 0;
     }
-    .btn-tw-badge {
-      font-size: 0.68rem;
-      font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 9999px;
-      line-height: 1;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .btn-tw-badge.active {
-      background: rgba(34, 197, 94, 0.16);
-      color: #4ade80;
-      border: 1px solid rgba(34, 197, 94, 0.3);
-    }
-    .btn-tw-badge.closed {
-      background: rgba(148, 163, 184, 0.14);
-      color: #94a3b8;
-      border: 1px solid rgba(148, 163, 184, 0.25);
-    }
-
-    /* Left Panel Perks Pill Strip */
-    .perks-strip-horizontal {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      flex-wrap: wrap;
-      margin-top: 26px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.065);
-    }
-    .perk-pill-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 5px 12px;
-      border-radius: 9999px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      font-size: 0.78rem;
-      color: #cbd5e1;
-      font-weight: 600;
-      transition: all 0.2s ease;
-    }
-    .perk-pill-badge:hover {
-      background: rgba(255, 255, 255, 0.08);
-      color: #ffffff;
-      border-color: rgba(255, 255, 255, 0.16);
-      transform: translateY(-1px);
-    }
-    .perk-pill-icon {
-      width: 14px;
-      height: 14px;
-      color: rgba(255, 255, 255, 0.65);
-      flex-shrink: 0;
-    }
 
     /* ── RIGHT PANEL ── */
     .glass-right-panel {
-      flex: 0 0 330px;
-      padding: 38px 28px;
+      flex: 0 0 320px;
+      padding: 40px 32px;
       background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.012));
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: 18px;
+      gap: 22px;
       position: relative;
       z-index: 2;
     }
@@ -459,25 +398,25 @@
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: rgba(255, 255, 255, 0.38);
-      margin-bottom: -6px;
+      margin-bottom: -10px;
     }
 
     /* Stats Stack */
     .stats-stack {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
     .stat-item-box {
       position: relative;
       overflow: hidden;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.085);
-      border-radius: 16px;
-      padding: 13px 16px;
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 18px;
+      padding: 16px 18px;
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 15px;
       transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .stat-item-box::before {
@@ -488,15 +427,15 @@
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 45%);
     }
     .stat-item-box:hover {
-      background: rgba(255, 255, 255, 0.065);
-      border-color: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.068);
+      border-color: rgba(255, 255, 255, 0.16);
       transform: translateY(-1px);
     }
 
     .stat-badge-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 11px;
+      width: 42px;
+      height: 42px;
+      border-radius: 13px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -511,8 +450,8 @@
       border: 1px solid rgba(34, 197, 94, 0.25);
     }
     .stat-badge-icon svg {
-      width: 19px;
-      height: 19px;
+      width: 20px;
+      height: 20px;
     }
 
     .stat-data {
@@ -520,16 +459,16 @@
       min-width: 0;
     }
     .stat-label-text {
-      font-size: 0.69rem;
+      font-size: 0.72rem;
       color: #728096;
       font-weight: 600;
       letter-spacing: 0.02em;
       text-transform: uppercase;
       line-height: 1;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
     }
     .stat-number-value {
-      font-size: 1.5rem;
+      font-size: 1.65rem;
       font-weight: 800;
       color: #ffffff;
       letter-spacing: -0.03em;
@@ -557,300 +496,60 @@
       50% { opacity: 0.62; }
     }
 
-    /* ── TIME WORKS CARD ── */
-    .timeworks-card {
-      position: relative;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.085);
-      border-radius: 16px;
-      padding: 14px 16px;
+    /* Perks */
+    .perks-panel {
+      border-top: 1px solid rgba(255, 255, 255, 0.065);
+      padding-top: 18px;
+    }
+    .perks-list-clean {
+      list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      cursor: pointer;
-      transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .timeworks-card:hover {
-      background: rgba(255, 255, 255, 0.065);
-      border-color: rgba(255, 255, 255, 0.16);
-      transform: translateY(-1px);
-    }
-    .timeworks-card:focus-visible {
-      outline: 2px solid rgba(255, 255, 255, 0.3);
-      outline-offset: 2px;
-    }
-
-    .tw-card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-    .tw-header-title {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.9);
-    }
-    .tw-header-icon {
-      width: 14px;
-      height: 14px;
-      stroke: #818cf8;
-      flex-shrink: 0;
-    }
-
-    .tw-status-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 3px 8px;
-      border-radius: 9999px;
-      font-size: 0.66rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      line-height: 1;
-    }
-    .tw-status-tag.active {
-      background: rgba(34, 197, 94, 0.15);
-      color: #4ade80;
-      border: 1px solid rgba(34, 197, 94, 0.3);
-    }
-    .tw-status-tag.closed {
-      background: rgba(148, 163, 184, 0.12);
-      color: #94a3b8;
-      border: 1px solid rgba(148, 163, 184, 0.22);
-    }
-    .tw-pulse-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: currentColor;
-    }
-    .tw-status-tag.active .tw-pulse-dot {
-      box-shadow: 0 0 6px currentColor;
-      animation: statusPulse 2s infinite ease-in-out;
-    }
-    @keyframes statusPulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
-    }
-
-    .tw-schedule-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .tw-schedule-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.8rem;
-      line-height: 1.25;
-    }
-    .tw-day-label {
-      color: rgba(203, 213, 225, 0.72);
-      font-weight: 500;
-    }
-    .tw-hours-value {
-      color: #ffffff;
-      font-weight: 700;
-      font-variant-numeric: tabular-nums;
-      letter-spacing: -0.01em;
-    }
-
-    .tw-meta-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-top: 8px;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      font-size: 0.68rem;
-      color: rgba(255, 255, 255, 0.42);
-    }
-    .tw-clock-digits {
-      font-variant-numeric: tabular-nums;
-      font-weight: 600;
-      color: rgba(255, 255, 255, 0.7);
-    }
-
-    /* ── TIME WORKS MODAL ── */
-    .tw-modal-backdrop {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      background: rgba(12, 14, 20, 0.75);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .tw-modal-backdrop.open {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .tw-modal-container {
-      position: relative;
-      width: 100%;
-      max-width: 460px;
-      background: rgba(38, 42, 51, 0.88);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 24px;
-      box-shadow:
-        0 40px 80px -15px rgba(0, 0, 0, 0.9),
-        0 0 0 1px rgba(255, 255, 255, 0.08) inset;
-      padding: 30px 28px;
-      transform: scale(0.95) translateY(14px);
-      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .tw-modal-backdrop.open .tw-modal-container {
-      transform: scale(1) translateY(0);
-    }
-
-    .tw-modal-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-    .tw-modal-title {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: #ffffff;
-      letter-spacing: -0.02em;
-      margin-bottom: 4px;
-    }
-    .tw-modal-subtitle {
-      font-size: 0.82rem;
-      color: rgba(203, 213, 225, 0.68);
-    }
-    .tw-modal-close-btn {
-      appearance: none;
-      border: none;
-      background: rgba(255, 255, 255, 0.06);
-      border-radius: 9999px;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: rgba(255, 255, 255, 0.6);
-      transition: all 0.2s ease;
-      flex-shrink: 0;
-    }
-    .tw-modal-close-btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      color: #ffffff;
-      transform: scale(1.05);
-    }
-
-    .tw-modal-cards-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-    .tw-detail-card {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
-      padding: 14px 16px;
-    }
-    .tw-detail-card-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 6px;
-    }
-    .tw-detail-days {
-      font-size: 0.86rem;
-      font-weight: 700;
-      color: #ffffff;
-    }
-    .tw-detail-hours {
-      font-size: 0.92rem;
-      font-weight: 800;
-      color: #818cf8;
-      font-variant-numeric: tabular-nums;
-    }
-    .tw-detail-note {
-      font-size: 0.77rem;
-      color: rgba(203, 213, 225, 0.65);
-      line-height: 1.45;
-    }
-
-    .tw-notice-box {
-      background: rgba(88, 101, 242, 0.08);
-      border: 1px solid rgba(88, 101, 242, 0.2);
-      border-radius: 14px;
-      padding: 12px 14px;
-      display: flex;
-      align-items: flex-start;
       gap: 11px;
-      margin-bottom: 20px;
     }
-    .tw-notice-icon {
-      width: 16px;
-      height: 16px;
-      stroke: #818cf8;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-    .tw-notice-text {
-      font-size: 0.76rem;
-      color: rgba(226, 232, 240, 0.85);
-      line-height: 1.5;
-    }
-
-    .tw-modal-footer {
+    .perk-item-clean {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding-top: 14px;
-      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      gap: 10px;
+      font-size: 0.83rem;
+      color: #cbd5e1;
+      font-weight: 600;
+      transition: color 0.2s ease, transform 0.2s ease;
     }
-    .tw-modal-clock-box {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      font-size: 0.74rem;
+    .perk-item-clean:hover {
+      color: #ffffff;
+      transform: translateX(2px);
+    }
+    .perk-bullet-svg {
+      width: 15px;
+      height: 15px;
       color: rgba(255, 255, 255, 0.65);
+      flex-shrink: 0;
     }
 
     /* ── RESPONSIVE DESIGN ── */
-    @media (max-width: 780px) {
+    @media (max-width: 760px) {
       .discord-horizontal-glass {
         flex-direction: column;
         border-radius: 25px;
         max-width: 480px;
       }
       .glass-left-panel {
-        padding: 34px 26px 26px;
+        padding: 34px 28px 28px;
         border-right: none;
         border-bottom: 1px solid rgba(255, 255, 255, 0.075);
       }
       .glass-right-panel {
         flex: none;
-        padding: 26px 26px 32px;
+        padding: 28px 28px 34px;
       }
       .guild-avatar-container {
-        width: 66px;
-        height: 66px;
-        border-radius: 19px;
+        width: 68px;
+        height: 68px;
+        border-radius: 20px;
       }
       .guild-icon-image {
-        border-radius: 18px;
+        border-radius: 19px;
       }
       .stats-stack {
         flex-direction: row;
@@ -860,8 +559,8 @@
         flex: 1;
         flex-direction: column;
         align-items: flex-start;
-        padding: 13px 14px;
-        gap: 8px;
+        padding: 14px;
+        gap: 10px;
       }
       .stat-number-value {
         font-size: 1.35rem;
@@ -876,8 +575,8 @@
         gap: 14px;
       }
       .guild-avatar-container {
-        width: 60px;
-        height: 60px;
+        width: 62px;
+        height: 62px;
       }
       .guild-display-name {
         font-size: 1.08rem;
@@ -886,7 +585,7 @@
         flex-direction: column;
         align-items: stretch;
       }
-      .btn-join-action, .btn-timeworks-action {
+      .btn-join-action, .btn-timework-link {
         width: 100%;
         justify-content: center;
       }
@@ -1071,13 +770,13 @@
   <!-- Background -->
   <%- include('./partials/background') %>
 
-  <!-- MAIN HORIZONTAL GLASS CARD -->
+  <!-- MAIN CARD -->
   <main class="discord-horizontal-glass" id="discordGlassFrame" aria-label="Sora's Station Discord Server">
     
-    <!-- Ambient Backlight -->
+    <!-- Ambient Banner Backlight inside Glass -->
     <div class="glass-ambient-backdrop" aria-hidden="true"></div>
 
-    <!-- LEFT PANEL: Brand, Tagline, Actions, Perks -->
+    <!-- LEFT PANEL: Brand, Tagline, Invite CTA -->
     <section class="glass-left-panel" aria-label="Server Information">
       <div>
         <div class="guild-header-row">
@@ -1108,67 +807,42 @@
         </div>
       </div>
 
-      <div>
-        <!-- Action Buttons: Join Discord + Time Works -->
-        <div class="cta-actions-group">
-          <!-- Join Discord Button (Target _blank dynamically, never navigates current page) -->
-          <button type="button"
-                  class="btn-join-action"
-                  id="joinDiscordBtn"
-                  data-invite="<%= typeof discordServerInvite !== 'undefined' ? discordServerInvite : 'https://discord.gg/YzEaab34kV' %>"
-                  aria-label="Join Sora's Station Discord Server">
-            <svg class="btn-join-discord-icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
-            </svg>
-            <span>Join Discord</span>
-            <svg class="btn-join-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <line x1="5" y1="12" x2="19" y2="12"/>
-              <polyline points="12 5 19 12 12 19"/>
-            </svg>
-          </button>
+      <!-- Action Buttons Row: Join Discord + Time Works Subdomain Link -->
+      <div class="cta-actions-group">
+        <!-- Join Discord Button (Target _blank dynamically, never navigates current page) -->
+        <button type="button"
+                class="btn-join-action"
+                id="joinDiscordBtn"
+                data-invite="<%= typeof discordServerInvite !== 'undefined' ? discordServerInvite : 'https://discord.gg/YzEaab34kV' %>"
+                aria-label="Join Sora's Station Discord Server">
+          <svg class="btn-join-discord-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+          </svg>
+          <span>Join Discord</span>
+          <svg class="btn-join-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </button>
 
-          <!-- Time Works Button -->
-          <button type="button"
-                  class="btn-timeworks-action"
-                  id="openTimeWorksBtn"
-                  aria-label="Xem chi tiết Khung Giờ Hoạt Động (Time Works)">
-            <svg class="btn-tw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="10"/>
-              <polyline points="12 6 12 12 16 14"/>
-            </svg>
-            <span>Time Works</span>
-            <span class="btn-tw-badge active" id="btnLiveStatusBadge">Online</span>
-          </button>
-        </div>
-
-        <!-- Features / Perks Row -->
-        <div class="perks-strip-horizontal">
-          <div class="perk-pill-badge">
-            <svg class="perk-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              <polyline points="9 12 11 14 15 10"/>
-            </svg>
-            <span>Uy Tín</span>
-          </div>
-          <div class="perk-pill-badge">
-            <svg class="perk-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
-              <circle cx="7" cy="7" r="1.5" fill="currentColor"/>
-            </svg>
-            <span>Giá Rẻ</span>
-          </div>
-          <div class="perk-pill-badge">
-            <svg class="perk-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-            </svg>
-            <span>Chất Lượng</span>
-          </div>
-        </div>
+        <!-- Time Works Subdomain Link -->
+        <a href="https://timework.sorae.tokyo"
+           class="btn-timework-link"
+           id="timeworkSubdomainBtn"
+           target="_blank"
+           rel="noopener noreferrer"
+           aria-label="Xem Khung Giờ Hoạt Động (Time Works)">
+          <svg class="btn-tw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <span>Time Works</span>
+        </a>
       </div>
     </section>
 
-    <!-- RIGHT PANEL: GUILD STATS & TIME WORKS -->
-    <aside class="glass-right-panel" aria-label="Guild Stats & Time Works">
+    <!-- RIGHT PANEL: LIVE STATS & PERKS -->
+    <aside class="glass-right-panel" aria-label="Live Server Stats">
       <div class="section-eyebrow">Guild Statistics</div>
 
       <div class="stats-stack">
@@ -1188,7 +862,7 @@
           </div>
         </div>
 
-        <!-- ONLINE MEMBERS (No green dot before count) -->
+        <!-- ONLINE MEMBERS (No green dot) -->
         <div class="stat-item-box">
           <div class="stat-badge-icon online" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="rgba(34,197,94,0.95)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -1205,98 +879,38 @@
         </div>
       </div>
 
-      <!-- TIME WORKS CARD -->
-      <div class="timeworks-card" id="timeWorksCard" role="button" tabindex="0" aria-label="Xem chi tiết Khung Giờ Hoạt Động (Time Works)">
-        <div class="tw-card-header">
-          <div class="tw-header-title">
-            <svg class="tw-header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="10"/>
-              <polyline points="12 6 12 12 16 14"/>
+      <!-- FEATURES / PERKS -->
+      <div class="perks-panel">
+        <ul class="perks-list-clean" role="list">
+          <li class="perk-item-clean">
+            <!-- Uy Tín: Shield Checkmark SVG -->
+            <svg class="perk-bullet-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <polyline points="9 12 11 14 15 10"/>
             </svg>
-            <span>Time Works</span>
-          </div>
-          <div class="tw-status-tag active" id="twLiveBadge">
-            <span class="tw-pulse-dot" aria-hidden="true"></span>
-            <span id="twLiveStatusText">Đang Hoạt Động</span>
-          </div>
-        </div>
-
-        <div class="tw-schedule-list">
-          <div class="tw-schedule-row">
-            <span class="tw-day-label">Thứ 2 — Thứ 6</span>
-            <span class="tw-hours-value">07:00 — 23:00</span>
-          </div>
-          <div class="tw-schedule-row">
-            <span class="tw-day-label">Thứ 7 — CN</span>
-            <span class="tw-hours-value">10:00 — 23:30</span>
-          </div>
-        </div>
-
-        <div class="tw-meta-footer">
-          <span>GMT+7 Vietnam</span>
-          <span class="tw-clock-digits" id="twLiveClock">--:--:--</span>
-        </div>
+            <span>Uy Tín</span>
+          </li>
+          <li class="perk-item-clean">
+            <!-- Giá Rẻ: Value Tag SVG -->
+            <svg class="perk-bullet-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+              <circle cx="7" cy="7" r="1.5" fill="currentColor"/>
+            </svg>
+            <span>Giá Rẻ</span>
+          </li>
+          <li class="perk-item-clean">
+            <!-- Chất Lượng: Premium Star Quality SVG -->
+            <svg class="perk-bullet-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            <span>Chất Lượng</span>
+          </li>
+        </ul>
       </div>
 
     </aside>
 
   </main>
-
-  <!-- TIME WORKS MODAL DIALOG -->
-  <div class="tw-modal-backdrop" id="twModalBackdrop" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="tw-modal-container">
-      <div class="tw-modal-header">
-        <div>
-          <h3 class="tw-modal-title">Khung Giờ Hoạt Động</h3>
-          <p class="tw-modal-subtitle">Sora's Station • Lịch Phục Vụ & Tiếp Nhận Đơn Hàng</p>
-        </div>
-        <button type="button" class="tw-modal-close-btn" id="twModalCloseBtn" aria-label="Đóng bảng giờ làm việc">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
-      </div>
-
-      <div class="tw-modal-cards-grid">
-        <div class="tw-detail-card">
-          <div class="tw-detail-card-head">
-            <span class="tw-detail-days">Thứ Hai — Thứ Sáu</span>
-            <span class="tw-detail-hours">07:00 — 23:00</span>
-          </div>
-          <p class="tw-detail-note">Tư vấn, giao dịch và xử lý đơn hàng liên tục trong ngày.</p>
-        </div>
-
-        <div class="tw-detail-card">
-          <div class="tw-detail-card-head">
-            <span class="tw-detail-days">Thứ Bảy — Chủ Nhật</span>
-            <span class="tw-detail-hours">10:00 — 23:30</span>
-          </div>
-          <p class="tw-detail-note">Hỗ trợ kỹ thuật, chăm sóc khách hàng và tiếp nhận dịch vụ cuối tuần.</p>
-        </div>
-      </div>
-
-      <div class="tw-notice-box">
-        <svg class="tw-notice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="8" x2="12" y2="12"/>
-          <line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
-        <p class="tw-notice-text">
-          Vui lòng hạn chế ping ngoài khung giờ phục vụ. Sora's Station luôn sẵn sàng hỗ trợ và đồng hành cùng quý khách!
-        </p>
-      </div>
-
-      <div class="tw-modal-footer">
-        <div class="tw-modal-clock-box">
-          <span id="twModalStatusText" style="color: #4ade80; font-weight: 700;">Đang hoạt động</span>
-          <span>•</span>
-          <span id="twModalClock">--:--:--</span>
-          <span>(GMT+7)</span>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Interactive Glass Sheen Tracking -->
   <script>
@@ -1325,6 +939,7 @@
         event.stopPropagation();
         var invite = button.getAttribute("data-invite") || "https://discord.gg/YzEaab34kV";
         
+        // Dynamically trigger anchor click with target="_blank"
         var link = document.createElement("a");
         link.href = invite;
         link.target = "_blank";
@@ -1337,127 +952,6 @@
             link.parentNode.removeChild(link);
           }
         }, 150);
-      });
-    })();
-  </script>
-
-  <!-- Time Works Engine (Live GMT+7 Vietnam Schedule & Clock) -->
-  <script>
-    (function () {
-      "use strict";
-
-      var badge = document.getElementById("twLiveBadge");
-      var text = document.getElementById("twLiveStatusText");
-      var clockEl = document.getElementById("twLiveClock");
-      var btnBadge = document.getElementById("btnLiveStatusBadge");
-      var modalStatusText = document.getElementById("twModalStatusText");
-      var modalClock = document.getElementById("twModalClock");
-
-      function getVnDate() {
-        var now = new Date();
-        // Vietnam is UTC+7
-        var utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-        return new Date(utc + (3600000 * 7));
-      }
-
-      function pad(n) {
-        return n < 10 ? "0" + n : n;
-      }
-
-      function checkWorkingHours() {
-        var vn = getVnDate();
-        var day = vn.getDay(); // 0 is Sunday, 1 is Monday ... 6 is Saturday
-        var hours = vn.getHours();
-        var mins = vn.getMinutes();
-        var currentMinutes = hours * 60 + mins;
-
-        var isOpen = false;
-
-        if (day >= 1 && day <= 5) {
-          // Mon - Fri: 07:00 to 23:00 (7*60 = 420 to 23*60 = 1380)
-          isOpen = currentMinutes >= 420 && currentMinutes < 1380;
-        } else {
-          // Sat - Sun: 10:00 to 23:30 (10*60 = 600 to 23*60+30 = 1410)
-          isOpen = currentMinutes >= 600 && currentMinutes < 1410;
-        }
-
-        var timeString = pad(hours) + ":" + pad(mins) + ":" + pad(vn.getSeconds());
-
-        if (clockEl) clockEl.textContent = timeString;
-        if (modalClock) modalClock.textContent = timeString;
-
-        if (isOpen) {
-          if (badge) {
-            badge.className = "tw-status-tag active";
-          }
-          if (text) text.textContent = "Đang Hoạt Động";
-          if (btnBadge) {
-            btnBadge.className = "btn-tw-badge active";
-            btnBadge.textContent = "Online";
-          }
-          if (modalStatusText) {
-            modalStatusText.textContent = "Đang Hoạt Động";
-            modalStatusText.style.color = "#4ade80";
-          }
-        } else {
-          if (badge) {
-            badge.className = "tw-status-tag closed";
-          }
-          if (text) text.textContent = "Nghỉ Phục Vụ";
-          if (btnBadge) {
-            btnBadge.className = "btn-tw-badge closed";
-            btnBadge.textContent = "Offline";
-          }
-          if (modalStatusText) {
-            modalStatusText.textContent = "Nghỉ Phục Vụ";
-            modalStatusText.style.color = "#94a3b8";
-          }
-        }
-      }
-
-      checkWorkingHours();
-      setInterval(checkWorkingHours, 1000);
-
-      // Modal Controls
-      var modal = document.getElementById("twModalBackdrop");
-      var openBtn = document.getElementById("openTimeWorksBtn");
-      var cardBtn = document.getElementById("timeWorksCard");
-      var closeBtn = document.getElementById("twModalCloseBtn");
-
-      function openModal() {
-        if (!modal) return;
-        modal.classList.add("open");
-        modal.setAttribute("aria-hidden", "false");
-        document.body.style.overflow = "hidden";
-      }
-
-      function closeModal() {
-        if (!modal) return;
-        modal.classList.remove("open");
-        modal.setAttribute("aria-hidden", "true");
-        document.body.style.overflow = "";
-      }
-
-      if (openBtn) openBtn.addEventListener("click", openModal);
-      if (cardBtn) cardBtn.addEventListener("click", openModal);
-      if (cardBtn) {
-        cardBtn.addEventListener("keydown", function (e) {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            openModal();
-          }
-        });
-      }
-      if (closeBtn) closeBtn.addEventListener("click", closeModal);
-      if (modal) {
-        modal.addEventListener("click", function (e) {
-          if (e.target === modal) closeModal();
-        });
-      }
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && modal && modal.classList.contains("open")) {
-          closeModal();
-        }
       });
     })();
   </script>

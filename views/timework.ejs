@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <meta name="description" content="<%= description %>" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="<%= author %>" />
+  <meta name="theme-color" content="#2f323a" />
+  <link rel="canonical" href="<%= canonicalUrl %>">
+
+  <!-- Progressive Web App (PWA) -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Sora's Station — Time Works" />
+
+  <!-- Vercel Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
+  <script defer src="/_vercel/insights/script.js"></script>
+
+  <!-- Social Discovery & OpenGraph Meta -->
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="vi_VN" />
+  <meta property="og:site_name" content="Sora's Station" />
+  <meta property="og:title" content="<%= title %>" />
+  <meta property="og:description" content="<%= description %>" />
+  <meta property="og:url" content="<%= canonicalUrl %>" />
+  <meta property="og:image" content="<%= typeof siteUrl !== 'undefined' ? siteUrl : 'https://timework.sorae.tokyo' %>/assets/banner.jpg" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="675" />
+
+  <!-- Twitter / Discord Large Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="<%= title %>" />
+  <meta name="twitter:description" content="<%= description %>" />
+  <meta name="twitter:image" content="<%= typeof siteUrl !== 'undefined' ? siteUrl : 'https://timework.sorae.tokyo' %>/assets/banner.jpg" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="<%= typeof faviconDataUri !== 'undefined' ? faviconDataUri : '/assets/favicon.png' %>" />
+  <link rel="shortcut icon" type="image/png" href="/assets/favicon.png" />
+  <link rel="apple-touch-icon" href="/assets/favicon.png" />
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg-base: #3b3e47;
+      --bg-slate-dark: #2f323a;
+      --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+      --color-discord: #5865f2;
+      --color-online: #22c55e;
+      --mouse-x: 50%;
+      --mouse-y: 50%;
+    }
+
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100%;
+      background-color: var(--bg-base);
+      color: #ffffff;
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      position: relative;
+      padding: clamp(20px, 4vw, 48px) 20px;
+    }
+
+    /* ── BACKGROUND ── */
+    .bg-wrapper {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+      contain: strict;
+    }
+
+    #sora-bg-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .bg-film-grain {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 40%, rgba(255, 255, 255, 0.035) 0%, transparent 75%);
+      mix-blend-mode: overlay;
+      pointer-events: none;
+    }
+
+    /* ── TIMEWORKS GLASS CONTAINER ── */
+    .timework-glass-container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 820px;
+      display: flex;
+      flex-direction: column;
+      border-radius: 28px;
+      background: rgba(47, 50, 58, 0.52);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow:
+        0 42px 100px -22px rgba(0, 0, 0, 0.88),
+        0 16px 38px rgba(0, 0, 0, 0.26),
+        0 0 0 1px rgba(255, 255, 255, 0.08),
+        inset 0 1px 1px rgba(255, 255, 255, 0.32);
+      overflow: hidden;
+      padding: clamp(28px, 4.5vw, 42px);
+      animation: glassFadeIn 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      gap: 26px;
+    }
+
+    .timework-glass-container::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(
+        750px circle at var(--mouse-x) var(--mouse-y),
+        rgba(255, 255, 255, 0.08),
+        transparent 50%
+      );
+      z-index: 1;
+      opacity: 0.85;
+      transition: opacity 0.3s ease;
+    }
+
+    .ambient-glow {
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 440px;
+      height: 440px;
+      background: radial-gradient(circle, rgba(129, 140, 248, 0.14) 0%, rgba(34, 197, 94, 0.06) 45%, transparent 70%);
+      filter: blur(60px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes glassFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(22px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* ── HEADER ROW ── */
+    .tw-top-bar {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding-bottom: 22px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .tw-brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .tw-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(55, 61, 76, 0.9), rgba(20, 23, 31, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .tw-brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+    .tw-brand-name {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+    .tw-brand-sub {
+      font-size: 0.76rem;
+      color: rgba(203, 213, 225, 0.65);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* Live Status & Clock Widget */
+    .tw-status-cluster {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .tw-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.25s ease;
+    }
+    .tw-status-badge.active {
+      background: rgba(34, 197, 94, 0.16);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.32);
+      box-shadow: 0 0 16px rgba(34, 197, 94, 0.2);
+    }
+    .tw-status-badge.closed {
+      background: rgba(148, 163, 184, 0.12);
+      color: #cbd5e1;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+    }
+    .tw-dot-indicator {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    .tw-status-badge.active .tw-dot-indicator {
+      box-shadow: 0 0 8px currentColor;
+      animation: dotPulse 2s infinite ease-in-out;
+    }
+    @keyframes dotPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.85); }
+    }
+
+    .tw-clock-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 13px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      font-size: 0.78rem;
+      color: rgba(226, 232, 240, 0.85);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .tw-clock-icon {
+      width: 14px;
+      height: 14px;
+      stroke: #818cf8;
+      flex-shrink: 0;
+    }
+
+    /* ── HERO TITLE ── */
+    .tw-hero-section {
+      position: relative;
+      z-index: 2;
+    }
+    .tw-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #818cf8;
+      margin-bottom: 6px;
+    }
+    .tw-main-heading {
+      font-size: clamp(1.85rem, 3.4vw, 2.5rem);
+      line-height: 1.16;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+      margin-bottom: 8px;
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+    }
+    .tw-hero-desc {
+      font-size: 0.94rem;
+      color: rgba(203, 213, 225, 0.75);
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    /* ── SCHEDULE CARDS GRID ── */
+    .tw-schedule-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .tw-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 20px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .tw-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 45%);
+    }
+    .tw-card:hover {
+      background: rgba(255, 255, 255, 0.068);
+      border-color: rgba(255, 255, 255, 0.16);
+      transform: translateY(-2px);
+    }
+
+    .tw-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .tw-card-day-title {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.01em;
+    }
+    .tw-card-icon-badge {
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+      background: rgba(129, 140, 248, 0.14);
+      border: 1px solid rgba(129, 140, 248, 0.26);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .tw-card-icon-badge svg {
+      width: 18px;
+      height: 18px;
+      stroke: #818cf8;
+    }
+
+    .tw-card-hours-box {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+    .tw-card-hours-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: rgba(203, 213, 225, 0.65);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .tw-card-hours-digits {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tw-card-desc {
+      font-size: 0.83rem;
+      color: rgba(203, 213, 225, 0.72);
+      line-height: 1.55;
+    }
+
+    .tw-card-tags {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-top: auto;
+    }
+    .tw-mini-tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    /* ── NOTICE BOX ── */
+    .tw-guideline-box {
+      position: relative;
+      z-index: 2;
+      background: rgba(88, 101, 242, 0.07);
+      border: 1px solid rgba(88, 101, 242, 0.22);
+      border-radius: 18px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .tw-guideline-icon {
+      width: 22px;
+      height: 22px;
+      stroke: #818cf8;
+      flex-shrink: 0;
+    }
+    .tw-guideline-text {
+      font-size: 0.84rem;
+      color: rgba(226, 232, 240, 0.88);
+      line-height: 1.55;
+    }
+
+    /* ── ACTIONS BAR ── */
+    .tw-actions-row {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding-top: 10px;
+    }
+
+    .tw-primary-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Primary Discord Join Button */
+    .btn-action-discord {
+      appearance: none;
+      -webkit-appearance: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 11px;
+      padding: 12px 24px;
+      background: #ffffff;
+      color: #0c0d12;
+      border: none;
+      outline: none;
+      border-radius: 9999px;
+      font-family: var(--font-sans);
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-decoration: none;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      box-shadow:
+        0 8px 24px rgba(255, 255, 255, 0.12),
+        0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+      transition:
+        transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+        background-color 0.2s ease;
+      user-select: none;
+    }
+    .btn-action-discord:hover {
+      transform: translateY(-2px) scale(1.02);
+      background: #f1f5f9;
+      box-shadow:
+        0 16px 36px rgba(255, 255, 255, 0.20),
+        0 0 0 1px rgba(255, 255, 255, 0.62) inset;
+    }
+    .btn-action-discord:active {
+      transform: translateY(0) scale(0.985);
+    }
+    .btn-action-discord svg {
+      width: 19px;
+      height: 19px;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+    .btn-arrow-right {
+      width: 14px;
+      height: 14px;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+    .btn-action-discord:hover .btn-arrow-right {
+      transform: translateX(3px);
+    }
+
+    /* Secondary Nav Links */
+    .btn-nav-glass {
+      appearance: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 9999px;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 0.86rem;
+      font-weight: 600;
+      text-decoration: none;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-nav-glass:hover {
+      background: rgba(255, 255, 255, 0.11);
+      border-color: rgba(255, 255, 255, 0.24);
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+    .btn-nav-glass svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+      flex-shrink: 0;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 720px) {
+      .tw-schedule-grid {
+        grid-template-columns: 1fr;
+      }
+      .tw-top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+      }
+      .tw-status-cluster {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .tw-actions-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .tw-primary-links {
+        flex-direction: column;
+        width: 100%;
+      }
+      .btn-action-discord, .btn-nav-glass {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+
+  <!-- WebGL Background Engine -->
+  <script id="sora-bg-engine">
+    (function () {
+      "use strict";
+      var isMobile = /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent)
+        || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      var isEco = isMobile || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4)
+        || (navigator.deviceMemory && navigator.deviceMemory <= 4);
+      var DPR_CAP = isEco ? 0.9 : Math.min(window.devicePixelRatio || 1, 1.2);
+      var FPS = isEco ? 35 : 60;
+      var FRAME_MS = 1000 / FPS;
+
+      var VS = "attribute vec2 a_position; void main(){gl_Position=vec4(a_position,0.0,1.0);}";
+      var FS = [
+        "precision mediump float;",
+        "uniform vec2 u_resolution; uniform float u_time; uniform vec2 u_mouse;",
+        "uniform float u_quality; uniform float u_zoom;",
+        "float gaussian(float d,float k){return exp(-d*d*k);}",
+        "vec3 filament(float d,float s){",
+        "  float core=gaussian(d,2800.);float glow=gaussian(d,320.);float halo=gaussian(d,60.);",
+        "  return s*(vec3(.78,.80,.85)*core*.60+vec3(.68,.70,.75)*glow*.30+vec3(.54,.56,.60)*halo*.12);}",
+        "vec3 ribbon(float d,float hw,float s){",
+        "  float ad=abs(d);float body=1.-smoothstep(0.,hw,ad);body=body*body*(3.-2.*body);",
+        "  float edge=gaussian(abs(ad-hw*.8),1800.);float inner=gaussian(d,60.);",
+        "  return s*(vec3(.78,.80,.85)*edge*.45+vec3(.66,.68,.72)*inner*.24+vec3(.42,.44,.48)*body*.18);}",
+        "void main(){",
+        "  vec2 uv=gl_FragCoord.xy/u_resolution.xy; vec2 p=uv*2.-1.;",
+        "  p.x*=u_resolution.x/u_resolution.y; p/=max(u_zoom,.1);",
+        "  float t=u_time*(u_quality>.5?.115:.085); float x=p.x; float y=p.y;",
+        "  float cm=exp(-dot(p*vec2(.72,1.08),p*vec2(.72,1.08))*1.25);",
+        "  vec3 col=vec3(.325,.340,.365)+vec3(.080,.085,.095)*cm; vec3 flow=vec3(0.);",
+        "  float yM=-.075-.285*sin(x*.84+.40+t*.72)-.052*sin(x*2.05-.55-t*.34); float dM=y-yM;",
+        "  flow+=ribbon(dM,.110,.52)+filament(dM+.072,.28)+filament(dM-.081,.34);",
+        "  float yA=yM+.118+.031*sin(x*2.48+1.06+t*.39); float dA=y-yA;",
+        "  flow+=ribbon(dA,.060,.25)+filament(dA-.038,.16);",
+        "  float yB=yM-.155+.040*sin(x*1.78-1.35-t*.27); float dB=y-yB;",
+        "  flow+=ribbon(dB,.075,.20)+filament(dB+.048,.13);",
+        "  float yC=.105+.205*sin(x*.91+2.28-t*.44)+.045*cos(x*1.62-.85+t*.24); float dC=y-yC;",
+        "  flow+=ribbon(dC,.085,.38)+filament(dC+.054,.22)+filament(dC-.058,.24);",
+        "  float yMs=-.02+.170*sin(x*.55+1.45+t*.28); flow+=vec3(.58,.60,.64)*gaussian(y-yMs,2.8)*.12;",
+        "  float vig=clamp(1.-dot(p*vec2(.55,.78),p*vec2(.55,.78))*.35,0.,1.);",
+        "  gl_FragColor=vec4(clamp((col+flow)*vig,0.,1.),1.);}",
+      ].join("");
+
+      var canvas, gl, program, uRes, uTime, uMouse, uQual, uZoom;
+      var startTime = 0, lastFrameTime = 0, rafId = null, isWebGL = false, visible = true;
+      var mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+
+      function mkShader(type, src) {
+        var shader = gl.createShader(type);
+        gl.shaderSource(shader, src);
+        gl.compileShader(shader);
+        return gl.getShaderParameter(shader, gl.COMPILE_STATUS) ? shader : null;
+      }
+
+      function buildGL() {
+        var opts = { alpha: false, depth: false, stencil: false, antialias: false, powerPreference: isEco ? "low-power" : "default" };
+        gl = canvas.getContext("webgl", opts) || canvas.getContext("experimental-webgl", opts);
+        if (!gl) return false;
+
+        var vs = mkShader(gl.VERTEX_SHADER, VS);
+        var fs = mkShader(gl.FRAGMENT_SHADER, FS);
+        if (!vs || !fs) return false;
+
+        program = gl.createProgram();
+        gl.attachShader(program, vs);
+        gl.attachShader(program, fs);
+        gl.linkProgram(program);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return false;
+
+        var buf = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+
+        var aPos = gl.getAttribLocation(program, "a_position");
+        gl.enableVertexAttribArray(aPos);
+        gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+        gl.useProgram(program);
+        uRes = gl.getUniformLocation(program, "u_resolution");
+        uTime = gl.getUniformLocation(program, "u_time");
+        uMouse = gl.getUniformLocation(program, "u_mouse");
+        uQual = gl.getUniformLocation(program, "u_quality");
+        uZoom = gl.getUniformLocation(program, "u_zoom");
+
+        gl.uniform1f(uQual, isEco ? 0.0 : 1.0);
+        gl.uniform1f(uZoom, 1.0);
+        return true;
+      }
+
+      function resize() {
+        if (!isWebGL || !canvas) return;
+        var w = window.innerWidth, h = window.innerHeight;
+        var dw = Math.floor(w * DPR_CAP), dh = Math.floor(h * DPR_CAP);
+        if (canvas.width !== dw || canvas.height !== dh) {
+          canvas.width = dw; canvas.height = dh;
+          gl.viewport(0, 0, dw, dh);
+          gl.uniform2f(uRes, dw, dh);
+        }
+      }
+
+      function render(now) {
+        if (!visible || !isWebGL) return;
+        if (now - lastFrameTime < FRAME_MS) {
+          rafId = requestAnimationFrame(render);
+          return;
+        }
+        lastFrameTime = now;
+        var elapsed = (now - startTime) * 0.001;
+
+        mouse.x += (mouse.tx - mouse.x) * 0.05;
+        mouse.y += (mouse.ty - mouse.y) * 0.05;
+
+        gl.uniform1f(uTime, elapsed);
+        gl.uniform2f(uMouse, mouse.x, mouse.y);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+        rafId = requestAnimationFrame(render);
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        canvas = document.getElementById("sora-bg-canvas");
+        if (!canvas) return;
+
+        isWebGL = buildGL();
+        if (!isWebGL) {
+          canvas.style.display = "none";
+          return;
+        }
+
+        startTime = performance.now();
+        lastFrameTime = startTime;
+        resize();
+        window.addEventListener("resize", resize, { passive: true });
+
+        document.addEventListener("visibilitychange", function () {
+          visible = !document.hidden;
+          if (visible && isWebGL) {
+            lastFrameTime = performance.now();
+            rafId = requestAnimationFrame(render);
+          } else if (rafId) {
+            cancelAnimationFrame(rafId);
+          }
+        });
+
+        if (!isMobile) {
+          window.addEventListener("mousemove", function (e) {
+            mouse.tx = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.ty = -(e.clientY / window.innerHeight) * 2 + 1;
+          }, { passive: true });
+        }
+
+        rafId = requestAnimationFrame(render);
+      });
+    })();
+  </script>
+</head>
+
+<body class="timework-page">
+
+  <!-- Background -->
+  <%- include('./partials/background') %>
+
+  <!-- MAIN TIMEWORKS GLASS CARD -->
+  <main class="timework-glass-container" id="twGlassFrame" aria-label="Khung Giờ Hoạt Động Sora's Station">
+    
+    <div class="ambient-glow" aria-hidden="true"></div>
+
+    <!-- TOP BAR -->
+    <header class="tw-top-bar">
+      <div class="tw-brand-group">
+        <img class="tw-avatar"
+             src="https://cdn.discordapp.com/icons/1463216183712026813/c57fd0acb8c421b9d1492465db0eeea5.webp?size=256"
+             alt="Sora's Station Avatar"
+             draggable="false" />
+        <div class="tw-brand-text">
+          <span class="tw-brand-name">Sora's Station</span>
+          <span class="tw-brand-sub">Official Time Works</span>
+        </div>
+      </div>
+
+      <div class="tw-status-cluster">
+        <!-- Live Status Pill -->
+        <div class="tw-status-badge active" id="liveStatusBadge">
+          <span class="tw-dot-indicator" aria-hidden="true"></span>
+          <span id="liveStatusText">Đang Hoạt Động</span>
+        </div>
+
+        <!-- Vietnam GMT+7 Realtime Clock -->
+        <div class="tw-clock-pill">
+          <svg class="tw-clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <span id="liveClockDisplay">--:--:--</span>
+          <span style="opacity: 0.55; font-size: 0.72rem;">GMT+7</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- HERO TITLE -->
+    <section class="tw-hero-section">
+      <div class="tw-eyebrow">Operating Schedule</div>
+      <h1 class="tw-main-heading">Khung Giờ Hoạt Động</h1>
+      <p class="tw-hero-desc">
+        Lịch trực, tư vấn và xử lý đơn hàng chính thức tại Sora's Station. Chúng tôi luôn sẵn sàng hỗ trợ khách hàng nhanh chóng và uy tín nhất.
+      </p>
+    </section>
+
+    <!-- SCHEDULE CARDS -->
+    <section class="tw-schedule-grid" aria-label="Chi tiết khung giờ">
+      <!-- Weekdays Card -->
+      <article class="tw-card">
+        <div class="tw-card-top">
+          <h2 class="tw-card-day-title">Thứ Hai — Thứ Sáu</h2>
+          <div class="tw-card-icon-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="tw-card-hours-box">
+          <span class="tw-card-hours-label">Khung Giờ Phục Vụ</span>
+          <span class="tw-card-hours-digits">07:00 — 23:00</span>
+        </div>
+
+        <p class="tw-card-desc">
+          Tư vấn dịch vụ, tiếp nhận thanh toán và xử lý đơn hàng liên tục trong ngày làm việc.
+        </p>
+
+        <div class="tw-card-tags">
+          <span class="tw-mini-tag">Tư Vấn Nhanh</span>
+          <span class="tw-mini-tag">Giao Dịch Ổn Định</span>
+          <span class="tw-mini-tag">Auto Delivery</span>
+        </div>
+      </article>
+
+      <!-- Weekend Card -->
+      <article class="tw-card">
+        <div class="tw-card-top">
+          <h2 class="tw-card-day-title">Thứ Bảy — Chủ Nhật</h2>
+          <div class="tw-card-icon-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="tw-card-hours-box">
+          <span class="tw-card-hours-label">Khung Giờ Cuối Tuần</span>
+          <span class="tw-card-hours-digits">10:00 — 23:30</span>
+        </div>
+
+        <p class="tw-card-desc">
+          Hỗ trợ kỹ thuật chuyên sâu, chăm sóc khách hàng và bảo hành đơn hàng cuối tuần.
+        </p>
+
+        <div class="tw-card-tags">
+          <span class="tw-mini-tag">Hỗ Trợ Kỹ Thuật</span>
+          <span class="tw-mini-tag">Bảo Hành Ticket</span>
+          <span class="tw-mini-tag">Chăm Sóc Khách Hàng</span>
+        </div>
+      </article>
+    </section>
+
+    <!-- NOTICE BANNER -->
+    <section class="tw-guideline-box">
+      <svg class="tw-guideline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <p class="tw-guideline-text">
+        Quý khách vui lòng hạn chế ping ngoài khung giờ phục vụ để tránh gián đoạn. Mọi yêu cầu gửi trong ticket sẽ được xử lý sớm nhất khi bắt đầu phiên làm việc!
+      </p>
+    </section>
+
+    <!-- ACTIONS ROW -->
+    <footer class="tw-actions-row">
+      <div class="tw-primary-links">
+        <!-- Join Discord Button (Target _blank dynamically, never navigates current page) -->
+        <button type="button"
+                class="btn-action-discord"
+                id="joinDiscordBtn"
+                data-invite="<%= typeof discordServerInvite !== 'undefined' ? discordServerInvite : 'https://discord.gg/YzEaab34kV' %>"
+                aria-label="Tham gia Discord Server">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+          </svg>
+          <span>Mở Discord Server</span>
+          <svg class="btn-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </button>
+
+        <a href="<%= typeof discordUrl !== 'undefined' ? discordUrl : 'https://discord.sorae.tokyo' %>" class="btn-nav-glass" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+          <span>Discord Station Hub</span>
+        </a>
+      </div>
+
+      <a href="<%= typeof profileUrl !== 'undefined' ? profileUrl : 'https://sorae.tokyo' %>" class="btn-nav-glass" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+        <span>Trang Chủ Sora</span>
+      </a>
+    </footer>
+
+  </main>
+
+  <!-- Interactive Glass Sheen Tracking -->
+  <script>
+    (function () {
+      "use strict";
+      var frame = document.getElementById("twGlassFrame");
+      if (frame && window.matchMedia("(pointer: fine)").matches) {
+        frame.addEventListener("mousemove", function (e) {
+          var rect = frame.getBoundingClientRect();
+          frame.style.setProperty("--mouse-x", (e.clientX - rect.left) + "px");
+          frame.style.setProperty("--mouse-y", (e.clientY - rect.top) + "px");
+        }, { passive: true });
+      }
+    })();
+  </script>
+
+  <!-- Join Discord Button Handler (Opens New Tab, NEVER Redirects Current Website) -->
+  <script>
+    (function () {
+      "use strict";
+      var button = document.getElementById("joinDiscordBtn");
+      if (!button) return;
+
+      button.addEventListener("click", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var invite = button.getAttribute("data-invite") || "https://discord.gg/YzEaab34kV";
+        
+        var link = document.createElement("a");
+        link.href = invite;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.style.display = "none";
+        document.body.appendChild(link);
+        link.click();
+        setTimeout(function () {
+          if (link.parentNode) {
+            link.parentNode.removeChild(link);
+          }
+        }, 150);
+      });
+    })();
+  </script>
+
+  <!-- Realtime Vietnam GMT+7 Clock & Live Working Status Engine -->
+  <script>
+    (function () {
+      "use strict";
+
+      var badge = document.getElementById("liveStatusBadge");
+      var text = document.getElementById("liveStatusText");
+      var clockEl = document.getElementById("liveClockDisplay");
+
+      function getVnDate() {
+        var now = new Date();
+        var utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+        return new Date(utc + (3600000 * 7));
+      }
+
+      function pad(n) {
+        return n < 10 ? "0" + n : n;
+      }
+
+      function checkSchedule() {
+        var vn = getVnDate();
+        var day = vn.getDay(); // 0 = Sunday, 1 = Monday ... 6 = Saturday
+        var hours = vn.getHours();
+        var mins = vn.getMinutes();
+        var currentMinutes = hours * 60 + mins;
+
+        var isOpen = false;
+
+        if (day >= 1 && day <= 5) {
+          // Mon - Fri: 07:00 to 23:00 (420 to 1380 mins)
+          isOpen = currentMinutes >= 420 && currentMinutes < 1380;
+        } else {
+          // Sat - Sun: 10:00 to 23:30 (600 to 1410 mins)
+          isOpen = currentMinutes >= 600 && currentMinutes < 1410;
+        }
+
+        var timeString = pad(hours) + ":" + pad(mins) + ":" + pad(vn.getSeconds());
+
+        if (clockEl) clockEl.textContent = timeString;
+
+        if (isOpen) {
+          if (badge) badge.className = "tw-status-badge active";
+          if (text) text.textContent = "Đang Hoạt Động";
+        } else {
+          if (badge) badge.className = "tw-status-badge closed";
+          if (text) text.textContent = "Nghỉ Phục Vụ";
+        }
+      }
+
+      checkSchedule();
+      setInterval(checkSchedule, 1000);
+    })();
+  </script>
+
+</body>
+</html>

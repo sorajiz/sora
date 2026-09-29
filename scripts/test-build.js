@@ -44,6 +44,12 @@ async function run() {
   assert.ok(discordHtml.includes('<link rel="canonical" href="https://discord.sorae.tokyo/">'), 'discord.html must have subdomain canonical URL');
   assert.ok(discordHtml.includes('https://discord.gg/YzEaab34kV'), 'discord.html must link to Discord server');
 
+  const timeworkHtml = fs.readFileSync(path.join(distDir, 'timework.html'), 'utf8');
+  assert.ok(timeworkHtml.includes("Sora's Station"), 'timework.html must include community title');
+  assert.ok(timeworkHtml.includes('<link rel="canonical" href="https://timework.sorae.tokyo/">'), 'timework.html must have subdomain canonical URL');
+  assert.ok(timeworkHtml.includes('07:00 — 23:00'), 'timework.html must include weekday schedule');
+  assert.ok(timeworkHtml.includes('10:00 — 23:30'), 'timework.html must include weekend schedule');
+
   const robots = fs.readFileSync(path.join(distDir, 'robots.txt'), 'utf8');
   assert.ok(robots.includes('Sitemap: https://sorastation.vercel.app/sitemap.xml'), 'robots.txt must advertise the production sitemap');
 

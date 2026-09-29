@@ -178,6 +178,31 @@ async function build() {
     console.log('  ✓ Built dist/discord.html');
   }
 
+  // Step 4c: Render Dedicated Time Works Landing Page strictly into dist/
+  const timeworkTemplate = path.join(viewsDir, 'timework.ejs');
+  if (fs.existsSync(timeworkTemplate)) {
+    const timeworkData = {
+      ...sharedData,
+      title: "Khung Giờ Hoạt Động — Sora's Station",
+      description: "Lịch phục vụ, tiếp nhận đơn hàng và hỗ trợ kỹ thuật chính thức của Sora's Station.",
+      canonicalUrl: 'https://timework.sorae.tokyo/',
+      discordServerInvite: 'https://discord.gg/YzEaab34kV',
+      siteUrl: 'https://timework.sorae.tokyo',
+      profileUrl: 'https://sorae.tokyo',
+      discordUrl: 'https://discord.sorae.tokyo',
+      faviconDataUri,
+      buildHash
+    };
+
+    const timeworkRendered = await ejs.renderFile(timeworkTemplate, timeworkData, {
+      root: viewsDir
+    });
+
+    fs.writeFileSync(path.join(distDir, 'timework.html'), timeworkRendered, 'utf8');
+    fs.writeFileSync(path.join(distDir, 'timeworks.html'), timeworkRendered, 'utf8');
+    console.log('  ✓ Built dist/timework.html & dist/timeworks.html');
+  }
+
   // Step 5: Copy static assets to dist/assets
   const assetFiles = ['favicon.ico', 'favicon.png', 'luminous-flow.png', 'banner.png', 'banner.jpg'];
   assetFiles.forEach(file => {

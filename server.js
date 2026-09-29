@@ -211,7 +211,8 @@ const PAGES = {
   intro: 'intro.html',
   skills: 'skills.html',
   contact: 'contact.html',
-  discord: 'discord.html'
+  discord: 'discord.html',
+  timework: 'timework.html'
 };
 
 function serveHtmlPage(fileName, res) {
@@ -250,12 +251,17 @@ function serveHtmlPage(fileName, res) {
   });
 }
 
-// Hostname-based routing for discord subdomain (e.g. discord.sorae.tokyo)
+// Hostname-based routing for subdomains (discord.sorae.tokyo, timework.sorae.tokyo, timeworks.sorae.tokyo)
 app.use((req, res, next) => {
   const host = (req.hostname || req.headers.host || '').toLowerCase();
   if (host.startsWith('discord.')) {
     if (req.path === '/' || req.path === '/index' || req.path === '/index.html' || req.path === '/discord' || req.path === '/discord.html') {
       return serveHtmlPage(PAGES.discord, res);
+    }
+  }
+  if (host.startsWith('timework.') || host.startsWith('timeworks.')) {
+    if (req.path === '/' || req.path === '/index' || req.path === '/index.html' || req.path === '/timework' || req.path === '/timework.html' || req.path === '/timeworks' || req.path === '/timeworks.html') {
+      return serveHtmlPage(PAGES.timework, res);
     }
   }
   next();
@@ -280,6 +286,10 @@ app.get(['/contact', '/contact.html'], (req, res) => {
 
 app.get(['/discord', '/discord.html'], (req, res) => {
   serveHtmlPage(PAGES.discord, res);
+});
+
+app.get(['/timework', '/timework.html', '/timeworks', '/timeworks.html'], (req, res) => {
+  serveHtmlPage(PAGES.timework, res);
 });
 
 // Favicon endpoints (served cleanly from dist/assets/ or assets/)

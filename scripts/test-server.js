@@ -86,6 +86,27 @@ const server = app.listen(testPort, '127.0.0.1', async () => {
       }
     },
     {
+      name: 'Timework Subdomain Host Routing (/ with Host: timework.sorae.tokyo)',
+      path: '/',
+      expectedStatus: 200,
+      headers: { 'Host': 'timework.sorae.tokyo' },
+      validate: (res, body) => {
+        if (!body.includes("Khung Giờ Hoạt Động")) return "Missing Time Works heading";
+        if (!body.includes('https://timework.sorae.tokyo/')) return 'Missing canonical timework URL';
+        if (!body.includes('07:00 — 23:00')) return 'Missing weekday hours';
+        return null;
+      }
+    },
+    {
+      name: 'Timework Clean Route (/timework)',
+      path: '/timework',
+      expectedStatus: 200,
+      validate: (res, body) => {
+        if (!body.includes("Khung Giờ Hoạt Động")) return "Missing Time Works heading";
+        return null;
+      }
+    },
+    {
       name: 'Health API (/health)',
       path: '/health',
       expectedStatus: 200,

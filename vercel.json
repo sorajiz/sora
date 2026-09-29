@@ -30,12 +30,54 @@
       ],
       "destination": "/discord.html"
     },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "timework.sorae.tokyo"
+        }
+      ],
+      "destination": "/timework.html"
+    },
+    {
+      "source": "/((?!assets|js|music|favicon|.*\\..*).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "timework.sorae.tokyo"
+        }
+      ],
+      "destination": "/timework.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "timeworks.sorae.tokyo"
+        }
+      ],
+      "destination": "/timework.html"
+    },
+    {
+      "source": "/((?!assets|js|music|favicon|.*\\..*).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "timeworks.sorae.tokyo"
+        }
+      ],
+      "destination": "/timework.html"
+    },
     { "source": "/favicon.ico", "destination": "/assets/favicon.ico" },
     { "source": "/favicon.png", "destination": "/assets/favicon.png" },
     { "source": "/intro", "destination": "/intro.html" },
     { "source": "/skills", "destination": "/skills.html" },
     { "source": "/contact", "destination": "/contact.html" },
     { "source": "/discord", "destination": "/discord.html" },
+    { "source": "/timework", "destination": "/timework.html" },
+    { "source": "/timeworks", "destination": "/timework.html" },
     { "source": "/((?!assets|js|music|favicon|.*\\..*).*)", "destination": "/index.html" }
   ],
   "headers": [
