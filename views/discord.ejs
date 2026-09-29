@@ -7,7 +7,7 @@
   <meta name="description" content="<%= description %>" />
   <meta name="robots" content="index, follow" />
   <meta name="author" content="<%= author %>" />
-  <meta name="theme-color" content="#2f323a">
+  <meta name="theme-color" content="#2f323a" />
   <link rel="canonical" href="<%= canonicalUrl %>">
 
   <!-- Progressive Web App (PWA) -->
@@ -17,7 +17,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Sora's Station" />
 
-  <!-- Vercel Web Analytics -->
+  <!-- Vercel Analytics -->
   <script>
     window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
   </script>
@@ -59,6 +59,8 @@
       --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
       --color-discord: #5865f2;
       --color-online: #22c55e;
+      --mouse-x: 50%;
+      --mouse-y: 50%;
     }
 
     *, *::before, *::after {
@@ -72,7 +74,7 @@
       width: 100%;
       min-height: 100%;
       background-color: var(--bg-base);
-      color: #fff;
+      color: #ffffff;
       font-family: var(--font-sans);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -90,11 +92,10 @@
       padding: clamp(20px, 4vw, 48px) 20px;
     }
 
-    /* ── PROFILE-IDENTICAL BACKGROUND ── */
+    /* ── BACKGROUND ── */
     .bg-wrapper {
       position: fixed;
-      top: 0;
-      left: 0;
+      inset: 0;
       width: 100vw;
       height: 100vh;
       z-index: 0;
@@ -121,39 +122,89 @@
     .bg-vignette-depth {
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse 110% 90% at 50% 50%, transparent 45%, rgba(25,27,32,.45) 75%, rgba(15,17,20,.85) 100%);
+      background: radial-gradient(ellipse 110% 90% at 50% 50%, transparent 42%, rgba(25, 27, 32, 0.38) 74%, rgba(15, 17, 20, 0.82) 100%);
       pointer-events: none;
     }
 
-    /* ── ULTRA-PREMIUM HORIZONTAL GLASS CONTAINER ── */
+    /* ── MAIN HORIZONTAL GLASS CARD ── */
     .discord-horizontal-glass {
       position: relative;
       z-index: 10;
       width: 100%;
       max-width: 820px;
-      border-radius: 28px;
-      background: rgba(20, 23, 31, 0.68);
-      backdrop-filter: blur(36px) saturate(190%);
-      -webkit-backdrop-filter: blur(36px) saturate(190%);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 30px;
+      background: linear-gradient(135deg, rgba(42, 47, 59, 0.72), rgba(18, 21, 29, 0.74));
+      backdrop-filter: blur(44px) saturate(185%) brightness(1.04);
+      -webkit-backdrop-filter: blur(44px) saturate(185%) brightness(1.04);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       box-shadow:
-        0 32px 80px -16px rgba(0, 0, 0, 0.75),
-        0 0 0 1px rgba(255, 255, 255, 0.05),
-        inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.25),
-        inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4);
+        0 38px 90px -22px rgba(0, 0, 0, 0.82),
+        0 12px 32px rgba(0, 0, 0, 0.22),
+        0 0 0 1px rgba(255, 255, 255, 0.045),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.42);
       display: flex;
       flex-direction: row;
       overflow: hidden;
+      isolation: isolate;
       animation: glassCardIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
     }
-    .discord-horizontal-glass:hover {
-      border-color: rgba(255, 255, 255, 0.2);
-      box-shadow:
-        0 42px 95px -16px rgba(0, 0, 0, 0.85),
-        0 0 0 1px rgba(255, 255, 255, 0.08),
-        inset 0 1px 2px 0 rgba(255, 255, 255, 0.35);
+
+    /* Ambient Guild Banner Backdrop inside Glass */
+    .glass-ambient-backdrop {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background-image: url('https://cdn.discordapp.com/banners/1463216183712026813/cdbd25712a4874a5ee26ca9685c601ee.webp?size=1024');
+      background-size: cover;
+      background-position: center;
+      filter: blur(50px) saturate(130%);
+      opacity: 0.16;
+      transform: scale(1.15);
+      pointer-events: none;
     }
+
+    /* Dynamic cursor sheen spotlight */
+    .discord-horizontal-glass::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      background: radial-gradient(
+        480px circle at var(--mouse-x) var(--mouse-y),
+        rgba(255, 255, 255, 0.09),
+        transparent 55%
+      );
+      transition: opacity 0.3s ease;
+    }
+
+    /* Soft angular reflection */
+    .discord-horizontal-glass::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      top: -35%;
+      left: -10%;
+      width: 62%;
+      height: 85%;
+      pointer-events: none;
+      transform: rotate(-14deg);
+      background: radial-gradient(ellipse, rgba(255, 255, 255, 0.06), transparent 68%);
+      filter: blur(20px);
+    }
+
+    .discord-horizontal-glass:hover {
+      border-color: rgba(255, 255, 255, 0.22);
+      box-shadow:
+        0 46px 105px -22px rgba(0, 0, 0, 0.88),
+        0 16px 38px rgba(0, 0, 0, 0.26),
+        0 0 0 1px rgba(255, 255, 255, 0.08),
+        inset 0 1px 1px rgba(255, 255, 255, 0.34);
+    }
+
     @keyframes glassCardIn {
       from {
         opacity: 0;
@@ -165,32 +216,34 @@
       }
     }
 
-    /* ── LEFT PANEL: BRANDING & CTA ── */
+    /* ── LEFT PANEL ── */
     .glass-left-panel {
       flex: 1 1 0;
       padding: 44px 40px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      border-right: 1px solid rgba(255, 255, 255, 0.07);
+      border-right: 1px solid rgba(255, 255, 255, 0.075);
     }
 
+    /* Guild Header */
     .guild-header-row {
       display: flex;
       align-items: center;
-      gap: 16px;
-      margin-bottom: 24px;
+      gap: 18px;
+      margin-bottom: 28px;
     }
+
     .guild-avatar-container {
       position: relative;
-      width: 58px;
-      height: 58px;
-      border-radius: 17px;
-      background: linear-gradient(135deg, #2b2f3e 0%, #151822 100%);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      width: 72px;
+      height: 72px;
+      border-radius: 21px;
+      background: linear-gradient(135deg, rgba(55, 61, 76, 0.9), rgba(20, 23, 31, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.12);
       flex-shrink: 0;
-      overflow: visible;
+      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -199,9 +252,13 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 16px;
+      border-radius: 20px;
       display: block;
-      transition: opacity 0.3s ease;
+      transform: scale(1.035);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .guild-avatar-container:hover .guild-icon-image {
+      transform: scale(1.09);
     }
     .guild-icon-fallback {
       position: absolute;
@@ -211,79 +268,81 @@
       justify-content: center;
     }
     .guild-icon-fallback svg {
-      width: 32px;
-      height: 32px;
-      fill: #fff;
-    }
-    .guild-status-badge {
-      position: absolute;
-      bottom: -3px;
-      right: -3px;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background: #22c55e;
-      border: 3px solid #14171f;
-      box-shadow: 0 0 10px rgba(34, 197, 94, 0.7);
+      width: 36px;
+      height: 36px;
+      fill: #ffffff;
     }
 
     .guild-title-wrap {
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      justify-content: center;
+      min-width: 0;
+    }
+    .guild-name-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     .guild-display-name {
-      font-size: 1.18rem;
+      font-size: 1.25rem;
       font-weight: 700;
-      color: #fff;
-      letter-spacing: -0.02em;
-      line-height: 1.2;
+      color: #ffffff;
+      letter-spacing: -0.025em;
+      line-height: 1.25;
     }
-    .guild-vanity-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.78rem;
-      color: #94a3b8;
-      font-weight: 500;
-    }
-    .guild-vanity-badge svg {
-      width: 13px;
-      height: 13px;
+    .guild-verified-badge {
+      width: 17px;
+      height: 17px;
       fill: #5865f2;
+      flex-shrink: 0;
+      filter: drop-shadow(0 0 8px rgba(88, 101, 242, 0.6));
     }
 
+    /* Hero Text */
     .editorial-hero-text {
-      margin-bottom: 28px;
+      margin-bottom: 29px;
+      padding-left: 8px;
+      text-align: left;
     }
     .editorial-title {
       font-family: var(--font-serif);
-      font-size: clamp(2.4rem, 4.5vw, 3.4rem);
-      line-height: 1.08;
+      font-size: clamp(2.55rem, 4.5vw, 3.5rem);
+      line-height: 1.045;
       font-weight: 400;
       font-style: italic;
-      letter-spacing: -0.025em;
-      color: #fff;
-      margin-bottom: 12px;
-      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      letter-spacing: -0.027em;
+      color: #ffffff;
+      margin-bottom: 14px;
+      text-align: left;
+      text-shadow: 0 5px 22px rgba(0, 0, 0, 0.38);
+    }
+    .editorial-title em {
+      font-style: italic;
     }
     .editorial-desc {
       font-size: 0.92rem;
-      color: #94a3b8;
+      color: rgba(203, 213, 225, 0.70);
       font-weight: 400;
-      line-height: 1.6;
-      max-width: 340px;
+      line-height: 1.65;
+      max-width: 345px;
     }
 
+    /* Join Button (Button element: does NOT show URL preview on hover) */
     .btn-join-action {
+      appearance: none;
+      -webkit-appearance: none;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 12px;
       padding: 13px 26px;
       background: #ffffff;
       color: #0c0d12;
       border: none;
+      outline: none;
       border-radius: 9999px;
+      font-family: var(--font-sans);
       font-size: 0.96rem;
       font-weight: 700;
       text-decoration: none;
@@ -292,19 +351,27 @@
       box-shadow:
         0 8px 24px rgba(255, 255, 255, 0.12),
         0 0 0 1px rgba(255, 255, 255, 0.4) inset;
-      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+      transition:
+        transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+        background-color 0.2s ease;
       width: fit-content;
+      user-select: none;
     }
     .btn-join-action:hover {
       transform: translateY(-2px) scale(1.02);
       background: #f1f5f9;
       box-shadow:
-        0 16px 36px rgba(255, 255, 255, 0.22),
-        0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+        0 16px 36px rgba(255, 255, 255, 0.20),
+        0 0 0 1px rgba(255, 255, 255, 0.62) inset;
     }
     .btn-join-action:active {
-      transform: translateY(0) scale(0.99);
-      box-shadow: 0 6px 16px rgba(255, 255, 255, 0.1);
+      transform: translateY(0) scale(0.985);
+      box-shadow: 0 6px 16px rgba(255, 255, 255, 0.10);
+    }
+    .btn-join-action:focus-visible {
+      outline: 3px solid rgba(255, 255, 255, 0.35);
+      outline-offset: 4px;
     }
     .btn-join-discord-icon {
       width: 20px;
@@ -322,11 +389,11 @@
       transform: translateX(3px);
     }
 
-    /* ── RIGHT PANEL: LIVE STATS & PERKS ── */
+    /* ── RIGHT PANEL ── */
     .glass-right-panel {
       flex: 0 0 320px;
       padding: 40px 32px;
-      background: rgba(255, 255, 255, 0.018);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.012));
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -338,19 +405,21 @@
       font-weight: 700;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.36);
+      color: rgba(255, 255, 255, 0.38);
       margin-bottom: -10px;
     }
 
+    /* Stats Stack */
     .stats-stack {
       display: flex;
       flex-direction: column;
       gap: 12px;
     }
-
     .stat-item-box {
-      background: rgba(255, 255, 255, 0.038);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid rgba(255, 255, 255, 0.09);
       border-radius: 18px;
       padding: 16px 18px;
       display: flex;
@@ -358,8 +427,15 @@
       gap: 15px;
       transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
+    .stat-item-box::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent 45%);
+    }
     .stat-item-box:hover {
-      background: rgba(255, 255, 255, 0.065);
+      background: rgba(255, 255, 255, 0.068);
       border-color: rgba(255, 255, 255, 0.16);
       transform: translateY(-1px);
     }
@@ -392,12 +468,12 @@
     }
     .stat-label-text {
       font-size: 0.72rem;
-      color: #64748b;
+      color: #728096;
       font-weight: 600;
       letter-spacing: 0.02em;
       text-transform: uppercase;
       line-height: 1;
-      margin-bottom: 5px;
+      margin-bottom: 6px;
     }
     .stat-number-value {
       font-size: 1.65rem;
@@ -409,52 +485,68 @@
       display: flex;
       align-items: center;
       gap: 7px;
+      transform-origin: left center;
     }
     .stat-number-value.loading {
-      color: rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.22);
       animation: pulseShimmer 1.4s infinite;
     }
-    @keyframes pulseShimmer {
-      0%, 100% { opacity: 0.2; }
-      50% { opacity: 0.55; }
+    .stat-number-value.updated {
+      animation: numberUpdated 0.38s cubic-bezier(0.16, 1, 0.3, 1);
     }
+
+    @keyframes numberUpdated {
+      0% { transform: scale(1); }
+      45% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+    @keyframes pulseShimmer {
+      0%, 100% { opacity: 0.25; }
+      50% { opacity: 0.62; }
+    }
+
     .online-indicator-dot {
       display: inline-block;
       width: 7px;
       height: 7px;
       border-radius: 50%;
       background: #22c55e;
-      box-shadow: 0 0 8px #22c55e;
+      box-shadow: 0 0 9px rgba(34, 197, 94, 0.9);
       animation: pulseGreen 2s infinite ease-in-out;
     }
     @keyframes pulseGreen {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
+      50% { opacity: 0.42; transform: scale(0.84); }
     }
 
-    /* Perk highlights (no emojis, sleek SVG bullets) */
+    /* Perks (Custom tailored SVGs for Uy Tín, Giá Rẻ, Chất Lượng) */
     .perks-panel {
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      border-top: 1px solid rgba(255, 255, 255, 0.065);
       padding-top: 18px;
     }
     .perks-list-clean {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 11px;
     }
     .perk-item-clean {
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 0.81rem;
+      font-size: 0.83rem;
       color: #cbd5e1;
-      font-weight: 500;
+      font-weight: 600;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+    .perk-item-clean:hover {
+      color: #ffffff;
+      transform: translateX(2px);
     }
     .perk-bullet-svg {
-      width: 14px;
-      height: 14px;
-      color: rgba(255, 255, 255, 0.45);
+      width: 15px;
+      height: 15px;
+      color: rgba(255, 255, 255, 0.65);
       flex-shrink: 0;
     }
 
@@ -462,17 +554,28 @@
     @media (max-width: 760px) {
       .discord-horizontal-glass {
         flex-direction: column;
-        border-radius: 24px;
+        border-radius: 25px;
         max-width: 480px;
       }
       .glass-left-panel {
-        padding: 36px 28px 28px;
+        padding: 34px 28px 28px;
         border-right: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.075);
       }
       .glass-right-panel {
         flex: none;
         padding: 28px 28px 34px;
+      }
+      .guild-avatar-container {
+        width: 68px;
+        height: 68px;
+        border-radius: 20px;
+      }
+      .guild-icon-image {
+        border-radius: 19px;
+      }
+      .editorial-hero-text {
+        padding-left: 4px;
       }
       .stats-stack {
         flex-direction: row;
@@ -482,7 +585,7 @@
         flex: 1;
         flex-direction: column;
         align-items: flex-start;
-        padding: 14px 14px;
+        padding: 14px;
         gap: 10px;
       }
       .stat-number-value {
@@ -491,6 +594,19 @@
     }
 
     @media (max-width: 440px) {
+      body {
+        padding: 16px;
+      }
+      .guild-header-row {
+        gap: 14px;
+      }
+      .guild-avatar-container {
+        width: 62px;
+        height: 62px;
+      }
+      .guild-display-name {
+        font-size: 1.08rem;
+      }
       .stats-stack {
         flex-direction: column;
       }
@@ -499,96 +615,188 @@
         align-items: center;
       }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 
-  <!--
-    ╔══════════════════════════════════════════════════════════════════════╗
-    ║  LUMINOUS PEARL FLOW ENGINE — WebGL1 GLSL Shader (Profile Engine)   ║
-    ╚══════════════════════════════════════════════════════════════════════╝
-  -->
+  <!-- WebGL Background Engine -->
   <script id="sora-bg-engine">
-  (function () {
-    'use strict';
-    var isMobile  = /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent)
-                  || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    var isEco     = isMobile || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4)
-                             || (navigator.deviceMemory && navigator.deviceMemory <= 4);
-    var DPR_CAP   = isEco ? 0.9 : Math.min(window.devicePixelRatio || 1, 1.2);
-    var FPS       = isEco ? 35 : 60;
-    var FRAME_MS  = 1000 / FPS;
+    (function () {
+      "use strict";
+      var isMobile = /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent)
+        || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      var isEco = isMobile || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4)
+        || (navigator.deviceMemory && navigator.deviceMemory <= 4);
+      var DPR_CAP = isEco ? 0.9 : Math.min(window.devicePixelRatio || 1, 1.2);
+      var FPS = isEco ? 35 : 60;
+      var FRAME_MS = 1000 / FPS;
 
-    var VS = 'attribute vec2 a_position; void main(){gl_Position=vec4(a_position,0.0,1.0);}';
-    var FS = [
-      'precision mediump float;',
-      'uniform vec2 u_resolution; uniform float u_time; uniform vec2 u_mouse;',
-      'uniform float u_quality; uniform float u_zoom;',
-      'float gaussian(float d,float k){return exp(-d*d*k);}',
-      'vec3 filament(float d,float s){',
-      '  float core=gaussian(d,2800.);float glow=gaussian(d,320.);float halo=gaussian(d,60.);',
-      '  return s*(vec3(.78,.80,.85)*core*.60+vec3(.68,.70,.75)*glow*.30+vec3(.54,.56,.60)*halo*.12);}',
-      'vec3 ribbon(float d,float hw,float s){',
-      '  float ad=abs(d);float body=1.-smoothstep(0.,hw,ad);body=body*body*(3.-2.*body);',
-      '  float edge=gaussian(abs(ad-hw*.8),1800.);float inner=gaussian(d,60.);',
-      '  return s*(vec3(.78,.80,.85)*edge*.45+vec3(.66,.68,.72)*inner*.24+vec3(.42,.44,.48)*body*.18);}',
-      'void main(){',
-      '  vec2 uv=gl_FragCoord.xy/u_resolution.xy;',
-      '  vec2 p=uv*2.-1.;p.x*=u_resolution.x/u_resolution.y;p/=max(u_zoom,.1);',
-      '  float t=u_time*(u_quality>.5?.115:.085);float x=p.x;float y=p.y;',
-      '  float cm=exp(-dot(p*vec2(.72,1.08),p*vec2(.72,1.08))*1.25);',
-      '  vec3 col=vec3(.325,.340,.365)+vec3(.080,.085,.095)*cm;',
-      '  vec3 flow=vec3(0.);',
-      '  float yM=-.075-.285*sin(x*.84+.40+t*.72)-.052*sin(x*2.05-.55-t*.34);float dM=y-yM;',
-      '  flow+=ribbon(dM,.110,.52)+filament(dM+.072,.28)+filament(dM-.081,.34);',
-      '  float yA=yM+.118+.031*sin(x*2.48+1.06+t*.39);float dA=y-yA;',
-      '  flow+=ribbon(dA,.060,.25)+filament(dA-.038,.16);',
-      '  float yB=yM-.155+.040*sin(x*1.78-1.35-t*.27);float dB=y-yB;',
-      '  flow+=ribbon(dB,.075,.20)+filament(dB+.048,.13);',
-      '  float yC=.105+.205*sin(x*.91+2.28-t*.44)+.045*cos(x*1.62-.85+t*.24);float dC=y-yC;',
-      '  flow+=ribbon(dC,.085,.38)+filament(dC+.054,.22)+filament(dC-.058,.24);',
-      '  float yMs=-.02+.170*sin(x*.55+1.45+t*.28);',
-      '  flow+=vec3(.58,.60,.64)*gaussian(y-yMs,2.8)*.12;',
-      '  float vig=clamp(1.-dot(p*vec2(.55,.78),p*vec2(.55,.78))*.35,0.,1.);',
-      '  gl_FragColor=vec4(clamp((col+flow)*vig,0.,1.),1.);}',
-    ].join('');
+      var VS = "attribute vec2 a_position; void main(){gl_Position=vec4(a_position,0.0,1.0);}";
+      var FS = [
+        "precision mediump float;",
+        "uniform vec2 u_resolution; uniform float u_time; uniform vec2 u_mouse;",
+        "uniform float u_quality; uniform float u_zoom;",
+        "float gaussian(float d,float k){return exp(-d*d*k);}",
+        "vec3 filament(float d,float s){",
+        "  float core=gaussian(d,2800.);float glow=gaussian(d,320.);float halo=gaussian(d,60.);",
+        "  return s*(vec3(.78,.80,.85)*core*.60+vec3(.68,.70,.75)*glow*.30+vec3(.54,.56,.60)*halo*.12);}",
+        "vec3 ribbon(float d,float hw,float s){",
+        "  float ad=abs(d);float body=1.-smoothstep(0.,hw,ad);body=body*body*(3.-2.*body);",
+        "  float edge=gaussian(abs(ad-hw*.8),1800.);float inner=gaussian(d,60.);",
+        "  return s*(vec3(.78,.80,.85)*edge*.45+vec3(.66,.68,.72)*inner*.24+vec3(.42,.44,.48)*body*.18);}",
+        "void main(){",
+        "  vec2 uv=gl_FragCoord.xy/u_resolution.xy; vec2 p=uv*2.-1.;",
+        "  p.x*=u_resolution.x/u_resolution.y; p/=max(u_zoom,.1);",
+        "  float t=u_time*(u_quality>.5?.115:.085); float x=p.x; float y=p.y;",
+        "  float cm=exp(-dot(p*vec2(.72,1.08),p*vec2(.72,1.08))*1.25);",
+        "  vec3 col=vec3(.325,.340,.365)+vec3(.080,.085,.095)*cm; vec3 flow=vec3(0.);",
+        "  float yM=-.075-.285*sin(x*.84+.40+t*.72)-.052*sin(x*2.05-.55-t*.34); float dM=y-yM;",
+        "  flow+=ribbon(dM,.110,.52)+filament(dM+.072,.28)+filament(dM-.081,.34);",
+        "  float yA=yM+.118+.031*sin(x*2.48+1.06+t*.39); float dA=y-yA;",
+        "  flow+=ribbon(dA,.060,.25)+filament(dA-.038,.16);",
+        "  float yB=yM-.155+.040*sin(x*1.78-1.35-t*.27); float dB=y-yB;",
+        "  flow+=ribbon(dB,.075,.20)+filament(dB+.048,.13);",
+        "  float yC=.105+.205*sin(x*.91+2.28-t*.44)+.045*cos(x*1.62-.85+t*.24); float dC=y-yC;",
+        "  flow+=ribbon(dC,.085,.38)+filament(dC+.054,.22)+filament(dC-.058,.24);",
+        "  float yMs=-.02+.170*sin(x*.55+1.45+t*.28); flow+=vec3(.58,.60,.64)*gaussian(y-yMs,2.8)*.12;",
+        "  float vig=clamp(1.-dot(p*vec2(.55,.78),p*vec2(.55,.78))*.35,0.,1.);",
+        "  gl_FragColor=vec4(clamp((col+flow)*vig,0.,1.),1.);}",
+      ].join("");
 
-    var canvas, gl, program, uRes, uTime, uMouse, uQual, uZoom;
-    var startTime=0, lastFrameTime=0, rafId=null, isWebGL=false, visible=true;
-    var mouse={x:0,y:0,tx:0,ty:0};
+      var canvas, gl, program, uRes, uTime, uMouse, uQual, uZoom;
+      var startTime = 0, lastFrameTime = 0, rafId = null, isWebGL = false, visible = true;
+      var mouse = { x: 0, y: 0, tx: 0, ty: 0 };
 
-    function mkShader(type,src){var s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return gl.getShaderParameter(s,gl.COMPILE_STATUS)?s:null;}
-    function buildGL(){
-      var opts={alpha:false,depth:false,stencil:false,antialias:false,powerPreference:isEco?'low-power':'default'};
-      gl=canvas.getContext('webgl',opts)||canvas.getContext('experimental-webgl',opts);
-      if(!gl)return false;
-      var vs=mkShader(gl.VERTEX_SHADER,VS),fs=mkShader(gl.FRAGMENT_SHADER,FS);
-      if(!vs||!fs)return false;
-      program=gl.createProgram();gl.attachShader(program,vs);gl.attachShader(program,fs);gl.linkProgram(program);
-      if(!gl.getProgramParameter(program,gl.LINK_STATUS))return false;
-      gl.useProgram(program);
-      var pb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,pb);
-      gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);
-      var ap=gl.getAttribLocation(program,'a_position');gl.enableVertexAttribArray(ap);gl.vertexAttribPointer(ap,2,gl.FLOAT,false,0,0);
-      uRes=gl.getUniformLocation(program,'u_resolution');uTime=gl.getUniformLocation(program,'u_time');
-      uMouse=gl.getUniformLocation(program,'u_mouse');uQual=gl.getUniformLocation(program,'u_quality');
-      uZoom=gl.getUniformLocation(program,'u_zoom');
-      gl.uniform1f(uQual,isEco?.4:1.);gl.uniform1f(uZoom,1.0);
-      isWebGL=true;return true;
-    }
-    function draw(now){if(!isWebGL||!gl)return;var e=(now-startTime)*.001;gl.uniform2f(uRes,canvas.width,canvas.height);gl.uniform1f(uTime,e);gl.uniform2f(uMouse,mouse.x,mouse.y);gl.drawArrays(gl.TRIANGLES,0,6);}
-    function resize(){if(!canvas)return;var nw=Math.max(1,Math.round((window.innerWidth||1)*DPR_CAP));var nh=Math.max(1,Math.round((window.innerHeight||1)*DPR_CAP));if(Math.abs(canvas.width-nw)<8&&Math.abs(canvas.height-nh)<8)return;canvas.width=nw;canvas.height=nh;if(isWebGL&&gl)gl.viewport(0,0,nw,nh);draw(performance.now());}
-    function frame(now){rafId=null;if(!visible)return;var e=now-lastFrameTime;if(e<FRAME_MS){rafId=requestAnimationFrame(frame);return;}lastFrameTime=now-(e%FRAME_MS);mouse.x+=(mouse.tx-mouse.x)*.05;mouse.y+=(mouse.ty-mouse.y)*.05;draw(now);if(!rafId)rafId=requestAnimationFrame(frame);}
-    function init(){canvas=document.getElementById('bgFlowCanvas');if(!canvas)return;buildGL();var rt;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(resize,120);},{passive:true});resize();window.addEventListener('mousemove',function(e){mouse.tx=(e.clientX/(window.innerWidth||1))*2-1;mouse.ty=(e.clientY/(window.innerHeight||1))*2-1;},{passive:true});document.addEventListener('visibilitychange',function(){visible=!document.hidden;if(visible){if(!rafId){lastFrameTime=performance.now();rafId=requestAnimationFrame(frame);}}else{if(rafId){cancelAnimationFrame(rafId);rafId=null;}}});startTime=lastFrameTime=performance.now();if(!rafId)rafId=requestAnimationFrame(frame);}
-    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
-  })();
+      function mkShader(type, src) {
+        var shader = gl.createShader(type);
+        gl.shaderSource(shader, src);
+        gl.compileShader(shader);
+        return gl.getShaderParameter(shader, gl.COMPILE_STATUS) ? shader : null;
+      }
+
+      function buildGL() {
+        var opts = { alpha: false, depth: false, stencil: false, antialias: false, powerPreference: isEco ? "low-power" : "default" };
+        gl = canvas.getContext("webgl", opts) || canvas.getContext("experimental-webgl", opts);
+        if (!gl) return false;
+        var vs = mkShader(gl.VERTEX_SHADER, VS), fs = mkShader(gl.FRAGMENT_SHADER, FS);
+        if (!vs || !fs) return false;
+        program = gl.createProgram();
+        gl.attachShader(program, vs);
+        gl.attachShader(program, fs);
+        gl.linkProgram(program);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return false;
+        gl.useProgram(program);
+        var pb = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, pb);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
+        var ap = gl.getAttribLocation(program, "a_position");
+        gl.enableVertexAttribArray(ap);
+        gl.vertexAttribPointer(ap, 2, gl.FLOAT, false, 0, 0);
+        uRes = gl.getUniformLocation(program, "u_resolution");
+        uTime = gl.getUniformLocation(program, "u_time");
+        uMouse = gl.getUniformLocation(program, "u_mouse");
+        uQual = gl.getUniformLocation(program, "u_quality");
+        uZoom = gl.getUniformLocation(program, "u_zoom");
+        gl.uniform1f(uQual, isEco ? 0.4 : 1.0);
+        gl.uniform1f(uZoom, 1.0);
+        isWebGL = true;
+        return true;
+      }
+
+      function draw(now) {
+        if (!isWebGL || !gl) return;
+        var elapsed = (now - startTime) * 0.001;
+        gl.uniform2f(uRes, canvas.width, canvas.height);
+        gl.uniform1f(uTime, elapsed);
+        gl.uniform2f(uMouse, mouse.x, mouse.y);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+      }
+
+      function resize() {
+        if (!canvas) return;
+        var nw = Math.max(1, Math.round((window.innerWidth || 1) * DPR_CAP));
+        var nh = Math.max(1, Math.round((window.innerHeight || 1) * DPR_CAP));
+        if (Math.abs(canvas.width - nw) < 8 && Math.abs(canvas.height - nh) < 8) return;
+        canvas.width = nw;
+        canvas.height = nh;
+        if (isWebGL && gl) gl.viewport(0, 0, nw, nh);
+        draw(performance.now());
+      }
+
+      function frame(now) {
+        rafId = null;
+        if (!visible) return;
+        var elapsed = now - lastFrameTime;
+        if (elapsed < FRAME_MS) {
+          rafId = requestAnimationFrame(frame);
+          return;
+        }
+        lastFrameTime = now - (elapsed % FRAME_MS);
+        mouse.x += (mouse.tx - mouse.x) * 0.05;
+        mouse.y += (mouse.ty - mouse.y) * 0.05;
+        draw(now);
+        if (!rafId) rafId = requestAnimationFrame(frame);
+      }
+
+      function init() {
+        canvas = document.getElementById("bgFlowCanvas");
+        if (!canvas) return;
+        buildGL();
+        var resizeTimer;
+        window.addEventListener("resize", function () {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(resize, 120);
+        }, { passive: true });
+        resize();
+        window.addEventListener("mousemove", function (event) {
+          mouse.tx = (event.clientX / (window.innerWidth || 1)) * 2 - 1;
+          mouse.ty = (event.clientY / (window.innerHeight || 1)) * 2 - 1;
+        }, { passive: true });
+        document.addEventListener("visibilitychange", function () {
+          visible = !document.hidden;
+          if (visible) {
+            if (!rafId) {
+              lastFrameTime = performance.now();
+              rafId = requestAnimationFrame(frame);
+            }
+          } else {
+            if (rafId) {
+              cancelAnimationFrame(rafId);
+              rafId = null;
+            }
+          }
+        });
+        startTime = performance.now();
+        lastFrameTime = startTime;
+        if (!rafId) rafId = requestAnimationFrame(frame);
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+      } else {
+        init();
+      }
+    })();
   </script>
 </head>
+
 <body class="discord-page">
 
-  <!-- Profile-Identical Background -->
+  <!-- Background -->
   <%- include('./partials/background') %>
 
-  <!-- Main Horizontal Glass Frame -->
+  <!-- MAIN CARD -->
   <main class="discord-horizontal-glass" id="discordGlassFrame" aria-label="Sora's Station Discord Server">
+    
+    <!-- Ambient Banner Backlight inside Glass -->
+    <div class="glass-ambient-backdrop" aria-hidden="true"></div>
 
     <!-- LEFT PANEL: Brand, Tagline, Invite CTA -->
     <section class="glass-left-panel" aria-label="Server Information">
@@ -597,51 +805,67 @@
           <div class="guild-avatar-container">
             <img id="guildIconImg"
                  class="guild-icon-image"
-                 src="https://cdn.discordapp.com/icons/1463216183712026813/c57fd0acb8c421b9d1492465db0eeea5.webp?size=128"
+                 src="https://cdn.discordapp.com/icons/1463216183712026813/c57fd0acb8c421b9d1492465db0eeea5.webp?size=256"
                  alt="Sora's Station Icon"
+                 draggable="false"
                  onerror="this.style.display='none'; document.getElementById('guildIconFallback').style.display='flex';" />
             <div id="guildIconFallback" class="guild-icon-fallback" style="display:none;" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+              <svg viewBox="0 0 24 24">
+                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+              </svg>
             </div>
-            <span class="guild-status-badge" aria-label="Server Active Online"></span>
           </div>
+
           <div class="guild-title-wrap">
-            <h2 class="guild-display-name">Sora's Station</h2>
-            <div class="guild-vanity-badge">
-              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-              <span>discord.gg/sorastation</span>
+            <div class="guild-name-row">
+              <h2 class="guild-display-name">Sora's Station</h2>
+              <svg class="guild-verified-badge" viewBox="0 0 24 24" title="Verified Community" aria-label="Verified Community">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+              </svg>
             </div>
           </div>
         </div>
 
         <div class="editorial-hero-text">
-          <h1 class="editorial-title"><em>Join the<br>Station.</em></h1>
-          <p class="editorial-desc">A small place for creativity, community and connection. Connect, share and enjoy with us.</p>
+          <h1 class="editorial-title">
+            <em>Join the<br />Station.</em>
+          </h1>
+          <p class="editorial-desc">
+            A small place for creativity, community and connection. Connect, share and enjoy with us.
+          </p>
         </div>
       </div>
 
-      <a href="<%= typeof discordServerInvite !== 'undefined' ? discordServerInvite : 'https://discord.gg/YzEaab34kV' %>"
-         class="btn-join-action" target="_blank" rel="noopener noreferrer"
-         id="joinDiscordBtn" aria-label="Join Sora's Station Discord Server">
-        <svg class="btn-join-discord-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+      <!-- Join Discord Button (Button element: hover does NOT show URL in browser corner) -->
+      <button type="button"
+              class="btn-join-action"
+              id="joinDiscordBtn"
+              data-invite="<%= typeof discordServerInvite !== 'undefined' ? discordServerInvite : 'https://discord.gg/YzEaab34kV' %>"
+              aria-label="Join Sora's Station Discord Server">
+        <svg class="btn-join-discord-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+        </svg>
         <span>Join Discord</span>
-        <svg class="btn-join-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-      </a>
+        <svg class="btn-join-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </button>
     </section>
 
-    <!-- RIGHT PANEL: LIVE STATS & COMMUNITY HIGHLIGHTS -->
+    <!-- RIGHT PANEL: LIVE STATS & PERKS -->
     <aside class="glass-right-panel" aria-label="Live Server Stats">
       <div class="section-eyebrow">Guild Statistics</div>
 
       <div class="stats-stack">
-        <!-- Total Members -->
+        <!-- TOTAL MEMBERS -->
         <div class="stat-item-box">
           <div class="stat-badge-icon members" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="rgba(88,101,242,0.95)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-              <circle cx="9" cy="7" r="4"></circle>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
             </svg>
           </div>
           <div class="stat-data">
@@ -650,16 +874,16 @@
           </div>
         </div>
 
-        <!-- Members Online -->
+        <!-- ONLINE MEMBERS -->
         <div class="stat-item-box">
           <div class="stat-badge-icon online" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="rgba(34,197,94,0.95)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
             </svg>
           </div>
           <div class="stat-data">
-            <div class="stat-label-text">Member Onl</div>
+            <div class="stat-label-text">Members Online</div>
             <div class="stat-number-value loading" id="statOnlineMembers" aria-live="polite">
               <span class="online-indicator-dot" aria-hidden="true"></span>
               <span id="statOnlineCount">—</span>
@@ -668,99 +892,302 @@
         </div>
       </div>
 
-      <!-- Sleek Feature Bullets (clean SVG, no emoji) -->
+      <!-- FEATURES / PERKS -->
       <div class="perks-panel">
         <ul class="perks-list-clean" role="list">
           <li class="perk-item-clean">
-            <svg class="perk-bullet-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            <span>AI Prompts &amp; Creative Hub</span>
+            <!-- Uy Tín: Shield Checkmark SVG -->
+            <svg class="perk-bullet-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <polyline points="9 12 11 14 15 10"/>
+            </svg>
+            <span>Uy Tín</span>
           </li>
           <li class="perk-item-clean">
-            <svg class="perk-bullet-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            <span>Bot &amp; Fullstack Engineering</span>
+            <!-- Giá Rẻ: Value Tag SVG -->
+            <svg class="perk-bullet-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+              <circle cx="7" cy="7" r="1.5" fill="currentColor"/>
+            </svg>
+            <span>Giá Rẻ</span>
           </li>
           <li class="perk-item-clean">
-            <svg class="perk-bullet-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            <span>Verified &amp; Transparent Community</span>
+            <!-- Chất Lượng: Premium Star Quality SVG -->
+            <svg class="perk-bullet-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            <span>Chất Lượng</span>
           </li>
         </ul>
       </div>
+
     </aside>
 
   </main>
 
-  <!-- Discord Guild Stats Fetcher (Guild ID: 1463216183712026813) -->
+  <!-- Interactive Glass Sheen Tracking -->
   <script>
-  (function () {
-    'use strict';
-    var GUILD_ID = '1463216183712026813';
-    var elTotal = document.getElementById('statTotalMembers');
-    var elOnlineBox = document.getElementById('statOnlineMembers');
-    var elOnlineCount = document.getElementById('statOnlineCount');
-    var elIcon = document.getElementById('guildIconImg');
-
-    function fmt(n) {
-      if (n === null || n === undefined || isNaN(n)) return '—';
-      return Number(n).toLocaleString('en-US');
-    }
-
-    function applyValues(total, online, iconHash) {
-      if (elTotal) {
-        elTotal.textContent = fmt(total);
-        elTotal.classList.remove('loading');
+    (function () {
+      "use strict";
+      var frame = document.getElementById("discordGlassFrame");
+      if (frame && window.matchMedia("(pointer: fine)").matches) {
+        frame.addEventListener("mousemove", function (e) {
+          var rect = frame.getBoundingClientRect();
+          frame.style.setProperty("--mouse-x", (e.clientX - rect.left) + "px");
+          frame.style.setProperty("--mouse-y", (e.clientY - rect.top) + "px");
+        }, { passive: true });
       }
-      if (elOnlineCount) {
-        elOnlineCount.textContent = fmt(online);
-      }
-      if (elOnlineBox) {
-        elOnlineBox.classList.remove('loading');
-      }
-      if (iconHash && elIcon) {
-        elIcon.src = 'https://cdn.discordapp.com/icons/' + GUILD_ID + '/' + iconHash + '.webp?size=128';
-      }
-    }
+    })();
+  </script>
 
-    function fetchStats() {
-      // 1. Direct query via verified invite code YzEaab34kV with counts
-      fetch('https://discord.com/api/v9/invites/YzEaab34kV?with_counts=true&with_expiration=true', { cache: 'no-store' })
-        .then(function(r) { return r.ok ? r.json() : Promise.reject(r.status); })
-        .then(function(data) {
-          var total = data.approximate_member_count;
-          var online = data.approximate_presence_count;
-          var icon = data.guild ? data.guild.icon : null;
-          applyValues(total, online, icon);
-        })
-        .catch(function() {
-          // 2. Fallback to vanity URL sorasito
-          fetch('https://discord.com/api/v9/invites/sorasito?with_counts=true', { cache: 'no-store' })
-            .then(function(r2) { return r2.ok ? r2.json() : Promise.reject(r2.status); })
-            .then(function(data2) {
-              var total = data2.approximate_member_count;
-              var online = data2.approximate_presence_count;
-              var icon = data2.guild ? data2.guild.icon : null;
-              applyValues(total, online, icon);
-            })
-            .catch(function() {
-              // 3. Fallback to widget.json
-              fetch('https://discord.com/api/guilds/' + GUILD_ID + '/widget.json', { cache: 'no-store' })
-                .then(function(r3) { return r3.ok ? r3.json() : Promise.reject(r3.status); })
-                .then(function(data3) {
-                  applyValues(null, data3.presence_count || 50, null);
-                })
-                .catch(function() {
-                  // Fallback numbers from verified guild snapshot if offline
-                  applyValues(462, 50, 'c57fd0acb8c421b9d1492465db0eeea5');
-                });
-            });
-        });
-    }
+  <!-- Join Discord Button Handler (No URL reveal on hover) -->
+  <script>
+    (function () {
+      "use strict";
+      var button = document.getElementById("joinDiscordBtn");
+      if (!button) return;
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', fetchStats);
-    } else {
-      fetchStats();
-    }
-  })();
+      button.addEventListener("click", function () {
+        var invite = button.getAttribute("data-invite");
+        if (!invite) return;
+        var opened = window.open(invite, "_blank", "noopener,noreferrer");
+        if (!opened) {
+          window.location.assign(invite);
+        }
+      });
+    })();
+  </script>
+
+  <!-- Realtime Discord Guild Stats Engine (Polling + Easing Counter) -->
+  <script>
+    (function () {
+      "use strict";
+      var GUILD_ID = "1463216183712026813";
+      var INVITE_CODE = "YzEaab34kV";
+      var NORMAL_INTERVAL = 3000;
+      var ERROR_INTERVAL = 10000;
+      var REQUEST_TIMEOUT = 5000;
+
+      var timer = null;
+      var isFetching = false;
+      var stopped = false;
+      var lastTotal = null;
+      var lastOnline = null;
+      var isFirstLoad = true;
+
+      var elTotal = document.getElementById("statTotalMembers");
+      var elOnlineBox = document.getElementById("statOnlineMembers");
+      var elOnlineCount = document.getElementById("statOnlineCount");
+      var elIcon = document.getElementById("guildIconImg");
+
+      function fmt(number) {
+        if (number === null || number === undefined || Number.isNaN(Number(number))) return "—";
+        return Number(number).toLocaleString("en-US");
+      }
+
+      function animateElement(element) {
+        if (!element) return;
+        element.classList.remove("updated");
+        void element.offsetWidth; // Force reflow
+        element.classList.add("updated");
+        setTimeout(function () {
+          element.classList.remove("updated");
+        }, 400);
+      }
+
+      // Smooth count-up easing for first render
+      function countUp(element, target, duration) {
+        if (!element || typeof target !== "number") return;
+        var start = 0;
+        var startTime = performance.now();
+        function tick(now) {
+          var elapsed = now - startTime;
+          var progress = Math.min(elapsed / duration, 1);
+          var ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+          var val = Math.floor(start + (target - start) * ease);
+          element.textContent = fmt(val);
+          if (progress < 1) {
+            requestAnimationFrame(tick);
+          } else {
+            element.textContent = fmt(target);
+          }
+        }
+        requestAnimationFrame(tick);
+      }
+
+      function updateTotal(total) {
+        if (total === null || total === undefined) return;
+        total = Number(total);
+        if (!Number.isFinite(total)) return;
+
+        if (elTotal) {
+          elTotal.classList.remove("loading");
+          if (lastTotal === null) {
+            countUp(elTotal, total, 900);
+          } else if (lastTotal !== total) {
+            animateElement(elTotal);
+            elTotal.textContent = fmt(total);
+          }
+        }
+        lastTotal = total;
+      }
+
+      function updateOnline(online) {
+        if (online === null || online === undefined) return;
+        online = Number(online);
+        if (!Number.isFinite(online)) return;
+
+        if (elOnlineBox) {
+          elOnlineBox.classList.remove("loading");
+        }
+
+        if (elOnlineCount) {
+          if (lastOnline === null) {
+            countUp(elOnlineCount, online, 800);
+          } else if (lastOnline !== online) {
+            animateElement(elOnlineBox);
+            elOnlineCount.textContent = fmt(online);
+          }
+        }
+        lastOnline = online;
+      }
+
+      function updateIcon(iconHash) {
+        if (!iconHash || !elIcon) return;
+        var newURL = "https://cdn.discordapp.com/icons/" + GUILD_ID + "/" + iconHash + ".webp?size=256";
+        if (elIcon.src !== newURL) {
+          elIcon.src = newURL;
+        }
+      }
+
+      async function fetchJSON(url) {
+        var controller = new AbortController();
+        var timeout = setTimeout(function () {
+          controller.abort();
+        }, REQUEST_TIMEOUT);
+
+        try {
+          var response = await fetch(url, {
+            cache: "no-store",
+            signal: controller.signal,
+            headers: { Accept: "application/json" }
+          });
+          if (!response.ok) {
+            throw new Error("HTTP " + response.status);
+          }
+          return await response.json();
+        } finally {
+          clearTimeout(timeout);
+        }
+      }
+
+      async function fetchInviteStats() {
+        var url = "https://discord.com/api/v10/invites/" + encodeURIComponent(INVITE_CODE) + "?with_counts=true&with_expiration=true";
+        var data = await fetchJSON(url);
+        if (!data) throw new Error("Discord response empty");
+
+        if (data.approximate_member_count !== undefined) {
+          updateTotal(data.approximate_member_count);
+        }
+        if (data.approximate_presence_count !== undefined) {
+          updateOnline(data.approximate_presence_count);
+        }
+        if (data.guild && data.guild.icon) {
+          updateIcon(data.guild.icon);
+        }
+        return true;
+      }
+
+      async function fetchVanityStats() {
+        var url = "https://discord.com/api/v10/invites/sorasito?with_counts=true";
+        var data = await fetchJSON(url);
+        if (!data) throw new Error("Vanity response empty");
+
+        if (data.approximate_member_count !== undefined) {
+          updateTotal(data.approximate_member_count);
+        }
+        if (data.approximate_presence_count !== undefined) {
+          updateOnline(data.approximate_presence_count);
+        }
+        if (data.guild && data.guild.icon) {
+          updateIcon(data.guild.icon);
+        }
+        return true;
+      }
+
+      async function fetchWidgetOnline() {
+        var url = "https://discord.com/api/guilds/" + GUILD_ID + "/widget.json";
+        var data = await fetchJSON(url);
+        if (data && data.presence_count !== undefined) {
+          updateOnline(data.presence_count);
+          return true;
+        }
+        return false;
+      }
+
+      function scheduleNext(delay) {
+        if (timer) clearTimeout(timer);
+        if (stopped) return;
+        timer = setTimeout(refreshStats, delay);
+      }
+
+      async function refreshStats() {
+        if (stopped || isFetching) return;
+        if (document.hidden) {
+          scheduleNext(NORMAL_INTERVAL);
+          return;
+        }
+
+        isFetching = true;
+        var success = false;
+
+        try {
+          await fetchInviteStats();
+          success = true;
+        } catch (inviteError) {
+          try {
+            await fetchVanityStats();
+            success = true;
+          } catch (vanityError) {
+            try {
+              await fetchWidgetOnline();
+              success = true;
+            } catch (widgetError) {
+              // Graceful: keep last valid counts
+            }
+          }
+        } finally {
+          isFetching = false;
+          scheduleNext(success ? NORMAL_INTERVAL : ERROR_INTERVAL);
+        }
+      }
+
+      document.addEventListener("visibilitychange", function () {
+        if (!document.hidden) {
+          if (timer) clearTimeout(timer);
+          refreshStats();
+        }
+      });
+
+      window.addEventListener("focus", function () {
+        if (timer) clearTimeout(timer);
+        refreshStats();
+      });
+
+      window.addEventListener("pagehide", function () {
+        stopped = true;
+        if (timer) {
+          clearTimeout(timer);
+          timer = null;
+        }
+      });
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", refreshStats, { once: true });
+      } else {
+        refreshStats();
+      }
+    })();
   </script>
 </body>
 </html>
