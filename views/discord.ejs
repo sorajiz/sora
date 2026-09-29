@@ -46,16 +46,15 @@
   <link rel="shortcut icon" type="image/png" href="/assets/favicon.png" />
   <link rel="apple-touch-icon" href="/assets/favicon.png" />
 
-  <!-- Google Fonts: Instrument Serif & Plus Jakarta Sans (identical to profile) -->
+  <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <style>
     :root {
       --bg-base: #3b3e47;
       --bg-slate-dark: #2f323a;
-      --font-serif: "Instrument Serif", Georgia, serif;
       --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
       --color-discord: #5865f2;
       --color-online: #22c55e;
@@ -231,7 +230,7 @@
       display: flex;
       align-items: center;
       gap: 18px;
-      margin-bottom: 28px;
+      margin-bottom: 26px;
     }
 
     .guild-avatar-container {
@@ -279,11 +278,6 @@
       justify-content: center;
       min-width: 0;
     }
-    .guild-name-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
     .guild-display-name {
       font-size: 1.25rem;
       font-weight: 700;
@@ -291,44 +285,31 @@
       letter-spacing: -0.025em;
       line-height: 1.25;
     }
-    .guild-verified-badge {
-      width: 17px;
-      height: 17px;
-      fill: #5865f2;
-      flex-shrink: 0;
-      filter: drop-shadow(0 0 8px rgba(88, 101, 242, 0.6));
-    }
 
-    /* Hero Text */
+    /* Hero Text (Clean, single-line, flush left, no awkward split) */
     .editorial-hero-text {
-      margin-bottom: 29px;
-      padding-left: 8px;
+      margin-bottom: 28px;
       text-align: left;
     }
     .editorial-title {
-      font-family: var(--font-serif);
-      font-size: clamp(2.55rem, 4.5vw, 3.5rem);
-      line-height: 1.045;
-      font-weight: 400;
-      font-style: italic;
-      letter-spacing: -0.027em;
+      font-size: clamp(1.85rem, 3.2vw, 2.45rem);
+      line-height: 1.18;
+      font-weight: 800;
+      letter-spacing: -0.03em;
       color: #ffffff;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
       text-align: left;
-      text-shadow: 0 5px 22px rgba(0, 0, 0, 0.38);
-    }
-    .editorial-title em {
-      font-style: italic;
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
     }
     .editorial-desc {
-      font-size: 0.92rem;
-      color: rgba(203, 213, 225, 0.70);
+      font-size: 0.94rem;
+      color: rgba(203, 213, 225, 0.72);
       font-weight: 400;
       line-height: 1.65;
-      max-width: 345px;
+      max-width: 350px;
     }
 
-    /* Join Button (Button element: does NOT show URL preview on hover) */
+    /* Join Button (Button element: hover does NOT show URL in browser corner) */
     .btn-join-action {
       appearance: none;
       -webkit-appearance: none;
@@ -484,7 +465,6 @@
       font-variant-numeric: tabular-nums;
       display: flex;
       align-items: center;
-      gap: 7px;
       transform-origin: left center;
     }
     .stat-number-value.loading {
@@ -505,21 +485,7 @@
       50% { opacity: 0.62; }
     }
 
-    .online-indicator-dot {
-      display: inline-block;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #22c55e;
-      box-shadow: 0 0 9px rgba(34, 197, 94, 0.9);
-      animation: pulseGreen 2s infinite ease-in-out;
-    }
-    @keyframes pulseGreen {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.42; transform: scale(0.84); }
-    }
-
-    /* Perks (Custom tailored SVGs for Uy Tín, Giá Rẻ, Chất Lượng) */
+    /* Perks */
     .perks-panel {
       border-top: 1px solid rgba(255, 255, 255, 0.065);
       padding-top: 18px;
@@ -573,9 +539,6 @@
       }
       .guild-icon-image {
         border-radius: 19px;
-      }
-      .editorial-hero-text {
-        padding-left: 4px;
       }
       .stats-stack {
         flex-direction: row;
@@ -817,19 +780,12 @@
           </div>
 
           <div class="guild-title-wrap">
-            <div class="guild-name-row">
-              <h2 class="guild-display-name">Sora's Station</h2>
-              <svg class="guild-verified-badge" viewBox="0 0 24 24" title="Verified Community" aria-label="Verified Community">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-              </svg>
-            </div>
+            <h2 class="guild-display-name">Sora's Station</h2>
           </div>
         </div>
 
         <div class="editorial-hero-text">
-          <h1 class="editorial-title">
-            <em>Join the<br />Station.</em>
-          </h1>
+          <h1 class="editorial-title">Join the Station</h1>
           <p class="editorial-desc">
             A small place for creativity, community and connection. Connect, share and enjoy with us.
           </p>
@@ -874,7 +830,7 @@
           </div>
         </div>
 
-        <!-- ONLINE MEMBERS -->
+        <!-- ONLINE MEMBERS (No green dot) -->
         <div class="stat-item-box">
           <div class="stat-badge-icon online" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="rgba(34,197,94,0.95)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -885,7 +841,6 @@
           <div class="stat-data">
             <div class="stat-label-text">Members Online</div>
             <div class="stat-number-value loading" id="statOnlineMembers" aria-live="polite">
-              <span class="online-indicator-dot" aria-hidden="true"></span>
               <span id="statOnlineCount">—</span>
             </div>
           </div>
@@ -940,20 +895,32 @@
     })();
   </script>
 
-  <!-- Join Discord Button Handler (No URL reveal on hover) -->
+  <!-- Join Discord Button Handler (Opens New Tab, NEVER Redirects Current Website) -->
   <script>
     (function () {
       "use strict";
       var button = document.getElementById("joinDiscordBtn");
       if (!button) return;
 
-      button.addEventListener("click", function () {
-        var invite = button.getAttribute("data-invite");
-        if (!invite) return;
-        var opened = window.open(invite, "_blank", "noopener,noreferrer");
-        if (!opened) {
-          window.location.assign(invite);
-        }
+      button.addEventListener("click", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var invite = button.getAttribute("data-invite") || "https://discord.gg/YzEaab34kV";
+        
+        // Dynamically trigger anchor click with target="_blank"
+        // This guarantees a new tab opens without popup blockers and NEVER changes the current website URL
+        var link = document.createElement("a");
+        link.href = invite;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.style.display = "none";
+        document.body.appendChild(link);
+        link.click();
+        setTimeout(function () {
+          if (link.parentNode) {
+            link.parentNode.removeChild(link);
+          }
+        }, 150);
       });
     })();
   </script>
@@ -973,7 +940,6 @@
       var stopped = false;
       var lastTotal = null;
       var lastOnline = null;
-      var isFirstLoad = true;
 
       var elTotal = document.getElementById("statTotalMembers");
       var elOnlineBox = document.getElementById("statOnlineMembers");
