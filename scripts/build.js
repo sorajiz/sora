@@ -43,10 +43,10 @@ const sharedData = {
   siteUrl: 'https://sorastation.vercel.app',
   telegramUrl: 'https://t.me/ixzplr',
   telegramUsername: '@ixzplr',
-  discordUrl: 'https://discord.com/users/1265702432701284395',
+  discordUrl: 'https://discord.gg/YzEaab34kV',
   discordUsername: '@ixplr',
   discordUserId: '1265702432701284395',
-  discordCommunityUrl: 'https://discord.gg/CZrQ4gPEDV',
+  discordCommunityUrl: 'https://discord.gg/YzEaab34kV',
   discordCommunityDisplay: 'discord.gg/sorastation',
   location: 'GMT+7 Vietnam'
 };
@@ -189,7 +189,7 @@ async function build() {
       discordServerInvite: 'https://discord.gg/YzEaab34kV',
       siteUrl: 'https://timework.sorae.tokyo',
       profileUrl: 'https://sorae.tokyo',
-      discordUrl: 'https://discord.sorae.tokyo',
+      discordUrl: 'https://discord.gg/YzEaab34kV',
       faviconDataUri,
       buildHash
     };
@@ -204,7 +204,7 @@ async function build() {
   }
 
   // Step 5: Copy static assets to dist/assets
-  const assetFiles = ['favicon.ico', 'favicon.png', 'luminous-flow.png', 'banner.png', 'banner.jpg'];
+  const assetFiles = ['favicon.ico', 'favicon.png', 'luminous-flow.png', 'banner.png', 'banner.jpg', 'liquid-glass-bg.jpg'];
   assetFiles.forEach(file => {
     const src = path.join(projectRoot, 'assets', file);
     if (fs.existsSync(src)) {
@@ -217,7 +217,8 @@ async function build() {
   copyFileIfExists(path.join(projectRoot, 'assets', 'favicon.png'), path.join(distDir, 'favicon.png'));
   copyFileIfExists(path.join(projectRoot, 'assets', 'banner.png'), path.join(distDir, 'banner.png'));
   copyFileIfExists(path.join(projectRoot, 'assets', 'banner.jpg'), path.join(distDir, 'banner.jpg'));
-  console.log('  ✓ Copied banner.png & banner.jpg -> dist/assets/ & dist/');
+  copyFileIfExists(path.join(projectRoot, 'assets', 'liquid-glass-bg.jpg'), path.join(distDir, 'liquid-glass-bg.jpg'));
+  console.log('  ✓ Copied banner, favicon, and liquid-glass-bg -> dist/assets/ & dist/');
 
   // Step 6: Pipeline for performance and devtools guard scripts (Source of truth: .src/ -> dist/js/)
   const srcPerf = path.join(projectRoot, '.src', 'sora-performance-x2.js');

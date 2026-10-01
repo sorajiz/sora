@@ -91,8 +91,8 @@ const server = app.listen(testPort, '127.0.0.1', async () => {
       expectedStatus: 200,
       headers: { 'Host': 'timework.sorae.tokyo' },
       validate: (res, body) => {
-        if (!body.includes("Khung Giờ Hoạt Động")) return "Missing Time Works heading";
-        if (!body.includes('https://timework.sorae.tokyo/')) return 'Missing canonical timework URL';
+        if (!body.includes('TimeWork Sora Station')) return 'Missing TimeWork heading';
+        if (!body.includes('cdHours')) return 'Missing countdown hours element';
         if (!body.includes('07:00 — 23:00')) return 'Missing weekday hours';
         return null;
       }

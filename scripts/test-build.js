@@ -47,6 +47,8 @@ async function run() {
   const timeworkHtml = fs.readFileSync(path.join(distDir, 'timework.html'), 'utf8');
   assert.ok(timeworkHtml.includes("Sora's Station"), 'timework.html must include community title');
   assert.ok(timeworkHtml.includes('<link rel="canonical" href="https://timework.sorae.tokyo/">'), 'timework.html must have subdomain canonical URL');
+  assert.ok(timeworkHtml.includes('TimeWork Sora Station'), 'timework.html must include brand title');
+  assert.ok(timeworkHtml.includes('cdHours'), 'timework.html must include countdown timer hours');
   assert.ok(timeworkHtml.includes('07:00 — 23:00'), 'timework.html must include weekday schedule');
   assert.ok(timeworkHtml.includes('10:00 — 23:30'), 'timework.html must include weekend schedule');
 

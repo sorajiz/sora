@@ -133,6 +133,7 @@ app.use(limiter);
 const FORBIDDEN_PATTERNS = [
   /^\/\.git/,
   /^\/\.github/,
+  /^\/\.agents/,
   /^\/\.src/,
   /^\/views/,
   /^\/scripts/,
