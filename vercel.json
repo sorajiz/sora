@@ -9,6 +9,74 @@
   "outputDirectory": "dist",
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "discord.sorae.tokyo"
+        }
+      ],
+      "destination": "/discord",
+      "permanent": false
+    },
+    {
+      "source": "/((?!assets|js|music|favicon|discord|.*\\..*).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "discord.sorae.tokyo"
+        }
+      ],
+      "destination": "/discord",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "timework.sorae.tokyo"
+        }
+      ],
+      "destination": "/timework",
+      "permanent": false
+    },
+    {
+      "source": "/((?!assets|js|music|favicon|timework|.*\\..*).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "timework.sorae.tokyo"
+        }
+      ],
+      "destination": "/timework",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "timeworks.sorae.tokyo"
+        }
+      ],
+      "destination": "/timework",
+      "permanent": false
+    },
+    {
+      "source": "/((?!assets|js|music|favicon|timework|.*\\..*).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "timeworks.sorae.tokyo"
+        }
+      ],
+      "destination": "/timework",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/",

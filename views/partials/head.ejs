@@ -1,4 +1,24 @@
 <head>
+  <!-- Subdomain Routing Isolation Guard (Zero-Delay Client-Side Edge Fallback) -->
+  <script>
+    (function () {
+      try {
+        var h = (window.location.hostname || '').toLowerCase();
+        var p = (window.location.pathname || '/').toLowerCase();
+        if (h === 'discord.sorae.tokyo' || h.startsWith('discord.')) {
+          if (!p.startsWith('/discord')) {
+            document.documentElement.style.display = 'none';
+            window.location.replace('/discord' + window.location.search + window.location.hash);
+          }
+        } else if (h === 'timework.sorae.tokyo' || h === 'timeworks.sorae.tokyo' || h.startsWith('timework.') || h.startsWith('timeworks.')) {
+          if (!p.startsWith('/timework')) {
+            document.documentElement.style.display = 'none';
+            window.location.replace('/timework' + window.location.search + window.location.hash);
+          }
+        }
+      } catch (e) {}
+    })();
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title><%= title %></title>

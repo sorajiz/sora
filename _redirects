@@ -1,3 +1,9 @@
+https://discord.sorae.tokyo/* /discord.html 200
+http://discord.sorae.tokyo/* /discord.html 200
+https://timework.sorae.tokyo/* /timework.html 200
+http://timework.sorae.tokyo/* /timework.html 200
+https://timeworks.sorae.tokyo/* /timework.html 200
+http://timeworks.sorae.tokyo/* /timework.html 200
 /favicon.ico /assets/favicon.ico 200
 /favicon.png /assets/favicon.png 200
 /intro   /intro.html   200
@@ -7,4 +13,5 @@
 /timework /timework.html 200
 /timeworks /timework.html 200
 /*       /index.html   200
+
 
