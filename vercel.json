@@ -75,6 +75,53 @@
       ],
       "destination": "/timework",
       "permanent": false
+    },
+    {
+      "source": "/pay/:code([A-Za-z0-9_-]+)/:amount(\\d+)",
+      "destination": "/pay?code=:code&amount=:amount",
+      "permanent": false
+    },
+    {
+      "source": "/payment/:code([A-Za-z0-9_-]+)/:amount(\\d+)",
+      "destination": "/payment?code=:code&amount=:amount",
+      "permanent": false
+    },
+    {
+      "source": "/pay/:code([A-Za-z0-9_-]+)",
+      "destination": "/pay?code=:code",
+      "permanent": false
+    },
+    {
+      "source": "/payment/:code([A-Za-z0-9_-]+)",
+      "destination": "/payment?code=:code",
+      "permanent": false
+    },
+    {
+      "source": "/:code(ORD\\d+|SR\\d+)",
+      "destination": "/pay?code=:code",
+      "permanent": false
+    },
+    {
+      "source": "/:code([A-Za-z0-9_-]+)",
+      "has": [
+        {
+          "type": "host",
+          "value": "payment.sorae.tokyo"
+        }
+      ],
+      "destination": "/pay?code=:code",
+      "permanent": false
+    },
+    {
+      "source": "/:code([A-Za-z0-9_-]+)",
+      "has": [
+        {
+          "type": "host",
+          "value": "pay.sorae.tokyo"
+        }
+      ],
+      "destination": "/pay?code=:code",
+      "permanent": false
     }
   ],
   "rewrites": [
