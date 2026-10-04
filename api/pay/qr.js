@@ -9,7 +9,8 @@ module.exports = (req, res) => {
 
   const urlParams = new URL(req.url, 'http://localhost').searchParams;
   const amount = parseInt(urlParams.get('amount') || urlParams.get('amt') || '0', 10);
-  const code = normalizeCode(urlParams.get('code') || urlParams.get('order') || urlParams.get('sr') || 'ORD192');
+  const rawCode = urlParams.get('code') || urlParams.get('order') || urlParams.get('sr');
+  const code = rawCode ? normalizeCode(rawCode) : 'Sora Station';
 
   const qrUrl = getQRUrl(amount, code);
 

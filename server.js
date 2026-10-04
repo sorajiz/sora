@@ -269,9 +269,8 @@ app.get(['/api/pay', '/api/payment'], (req, res) => {
 // GET QR image or URL
 app.get(['/api/pay/qr', '/api/payment/qr'], (req, res) => {
   const amount = parseInt(req.query.amount || req.query.amt || '0', 10);
-  const rawCode = (req.query.code || req.query.order || req.query.sr || 'ORD192').toUpperCase();
-  const numMatch = rawCode.match(/\d+/);
-  const ordCode = numMatch ? `ORD${numMatch[0]}` : rawCode;
+  const rawCode = (req.query.code || req.query.order || req.query.sr || '').trim();
+  const ordCode = rawCode ? (rawCode.match(/\d+/) ? `ORD${rawCode.match(/\d+/)[0]}` : rawCode.toUpperCase()) : 'Sora Station';
   const qrUrl = getQRUrl(amount, ordCode);
 
   if (req.query.redirect === 'true' || req.query.raw === 'true') {
@@ -352,43 +351,8 @@ app.post(['/api/pay/create', '/api/payment/create'], (req, res) => {
   });
 });
 
-// Check payment status (polled by frontend or bot)
-app.get(['/api/pay/status/:srCode', '/api/payment/status/:srCode'], (req, res) => {
-  const code = (req.params.srCode || '').trim().toUpperCase();
-  const session = findPaySession(code);
-
-  if (!session) {
-    const numMatch = code.match(/\d+/);
-    const ordCode = numMatch ? `ORD${numMatch[0]}` : code;
-    return res.json({
-      ok: true,
-      srCode: code,
-      ordCode,
-      status: 'pending',
-      amount: null,
-      expiresAt: null,
-      createdAt: null
-    });
-  }
-
-  if (session.status === 'pending' && session.expiresAt && Date.now() > session.expiresAt) {
-    session.status = 'expired';
-    savePaySessions();
-  }
-
-  res.json({
-    ok: true,
-    orderId: session.ordCode || session.srCode,
-    srCode: code || session.srCode,
-    ordCode: session.ordCode || session.srCode,
-    amount: session.amount,
-    status: session.status,
-    transactionId: session.transactionId,
-    paidAt: session.paidAt,
-    expiresAt: session.expiresAt || null,
-    createdAt: session.createdAt || null
-  });
-});
+// NOTE: /api/pay/status routes are handled by the module-based handler registered below (section 8.5)
+// to avoid duplicate route conflicts, the old in-memory handler is removed.
 
 // Confirm payment (called by Workspace-ZyX-Bot upon MBBank receipt)
 app.post(['/api/pay/confirm', '/api/payment/confirm'], (req, res) => {
@@ -568,21 +532,29 @@ function servePayPage(req, res) {
   const codeParam = req.params?.srCode || req.query?.code || req.query?.order || req.query?.sr || (segments.length > 0 ? segments[0] : null);
   const amountQuery = req.query?.amount || req.query?.amt || req.query?.price || req.query?.tien || (segments.length > 1 ? segments[1] : null);
 
-  const session = findPaySession(codeParam);
   let orderData = null;
-
-  if (session) {
-    orderData = { ...session };
-    if (amountQuery) orderData.amount = parseInt(amountQuery, 10);
-  } else if (codeParam || amountQuery) {
-    const rawCode = (codeParam || 'ORD192').toUpperCase();
+  if (codeParam && /^(ORD|SR)\d+/i.test(codeParam)) {
+    const rawCode = codeParam.toUpperCase();
     const numMatch = rawCode.match(/\d+/);
     const ordCode = numMatch ? `ORD${numMatch[0]}` : rawCode;
-    orderData = {
-      srCode: rawCode,
-      ordCode,
-      amount: amountQuery ? parseInt(amountQuery, 10) : null
-    };
+    const session = findPaySession(ordCode);
+    if (session) {
+      orderData = { ...session };
+      if (amountQuery) orderData.amount = parseInt(amountQuery, 10);
+    } else {
+      orderData = {
+        srCode: rawCode,
+        ordCode,
+        amount: amountQuery ? parseInt(amountQuery, 10) : null
+      };
+    }
+  } else if (codeParam && !/^(PAY|PAYMENT|GENERAL|SORA)$/i.test(codeParam) && isNaN(codeParam)) {
+    const rawCode = codeParam.toUpperCase();
+    const session = findPaySession(rawCode);
+    if (session) {
+      orderData = { ...session };
+      if (amountQuery) orderData.amount = parseInt(amountQuery, 10);
+    }
   }
 
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
@@ -725,17 +697,7 @@ app.all(['/api/pay/status/:srCode', '/api/pay/status'], (req, res) => {
   if (req.params.srCode) req.query.srCode = req.params.srCode;
   return payStatusHandler(req, res);
 });
-app.get(['/pay', '/payment'], (req, res) => {
-  const payDist = path.join(DIST_DIR, 'pay.html');
-  const targetRoot = fs.existsSync(payDist) ? DIST_DIR : path.join(__dirname, 'views');
-  res.sendFile('pay.html', { root: targetRoot });
-});
-
-app.get(/^\/(ORD|SR)\d+$/i, (req, res) => {
-  const payDist = path.join(DIST_DIR, 'pay.html');
-  const targetRoot = fs.existsSync(payDist) ? DIST_DIR : path.join(__dirname, 'views');
-  res.sendFile('pay.html', { root: targetRoot });
-});
+// NOTE: /pay, /payment, /ORD*, /SR* routes are handled by the servePayPage routes registered above (section 8)
 
 // ----------------------------------------------------------------------------
 // 9. LIGHTWEIGHT ASSET 404 & SPA ROUTE FALLBACK

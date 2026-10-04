@@ -141,6 +141,20 @@
       animation: pulse 1.6s infinite;
     }
 
+    .status-pill.ready {
+      background: #0f1f14;
+      border: 1px solid #1a3c25;
+      color: #4ade80;
+    }
+
+    .status-pill.ready .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4ade80;
+      animation: pulse 1.6s infinite;
+    }
+
     .status-pill.paid {
       background: #0f1f14;
       border: 1px solid #1a3c25;
@@ -671,7 +685,7 @@
         <img id="modalQrImg" src="" alt="Mã VietQR Phóng To" />
       </div>
       <div class="modal-info">
-        <p><strong id="modalAmount">0 đ</strong> · <span id="modalMemo">ORD---</span></p>
+        <p><strong id="modalAmount">0 đ</strong> · <span id="modalMemo">Sora Station</span></p>
       </div>
       <button class="btn-qr" id="btnModalDownload" style="width: 100%; padding: 8px 14px;">Tải ảnh QR này</button>
     </div>
@@ -688,6 +702,8 @@
         accountName: 'TRAN DANG KHOA'
       };
 
+      const pageSessionStartedAt = Date.now();
+
       /*__SERVER_ORDER__*/
       const serverOrder = window.__SERVER_ORDER__ || null;
 
@@ -701,13 +717,21 @@
 
       // 1. Check serverOrder (if injected by server)
       if (serverOrder) {
-        if (serverOrder.ordCode || serverOrder.srCode) foundCode = serverOrder.ordCode || serverOrder.srCode;
+        if (serverOrder.ordCode || serverOrder.srCode) {
+          const sc = (serverOrder.ordCode || serverOrder.srCode).toUpperCase();
+          if (sc !== 'GENERAL' && sc !== 'SORA' && sc !== 'DEFAULT' && sc !== 'ORD192') {
+            foundCode = sc;
+          }
+        }
         if (serverOrder.amount) foundAmount = parseInt(serverOrder.amount, 10);
       }
 
-      // 2. Check query params (?code=, ?order=, ?sr=, ?amount=, ?price=, ?tien=, ?vnd=)
+      // 2. Check query params (?code=, ?order=, ?sr=, ?memo=)
       if (!foundCode) {
-        foundCode = urlParams.get('code') || urlParams.get('order') || urlParams.get('sr') || urlParams.get('memo');
+        const qCode = urlParams.get('code') || urlParams.get('order') || urlParams.get('sr') || urlParams.get('memo');
+        if (qCode && !/^(general|sora|default)$/i.test(qCode.trim())) {
+          foundCode = qCode.trim();
+        }
       }
       if (!foundAmount) {
         const qAmt = urlParams.get('amount') || urlParams.get('amt') || urlParams.get('price') || urlParams.get('tien') || urlParams.get('vnd');
@@ -724,9 +748,12 @@
         }
       }
 
-      // Fallback first segment as code if still not matched
+      // Fallback first segment as code ONLY if it looks like an ORD/SR or custom order code (length >= 4 and not keyword)
       if (!foundCode && pathSegments.length > 0) {
-        foundCode = pathSegments[0].toUpperCase();
+        const firstSeg = pathSegments[0].toUpperCase();
+        if (/(ORD|SR)\d+/i.test(firstSeg) || (/^[A-Z0-9_-]{4,15}$/.test(firstSeg) && !/^(PAY|PAYMENT|GENERAL|SORA|INDEX|STATUS)$/i.test(firstSeg))) {
+          foundCode = firstSeg;
+        }
       }
 
       // 4. Check if code has embedded amount separator e.g. ORD198-10000 or ORD198_10000 or 10000-ORD198
@@ -747,41 +774,55 @@
         if (hashMatch) foundAmount = parseInt(hashMatch[0], 10);
       }
 
-      // Standardize order code: ORD{number}
-      let rawCode = (foundCode || 'ORD192').toUpperCase();
-      const numMatch = rawCode.match(/\d+/);
-      const orderNum = numMatch ? numMatch[0] : rawCode.replace(/^(SR|ORD)/i, '');
-      const ordCode = `ORD${orderNum}`;
+      // Xác định loại phiên: Đơn hàng cụ thể (isGeneral = false) hay Cổng thanh toán gốc tự do (isGeneral = true)
+      const isGeneral = !foundCode;
+      let ordCode = '';
+      if (!isGeneral) {
+        const rawCode = foundCode.toUpperCase();
+        const numMatch = rawCode.match(/\d+/);
+        const orderNum = numMatch ? numMatch[0] : rawCode.replace(/^(SR|ORD)/i, '');
+        ordCode = `ORD${orderNum}`;
+      } else {
+        ordCode = 'GENERAL';
+      }
+
+      const displayMemo = isGeneral ? 'Sora Station' : ordCode;
       let rawAmount = (foundAmount && !isNaN(foundAmount) && foundAmount > 0) ? foundAmount : null;
 
       // ── EXPIRATION & COUNTDOWN TIME SYNCHRONIZATION ──
-      // Cập nhật và lưu mốc hết hạn theo mã QR bot tạo ra, tránh reset về 15:00 khi vào lại/tải lại trang
+      // Chỉ tính thời gian hết hạn cho đơn hàng có mã cụ thể; Cổng thanh toán tự do không bao giờ hết hạn
       let targetExpiresAt = null;
-      if (serverOrder && serverOrder.expiresAt) {
-        targetExpiresAt = Number(serverOrder.expiresAt);
-      }
-      if (!targetExpiresAt) {
-        try {
-          const cachedExp = localStorage.getItem('sora_exp_' + ordCode);
-          if (cachedExp && !isNaN(Number(cachedExp))) {
-            targetExpiresAt = Number(cachedExp);
-          }
-        } catch (e) {}
-      }
-      if (!targetExpiresAt || isNaN(targetExpiresAt) || targetExpiresAt <= 0) {
-        targetExpiresAt = Date.now() + 15 * 60 * 1000;
-        try {
-          localStorage.setItem('sora_exp_' + ordCode, String(targetExpiresAt));
-        } catch (e) {}
+      if (!isGeneral) {
+        if (serverOrder && serverOrder.expiresAt) {
+          targetExpiresAt = Number(serverOrder.expiresAt);
+        }
+        if (!targetExpiresAt) {
+          try {
+            const cachedExp = localStorage.getItem('sora_exp_' + ordCode);
+            if (cachedExp && !isNaN(Number(cachedExp))) {
+              targetExpiresAt = Number(cachedExp);
+            }
+          } catch (e) {}
+        }
+        if (!targetExpiresAt || isNaN(targetExpiresAt) || targetExpiresAt <= 0) {
+          targetExpiresAt = Date.now() + 15 * 60 * 1000;
+          try {
+            localStorage.setItem('sora_exp_' + ordCode, String(targetExpiresAt));
+          } catch (e) {}
+        }
       }
 
-      // ── CLEAN ADDRESS BAR: Đảm bảo thanh địa chỉ chỉ hiện https://payment.sorae.tokyo/{Mã_Đơn} ──
-      // Ẩn sạch ?amount=... và path thừa, giữ URL cực kỳ gọn gàng chuyên nghiệp
+      // ── CLEAN ADDRESS BAR ──
       if (window.history && window.history.replaceState) {
         try {
           const isSub = /^(payment|pay)\./i.test(window.location.hostname || '');
-          const cleanPath = isSub ? `/${ordCode}` : `/payment/${ordCode}`;
-          window.history.replaceState({}, document.title, cleanPath);
+          if (isGeneral) {
+            const cleanPath = isSub ? '/' : '/payment';
+            window.history.replaceState({}, document.title, cleanPath);
+          } else {
+            const cleanPath = isSub ? `/${ordCode}` : `/payment/${ordCode}`;
+            window.history.replaceState({}, document.title, cleanPath);
+          }
         } catch (e) {}
       }
 
@@ -790,11 +831,11 @@
         return Number(v).toLocaleString('vi-VN') + ' đ';
       }
 
-      // Clean QR URL using VietQR qr_only template (Image 2 style)
+      // Clean QR URL using VietQR qr_only template
       function getQRUrl(amt, memo) {
         const encName = encodeURIComponent(BANK_CONFIG.accountName);
-        const encMemo = encodeURIComponent(memo);
-        const amtParam = (amt && !isNaN(amt)) ? `amount=${amt}&` : '';
+        const encMemo = encodeURIComponent(memo || 'Sora Station');
+        const amtParam = (amt && !isNaN(amt) && amt > 0) ? `amount=${amt}&` : '';
         return `https://api.vietqr.io/image/${BANK_CONFIG.bin}-${BANK_CONFIG.stk}-qr_only.png?${amtParam}addInfo=${encMemo}&accountName=${encName}`;
       }
 
@@ -802,33 +843,54 @@
       const modalQrImg = document.getElementById('modalQrImg');
 
       function updateQR(amt) {
-        const url = getQRUrl(amt, ordCode);
+        const url = getQRUrl(amt, displayMemo);
         qrImg.src = url;
         modalQrImg.src = url;
       }
 
       // Populate UI
-      document.getElementById('valMemo').textContent = ordCode;
+      document.getElementById('valMemo').textContent = displayMemo;
       document.getElementById('valSTK').textContent = BANK_CONFIG.stk;
       document.getElementById('valName').textContent = BANK_CONFIG.accountName;
-      document.getElementById('modalMemo').textContent = ordCode;
+      document.getElementById('modalMemo').textContent = displayMemo;
+
+      if (isGeneral) {
+        const brandTitle = document.querySelector('.brand-title');
+        if (brandTitle) brandTitle.textContent = 'Cổng Thanh Toán Sora';
+        const pill = document.getElementById('statusPill');
+        const pillText = document.getElementById('statusPillText');
+        if (pill) pill.className = 'status-pill ready';
+        if (pillText) pillText.textContent = 'Sẵn sàng nhận tiền';
+        const cd = document.getElementById('countdownEl');
+        if (cd) {
+          cd.textContent = '24/7';
+          cd.title = 'Cổng thanh toán tự do không giới hạn thời gian';
+        }
+      }
 
       if (rawAmount) {
         document.getElementById('valAmount').textContent = formatVND(rawAmount);
         document.getElementById('modalAmount').textContent = formatVND(rawAmount);
         updateQR(rawAmount);
 
-        // Tự động đồng bộ số tiền lên Cloud Store trong nền nếu đơn chưa có
-        try {
-          fetch('/api/pay/create', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ srCode: ordCode, amount: rawAmount, expiresAt: targetExpiresAt })
-          }).catch(function () {});
-        } catch (e) {}
+        if (!isGeneral) {
+          // Tự động đồng bộ số tiền lên Cloud Store trong nền nếu đơn chưa có
+          try {
+            fetch('/api/pay/create', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ srCode: ordCode, amount: rawAmount, expiresAt: targetExpiresAt })
+            }).catch(function () {});
+          } catch (e) {}
+        }
       } else {
-        document.getElementById('valAmount').textContent = 'Đang tải số tiền...';
-        document.getElementById('modalAmount').textContent = 'Nhập khi quét QR';
+        if (isGeneral) {
+          document.getElementById('valAmount').textContent = 'Tùy chỉnh khi quét';
+          document.getElementById('modalAmount').textContent = 'Nhập khi quét QR';
+        } else {
+          document.getElementById('valAmount').textContent = 'Đang tải số tiền...';
+          document.getElementById('modalAmount').textContent = 'Nhập khi quét QR';
+        }
         updateQR('');
       }
 
@@ -855,6 +917,10 @@
       const iconCheck = document.getElementById('iconCheck');
       const textCheck = document.getElementById('textCheck');
 
+      const checkEndpoint = isGeneral 
+        ? `/api/pay/status/general?since=${pageSessionStartedAt}` 
+        : `/api/pay/status/${ordCode}`;
+
       async function manualCheckPayment() {
         if (isCompleted) return;
         if (btnCheckPayment && btnCheckPayment.classList.contains('checking')) return;
@@ -864,20 +930,21 @@
         if (textCheck) textCheck.textContent = 'Đang kiểm tra...';
 
         try {
-          const res = await fetch(`/api/pay/status/${ordCode}`);
+          const res = await fetch(checkEndpoint);
           if (res.ok) {
             const data = await res.json();
             if (data.status === 'paid' || data.paid === true) {
               onSuccess(data);
-              showToast('🎉 Đã xác nhận thanh toán thành công!');
+              const amtLabel = data.amount ? formatVND(data.amount) : '';
+              showToast('🎉 Đã xác nhận thanh toán thành công' + (amtLabel ? ': ' + amtLabel : '!'));
               return;
             }
-            if (data.status === 'expired') {
+            if (data.status === 'expired' && !isGeneral) {
               onExpired();
               showToast('Mã thanh toán đã hết hạn!');
               return;
             }
-            if (data.expiresAt) {
+            if (data.expiresAt && !isGeneral) {
               applyServerExpiresAt(data.expiresAt);
             }
             if (data.amount && !rawAmount) {
@@ -905,7 +972,7 @@
 
       // ── DOWNLOAD QR (EXACT FILENAME: qrsora.png) ──
       async function downloadQR() {
-        const currentSrc = qrImg.src || getQRUrl(rawAmount, ordCode);
+        const currentSrc = qrImg.src || getQRUrl(rawAmount, displayMemo);
         if (!currentSrc) return;
         try {
           const resp = await fetch(currentSrc);
@@ -945,9 +1012,16 @@
         btn.addEventListener('click', () => {
           const target = btn.getAttribute('data-target');
           let val = '';
-          if (target === 'copyAmount') val = rawAmount.toString();
+          if (target === 'copyAmount') {
+            if (rawAmount) {
+              val = rawAmount.toString();
+            } else {
+              showToast('Số tiền tùy chỉnh — Quý khách tự nhập trên app ngân hàng!');
+              return;
+            }
+          }
           if (target === 'copySTK') val = BANK_CONFIG.stk;
-          if (target === 'copyMemo') val = ordCode;
+          if (target === 'copyMemo') val = displayMemo;
 
           if (val) {
             navigator.clipboard.writeText(val).then(() => {
@@ -965,12 +1039,13 @@
       });
 
       // ── TIMER (SYNCHRONIZED WITH BOT & EXPIRATION CLOCK) ──
-      let totalSeconds = Math.max(0, Math.floor((targetExpiresAt - Date.now()) / 1000));
+      let totalSeconds = targetExpiresAt ? Math.max(0, Math.floor((targetExpiresAt - Date.now()) / 1000)) : 0;
       let isCompleted = false;
+      let timer = null;
       const countdownEl = document.getElementById('countdownEl');
 
       function renderTimer() {
-        if (isCompleted || !countdownEl) return;
+        if (isCompleted || !countdownEl || isGeneral) return;
         const mins = Math.floor(totalSeconds / 60);
         const secs = totalSeconds % 60;
         countdownEl.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
@@ -983,7 +1058,7 @@
       }
 
       function applyServerExpiresAt(serverExp) {
-        if (!serverExp || isNaN(Number(serverExp))) return;
+        if (isGeneral || !serverExp || isNaN(Number(serverExp))) return;
         const expTime = Number(serverExp);
         if (expTime <= 0) return;
         targetExpiresAt = expTime;
@@ -992,7 +1067,6 @@
         } catch (e) {}
 
         const realRemaining = Math.max(0, Math.floor((expTime - Date.now()) / 1000));
-        // Nếu chênh lệch > 2 giây so với client, điều chỉnh mượt mà theo server
         if (Math.abs(totalSeconds - realRemaining) > 2) {
           totalSeconds = realRemaining;
           if (totalSeconds <= 0) {
@@ -1003,63 +1077,57 @@
         }
       }
 
-      // Render ngay lập tức khi mở trang (tránh giật 15:00 nếu thời gian còn lại là 10:00)
-      if (totalSeconds <= 0) {
-        onExpired();
-      } else {
-        renderTimer();
-      }
-
-      const timer = setInterval(() => {
-        if (isCompleted) return;
-        totalSeconds--;
+      if (!isGeneral) {
         if (totalSeconds <= 0) {
-          clearInterval(timer);
           onExpired();
-          return;
+        } else {
+          renderTimer();
         }
-        renderTimer();
-      }, 1000);
+
+        timer = setInterval(() => {
+          if (isCompleted) return;
+          totalSeconds--;
+          if (totalSeconds <= 0) {
+            clearInterval(timer);
+            onExpired();
+            return;
+          }
+          renderTimer();
+        }, 1000);
+      }
 
       // ── EXPIRED STATE ──
       function onExpired() {
-        if (isCompleted) return;
+        if (isCompleted || isGeneral) return;
         isCompleted = true;
         countdownEl.style.display = 'none';
 
-        // Status pill: Quá hạn
         const pill = document.getElementById('statusPill');
         pill.className = 'status-pill expired';
         document.getElementById('statusPillText').textContent = '✕ Quá hạn';
 
-        // Banner
         document.getElementById('expiredBanner').style.display = 'block';
 
-        // Dim QR
         document.getElementById('qrTrigger').style.opacity = '0.35';
         document.getElementById('qrTrigger').style.pointerEvents = 'none';
         if (btnCheckPayment) btnCheckPayment.style.display = 'none';
       }
 
-      // ── SUCCESS STATE (ONLY ✓ Thành công, NO EXTRA BADGE) ──
+      // ── SUCCESS STATE (ONLY ✓ Thành công) ──
       function onSuccess(data) {
         if (isCompleted) return;
         isCompleted = true;
-        clearInterval(timer);
+        if (timer) clearInterval(timer);
 
-        // Hide countdown timer element completely
         countdownEl.style.display = 'none';
         if (btnCheckPayment) btnCheckPayment.style.display = 'none';
 
-        // Status pill: ONLY ✓ Thành công
         const pill = document.getElementById('statusPill');
         pill.className = 'status-pill paid';
         document.getElementById('statusPillText').textContent = '✓ Thành công';
 
-              // In-place Success Banner
         const banner = document.getElementById('successBanner');
         const transId = data.transactionId || 'FT' + Date.now();
-        // Cập nhật amount từ data trước khi show banner
         if (data.amount && data.amount > 0) {
           rawAmount = data.amount;
           document.getElementById('valAmount').textContent = formatVND(rawAmount);
@@ -1072,28 +1140,25 @@
       }
 
       // ── POLLING CHECK STATUS ──
-      let amountRetryCount = 0; // Đếm số lần thử tải amount thất bại
+      let amountRetryCount = 0;
       async function checkStatus() {
         if (isCompleted) return;
         try {
-          const res = await fetch(`/api/pay/status/${ordCode}`);
+          const res = await fetch(checkEndpoint);
           if (res.ok) {
             const data = await res.json();
             if (data.status === 'paid' || data.paid === true) {
               onSuccess(data);
               return;
             }
-            if (data.status === 'expired') {
+            if (data.status === 'expired' && !isGeneral) {
               onExpired();
               return;
             }
-            // Đồng bộ mốc thời gian hết hạn chính xác từ đơn hàng gốc đã tạo
-            if (data.expiresAt) {
+            if (data.expiresAt && !isGeneral) {
               applyServerExpiresAt(data.expiresAt);
             }
-            // Cập nhật amount từ server bất kỳ khi nào có giá trị mới hợp lệ
-            // (Vercel instance có thể khác nhau, ưu tiên server amount)
-            if (data.amount && data.amount > 0) {
+            if (data.amount && data.amount > 0 && !rawAmount) {
               rawAmount = data.amount;
               document.getElementById('valAmount').textContent = formatVND(rawAmount);
               document.getElementById('modalAmount').textContent = formatVND(rawAmount);
@@ -1102,8 +1167,7 @@
           }
         } catch {}
 
-        // Chỉ fallback "Tùy chỉnh khi quét" sau khi đã thử >= 8 lần mà vẫn không có số tiền
-        if (!rawAmount) {
+        if (!rawAmount && !isGeneral) {
           amountRetryCount = (amountRetryCount || 0) + 1;
           if (amountRetryCount >= 8) {
             const el = document.getElementById('valAmount');
@@ -1111,8 +1175,6 @@
               el.textContent = 'Tùy chỉnh khi quét';
             }
           }
-        } else {
-          amountRetryCount = 0; // reset nếu đã có amount
         }
       }
 
@@ -1126,10 +1188,10 @@
       }, 2500);
 
       // Testing shortcuts in console
-      window.testPaySuccess = function () {
+      window.testPaySuccess = function (customAmt) {
         onSuccess({
           srCode: ordCode,
-          amount: rawAmount,
+          amount: customAmt || rawAmount || 50000,
           transactionId: 'FT' + Math.floor(Math.random() * 100000000)
         });
       };

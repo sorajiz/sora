@@ -131,6 +131,9 @@ module.exports = async (req, res) => {
       // Lưu mapping cho cả ORD... và SR... để web poll không bị miss
       sessions[ordCode] = session;
       if (srCode) sessions[srCode] = session;
+      // KHÔNG ghi đè GENERAL khi giao dịch có mã đơn cụ thể —
+      // chỉ để GENERAL phản ánh giao dịch thực sự tự do (không mã đơn)
+      // sessions['GENERAL'] = session; // <-- tắt để tránh lẫn đơn hàng vào cổng tự do
       await saveSessionsAsync(sessions);
 
       // Đánh dấu giao dịch đã hoàn tất chống trùng lặp
@@ -172,9 +175,27 @@ module.exports = async (req, res) => {
         } catch {}
       }
     } else {
-      // Đơn không có mã đơn nhưng tiền vẫn vào -> Ghi nhận đã nhận
+      // Đơn không có mã đơn nhưng tiền vẫn vào -> Ghi nhận vào GENERAL session
+      const generalData = {
+        orderId: 'GENERAL',
+        srCode: 'GENERAL',
+        ordCode: 'GENERAL',
+        status: 'paid',
+        paidAt: Date.now(),
+        amount: amount,
+        transactionId: transId,
+        bank: payload.gateway || payload.bankName || payload.bank || 'MBBank',
+        content: content
+      };
+      try {
+        const sessions = await fetchSessionsAsync();
+        sessions['GENERAL'] = generalData;
+        sessions['_LATEST_'] = generalData;
+        await saveSessionsAsync(sessions);
+      } catch (e) {}
+
       markTransactionProcessed(transId);
-      console.log(`[SePay Webhook] ℹ️ Nhận giao dịch không có mã đơn: ${amount}đ (${content}) - Trans: ${transId}`);
+      console.log(`[SePay Webhook] ℹ️ Ghi nhận giao dịch tự do: ${amount}đ (${content}) - Trans: ${transId}`);
     }
 
     // 5. Phản hồi hợp lệ chuẩn SePay: HTTP 200 + body {"success": true}

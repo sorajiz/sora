@@ -1,23 +1,16 @@
-const { getSessions, normalizeCode, saveSessions, fetchSessionsAsync, saveSessionsAsync } = require('../../_store');
+const { getSessions, normalizeCode, saveSessions, fetchSessionsAsync, saveSessionsAsync, formatVND } = require('../../_store');
 
 const SEPAY_TOKEN = process.env.SEPAY_API_TOKEN || 'L6UBGXPLJQSNGQHVBQJYMBAQ2C4L77TAPTKRDZCV9UJ2XDHAPZMGD0X6DSKI15Z5';
 
 let cachedTransactions = null;
 let lastFetchTime = 0;
 
-/**
- * Kiểm tra trực tiếp trên SePay xem đơn đã có tiền vào chưa
- * Dùng bộ đệm 2 giây để tránh vượt rate-limit của SePay (tối đa 3 req/s)
- * @param {string} ordCode 
- */
-async function checkSePayForOrder(ordCode) {
-  if (!SEPAY_TOKEN || !ordCode) return null;
+async function fetchSePayTransactions() {
+  if (!SEPAY_TOKEN) return [];
   const now = Date.now();
-
-  // Chỉ fetch SePay tối đa 1 lần mỗi 2 giây giữa các client
   if (!cachedTransactions || (now - lastFetchTime) > 2000) {
     try {
-      const res = await fetch('https://my.sepay.vn/userapi/transactions/list?limit=15', {
+      const res = await fetch('https://my.sepay.vn/userapi/transactions/list?limit=25', {
         headers: {
           'Authorization': `Bearer ${SEPAY_TOKEN}`,
           'Accept': 'application/json',
@@ -30,26 +23,40 @@ async function checkSePayForOrder(ordCode) {
         cachedTransactions = Array.isArray(data?.transactions) ? data.transactions : [];
         lastFetchTime = now;
       }
-    } catch {
-      // Bỏ qua lỗi mạng, tiếp tục dùng cache cũ nếu có
-    }
+    } catch {}
   }
+  return cachedTransactions || [];
+}
 
-  if (!cachedTransactions || !cachedTransactions.length) return null;
+function parseTxTime(dateVal) {
+  if (!dateVal) return Date.now();
+  let str = String(dateVal).trim().replace(' ', 'T');
+  if (!str.includes('+') && !str.includes('Z')) {
+    str += '+07:00';
+  }
+  const parsed = Date.parse(str);
+  return isNaN(parsed) ? Date.now() : parsed;
+}
+
+/**
+ * Kiểm tra SePay cho giao dịch đơn có mã ORD/SR cụ thể
+ */
+async function checkSePayForOrder(ordCode) {
+  if (!ordCode) return null;
+  const transactions = await fetchSePayTransactions();
+  if (!transactions.length) return null;
 
   const targetCode = String(ordCode).toUpperCase();
   const numMatch = targetCode.match(/\d+/);
   const num = numMatch ? numMatch[0] : '';
 
-  for (const tx of cachedTransactions) {
+  for (const tx of transactions) {
     const content = String(tx.transaction_content || tx.content || tx.description || '').toUpperCase();
     const codeField = String(tx.code || '').toUpperCase();
     const amountIn = Number(tx.amount_in || tx.amount || tx.transferAmount || 0);
 
-    // Giao dịch phải là tiền vào (> 0)
     if (amountIn <= 0) continue;
 
-    // Kiểm tra khớp mã ORD... / SR... / số thứ tự đơn
     const isMatched = (
       (codeField && codeField === targetCode) ||
       content.includes(targetCode) ||
@@ -66,12 +73,43 @@ async function checkSePayForOrder(ordCode) {
         status: 'paid',
         amount: amountIn,
         transactionId: tx.reference_number || String(tx.id),
-        paidAt: tx.transaction_date ? new Date(tx.transaction_date).getTime() : Date.now(),
+        paidAt: parseTxTime(tx.transaction_date),
         bank: tx.bank_brand_name || tx.gateway || 'MBBank'
       };
     }
   }
+  return null;
+}
 
+/**
+ * Kiểm tra SePay cho giao dịch tự do (QR bình thường, không mã đơn, số tiền tùy chỉnh)
+ * Ai bank bao nhiêu trong phiên thì check bấy nhiêu!
+ */
+async function checkSePayForGeneral(sinceTime) {
+  const transactions = await fetchSePayTransactions();
+  if (!transactions.length) return null;
+
+  const now = Date.now();
+  // Buffer 3 phút cho sai lệch đồng hồ client/server
+  const minTime = (sinceTime && !isNaN(Number(sinceTime))) ? (Number(sinceTime) - 3 * 60 * 1000) : (now - 15 * 60 * 1000);
+
+  for (const tx of transactions) {
+    const amountIn = Number(tx.amount_in || tx.amount || tx.transferAmount || 0);
+    if (amountIn <= 0) continue;
+
+    const txTime = parseTxTime(tx.transaction_date);
+
+    if (txTime >= minTime) {
+      return {
+        status: 'paid',
+        amount: amountIn,
+        transactionId: tx.reference_number || String(tx.id),
+        paidAt: txTime,
+        bank: tx.bank_brand_name || tx.gateway || 'MBBank',
+        content: tx.transaction_content || tx.content || ''
+      };
+    }
+  }
   return null;
 }
 
@@ -84,16 +122,89 @@ module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   const raw = (req.query.srCode || req.url.split('?')[0].split('/').pop() || '').trim().toUpperCase();
+  const isGeneral = (!raw || raw === 'GENERAL' || raw === 'SORA' || raw === 'DEFAULT' || raw === '_GENERAL_' || raw === 'ROOT');
+  const sinceParam = Number(req.query.since || 0);
+
+  // Tải từ Cloud Master Store
+  const sessions = await fetchSessionsAsync();
+
+  // 1. XỬ LÝ PHIÊN THANH TOÁN TỰ DO (QR BÌNH THƯỜNG / KHÔNG MÃ ĐƠN)
+  if (isGeneral) {
+    let generalSession = sessions['GENERAL'] || sessions['_LATEST_'];
+    const minCheckTime = sinceParam ? (sinceParam - 3 * 60 * 1000) : (Date.now() - 15 * 60 * 1000);
+
+    // Kiểm tra xem đã có webhook nhận tiền trong phiên chưa
+    if (generalSession && generalSession.status === 'paid' && generalSession.paidAt >= minCheckTime) {
+      const finalAmt = generalSession.amount || 0;
+      return res.json({
+        ok: true,
+        isGeneral: true,
+        orderId: 'GENERAL',
+        srCode: 'GENERAL',
+        ordCode: 'GENERAL',
+        status: 'paid',
+        paid: true,
+        amount: finalAmt,
+        amountFormatted: finalAmt > 0 ? formatVND(finalAmt) : null,
+        transactionId: generalSession.transactionId,
+        paidAt: generalSession.paidAt,
+        bank: generalSession.bank || 'MBBank'
+      });
+    }
+
+    // Quét trực tiếp SePay API xem có tiền vào tài khoản không
+    const sepayTx = await checkSePayForGeneral(sinceParam);
+    if (sepayTx) {
+      generalSession = {
+        orderId: 'GENERAL',
+        srCode: 'GENERAL',
+        ordCode: 'GENERAL',
+        status: 'paid',
+        amount: sepayTx.amount,
+        transactionId: sepayTx.transactionId,
+        paidAt: sepayTx.paidAt,
+        bank: sepayTx.bank
+      };
+      sessions['GENERAL'] = generalSession;
+      sessions['_LATEST_'] = generalSession;
+      await saveSessionsAsync(sessions);
+
+      return res.json({
+        ok: true,
+        isGeneral: true,
+        orderId: 'GENERAL',
+        srCode: 'GENERAL',
+        ordCode: 'GENERAL',
+        status: 'paid',
+        paid: true,
+        amount: sepayTx.amount,
+        amountFormatted: formatVND(sepayTx.amount),
+        transactionId: sepayTx.transactionId,
+        paidAt: sepayTx.paidAt,
+        bank: sepayTx.bank
+      });
+    }
+
+    return res.json({
+      ok: true,
+      isGeneral: true,
+      orderId: 'GENERAL',
+      srCode: 'GENERAL',
+      ordCode: 'GENERAL',
+      status: 'pending',
+      paid: false,
+      amount: null,
+      message: 'Chưa ghi nhận biến động số dư'
+    });
+  }
+
+  // 2. XỬ LÝ ĐƠN HÀNG CÓ MÃ ORD / SR CỤ THỂ
   const ordCode = normalizeCode(raw);
   const numMatch = ordCode.match(/\d+/);
   const srCode = numMatch ? `SR${numMatch[0]}` : ordCode;
 
-  // Luôn tải từ Cloud Master Store để đảm bảo dữ liệu nhất quán
-  // (Vercel serverless có nhiều instance độc lập, memory không chia sẻ)
-  const sessions = await fetchSessionsAsync();
   let session = sessions[ordCode] || sessions[srCode] || sessions[raw];
 
-  // 1. Nếu session chưa có hoặc đang pending, kiểm tra SePay Realtime
   if (!session || session.status === 'pending') {
     const sepayTx = await checkSePayForOrder(ordCode);
     if (sepayTx) {
@@ -104,9 +215,9 @@ module.exports = async (req, res) => {
         createdAt: Date.now()
       };
       session.status = 'paid';
-      // Ưu tiên giữ amount từ session gốc (Bot tạo), chỉ dùng SePay amount làm fallback
-      // Điều này đảm bảo amount hiển thị đúng với số tiền yêu cầu, không phải số tiền thực tế chuyển
-      if (!session.amount || session.amount <= 0) {
+      // "ai bank bao nhiêu khi kiểm tra thì check bấy nhiêu":
+      // Cập nhật số tiền thực nhận từ SePay (nếu đơn tùy chỉnh hoặc sepay có số tiền thực tế)
+      if (!session.amount || session.amount <= 0 || sepayTx.amount > 0) {
         session.amount = sepayTx.amount;
       }
       session.transactionId = sepayTx.transactionId;
@@ -138,7 +249,6 @@ module.exports = async (req, res) => {
     saveSessions(sessions);
   }
 
-  const { formatVND } = require('../../_store');
   const finalAmount = session.amount || 0;
   res.json({
     ok: true,
