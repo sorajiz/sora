@@ -187,11 +187,11 @@
     { "source": "/timework", "destination": "/timework.html" },
     { "source": "/timeworks", "destination": "/timework.html" },
     { "source": "/pay", "destination": "/pay.html" },
-    { "source": "/pay/:code", "destination": "/pay.html" },
-    { "source": "/pay/:code/:amount", "destination": "/pay.html" },
+    { "source": "/pay/:code", "destination": "/pay.html?code=:code" },
+    { "source": "/pay/:code/:amount", "destination": "/pay.html?code=:code&amount=:amount" },
     { "source": "/payment", "destination": "/payment.html" },
-    { "source": "/payment/:code", "destination": "/payment.html" },
-    { "source": "/payment/:code/:amount", "destination": "/payment.html" },
+    { "source": "/payment/:code", "destination": "/payment.html?code=:code" },
+    { "source": "/payment/:code/:amount", "destination": "/payment.html?code=:code&amount=:amount" },
     { "source": "/((?!assets|js|music|favicon|api|pay|payment|.*\\..*).*)", "destination": "/index.html" }
   ],
   "headers": [

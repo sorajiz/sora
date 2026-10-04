@@ -7,12 +7,22 @@
         var p = (window.location.pathname || '/').toLowerCase();
         if (p.startsWith('/pay') || p.startsWith('/payment')) {
           document.documentElement.style.display = 'none';
-          window.location.replace('/pay.html' + window.location.search + window.location.hash);
+          var cleanCode = p.replace(/^\/(pay|payment)\/?/i, '').split('/')[0];
+          var targetUrl = '/pay.html' + (cleanCode ? '?code=' + cleanCode : '');
+          if (window.location.search) {
+            targetUrl += (cleanCode ? '&' : '?') + window.location.search.slice(1);
+          }
+          window.location.replace(targetUrl + window.location.hash);
           return;
         }
         if (h === 'payment.sorae.tokyo' || h === 'pay.sorae.tokyo' || h.startsWith('payment.') || h.startsWith('pay.')) {
           document.documentElement.style.display = 'none';
-          window.location.replace('/pay.html' + window.location.search + window.location.hash);
+          var subCode = p.replace(/^\//, '').split('/')[0];
+          var subTarget = '/pay.html' + (subCode ? '?code=' + subCode : '');
+          if (window.location.search) {
+            subTarget += (subCode ? '&' : '?') + window.location.search.slice(1);
+          }
+          window.location.replace(subTarget + window.location.hash);
           return;
         }
         if (h === 'discord.sorae.tokyo' || h.startsWith('discord.')) {
