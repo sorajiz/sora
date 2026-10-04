@@ -227,27 +227,92 @@ function findPaySession(queryCode) {
   return null;
 }
 
+const BANK_CONFIG = {
+  bin: '970422',
+  stk: '67788990011',
+  accountName: 'TRAN DANG KHOA',
+  bankName: 'MBBank'
+};
+
+function getQRUrl(amt, memo) {
+  const encName = encodeURIComponent(BANK_CONFIG.accountName);
+  const encMemo = encodeURIComponent(memo);
+  const amtParam = (amt && !isNaN(amt)) ? `amount=${amt}&` : '';
+  return `https://api.vietqr.io/image/${BANK_CONFIG.bin}-${BANK_CONFIG.stk}-qr_only.png?${amtParam}addInfo=${encMemo}&accountName=${encName}`;
+}
+
+// 6c. SORA PAYMENT GATEWAY API INFO
+app.get(['/api/pay', '/api/payment'], (req, res) => {
+  res.json({
+    status: 'online',
+    service: "Sora's Station Payment Gateway API",
+    version: '2.0.0',
+    timestamp: new Date().toISOString(),
+    bank: BANK_CONFIG,
+    endpoints: {
+      createOrder: 'POST /api/pay/create',
+      checkStatus: 'GET /api/pay/status/:srCode',
+      confirmPayment: 'POST /api/pay/confirm',
+      getQR: 'GET /api/pay/qr?amount=10000&code=ORD197'
+    },
+    webUrls: {
+      mainDomain: 'https://sorae.tokyo/pay/:code',
+      subDomain: 'https://payment.sorae.tokyo/:code'
+    }
+  });
+});
+
+// GET QR image or URL
+app.get(['/api/pay/qr', '/api/payment/qr'], (req, res) => {
+  const amount = parseInt(req.query.amount || req.query.amt || '0', 10);
+  const rawCode = (req.query.code || req.query.order || req.query.sr || 'ORD192').toUpperCase();
+  const numMatch = rawCode.match(/\d+/);
+  const ordCode = numMatch ? `ORD${numMatch[0]}` : rawCode;
+  const qrUrl = getQRUrl(amount, ordCode);
+
+  if (req.query.redirect === 'true' || req.query.raw === 'true') {
+    return res.redirect(302, qrUrl);
+  }
+
+  res.json({
+    ok: true,
+    orderId: ordCode,
+    amount,
+    qrUrl
+  });
+});
+
 // Create payment session (called by Workspace-ZyX-Bot upon /qr)
 app.post(['/api/pay/create', '/api/payment/create'], (req, res) => {
   const { srCode, amount, description, bank = 'MBBank', expiresAt } = req.body || {};
-  if (!srCode || !amount) {
-    return res.status(400).json({ ok: false, error: 'Thiếu srCode hoặc amount' });
+  if (!amount) {
+    return res.status(400).json({ ok: false, error: 'Thiếu số tiền (amount)' });
   }
 
-  const rawCode = String(srCode).trim().toUpperCase();
+  const numAmount = parseInt(amount, 10);
+  if (isNaN(numAmount) || numAmount <= 0) {
+    return res.status(400).json({ ok: false, error: 'Số tiền không hợp lệ' });
+  }
+
+  const rawCode = srCode ? String(srCode).trim().toUpperCase() : ('ORD' + Math.floor(100 + Math.random() * 900));
   const numMatch = rawCode.match(/\d+/);
   const orderNum = numMatch ? numMatch[0] : rawCode.replace(/^(SR|ORD)/i, '');
   const ordCode = `ORD${orderNum}`;
-  const numAmount = parseInt(amount, 10);
   const expTime = expiresAt || (Date.now() + 15 * 60 * 1000);
+  const qrUrl = getQRUrl(numAmount, ordCode);
 
   const sessionData = {
+    orderId: ordCode,
     srCode: rawCode,
     ordCode,
     amount: numAmount,
+    formattedAmount: numAmount.toLocaleString('vi-VN') + ' đ',
     description: description || `Thanh toán đơn hàng ${ordCode}`,
-    bank,
+    bank: BANK_CONFIG,
     status: 'pending',
+    qrUrl,
+    payUrl: `https://sorae.tokyo/pay/${ordCode}`,
+    subdomainUrl: `https://payment.sorae.tokyo/${ordCode}`,
     createdAt: Date.now(),
     expiresAt: expTime,
     transactionId: null,
@@ -262,11 +327,16 @@ app.post(['/api/pay/create', '/api/payment/create'], (req, res) => {
 
   res.json({
     ok: true,
+    orderId: ordCode,
     srCode: rawCode,
     ordCode,
     amount: numAmount,
-    payUrl: `https://payment.sorae.tokyo/${ordCode}`,
-    expiresAt: expTime
+    formattedAmount: sessionData.formattedAmount,
+    qrUrl,
+    payUrl: `https://sorae.tokyo/pay/${ordCode}`,
+    subdomainUrl: `https://payment.sorae.tokyo/${ordCode}`,
+    expiresAt: expTime,
+    bank: BANK_CONFIG
   });
 });
 
@@ -294,7 +364,8 @@ app.get(['/api/pay/status/:srCode', '/api/payment/status/:srCode'], (req, res) =
 
   res.json({
     ok: true,
-    srCode: session.srCode,
+    orderId: session.ordCode || session.srCode,
+    srCode: code || session.srCode,
     ordCode: session.ordCode || session.srCode,
     amount: session.amount,
     status: session.status,

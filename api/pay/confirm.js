@@ -1,43 +1,23 @@
-const fs = require('fs');
-const path = require('path');
-
-const SESSIONS_FILE = path.join('/tmp', 'pay_sessions.json');
-
-function getSessions() {
-  try {
-    if (fs.existsSync(SESSIONS_FILE)) {
-      return JSON.parse(fs.readFileSync(SESSIONS_FILE, 'utf8'));
-    }
-  } catch {}
-  return {};
-}
-
-function saveSessions(data) {
-  try {
-    fs.writeFileSync(SESSIONS_FILE, JSON.stringify(data, null, 2), 'utf8');
-  } catch {}
-}
+const { getSessions, saveSessions, normalizeCode } = require('../_store');
 
 module.exports = (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   const { srCode, amount, transactionId, bank } = req.body || {};
   if (!srCode) {
-    return res.status(400).json({ ok: false, error: 'Thiếu srCode' });
+    return res.status(400).json({ ok: false, error: 'Thiếu srCode (Mã đơn hàng)' });
   }
 
-  const rawCode = String(srCode).trim().toUpperCase();
-  const numMatch = rawCode.match(/\d+/);
-  const orderNum = numMatch ? numMatch[0] : rawCode.replace(/^(SR|ORD)/i, '');
-  const ordCode = `ORD${orderNum}`;
-
+  const ordCode = normalizeCode(srCode);
   const sessions = getSessions();
-  let session = sessions[rawCode] || sessions[ordCode] || {
-    srCode: rawCode,
+  let session = sessions[ordCode] || {
+    orderId: ordCode,
+    srCode: ordCode,
     ordCode,
     amount: amount ? parseInt(amount, 10) : 0,
     createdAt: Date.now()
@@ -49,13 +29,13 @@ module.exports = (req, res) => {
   if (amount) session.amount = parseInt(amount, 10);
   if (bank) session.bank = bank;
 
-  sessions[rawCode] = session;
   sessions[ordCode] = session;
   saveSessions(sessions);
 
   res.json({
     ok: true,
-    srCode: rawCode,
+    orderId: ordCode,
+    srCode: ordCode,
     ordCode,
     status: 'paid',
     transactionId: session.transactionId

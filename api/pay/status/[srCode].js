@@ -1,43 +1,38 @@
-const fs = require('fs');
-const path = require('path');
-
-const SESSIONS_FILE = path.join('/tmp', 'pay_sessions.json');
-
-function getSessions() {
-  try {
-    if (fs.existsSync(SESSIONS_FILE)) {
-      return JSON.parse(fs.readFileSync(SESSIONS_FILE, 'utf8'));
-    }
-  } catch {}
-  return {};
-}
+const { getSessions, normalizeCode, saveSessions } = require('../../_store');
 
 module.exports = (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const code = (req.query.srCode || req.url.split('/').pop() || '').trim().toUpperCase();
+  const raw = (req.query.srCode || req.url.split('/').pop() || '').trim().toUpperCase();
+  const ordCode = normalizeCode(raw);
   const sessions = getSessions();
-  const numMatch = code.match(/\d+/);
-  const ordCode = numMatch ? `ORD${numMatch[0]}` : code;
-
-  const session = sessions[code] || (numMatch ? (sessions[ordCode] || sessions[numMatch[0]]) : null);
+  const session = sessions[ordCode] || sessions[raw];
 
   if (!session) {
     return res.json({
       ok: true,
-      srCode: code,
+      orderId: ordCode,
+      srCode: ordCode,
       ordCode,
       status: 'pending',
       amount: null
     });
   }
 
+  if (session.status === 'pending' && session.expiresAt && Date.now() > session.expiresAt) {
+    session.status = 'expired';
+    sessions[ordCode] = session;
+    saveSessions(sessions);
+  }
+
   res.json({
     ok: true,
+    orderId: session.ordCode,
     srCode: session.srCode,
     ordCode: session.ordCode,
     amount: session.amount,

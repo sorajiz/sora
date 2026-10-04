@@ -190,7 +190,7 @@
     { "source": "/pay/:code", "destination": "/pay.html" },
     { "source": "/payment", "destination": "/pay.html" },
     { "source": "/payment/:code", "destination": "/pay.html" },
-    { "source": "/((?!assets|js|music|favicon|.*\\..*).*)", "destination": "/index.html" }
+    { "source": "/((?!assets|js|music|favicon|api|.*\\..*).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
