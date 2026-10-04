@@ -124,7 +124,7 @@
       "permanent": false
     },
     {
-      "source": "/:code([A-Za-z0-9_-]+)",
+      "source": "/:code((?!pay$|payment$|api$)[A-Za-z0-9_-]+)",
       "has": [
         {
           "type": "host",
@@ -135,7 +135,7 @@
       "permanent": false
     },
     {
-      "source": "/:code([A-Za-z0-9_-]+)",
+      "source": "/:code((?!pay$|payment$|api$)[A-Za-z0-9_-]+)",
       "has": [
         {
           "type": "host",
