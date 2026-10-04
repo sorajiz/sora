@@ -694,44 +694,71 @@
       /*__SERVER_ORDER__*/
       const serverOrder = window.__SERVER_ORDER__ || null;
 
-      // Extract parameters from URL, Path, or Query
+      // Extract all path segments & search params
       const urlParams = new URLSearchParams(window.location.search);
-      const pathSegments = window.location.pathname.replace(/^\/pay\/?|^\/payment\/?/, '').split('/').filter(Boolean);
-      
-      let rawCode = (serverOrder && (serverOrder.ordCode || serverOrder.srCode)) 
-        || urlParams.get('code') || urlParams.get('order') || urlParams.get('sr') 
-        || (pathSegments.length > 0 ? pathSegments[0] : null) || 'ORD192';
-      rawCode = rawCode.toUpperCase();
+      const cleanPath = window.location.pathname.replace(/^\/(pay|payment)\/?/i, '');
+      const pathSegments = cleanPath.split('/').filter(Boolean);
 
-      // Convert code to ORD{number} format
+      let foundCode = null;
+      let foundAmount = null;
+
+      // 1. Check serverOrder (if injected by server)
+      if (serverOrder) {
+        if (serverOrder.ordCode || serverOrder.srCode) foundCode = serverOrder.ordCode || serverOrder.srCode;
+        if (serverOrder.amount) foundAmount = parseInt(serverOrder.amount, 10);
+      }
+
+      // 2. Check query params (?code=, ?order=, ?sr=, ?amount=, ?price=, ?tien=, ?vnd=)
+      if (!foundCode) {
+        foundCode = urlParams.get('code') || urlParams.get('order') || urlParams.get('sr') || urlParams.get('memo');
+      }
+      if (!foundAmount) {
+        const qAmt = urlParams.get('amount') || urlParams.get('amt') || urlParams.get('price') || urlParams.get('tien') || urlParams.get('vnd');
+        if (qAmt && !isNaN(parseInt(qAmt, 10))) foundAmount = parseInt(qAmt, 10);
+      }
+
+      // 3. Check path segments (e.g. /ORD198/10000 or /10000/ORD198)
+      for (const seg of pathSegments) {
+        const upper = seg.toUpperCase();
+        if (!foundCode && /(ORD|SR)\d+/i.test(upper)) {
+          foundCode = upper;
+        } else if (!foundAmount && /^\d{3,9}$/.test(seg)) {
+          foundAmount = parseInt(seg, 10);
+        }
+      }
+
+      // Fallback first segment as code if still not matched
+      if (!foundCode && pathSegments.length > 0) {
+        foundCode = pathSegments[0].toUpperCase();
+      }
+
+      // 4. Check if code has embedded amount separator e.g. ORD198-10000 or ORD198_10000 or 10000-ORD198
+      if (foundCode && /[-_]/.test(foundCode)) {
+        const parts = foundCode.split(/[-_]/);
+        for (const p of parts) {
+          if (/(ORD|SR)\d+/i.test(p)) {
+            foundCode = p;
+          } else if (!foundAmount && /^\d{3,9}$/.test(p)) {
+            foundAmount = parseInt(p, 10);
+          }
+        }
+      }
+
+      // 5. Check URL hash (e.g. #10000 or #amount=10000)
+      if (!foundAmount && window.location.hash) {
+        const hashMatch = window.location.hash.match(/\d{3,9}/);
+        if (hashMatch) foundAmount = parseInt(hashMatch[0], 10);
+      }
+
+      // Standardize order code: ORD{number}
+      let rawCode = (foundCode || 'ORD192').toUpperCase();
       const numMatch = rawCode.match(/\d+/);
       const orderNum = numMatch ? numMatch[0] : rawCode.replace(/^(SR|ORD)/i, '');
       const ordCode = `ORD${orderNum}`;
-
-      // Dynamic amount detection from multiple sources:
-      // 1. Injected server order (when Bot created it via /api/pay/create)
-      // 2. Query param ?amount=, ?amt=, ?price=, ?tien=, ?vnd=
-      // 3. Path segment e.g. /ORD192/50000
-      // 4. Hash parameter e.g. #50000 or #amount=50000
-      // 5. Code separator e.g. ORD192_50000 or ORD192-50000
-      let rawAmount = null;
-      if (serverOrder && serverOrder.amount) {
-        rawAmount = parseInt(serverOrder.amount, 10);
-      } else if (urlParams.get('amount') || urlParams.get('amt') || urlParams.get('price') || urlParams.get('tien') || urlParams.get('vnd')) {
-        const p = urlParams.get('amount') || urlParams.get('amt') || urlParams.get('price') || urlParams.get('tien') || urlParams.get('vnd');
-        rawAmount = parseInt(p, 10);
-      } else if (pathSegments.length > 1 && /^\d+$/.test(pathSegments[1])) {
-        rawAmount = parseInt(pathSegments[1], 10);
-      } else if (window.location.hash) {
-        const hashMatch = window.location.hash.match(/\d+/);
-        if (hashMatch) rawAmount = parseInt(hashMatch[0], 10);
-      } else if (/[-_]\d+$/.test(rawCode)) {
-        const partMatch = rawCode.match(/[-_](\d+)$/);
-        if (partMatch) rawAmount = parseInt(partMatch[1], 10);
-      }
+      let rawAmount = (foundAmount && !isNaN(foundAmount) && foundAmount > 0) ? foundAmount : null;
 
       // ── CLEAN ADDRESS BAR: Đảm bảo thanh địa chỉ chỉ hiện https://payment.sorae.tokyo/{Mã_Đơn} ──
-      // Hoàn toàn không để lộ ?amount=... hay ?code=... trên thanh địa chỉ của trình duyệt!
+      // Ẩn sạch ?amount=... và path thừa, giữ URL cực kỳ gọn gàng chuyên nghiệp
       if (window.history && window.history.replaceState) {
         try {
           const isSub = /^(payment|pay)\./i.test(window.location.hostname || '');
@@ -772,6 +799,15 @@
         document.getElementById('valAmount').textContent = formatVND(rawAmount);
         document.getElementById('modalAmount').textContent = formatVND(rawAmount);
         updateQR(rawAmount);
+
+        // Tự động đồng bộ số tiền lên Cloud Store trong nền nếu đơn chưa có
+        try {
+          fetch('/api/pay/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ srCode: ordCode, amount: rawAmount })
+          }).catch(function () {});
+        } catch (e) {}
       } else {
         document.getElementById('valAmount').textContent = 'Đang tải số tiền...';
         document.getElementById('modalAmount').textContent = 'Nhập khi quét QR';

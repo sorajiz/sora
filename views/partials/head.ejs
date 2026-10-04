@@ -5,24 +5,36 @@
       try {
         var h = (window.location.hostname || '').toLowerCase();
         var p = (window.location.pathname || '/').toLowerCase();
-        if (p.startsWith('/pay') || p.startsWith('/payment') || /^\/(ord|sr)\d+/i.test(p)) {
+        if (p.startsWith('/pay') || p.startsWith('/payment') || /^\/(ord|sr)/i.test(p)) {
           document.documentElement.style.display = 'none';
-          var cleanCode = p.replace(/^\/(pay|payment)\/?/i, '').replace(/^\//, '').split('/')[0];
-          var targetUrl = '/pay' + (cleanCode ? '?code=' + cleanCode : '');
+          var segs = p.replace(/^\/(pay|payment)\/?/i, '').replace(/^\//, '').split('/').filter(Boolean);
+          var code = segs[0] || '';
+          var amt = segs[1] || '';
+          var targetUrl = '/pay' + (code ? '?code=' + encodeURIComponent(code) : '');
+          if (amt && /^\d+$/.test(amt)) {
+            targetUrl += (targetUrl.includes('?') ? '&' : '?') + 'amount=' + amt;
+          }
           if (window.location.search) {
-            targetUrl += (cleanCode ? '&' : '?') + window.location.search.slice(1);
+            var s = window.location.search.slice(1);
+            targetUrl += (targetUrl.includes('?') ? '&' : '?') + s;
           }
           window.location.replace(targetUrl + window.location.hash);
           return;
         }
         if (h === 'payment.sorae.tokyo' || h === 'pay.sorae.tokyo' || h.startsWith('payment.') || h.startsWith('pay.')) {
           document.documentElement.style.display = 'none';
-          var subCode = p.replace(/^\//, '').split('/')[0];
-          var subTarget = '/pay' + (subCode ? '?code=' + subCode : '');
-          if (window.location.search) {
-            subTarget += (subCode ? '&' : '?') + window.location.search.slice(1);
+          var segs = p.replace(/^\//, '').split('/').filter(Boolean);
+          var code = segs[0] || '';
+          var amt = segs[1] || '';
+          var targetUrl = '/pay' + (code ? '?code=' + encodeURIComponent(code) : '');
+          if (amt && /^\d+$/.test(amt)) {
+            targetUrl += (targetUrl.includes('?') ? '&' : '?') + 'amount=' + amt;
           }
-          window.location.replace(subTarget + window.location.hash);
+          if (window.location.search) {
+            var s = window.location.search.slice(1);
+            targetUrl += (targetUrl.includes('?') ? '&' : '?') + s;
+          }
+          window.location.replace(targetUrl + window.location.hash);
           return;
         }
         if (h === 'discord.sorae.tokyo' || h.startsWith('discord.')) {
