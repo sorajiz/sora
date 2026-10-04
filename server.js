@@ -333,8 +333,10 @@ app.post(['/api/pay/create', '/api/payment/create'], (req, res) => {
     amount: numAmount,
     formattedAmount: sessionData.formattedAmount,
     qrUrl,
-    payUrl: `https://sorae.tokyo/pay/${ordCode}`,
-    subdomainUrl: `https://payment.sorae.tokyo/${ordCode}`,
+    payUrl: `https://sorae.tokyo/payment?code=${ordCode}&amount=${numAmount}`,
+    directUrl: `https://sorae.tokyo/payment/${ordCode}?amount=${numAmount}`,
+    subdomainUrl: `https://payment.sorae.tokyo/${ordCode}?amount=${numAmount}`,
+    cleanSubdomainUrl: `https://payment.sorae.tokyo/${ordCode}`,
     expiresAt: expTime,
     bank: BANK_CONFIG
   });

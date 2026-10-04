@@ -124,6 +124,28 @@
       "permanent": false
     },
     {
+      "source": "/:code((?!pay$|payment$|api$)[A-Za-z0-9_-]+)/:amount(\\d+)",
+      "has": [
+        {
+          "type": "host",
+          "value": "payment.sorae.tokyo"
+        }
+      ],
+      "destination": "/pay?code=:code&amount=:amount",
+      "permanent": false
+    },
+    {
+      "source": "/:code((?!pay$|payment$|api$)[A-Za-z0-9_-]+)/:amount(\\d+)",
+      "has": [
+        {
+          "type": "host",
+          "value": "pay.sorae.tokyo"
+        }
+      ],
+      "destination": "/pay?code=:code&amount=:amount",
+      "permanent": false
+    },
+    {
       "source": "/:code((?!pay$|payment$|api$)[A-Za-z0-9_-]+)",
       "has": [
         {
