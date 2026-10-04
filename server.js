@@ -640,6 +640,11 @@ app.get([
   servePayPage(req, res);
 });
 
+// Direct ORD/SR order code route support (e.g. /ORD198)
+app.get(/^\/(ORD|SR)\d+/i, (req, res) => {
+  servePayPage(req, res);
+});
+
 // Favicon endpoints (served cleanly from dist/assets/ or assets/)
 app.get('/favicon.ico', (req, res) => {
   res.setHeader('Content-Type', 'image/x-icon');

@@ -717,7 +717,8 @@
           currentUrl.searchParams.delete('tien');
           currentUrl.searchParams.delete('vnd');
           currentUrl.hash = '';
-          const cleanPath = `/${ordCode}`;
+          const isSub = /^(payment|pay)\./i.test(window.location.hostname || '');
+          const cleanPath = isSub ? `/${ordCode}` : `/payment/${ordCode}`;
           const remainingQuery = currentUrl.searchParams.toString() ? `?${currentUrl.searchParams.toString()}` : '';
           window.history.replaceState({}, document.title, cleanPath + remainingQuery);
         } catch (e) {}

@@ -5,10 +5,10 @@
       try {
         var h = (window.location.hostname || '').toLowerCase();
         var p = (window.location.pathname || '/').toLowerCase();
-        if (p.startsWith('/pay') || p.startsWith('/payment')) {
+        if (p.startsWith('/pay') || p.startsWith('/payment') || /^\/(ord|sr)\d+/i.test(p)) {
           document.documentElement.style.display = 'none';
-          var cleanCode = p.replace(/^\/(pay|payment)\/?/i, '').split('/')[0];
-          var targetUrl = '/pay.html' + (cleanCode ? '?code=' + cleanCode : '');
+          var cleanCode = p.replace(/^\/(pay|payment)\/?/i, '').replace(/^\//, '').split('/')[0];
+          var targetUrl = '/pay' + (cleanCode ? '?code=' + cleanCode : '');
           if (window.location.search) {
             targetUrl += (cleanCode ? '&' : '?') + window.location.search.slice(1);
           }
@@ -18,7 +18,7 @@
         if (h === 'payment.sorae.tokyo' || h === 'pay.sorae.tokyo' || h.startsWith('payment.') || h.startsWith('pay.')) {
           document.documentElement.style.display = 'none';
           var subCode = p.replace(/^\//, '').split('/')[0];
-          var subTarget = '/pay.html' + (subCode ? '?code=' + subCode : '');
+          var subTarget = '/pay' + (subCode ? '?code=' + subCode : '');
           if (window.location.search) {
             subTarget += (subCode ? '&' : '?') + window.location.search.slice(1);
           }
