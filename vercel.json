@@ -102,6 +102,28 @@
       "permanent": false
     },
     {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "payment.sorae.tokyo"
+        }
+      ],
+      "destination": "/pay",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "pay.sorae.tokyo"
+        }
+      ],
+      "destination": "/pay",
+      "permanent": false
+    },
+    {
       "source": "/:code([A-Za-z0-9_-]+)",
       "has": [
         {
