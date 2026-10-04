@@ -421,7 +421,7 @@ app.post(['/api/pay/confirm', '/api/payment/confirm'], (req, res) => {
 });
 
 // Direct Webhook endpoint for SePay / Payment gateways
-app.post(['/api/pay/webhook', '/api/payment/webhook'], (req, res) => {
+app.post(['/api/pay/webhook', '/api/payment/webhook', '/hooks/sepay-payment', '/api/hooks/sepay-payment'], (req, res) => {
   try {
     const payload = req.body || {};
     const content = payload.content || payload.description || '';
@@ -602,8 +602,8 @@ app.use((req, res, next) => {
     }
   }
   if (host.startsWith('pay.') || host.startsWith('payment.')) {
-    // If not an API request, serve the payment page with dynamic order data
-    if (!req.path.startsWith('/api/') && !req.path.startsWith('/assets/') && !req.path.startsWith('/js/') && !req.path.startsWith('/music/')) {
+    // If not an API or Webhook request, serve the payment page with dynamic order data
+    if (!req.path.startsWith('/api/') && !req.path.startsWith('/hooks/') && !req.path.startsWith('/assets/') && !req.path.startsWith('/js/') && !req.path.startsWith('/music/')) {
       return servePayPage(req, res);
     }
   }

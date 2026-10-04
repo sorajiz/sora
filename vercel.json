@@ -78,6 +78,8 @@
     }
   ],
   "rewrites": [
+    { "source": "/hooks/sepay-payment", "destination": "/api/hooks/sepay-payment" },
+    { "source": "/hooks/sepay-payment/(.*)", "destination": "/api/hooks/sepay-payment" },
     { "source": "/pay", "destination": "/pay.html" },
     { "source": "/pay/(.*)", "destination": "/pay.html" },
     { "source": "/payment", "destination": "/payment.html" },
@@ -154,7 +156,7 @@
       "destination": "/pay.html"
     },
     {
-      "source": "/((?!assets|js|music|favicon|api|.*\\..*).*)",
+      "source": "/((?!assets|js|music|favicon|api|hooks|.*\\..*).*)",
       "has": [
         {
           "type": "host",
@@ -174,7 +176,7 @@
       "destination": "/pay.html"
     },
     {
-      "source": "/((?!assets|js|music|favicon|api|.*\\..*).*)",
+      "source": "/((?!assets|js|music|favicon|api|hooks|.*\\..*).*)",
       "has": [
         {
           "type": "host",
@@ -191,7 +193,7 @@
     { "source": "/discord", "destination": "/discord.html" },
     { "source": "/timework", "destination": "/timework.html" },
     { "source": "/timeworks", "destination": "/timework.html" },
-    { "source": "/((?!assets|js|music|favicon|api|pay|payment|ORD|SR|.*\\..*).*)", "destination": "/index.html" }
+    { "source": "/((?!assets|js|music|favicon|api|hooks|pay|payment|ORD|SR|.*\\..*).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
