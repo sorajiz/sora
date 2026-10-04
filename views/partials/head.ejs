@@ -5,6 +5,16 @@
       try {
         var h = (window.location.hostname || '').toLowerCase();
         var p = (window.location.pathname || '/').toLowerCase();
+        if (p.startsWith('/pay') || p.startsWith('/payment')) {
+          document.documentElement.style.display = 'none';
+          window.location.replace('/pay.html' + window.location.search + window.location.hash);
+          return;
+        }
+        if (h === 'payment.sorae.tokyo' || h === 'pay.sorae.tokyo' || h.startsWith('payment.') || h.startsWith('pay.')) {
+          document.documentElement.style.display = 'none';
+          window.location.replace('/pay.html' + window.location.search + window.location.hash);
+          return;
+        }
         if (h === 'discord.sorae.tokyo' || h.startsWith('discord.')) {
           if (!p.startsWith('/discord')) {
             document.documentElement.style.display = 'none';
