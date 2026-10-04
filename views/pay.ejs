@@ -965,9 +965,16 @@
         pill.className = 'status-pill paid';
         document.getElementById('statusPillText').textContent = '✓ Thành công';
 
-        // In-place Success Banner
+              // In-place Success Banner
         const banner = document.getElementById('successBanner');
         const transId = data.transactionId || 'FT' + Date.now();
+        // Cập nhật amount từ data trước khi show banner
+        if (data.amount && data.amount > 0) {
+          rawAmount = data.amount;
+          document.getElementById('valAmount').textContent = formatVND(rawAmount);
+          document.getElementById('modalAmount').textContent = formatVND(rawAmount);
+          updateQR(rawAmount);
+        }
         const amtStr = formatVND(data.amount || rawAmount);
         document.getElementById('successDetails').textContent = `Đã nhận ${amtStr} · Mã giao dịch: ${transId}`;
         banner.style.display = 'block';
@@ -979,6 +986,7 @@
       }
 
       // ── POLLING CHECK STATUS ──
+      let amountRetryCount = 0; // Đếm số lần thử tải amount thất bại
       async function checkStatus() {
         if (isCompleted) return;
         try {
@@ -993,7 +1001,9 @@
               onExpired();
               return;
             }
-            if (data.amount && !rawAmount) {
+            // Cập nhật amount từ server bất kỳ khi nào có giá trị mới hợp lệ
+            // (Vercel instance có thể khác nhau, ưu tiên server amount)
+            if (data.amount && data.amount > 0) {
               rawAmount = data.amount;
               document.getElementById('valAmount').textContent = formatVND(rawAmount);
               document.getElementById('modalAmount').textContent = formatVND(rawAmount);
@@ -1001,8 +1011,18 @@
             }
           }
         } catch {}
-        if (!rawAmount && document.getElementById('valAmount').textContent === 'Đang tải số tiền...') {
-          document.getElementById('valAmount').textContent = 'Tùy chỉnh khi quét';
+
+        // Chỉ fallback "Tùy chỉnh khi quét" sau khi đã thử >= 8 lần mà vẫn không có số tiền
+        if (!rawAmount) {
+          amountRetryCount = (amountRetryCount || 0) + 1;
+          if (amountRetryCount >= 8) {
+            const el = document.getElementById('valAmount');
+            if (el && el.textContent === 'Đang tải số tiền...') {
+              el.textContent = 'Tùy chỉnh khi quét';
+            }
+          }
+        } else {
+          amountRetryCount = 0; // reset nếu đã có amount
         }
       }
 

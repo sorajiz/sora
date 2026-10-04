@@ -88,14 +88,10 @@ module.exports = async (req, res) => {
   const numMatch = ordCode.match(/\d+/);
   const srCode = numMatch ? `SR${numMatch[0]}` : ordCode;
 
-  let sessions = getSessions();
+  // Luôn tải từ Cloud Master Store để đảm bảo dữ liệu nhất quán
+  // (Vercel serverless có nhiều instance độc lập, memory không chia sẻ)
+  const sessions = await fetchSessionsAsync();
   let session = sessions[ordCode] || sessions[srCode] || sessions[raw];
-
-  // Nếu session chưa có hoặc chưa có số tiền, tải từ Cloud Master Store
-  if (!session || !session.amount) {
-    sessions = await fetchSessionsAsync();
-    session = sessions[ordCode] || sessions[srCode] || sessions[raw];
-  }
 
   // 1. Nếu session chưa có hoặc đang pending, kiểm tra SePay Realtime
   if (!session || session.status === 'pending') {
@@ -108,7 +104,11 @@ module.exports = async (req, res) => {
         createdAt: Date.now()
       };
       session.status = 'paid';
-      session.amount = sepayTx.amount;
+      // Ưu tiên giữ amount từ session gốc (Bot tạo), chỉ dùng SePay amount làm fallback
+      // Điều này đảm bảo amount hiển thị đúng với số tiền yêu cầu, không phải số tiền thực tế chuyển
+      if (!session.amount || session.amount <= 0) {
+        session.amount = sepayTx.amount;
+      }
       session.transactionId = sepayTx.transactionId;
       session.paidAt = sepayTx.paidAt;
       session.bank = sepayTx.bank;
@@ -136,12 +136,16 @@ module.exports = async (req, res) => {
     saveSessions(sessions);
   }
 
+  const { formatVND } = require('../../_store');
+  const finalAmount = session.amount || 0;
   res.json({
     ok: true,
-    orderId: session.ordCode,
-    srCode: session.srCode,
-    ordCode: session.ordCode,
-    amount: session.amount,
+    orderId: session.ordCode || ordCode,
+    srCode: session.srCode || srCode,
+    ordCode: session.ordCode || ordCode,
+    amount: finalAmount,
+    amountFormatted: finalAmount > 0 ? formatVND(finalAmount) : null,
+    description: session.description || null,
     status: session.status,
     transactionId: session.transactionId,
     paidAt: session.paidAt

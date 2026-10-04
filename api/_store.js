@@ -105,17 +105,32 @@ async function fetchSessionsAsync() {
 async function saveSessionsAsync(data) {
   saveSessions(data);
   try {
+    // Fetch-and-merge: luôn lấy dữ liệu mới nhất từ Cloud trước khi PUT
+    // Tránh race condition khi nhiều Vercel instance PUT đồng thời sẽ overwrite mất nhau
+    let cloudOrders = {};
+    try {
+      const fetchRes = await fetch(CLOUD_API_URL, { signal: AbortSignal.timeout(2000) });
+      if (fetchRes.ok) {
+        const json = await fetchRes.json();
+        if (json?.data?.orders) cloudOrders = json.data.orders;
+      }
+    } catch {}
+
+    // Merge: data mới ghi đè lên cloud cũ (để đảm bảo status update đúng)
+    const merged = { ...cloudOrders, ...data };
+
     await fetch(CLOUD_API_URL, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         name: 'sora_payments_master_store',
-        data: { orders: data, updatedAt: Date.now() }
+        data: { orders: merged, updatedAt: Date.now() }
       }),
-      signal: AbortSignal.timeout(2500)
+      signal: AbortSignal.timeout(3000)
     });
   } catch {}
 }
+
 
 module.exports = {
   BANK_CONFIG,
