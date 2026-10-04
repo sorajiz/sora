@@ -223,7 +223,16 @@ async function build() {
 
     fs.writeFileSync(path.join(distDir, 'pay.html'), payRendered, 'utf8');
     fs.writeFileSync(path.join(distDir, 'payment.html'), payRendered, 'utf8');
-    console.log('  ✓ Built dist/pay.html & dist/payment.html');
+
+    const payDir = path.join(distDir, 'pay');
+    if (!fs.existsSync(payDir)) fs.mkdirSync(payDir, { recursive: true });
+    fs.writeFileSync(path.join(payDir, 'index.html'), payRendered, 'utf8');
+
+    const paymentDir = path.join(distDir, 'payment');
+    if (!fs.existsSync(paymentDir)) fs.mkdirSync(paymentDir, { recursive: true });
+    fs.writeFileSync(path.join(paymentDir, 'index.html'), payRendered, 'utf8');
+
+    console.log('  ✓ Built dist/pay.html, dist/payment.html & subdirectories');
   }
 
   // Step 5: Copy static assets to dist/assets
