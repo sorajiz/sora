@@ -107,6 +107,37 @@ const server = app.listen(testPort, '127.0.0.1', async () => {
       }
     },
     {
+      name: 'Pay Subdomain Host Routing (/ with Host: pay.sorae.tokyo)',
+      path: '/',
+      expectedStatus: 200,
+      headers: { 'Host': 'payment.sorae.tokyo' },
+      validate: (res, body) => {
+        if (!body.includes('Thanh Toán Đơn Hàng')) return 'Missing payment title';
+        if (!body.includes('TRAN DANG KHOA')) return 'Missing account holder';
+        return null;
+      }
+    },
+    {
+      name: 'Pay Clean Route (/pay/SR192)',
+      path: '/pay/SR192',
+      expectedStatus: 200,
+      validate: (res, body) => {
+        if (!body.includes('Thanh Toán Đơn Hàng')) return 'Missing payment page content';
+        return null;
+      }
+    },
+    {
+      name: 'Payment API Status (/api/pay/status/SR192)',
+      path: '/api/pay/status/SR192',
+      expectedStatus: 200,
+      validate: (res, body) => {
+        const json = JSON.parse(body);
+        if (json.ok !== true) return 'Payment API status ok must be true';
+        if (json.srCode !== 'SR192') return 'Payment API srCode must match';
+        return null;
+      }
+    },
+    {
       name: 'Health API (/health)',
       path: '/health',
       expectedStatus: 200,

@@ -57,6 +57,10 @@ app.use(
   })
 );
 
+// Body parsing for JSON and URL-encoded API requests (Payment Webhooks & Session creation)
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // ----------------------------------------------------------------------------
 // 3. HARDENED CSP & ADAPTIVE HELMET SECURITY (NO UNSAFE-EVAL)
 // ----------------------------------------------------------------------------
@@ -174,6 +178,210 @@ app.get(['/health', '/api/health', '/api/status'], (req, res) => {
 });
 
 // ----------------------------------------------------------------------------
+// 6b. REAL-TIME PAYMENT GATEWAY API & ORDER SESSIONS
+// ----------------------------------------------------------------------------
+const PAY_DATA_DIR = path.join(__dirname, 'data');
+const PAY_SESSIONS_FILE = path.join(PAY_DATA_DIR, 'pay_sessions.json');
+
+if (!fs.existsSync(PAY_DATA_DIR)) {
+  try { fs.mkdirSync(PAY_DATA_DIR, { recursive: true }); } catch {}
+}
+
+const paySessions = new Map();
+
+function loadPaySessions() {
+  try {
+    if (fs.existsSync(PAY_SESSIONS_FILE)) {
+      const data = JSON.parse(fs.readFileSync(PAY_SESSIONS_FILE, 'utf8'));
+      for (const [k, v] of Object.entries(data)) {
+        paySessions.set(k.toUpperCase(), v);
+      }
+    }
+  } catch {}
+}
+
+function savePaySessions() {
+  try {
+    const obj = {};
+    for (const [k, v] of paySessions.entries()) {
+      obj[k] = v;
+    }
+    fs.writeFileSync(PAY_SESSIONS_FILE, JSON.stringify(obj, null, 2), 'utf8');
+  } catch {}
+}
+
+loadPaySessions();
+
+function findPaySession(queryCode) {
+  if (!queryCode) return null;
+  const q = String(queryCode).trim().toUpperCase();
+  if (paySessions.has(q)) return paySessions.get(q);
+
+  const numMatch = q.match(/\d+/);
+  if (numMatch) {
+    const num = numMatch[0];
+    if (paySessions.has(`ORD${num}`)) return paySessions.get(`ORD${num}`);
+    if (paySessions.has(`SR${num}`)) return paySessions.get(`SR${num}`);
+    if (paySessions.has(num)) return paySessions.get(num);
+  }
+  return null;
+}
+
+// Create payment session (called by Workspace-ZyX-Bot upon /qr)
+app.post(['/api/pay/create', '/api/payment/create'], (req, res) => {
+  const { srCode, amount, description, bank = 'MBBank', expiresAt } = req.body || {};
+  if (!srCode || !amount) {
+    return res.status(400).json({ ok: false, error: 'Thiếu srCode hoặc amount' });
+  }
+
+  const rawCode = String(srCode).trim().toUpperCase();
+  const numMatch = rawCode.match(/\d+/);
+  const orderNum = numMatch ? numMatch[0] : rawCode.replace(/^(SR|ORD)/i, '');
+  const ordCode = `ORD${orderNum}`;
+  const numAmount = parseInt(amount, 10);
+  const expTime = expiresAt || (Date.now() + 15 * 60 * 1000);
+
+  const sessionData = {
+    srCode: rawCode,
+    ordCode,
+    amount: numAmount,
+    description: description || `Thanh toán đơn hàng ${ordCode}`,
+    bank,
+    status: 'pending',
+    createdAt: Date.now(),
+    expiresAt: expTime,
+    transactionId: null,
+    paidAt: null
+  };
+
+  paySessions.set(rawCode, sessionData);
+  paySessions.set(ordCode, sessionData);
+  savePaySessions();
+
+  console.log(`[Payment] ⚡ Đã tạo phiên thanh toán Web: ${ordCode} (${rawCode}) — ${numAmount.toLocaleString('vi-VN')}đ`);
+
+  res.json({
+    ok: true,
+    srCode: rawCode,
+    ordCode,
+    amount: numAmount,
+    payUrl: `https://payment.sorae.tokyo/${ordCode}`,
+    expiresAt: expTime
+  });
+});
+
+// Check payment status (polled by frontend or bot)
+app.get(['/api/pay/status/:srCode', '/api/payment/status/:srCode'], (req, res) => {
+  const code = (req.params.srCode || '').trim().toUpperCase();
+  const session = findPaySession(code);
+
+  if (!session) {
+    const numMatch = code.match(/\d+/);
+    const ordCode = numMatch ? `ORD${numMatch[0]}` : code;
+    return res.json({
+      ok: true,
+      srCode: code,
+      ordCode,
+      status: 'pending',
+      amount: null
+    });
+  }
+
+  if (session.status === 'pending' && session.expiresAt && Date.now() > session.expiresAt) {
+    session.status = 'expired';
+    savePaySessions();
+  }
+
+  res.json({
+    ok: true,
+    srCode: session.srCode,
+    ordCode: session.ordCode || session.srCode,
+    amount: session.amount,
+    status: session.status,
+    transactionId: session.transactionId,
+    paidAt: session.paidAt
+  });
+});
+
+// Confirm payment (called by Workspace-ZyX-Bot upon MBBank receipt)
+app.post(['/api/pay/confirm', '/api/payment/confirm'], (req, res) => {
+  const { srCode, amount, transactionId, bank } = req.body || {};
+  if (!srCode) {
+    return res.status(400).json({ ok: false, error: 'Thiếu srCode' });
+  }
+
+  const rawCode = String(srCode).trim().toUpperCase();
+  let session = findPaySession(rawCode);
+
+  const numMatch = rawCode.match(/\d+/);
+  const orderNum = numMatch ? numMatch[0] : rawCode.replace(/^(SR|ORD)/i, '');
+  const ordCode = `ORD${orderNum}`;
+
+  if (!session) {
+    session = {
+      srCode: rawCode,
+      ordCode,
+      amount: amount ? parseInt(amount, 10) : 0,
+      createdAt: Date.now()
+    };
+  }
+
+  session.status = 'paid';
+  session.paidAt = Date.now();
+  session.transactionId = transactionId || ('FT' + Date.now());
+  if (amount) session.amount = parseInt(amount, 10);
+  if (bank) session.bank = bank;
+
+  paySessions.set(rawCode, session);
+  paySessions.set(ordCode, session);
+  savePaySessions();
+
+  console.log(`[Payment] 🎉 Xác nhận thanh toán thành công Web: ${ordCode} — Trans: ${session.transactionId}`);
+
+  res.json({
+    ok: true,
+    srCode: rawCode,
+    ordCode,
+    status: 'paid',
+    transactionId: session.transactionId
+  });
+});
+
+// Direct Webhook endpoint for SePay / Payment gateways
+app.post(['/api/pay/webhook', '/api/payment/webhook'], (req, res) => {
+  try {
+    const payload = req.body || {};
+    const content = payload.content || payload.description || '';
+    const amount = payload.transferAmount || payload.amount || 0;
+    const transId = String(payload.id || payload.transactionId || 'FT' + Date.now());
+
+    const match = content.match(/(ORD|SR)?\d+/i);
+    if (match) {
+      const matchedCode = match[0].toUpperCase();
+      let session = findPaySession(matchedCode);
+      const numMatch = matchedCode.match(/\d+/);
+      const ordCode = numMatch ? `ORD${numMatch[0]}` : matchedCode;
+
+      if (!session) {
+        session = { srCode: matchedCode, ordCode, amount: Number(amount), createdAt: Date.now() };
+      }
+      session.status = 'paid';
+      session.paidAt = Date.now();
+      session.transactionId = transId;
+      session.amount = Number(amount);
+      paySessions.set(matchedCode, session);
+      paySessions.set(ordCode, session);
+      savePaySessions();
+      console.log(`[Payment Webhook] ✅ Nhận tiền SePay Webhook: ${ordCode} (${amount}đ) - Trans: ${transId}`);
+    }
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ----------------------------------------------------------------------------
 // 7. HIGH-PERFORMANCE STATIC FILE SERVING FROM DIST/
 // ----------------------------------------------------------------------------
 // Serves exclusively from dist/ directory to isolate the repository root.
@@ -213,7 +421,8 @@ const PAGES = {
   skills: 'skills.html',
   contact: 'contact.html',
   discord: 'discord.html',
-  timework: 'timework.html'
+  timework: 'timework.html',
+  pay: 'pay.html'
 };
 
 function serveHtmlPage(fileName, res) {
@@ -252,7 +461,61 @@ function serveHtmlPage(fileName, res) {
   });
 }
 
-// Hostname-based routing for subdomains (discord.sorae.tokyo, timework.sorae.tokyo, timeworks.sorae.tokyo)
+function servePayPage(req, res) {
+  let targetPath = path.join(DIST_DIR, 'pay.html');
+  if (!fs.existsSync(targetPath)) {
+    try {
+      const build = require('./scripts/build');
+      build();
+    } catch (e) {
+      console.error('Auto-build failed in servePayPage:', e);
+    }
+  }
+  if (!fs.existsSync(targetPath)) {
+    return res.status(404).type('text/plain').send('404 Not Found: pay.html not found.');
+  }
+
+  // Parse order code and dynamic amount from path or query parameters
+  const pathClean = req.path.replace(/^\/pay\/?|^\/payment\/?|^\//, '');
+  const segments = pathClean.split('/').filter(Boolean);
+  const codeParam = req.params?.srCode || req.query?.code || req.query?.order || req.query?.sr || (segments.length > 0 ? segments[0] : null);
+  const amountQuery = req.query?.amount || req.query?.amt || req.query?.price || req.query?.tien || (segments.length > 1 ? segments[1] : null);
+
+  const session = findPaySession(codeParam);
+  let orderData = null;
+
+  if (session) {
+    orderData = { ...session };
+    if (amountQuery) orderData.amount = parseInt(amountQuery, 10);
+  } else if (codeParam || amountQuery) {
+    const rawCode = (codeParam || 'ORD192').toUpperCase();
+    const numMatch = rawCode.match(/\d+/);
+    const ordCode = numMatch ? `ORD${numMatch[0]}` : rawCode;
+    orderData = {
+      srCode: rawCode,
+      ordCode,
+      amount: amountQuery ? parseInt(amountQuery, 10) : null
+    };
+  }
+
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+
+  if (orderData) {
+    try {
+      let html = fs.readFileSync(targetPath, 'utf8');
+      const injection = `window.__SERVER_ORDER__ = ${JSON.stringify(orderData)};`;
+      html = html.replace('/*__SERVER_ORDER__*/', injection);
+      return res.send(html);
+    } catch (err) {
+      console.error('Error injecting server order in servePayPage:', err);
+    }
+  }
+
+  return res.sendFile('pay.html', { root: DIST_DIR });
+}
+
+// Hostname-based routing for subdomains (discord.sorae.tokyo, timework.sorae.tokyo, pay.sorae.tokyo, payment.sorae.tokyo)
 app.use((req, res, next) => {
   const host = (req.hostname || req.headers.host || '').toLowerCase();
   if (host.startsWith('discord.')) {
@@ -263,6 +526,12 @@ app.use((req, res, next) => {
   if (host.startsWith('timework.') || host.startsWith('timeworks.')) {
     if (req.path === '/' || req.path === '/index' || req.path === '/index.html' || req.path === '/timework' || req.path === '/timework.html' || req.path === '/timeworks' || req.path === '/timeworks.html') {
       return serveHtmlPage(PAGES.timework, res);
+    }
+  }
+  if (host.startsWith('pay.') || host.startsWith('payment.')) {
+    // If not an API request, serve the payment page with dynamic order data
+    if (!req.path.startsWith('/api/') && !req.path.startsWith('/assets/') && !req.path.startsWith('/js/') && !req.path.startsWith('/music/')) {
+      return servePayPage(req, res);
     }
   }
   next();
@@ -291,6 +560,13 @@ app.get(['/discord', '/discord.html'], (req, res) => {
 
 app.get(['/timework', '/timework.html', '/timeworks', '/timeworks.html'], (req, res) => {
   serveHtmlPage(PAGES.timework, res);
+});
+
+app.get([
+  '/pay', '/pay.html', '/pay/:srCode', '/pay/:srCode/:amount',
+  '/payment', '/payment.html', '/payment/:srCode', '/payment/:srCode/:amount'
+], (req, res) => {
+  servePayPage(req, res);
 });
 
 // Favicon endpoints (served cleanly from dist/assets/ or assets/)

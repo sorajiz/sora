@@ -203,8 +203,30 @@ async function build() {
     console.log('  ✓ Built dist/timework.html & dist/timeworks.html');
   }
 
+  // Step 4d: Render Dedicated Payment Gateway Landing Page strictly into dist/
+  const payTemplate = path.join(viewsDir, 'pay.ejs');
+  if (fs.existsSync(payTemplate)) {
+    const payData = {
+      ...sharedData,
+      title: "Thanh Toán — Sora's Station",
+      description: "Cổng thanh toán tự động VietQR MBBank Napas 24/7 — Sora's Station",
+      canonicalUrl: 'https://payment.sorae.tokyo/',
+      siteUrl: 'https://payment.sorae.tokyo',
+      profileUrl: 'https://sorae.tokyo',
+      faviconDataUri,
+      buildHash
+    };
+
+    const payRendered = await ejs.renderFile(payTemplate, payData, {
+      root: viewsDir
+    });
+
+    fs.writeFileSync(path.join(distDir, 'pay.html'), payRendered, 'utf8');
+    console.log('  ✓ Built dist/pay.html');
+  }
+
   // Step 5: Copy static assets to dist/assets
-  const assetFiles = ['favicon.ico', 'favicon.png', 'luminous-flow.png', 'banner.png', 'banner.jpg', 'liquid-glass-bg.jpg'];
+  const assetFiles = ['favicon.ico', 'favicon.png', 'luminous-flow.png', 'banner.png', 'banner.jpg', 'liquid-glass-bg.jpg', 'sora-store-icon.png'];
   assetFiles.forEach(file => {
     const src = path.join(projectRoot, 'assets', file);
     if (fs.existsSync(src)) {
@@ -215,6 +237,7 @@ async function build() {
   // Direct root asset copies in dist/
   copyFileIfExists(path.join(projectRoot, 'assets', 'favicon.ico'), path.join(distDir, 'favicon.ico'));
   copyFileIfExists(path.join(projectRoot, 'assets', 'favicon.png'), path.join(distDir, 'favicon.png'));
+  copyFileIfExists(path.join(projectRoot, 'assets', 'sora-store-icon.png'), path.join(distDir, 'assets', 'sora-store-icon.png'));
   copyFileIfExists(path.join(projectRoot, 'assets', 'banner.png'), path.join(distDir, 'banner.png'));
   copyFileIfExists(path.join(projectRoot, 'assets', 'banner.jpg'), path.join(distDir, 'banner.jpg'));
   copyFileIfExists(path.join(projectRoot, 'assets', 'liquid-glass-bg.jpg'), path.join(distDir, 'liquid-glass-bg.jpg'));

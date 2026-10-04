@@ -138,6 +138,46 @@
       ],
       "destination": "/timework.html"
     },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "pay.sorae.tokyo"
+        }
+      ],
+      "destination": "/pay.html"
+    },
+    {
+      "source": "/((?!assets|js|music|favicon|api|.*\\..*).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "pay.sorae.tokyo"
+        }
+      ],
+      "destination": "/pay.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "payment.sorae.tokyo"
+        }
+      ],
+      "destination": "/pay.html"
+    },
+    {
+      "source": "/((?!assets|js|music|favicon|api|.*\\..*).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "payment.sorae.tokyo"
+        }
+      ],
+      "destination": "/pay.html"
+    },
     { "source": "/favicon.ico", "destination": "/assets/favicon.ico" },
     { "source": "/favicon.png", "destination": "/assets/favicon.png" },
     { "source": "/intro", "destination": "/intro.html" },
@@ -146,6 +186,10 @@
     { "source": "/discord", "destination": "/discord.html" },
     { "source": "/timework", "destination": "/timework.html" },
     { "source": "/timeworks", "destination": "/timework.html" },
+    { "source": "/pay", "destination": "/pay.html" },
+    { "source": "/pay/:code", "destination": "/pay.html" },
+    { "source": "/payment", "destination": "/pay.html" },
+    { "source": "/payment/:code", "destination": "/pay.html" },
     { "source": "/((?!assets|js|music|favicon|.*\\..*).*)", "destination": "/index.html" }
   ],
   "headers": [
