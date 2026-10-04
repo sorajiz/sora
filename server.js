@@ -58,7 +58,11 @@ app.use(
 );
 
 // Body parsing for JSON and URL-encoded API requests (Payment Webhooks & Session creation)
-app.use(express.json());
+app.use(express.json({
+  verify: (req, res, buf) => {
+    req.rawBody = buf ? buf.toString('utf8') : '';
+  }
+}));
 app.use(express.urlencoded({ extended: true }));
 
 // ----------------------------------------------------------------------------

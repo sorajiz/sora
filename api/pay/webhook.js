@@ -1,32 +1,65 @@
+const crypto = require('crypto');
 const { getSessions, saveSessions, fetchSessionsAsync, saveSessionsAsync, isTransactionProcessed, markTransactionProcessed, normalizeCode } = require('../_store');
+
+// SePay Webhook Secret Key (HMAC-SHA256)
+const SEPAY_WEBHOOK_SECRET = process.env.SEPAY_WEBHOOK_SECRET || 'whsec_ShtYQ2ZdmSRjkjW3NBE4E7duiP85IZZp';
+
+function safeCompare(a, b) {
+  if (typeof a !== 'string' || typeof b !== 'string') return false;
+  const bufA = Buffer.from(a, 'utf8');
+  const bufB = Buffer.from(b, 'utf8');
+  if (bufA.length !== bufB.length) return false;
+  return crypto.timingSafeEqual(bufA, bufB);
+}
+
+function verifySePaySignature(req, secret) {
+  const sigHeader = (
+    req.headers['x-sepay-signature'] ||
+    req.headers['x-signature'] ||
+    req.headers['sepay-signature'] ||
+    req.headers['x-webhook-signature'] ||
+    ''
+  ).trim();
+
+  if (!sigHeader) {
+    return { valid: true, isSigned: false };
+  }
+
+  const timestamp = req.headers['x-sepay-timestamp'] || req.headers['x-timestamp'] || '';
+  const rawSig = sigHeader.replace(/^sha256=/i, '').trim();
+
+  const rawBody = req.rawBody || (typeof req.body === 'string' ? req.body : JSON.stringify(req.body));
+  const candidates = [];
+
+  if (timestamp) {
+    candidates.push(`${timestamp}.${rawBody}`);
+    if (typeof req.body === 'object') {
+      try { candidates.push(`${timestamp}.${JSON.stringify(req.body)}`); } catch {}
+    }
+  }
+  candidates.push(rawBody);
+  if (typeof req.body === 'object') {
+    try { candidates.push(JSON.stringify(req.body)); } catch {}
+  }
+
+  for (const candidate of candidates) {
+    if (!candidate) continue;
+    const computed = crypto.createHmac('sha256', secret).update(candidate).digest('hex');
+    if (safeCompare(rawSig, computed)) {
+      return { valid: true, isSigned: true };
+    }
+  }
+
+  return { valid: false, isSigned: true };
+}
 
 /**
  * SePay Official Webhook Endpoint for Sora's Station (https://payment.sorae.tokyo)
- * 
- * Payload structure from SePay:
- * {
- *   "id": 92704,
- *   "gateway": "Vietcombank",
- *   "transactionDate": "2024-07-02 11:08:33",
- *   "accountNumber": "1017588888",
- *   "subAccount": "",
- *   "code": "SEVN63DC8E5C",
- *   "content": "ORD192 chuyen tien",
- *   "transferType": "in",
- *   "description": "NGUYEN VAN A chuyen tien",
- *   "transferAmount": 5000000,
- *   "accumulated": 105000000,
- *   "referenceCode": "FT24012345678"
- * }
- * 
- * Valid Response:
- * - HTTP Status: 200 or 201
- * - Exact JSON: {"success": true}
- * - Response within 30 seconds
+ * Supports HMAC-SHA256 security verification
  */
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-webhook-token');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-sepay-signature, x-sepay-timestamp');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
 
@@ -37,6 +70,16 @@ module.exports = async (req, res) => {
   }
 
   try {
+    // 0. Xác thực chữ ký bảo mật HMAC-SHA256 nếu có header chữ ký từ SePay
+    const sigCheck = verifySePaySignature(req, SEPAY_WEBHOOK_SECRET);
+    if (sigCheck.isSigned && !sigCheck.valid) {
+      console.warn('[SePay Webhook] ⚠️ Chữ ký HMAC-SHA256 không hợp lệ!');
+      return res.status(401).json({ success: false, error: 'Invalid HMAC signature' });
+    }
+    if (sigCheck.isSigned) {
+      console.log('[SePay Webhook] 🛡️ Xác thực chữ ký HMAC-SHA256 hợp lệ!');
+    }
+
     const payload = req.body || {};
     const transferType = String(payload.transferType || payload.type || 'in').trim().toLowerCase();
     const amount = Number(payload.transferAmount !== undefined ? payload.transferAmount : (payload.amount !== undefined ? payload.amount : payload.amountIn)) || 0;
