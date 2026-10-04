@@ -222,7 +222,8 @@ async function build() {
     });
 
     fs.writeFileSync(path.join(distDir, 'pay.html'), payRendered, 'utf8');
-    console.log('  ✓ Built dist/pay.html');
+    fs.writeFileSync(path.join(distDir, 'payment.html'), payRendered, 'utf8');
+    console.log('  ✓ Built dist/pay.html & dist/payment.html');
   }
 
   // Step 5: Copy static assets to dist/assets
