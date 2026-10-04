@@ -563,7 +563,7 @@
         <div class="brand">
           <img src="/assets/sora-store-icon.png" onerror="this.src='https://cdn.discordapp.com/icons/1463216183712026813/a8643951271d8b189e5785440c3fb59d.png?size=256'" class="brand-avatar-img" alt="Sora's Store Icon" />
           <div>
-            <h1 class="brand-title">Thanh Toán Đơn Hàng</h1>
+            <h1 class="brand-title" id="pageTitle">Thanh Toán Đơn Hàng</h1>
           </div>
         </div>
 
@@ -627,13 +627,29 @@
         <!-- DETAILS COLUMN -->
         <div class="details-column">
 
-          <!-- Số tiền -->
-          <div class="row-card">
+          <!-- Số tiền (ẩn khi general vì tùy chỉnh) -->
+          <div class="row-card" id="rowAmount">
             <div class="row-info">
               <span class="row-label">Số Tiền</span>
               <span class="row-val amount-val" id="valAmount">0 đ</span>
             </div>
             <button class="btn-copy" data-target="copyAmount">Sao chép</button>
+          </div>
+
+          <!-- Tổng donate phiên (chỉ hiện khi general) -->
+          <div class="row-card" id="rowDonateTotal" style="display:none">
+            <div class="row-info">
+              <span class="row-label">Tổng Nhận Phiên Này</span>
+              <span class="row-val amount-val" id="valDonateTotal" style="color:#4ade80">0 đ</span>
+            </div>
+          </div>
+
+          <!-- Lượt donate gần nhất (chỉ hiện khi general và đã có) -->
+          <div class="row-card" id="rowLastDonate" style="display:none">
+            <div class="row-info">
+              <span class="row-label">Ủng Hộ Gần Nhất</span>
+              <span class="row-val" id="valLastDonate" style="color:#facc15">—</span>
+            </div>
           </div>
 
           <!-- Ngân hàng -->
@@ -661,7 +677,7 @@
             </div>
           </div>
 
-          <!-- Nội dung chuyển khoản (ORD format) -->
+          <!-- Nội dung chuyển khoản -->
           <div class="row-card">
             <div class="row-info">
               <span class="row-label">Nội Dung Chuyển Khoản</span>
@@ -854,17 +870,31 @@
       document.getElementById('valName').textContent = BANK_CONFIG.accountName;
       document.getElementById('modalMemo').textContent = displayMemo;
 
+      // ── DONATE SESSION TRACKING ──
+      let donateSessionTotal = 0;
+      let donateCount = 0;
+      // since luôn được cập nhật sau mỗi lần nhận donate để không detect lại
+      let generalSince = pageSessionStartedAt;
+
       if (isGeneral) {
-        const brandTitle = document.querySelector('.brand-title');
-        if (brandTitle) brandTitle.textContent = 'Cổng Thanh Toán Sora';
+        // Cập nhật tiêu đề trang
+        const pageTitle = document.getElementById('pageTitle');
+        if (pageTitle) pageTitle.textContent = 'Ủng Hộ / Donate Sora';
+
+        // Ẩn row số tiền cố định, hiện row donate
+        const rowAmt = document.getElementById('rowAmount');
+        if (rowAmt) rowAmt.style.display = 'none';
+        document.getElementById('rowDonateTotal').style.display = '';
+
         const pill = document.getElementById('statusPill');
         const pillText = document.getElementById('statusPillText');
         if (pill) pill.className = 'status-pill ready';
-        if (pillText) pillText.textContent = 'Sẵn sàng nhận tiền';
+        if (pillText) pillText.textContent = '💜 Sẵn sàng nhận';
+
         const cd = document.getElementById('countdownEl');
         if (cd) {
           cd.textContent = '24/7';
-          cd.title = 'Cổng thanh toán tự do không giới hạn thời gian';
+          cd.title = 'Cổng thanh toán tự do — không giới hạn thời gian';
         }
       }
 
@@ -917,9 +947,11 @@
       const iconCheck = document.getElementById('iconCheck');
       const textCheck = document.getElementById('textCheck');
 
-      const checkEndpoint = isGeneral 
-        ? `/api/pay/status/general?since=${pageSessionStartedAt}` 
-        : `/api/pay/status/${ordCode}`;
+      // Endpoint động: general dùng generalSince (cập nhật sau mỗi donate)
+      function getCheckEndpoint() {
+        if (isGeneral) return `/api/pay/status/general?since=${generalSince}`;
+        return `/api/pay/status/${ordCode}`;
+      }
 
       async function manualCheckPayment() {
         if (isCompleted) return;
@@ -930,7 +962,7 @@
         if (textCheck) textCheck.textContent = 'Đang kiểm tra...';
 
         try {
-          const res = await fetch(checkEndpoint);
+          const res = await fetch(getCheckEndpoint());
           if (res.ok) {
             const data = await res.json();
             if (data.status === 'paid' || data.paid === true) {
@@ -1113,8 +1145,52 @@
         if (btnCheckPayment) btnCheckPayment.style.display = 'none';
       }
 
-      // ── SUCCESS STATE (ONLY ✓ Thành công) ──
+      // ── SUCCESS STATE ──
       function onSuccess(data) {
+        // ── GENERAL / DONATE MODE: không khóa trang, tiếp tục nhận ──
+        if (isGeneral) {
+          const receivedAmt = data.amount || 0;
+          const transId = data.transactionId || 'FT' + Date.now();
+          const bank = data.bank || 'MBBank';
+
+          // Cộng dồn tổng donate phiên này
+          donateCount++;
+          donateSessionTotal += receivedAmt;
+
+          // Cập nhật UI donate
+          document.getElementById('valDonateTotal').textContent = formatVND(donateSessionTotal);
+          document.getElementById('rowLastDonate').style.display = '';
+          document.getElementById('valLastDonate').textContent =
+            `+${formatVND(receivedAmt)} · ${bank} · #${donateCount}`;
+
+          // Cập nhật modal info
+          document.getElementById('modalAmount').textContent = 'Tùy chỉnh khi quét';
+
+          // Toast mừng
+          showToast(`🎉 Nhận được ${formatVND(receivedAmt)} từ ${bank}!`);
+
+          // *** Chìa khóa: advance "since" qua thời điểm paidAt + 1 giây ***
+          // Lần poll tiếp theo sẽ dùng since mới → không detect lại giao dịch vừa rồi
+          const newSince = (data.paidAt || Date.now()) + 1000;
+          generalSince = newSince;
+
+          // Giữ pill màu xanh và hiện thông báo brief
+          const pill = document.getElementById('statusPill');
+          const pillText = document.getElementById('statusPillText');
+          pill.className = 'status-pill paid';
+          pillText.textContent = `✓ Đã nhận #${donateCount}`;
+
+          // Sau 3 giây reset pill về sẵn sàng nhận tiếp
+          setTimeout(() => {
+            pill.className = 'status-pill ready';
+            pillText.textContent = '💜 Sẵn sàng nhận';
+          }, 3000);
+
+          // KHÔNG set isCompleted = true → tiếp tục poll
+          return;
+        }
+
+        // ── ORDER MODE: khóa trang bình thường ──
         if (isCompleted) return;
         isCompleted = true;
         if (timer) clearInterval(timer);
@@ -1142,9 +1218,9 @@
       // ── POLLING CHECK STATUS ──
       let amountRetryCount = 0;
       async function checkStatus() {
-        if (isCompleted) return;
+        if (isCompleted) return; // chỉ dừng khi đơn hàng hoàn tất; general không bao giờ isCompleted
         try {
-          const res = await fetch(checkEndpoint);
+          const res = await fetch(getCheckEndpoint());
           if (res.ok) {
             const data = await res.json();
             if (data.status === 'paid' || data.paid === true) {
