@@ -302,32 +302,38 @@ app.post(['/api/pay/create', '/api/payment/create'], (req, res) => {
   const numMatch = rawCode.match(/\d+/);
   const orderNum = numMatch ? numMatch[0] : rawCode.replace(/^(SR|ORD)/i, '');
   const ordCode = `ORD${orderNum}`;
-  const expTime = expiresAt || (Date.now() + 15 * 60 * 1000);
+  const existingSession = findPaySession(rawCode) || findPaySession(ordCode);
+
+  const expTime = (expiresAt && !isNaN(Number(expiresAt)))
+    ? Number(expiresAt)
+    : (existingSession?.expiresAt || (Date.now() + 15 * 60 * 1000));
+  const createdAtTime = existingSession?.createdAt || Date.now();
   const qrUrl = getQRUrl(numAmount, ordCode);
 
   const sessionData = {
+    ...existingSession,
     orderId: ordCode,
     srCode: rawCode,
     ordCode,
     amount: numAmount,
     formattedAmount: numAmount.toLocaleString('vi-VN') + ' đ',
-    description: description || `Thanh toán đơn hàng ${ordCode}`,
+    description: description || existingSession?.description || `Thanh toán đơn hàng ${ordCode}`,
     bank: BANK_CONFIG,
-    status: 'pending',
+    status: existingSession?.status || 'pending',
     qrUrl,
     payUrl: `https://sorae.tokyo/pay/${ordCode}`,
     subdomainUrl: `https://payment.sorae.tokyo/${ordCode}`,
-    createdAt: Date.now(),
+    createdAt: createdAtTime,
     expiresAt: expTime,
-    transactionId: null,
-    paidAt: null
+    transactionId: existingSession?.transactionId || null,
+    paidAt: existingSession?.paidAt || null
   };
 
   paySessions.set(rawCode, sessionData);
   paySessions.set(ordCode, sessionData);
   savePaySessions();
 
-  console.log(`[Payment] ⚡ Đã tạo phiên thanh toán Web: ${ordCode} (${rawCode}) — ${numAmount.toLocaleString('vi-VN')}đ`);
+  console.log(`[Payment] ⚡ Đã tạo/đồng bộ phiên thanh toán Web: ${ordCode} (${rawCode}) — ${numAmount.toLocaleString('vi-VN')}đ`);
 
   res.json({
     ok: true,
@@ -359,7 +365,9 @@ app.get(['/api/pay/status/:srCode', '/api/payment/status/:srCode'], (req, res) =
       srCode: code,
       ordCode,
       status: 'pending',
-      amount: null
+      amount: null,
+      expiresAt: null,
+      createdAt: null
     });
   }
 
@@ -376,7 +384,9 @@ app.get(['/api/pay/status/:srCode', '/api/payment/status/:srCode'], (req, res) =
     amount: session.amount,
     status: session.status,
     transactionId: session.transactionId,
-    paidAt: session.paidAt
+    paidAt: session.paidAt,
+    expiresAt: session.expiresAt || null,
+    createdAt: session.createdAt || null
   });
 });
 

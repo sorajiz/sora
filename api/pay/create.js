@@ -19,30 +19,40 @@ module.exports = async (req, res) => {
   }
 
   const ordCode = normalizeCode(srCode);
-  const expTime = expiresAt || (Date.now() + 15 * 60 * 1000);
+  const sessions = await fetchSessionsAsync();
+  const existingSession = sessions[ordCode] || (srCode ? sessions[srCode] : null);
+
+  // Giữ nguyên expiresAt và createdAt gốc nếu phiên đã tồn tại và không truyền expiresAt mới
+  const expTime = (expiresAt && !isNaN(Number(expiresAt)))
+    ? Number(expiresAt)
+    : (existingSession?.expiresAt || (Date.now() + 15 * 60 * 1000));
+  const createdAtTime = existingSession?.createdAt || Date.now();
   const qrUrl = getQRUrl(numAmount, ordCode);
 
   const sessionData = {
+    ...existingSession,
     orderId: ordCode,
     srCode: ordCode,
     ordCode,
     amount: numAmount,
     formattedAmount: formatVND(numAmount),
-    description: description || `Thanh toán đơn hàng ${ordCode}`,
+    description: description || existingSession?.description || `Thanh toán đơn hàng ${ordCode}`,
     bank: BANK_CONFIG,
-    status: 'pending',
+    status: existingSession?.status || 'pending',
     qrUrl,
     payUrl: `https://payment.sorae.tokyo/${ordCode}`,
     directUrl: `https://sorae.tokyo/payment/${ordCode}`,
     subdomainUrl: `https://payment.sorae.tokyo/${ordCode}`,
-    createdAt: Date.now(),
+    createdAt: createdAtTime,
     expiresAt: expTime,
-    transactionId: null,
-    paidAt: null
+    transactionId: existingSession?.transactionId || null,
+    paidAt: existingSession?.paidAt || null
   };
 
-  const sessions = await fetchSessionsAsync();
   sessions[ordCode] = sessionData;
+  if (srCode && srCode !== ordCode) {
+    sessions[srCode] = sessionData;
+  }
   await saveSessionsAsync(sessions);
 
   res.json({

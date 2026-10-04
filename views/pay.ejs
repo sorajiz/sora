@@ -754,6 +754,27 @@
       const ordCode = `ORD${orderNum}`;
       let rawAmount = (foundAmount && !isNaN(foundAmount) && foundAmount > 0) ? foundAmount : null;
 
+      // ── EXPIRATION & COUNTDOWN TIME SYNCHRONIZATION ──
+      // Cập nhật và lưu mốc hết hạn theo mã QR bot tạo ra, tránh reset về 15:00 khi vào lại/tải lại trang
+      let targetExpiresAt = null;
+      if (serverOrder && serverOrder.expiresAt) {
+        targetExpiresAt = Number(serverOrder.expiresAt);
+      }
+      if (!targetExpiresAt) {
+        try {
+          const cachedExp = localStorage.getItem('sora_exp_' + ordCode);
+          if (cachedExp && !isNaN(Number(cachedExp))) {
+            targetExpiresAt = Number(cachedExp);
+          }
+        } catch (e) {}
+      }
+      if (!targetExpiresAt || isNaN(targetExpiresAt) || targetExpiresAt <= 0) {
+        targetExpiresAt = Date.now() + 15 * 60 * 1000;
+        try {
+          localStorage.setItem('sora_exp_' + ordCode, String(targetExpiresAt));
+        } catch (e) {}
+      }
+
       // ── CLEAN ADDRESS BAR: Đảm bảo thanh địa chỉ chỉ hiện https://payment.sorae.tokyo/{Mã_Đơn} ──
       // Ẩn sạch ?amount=... và path thừa, giữ URL cực kỳ gọn gàng chuyên nghiệp
       if (window.history && window.history.replaceState) {
@@ -802,7 +823,7 @@
           fetch('/api/pay/create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ srCode: ordCode, amount: rawAmount })
+            body: JSON.stringify({ srCode: ordCode, amount: rawAmount, expiresAt: targetExpiresAt })
           }).catch(function () {});
         } catch (e) {}
       } else {
@@ -855,6 +876,9 @@
               onExpired();
               showToast('Mã thanh toán đã hết hạn!');
               return;
+            }
+            if (data.expiresAt) {
+              applyServerExpiresAt(data.expiresAt);
             }
             if (data.amount && !rawAmount) {
               rawAmount = data.amount;
@@ -940,10 +964,51 @@
         });
       });
 
-      // ── TIMER (15 MINUTES) ──
-      let totalSeconds = 15 * 60;
+      // ── TIMER (SYNCHRONIZED WITH BOT & EXPIRATION CLOCK) ──
+      let totalSeconds = Math.max(0, Math.floor((targetExpiresAt - Date.now()) / 1000));
       let isCompleted = false;
       const countdownEl = document.getElementById('countdownEl');
+
+      function renderTimer() {
+        if (isCompleted || !countdownEl) return;
+        const mins = Math.floor(totalSeconds / 60);
+        const secs = totalSeconds % 60;
+        countdownEl.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+        if (totalSeconds < 120) {
+          countdownEl.classList.add('urgent');
+        } else {
+          countdownEl.classList.remove('urgent');
+        }
+      }
+
+      function applyServerExpiresAt(serverExp) {
+        if (!serverExp || isNaN(Number(serverExp))) return;
+        const expTime = Number(serverExp);
+        if (expTime <= 0) return;
+        targetExpiresAt = expTime;
+        try {
+          localStorage.setItem('sora_exp_' + ordCode, String(expTime));
+        } catch (e) {}
+
+        const realRemaining = Math.max(0, Math.floor((expTime - Date.now()) / 1000));
+        // Nếu chênh lệch > 2 giây so với client, điều chỉnh mượt mà theo server
+        if (Math.abs(totalSeconds - realRemaining) > 2) {
+          totalSeconds = realRemaining;
+          if (totalSeconds <= 0) {
+            onExpired();
+            return;
+          }
+          renderTimer();
+        }
+      }
+
+      // Render ngay lập tức khi mở trang (tránh giật 15:00 nếu thời gian còn lại là 10:00)
+      if (totalSeconds <= 0) {
+        onExpired();
+      } else {
+        renderTimer();
+      }
 
       const timer = setInterval(() => {
         if (isCompleted) return;
@@ -953,14 +1018,7 @@
           onExpired();
           return;
         }
-
-        const mins = Math.floor(totalSeconds / 60);
-        const secs = totalSeconds % 60;
-        countdownEl.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-
-        if (totalSeconds < 120) {
-          countdownEl.classList.add('urgent');
-        }
+        renderTimer();
       }, 1000);
 
       // ── EXPIRED STATE ──
@@ -1028,6 +1086,10 @@
             if (data.status === 'expired') {
               onExpired();
               return;
+            }
+            // Đồng bộ mốc thời gian hết hạn chính xác từ đơn hàng gốc đã tạo
+            if (data.expiresAt) {
+              applyServerExpiresAt(data.expiresAt);
             }
             // Cập nhật amount từ server bất kỳ khi nào có giá trị mới hợp lệ
             // (Vercel instance có thể khác nhau, ưu tiên server amount)

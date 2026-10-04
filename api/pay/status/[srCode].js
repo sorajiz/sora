@@ -126,7 +126,9 @@ module.exports = async (req, res) => {
       srCode: ordCode,
       ordCode,
       status: 'pending',
-      amount: null
+      amount: null,
+      expiresAt: null,
+      createdAt: null
     });
   }
 
@@ -148,6 +150,8 @@ module.exports = async (req, res) => {
     description: session.description || null,
     status: session.status,
     transactionId: session.transactionId,
-    paidAt: session.paidAt
+    paidAt: session.paidAt,
+    expiresAt: session.expiresAt || null,
+    createdAt: session.createdAt || null
   });
 };
