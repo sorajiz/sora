@@ -312,6 +312,31 @@
       border-color: rgba(255, 255, 255, 0.2);
     }
 
+    .btn-qr.btn-check {
+      background: #17181f;
+      border-color: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+    }
+
+    .btn-qr.btn-check:hover {
+      background: #242630;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-qr.btn-check.checking {
+      opacity: 0.75;
+      pointer-events: none;
+    }
+
+    @keyframes spinCheck {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .spinning {
+      animation: spinCheck 0.75s linear infinite;
+    }
+
     /* ── DETAILS COLUMN ── */
     .details-column {
       display: flex;
@@ -571,14 +596,13 @@
           </div>
 
           <div class="qr-btns">
-            <button class="btn-qr" id="btnZoomQR">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            <button class="btn-qr btn-check" id="btnCheckPayment" title="Kiểm tra trạng thái thanh toán từ ngân hàng">
+              <svg id="iconCheck" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
               </svg>
-              Xem to
+              <span id="textCheck">Kiểm tra</span>
             </button>
-            <button class="btn-qr" id="btnDownloadQR">
+            <button class="btn-qr" id="btnDownloadQR" title="Tải ảnh QR (qrsora.png)">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                 <polyline points="7 10 12 15 17 10"></polyline>
@@ -772,7 +796,6 @@
       }
 
       document.getElementById('qrTrigger').addEventListener('click', openModal);
-      document.getElementById('btnZoomQR').addEventListener('click', openModal);
       document.getElementById('modalClose').addEventListener('click', closeModal);
       qrModal.addEventListener('click', (e) => {
         if (e.target === qrModal) closeModal();
@@ -780,6 +803,56 @@
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeModal();
       });
+
+      // ── CHECK PAYMENT BUTTON (MANUAL SCAN) ──
+      const btnCheckPayment = document.getElementById('btnCheckPayment');
+      const iconCheck = document.getElementById('iconCheck');
+      const textCheck = document.getElementById('textCheck');
+
+      async function manualCheckPayment() {
+        if (isCompleted) return;
+        if (btnCheckPayment && btnCheckPayment.classList.contains('checking')) return;
+
+        if (btnCheckPayment) btnCheckPayment.classList.add('checking');
+        if (iconCheck) iconCheck.classList.add('spinning');
+        if (textCheck) textCheck.textContent = 'Đang kiểm tra...';
+
+        try {
+          const res = await fetch(`/api/pay/status/${ordCode}`);
+          if (res.ok) {
+            const data = await res.json();
+            if (data.status === 'paid' || data.paid === true) {
+              onSuccess(data);
+              showToast('🎉 Đã xác nhận thanh toán thành công!');
+              return;
+            }
+            if (data.status === 'expired') {
+              onExpired();
+              showToast('Mã thanh toán đã hết hạn!');
+              return;
+            }
+            if (data.amount && !rawAmount) {
+              rawAmount = data.amount;
+              document.getElementById('valAmount').textContent = formatVND(rawAmount);
+              document.getElementById('modalAmount').textContent = formatVND(rawAmount);
+              updateQR(rawAmount);
+            }
+          }
+          showToast('Chưa ghi nhận biến động số dư. Vui lòng thử lại sau vài giây!');
+        } catch (e) {
+          showToast('Đang kết nối cổng ngân hàng...');
+        } finally {
+          setTimeout(() => {
+            if (btnCheckPayment) btnCheckPayment.classList.remove('checking');
+            if (iconCheck) iconCheck.classList.remove('spinning');
+            if (textCheck) textCheck.textContent = 'Kiểm tra';
+          }, 800);
+        }
+      }
+
+      if (btnCheckPayment) {
+        btnCheckPayment.addEventListener('click', manualCheckPayment);
+      }
 
       // ── DOWNLOAD QR (EXACT FILENAME: qrsora.png) ──
       async function downloadQR() {
@@ -882,6 +955,7 @@
         // Dim QR
         document.getElementById('qrTrigger').style.opacity = '0.35';
         document.getElementById('qrTrigger').style.pointerEvents = 'none';
+        if (btnCheckPayment) btnCheckPayment.style.display = 'none';
       }
 
       // ── SUCCESS STATE (ONLY ✓ Thành công, NO EXTRA BADGE) ──
@@ -892,6 +966,7 @@
 
         // Hide countdown timer element completely
         countdownEl.style.display = 'none';
+        if (btnCheckPayment) btnCheckPayment.style.display = 'none';
 
         // Status pill: ONLY ✓ Thành công
         const pill = document.getElementById('statusPill');
