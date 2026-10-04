@@ -1,4 +1,4 @@
-const { getSessions, saveSessions, saveSessionsAsync, isTransactionProcessed, markTransactionProcessed, normalizeCode } = require('../_store');
+const { getSessions, saveSessions, fetchSessionsAsync, saveSessionsAsync, isTransactionProcessed, markTransactionProcessed, normalizeCode } = require('../_store');
 
 /**
  * SePay Official Webhook Endpoint for Sora's Station (https://payment.sorae.tokyo)
@@ -71,7 +71,7 @@ module.exports = async (req, res) => {
     }
 
     if (ordCode) {
-      const sessions = getSessions();
+      const sessions = await fetchSessionsAsync();
       let session = sessions[ordCode] || sessions[srCode] || {
         orderId: ordCode,
         srCode: srCode || ordCode,

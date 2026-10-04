@@ -1,4 +1,4 @@
-const { getSessions, normalizeCode, saveSessions } = require('../../_store');
+const { getSessions, normalizeCode, saveSessions, fetchSessionsAsync, saveSessionsAsync } = require('../../_store');
 
 const SEPAY_TOKEN = process.env.SEPAY_API_TOKEN || 'L6UBGXPLJQSNGQHVBQJYMBAQ2C4L77TAPTKRDZCV9UJ2XDHAPZMGD0X6DSKI15Z5';
 
@@ -88,8 +88,14 @@ module.exports = async (req, res) => {
   const numMatch = ordCode.match(/\d+/);
   const srCode = numMatch ? `SR${numMatch[0]}` : ordCode;
 
-  const sessions = getSessions();
+  let sessions = getSessions();
   let session = sessions[ordCode] || sessions[srCode] || sessions[raw];
+
+  // Nếu session chưa có hoặc chưa có số tiền, tải từ Cloud Master Store
+  if (!session || !session.amount) {
+    sessions = await fetchSessionsAsync();
+    session = sessions[ordCode] || sessions[srCode] || sessions[raw];
+  }
 
   // 1. Nếu session chưa có hoặc đang pending, kiểm tra SePay Realtime
   if (!session || session.status === 'pending') {
@@ -109,7 +115,7 @@ module.exports = async (req, res) => {
 
       sessions[ordCode] = session;
       sessions[srCode] = session;
-      saveSessions(sessions);
+      await saveSessionsAsync(sessions);
     }
   }
 

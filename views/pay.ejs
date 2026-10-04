@@ -731,20 +731,12 @@
       }
 
       // ── CLEAN ADDRESS BAR: Đảm bảo thanh địa chỉ chỉ hiện https://payment.sorae.tokyo/{Mã_Đơn} ──
-      // Hoàn toàn không để lộ ?amount=... trên thanh địa chỉ của trình duyệt!
+      // Hoàn toàn không để lộ ?amount=... hay ?code=... trên thanh địa chỉ của trình duyệt!
       if (window.history && window.history.replaceState) {
         try {
-          const currentUrl = new URL(window.location.href);
-          currentUrl.searchParams.delete('amount');
-          currentUrl.searchParams.delete('amt');
-          currentUrl.searchParams.delete('price');
-          currentUrl.searchParams.delete('tien');
-          currentUrl.searchParams.delete('vnd');
-          currentUrl.hash = '';
           const isSub = /^(payment|pay)\./i.test(window.location.hostname || '');
           const cleanPath = isSub ? `/${ordCode}` : `/payment/${ordCode}`;
-          const remainingQuery = currentUrl.searchParams.toString() ? `?${currentUrl.searchParams.toString()}` : '';
-          window.history.replaceState({}, document.title, cleanPath + remainingQuery);
+          window.history.replaceState({}, document.title, cleanPath);
         } catch (e) {}
       }
 
