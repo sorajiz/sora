@@ -1,6 +1,6 @@
-const { getSessions, saveSessions, normalizeCode } = require('../_store');
+const { getSessions, saveSessions, fetchSessionsAsync, saveSessionsAsync, normalizeCode } = require('../_store');
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -14,8 +14,11 @@ module.exports = (req, res) => {
   }
 
   const ordCode = normalizeCode(srCode);
-  const sessions = getSessions();
-  let session = sessions[ordCode] || {
+  const numMatch = ordCode.match(/\d+/);
+  const srAlt = numMatch ? `SR${numMatch[0]}` : ordCode;
+
+  const sessions = await fetchSessionsAsync();
+  let session = sessions[ordCode] || sessions[srAlt] || {
     orderId: ordCode,
     srCode: ordCode,
     ordCode,
@@ -30,7 +33,8 @@ module.exports = (req, res) => {
   if (bank) session.bank = bank;
 
   sessions[ordCode] = session;
-  saveSessions(sessions);
+  if (srAlt) sessions[srAlt] = session;
+  await saveSessionsAsync(sessions);
 
   res.json({
     ok: true,

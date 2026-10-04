@@ -697,6 +697,33 @@ app.post(['/_vercel/insights/view', '/_vercel/insights/event'], (req, res) => {
 });
 
 // ----------------------------------------------------------------------------
+// 8.5. PAYMENT & WEBHOOK API (Sora Pay Gateway & SePay Webhook)
+// ----------------------------------------------------------------------------
+const payWebhookHandler = require('./api/pay/webhook');
+const payCreateHandler = require('./api/pay/create');
+const payConfirmHandler = require('./api/pay/confirm');
+const payStatusHandler = require('./api/pay/status/[srCode]');
+
+app.all(['/api/pay/webhook', '/api/sepay/webhook', '/webhook/payment'], (req, res) => payWebhookHandler(req, res));
+app.all('/api/pay/create', (req, res) => payCreateHandler(req, res));
+app.all('/api/pay/confirm', (req, res) => payConfirmHandler(req, res));
+app.all(['/api/pay/status/:srCode', '/api/pay/status'], (req, res) => {
+  if (req.params.srCode) req.query.srCode = req.params.srCode;
+  return payStatusHandler(req, res);
+});
+app.get(['/pay', '/payment'], (req, res) => {
+  const payDist = path.join(DIST_DIR, 'pay.html');
+  const targetRoot = fs.existsSync(payDist) ? DIST_DIR : path.join(__dirname, 'views');
+  res.sendFile('pay.html', { root: targetRoot });
+});
+
+app.get(/^\/(ORD|SR)\d+$/i, (req, res) => {
+  const payDist = path.join(DIST_DIR, 'pay.html');
+  const targetRoot = fs.existsSync(payDist) ? DIST_DIR : path.join(__dirname, 'views');
+  res.sendFile('pay.html', { root: targetRoot });
+});
+
+// ----------------------------------------------------------------------------
 // 9. LIGHTWEIGHT ASSET 404 & SPA ROUTE FALLBACK
 // ----------------------------------------------------------------------------
 // If an asset (.css, .js, .png, .json, etc.) is missing, return a fast 404

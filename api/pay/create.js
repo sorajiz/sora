@@ -1,6 +1,6 @@
-const { BANK_CONFIG, getSessions, saveSessions, formatVND, getQRUrl, normalizeCode } = require('../_store');
+const { BANK_CONFIG, fetchSessionsAsync, saveSessionsAsync, formatVND, getQRUrl, normalizeCode } = require('../_store');
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -32,19 +32,18 @@ module.exports = (req, res) => {
     bank: BANK_CONFIG,
     status: 'pending',
     qrUrl,
-    payUrl: `https://sorae.tokyo/payment?code=${ordCode}&amount=${numAmount}`,
-    directUrl: `https://sorae.tokyo/payment/${ordCode}?amount=${numAmount}`,
-    subdomainUrl: `https://payment.sorae.tokyo/${ordCode}?amount=${numAmount}`,
-    cleanSubdomainUrl: `https://payment.sorae.tokyo/${ordCode}`,
+    payUrl: `https://payment.sorae.tokyo/${ordCode}`,
+    directUrl: `https://sorae.tokyo/payment/${ordCode}`,
+    subdomainUrl: `https://payment.sorae.tokyo/${ordCode}`,
     createdAt: Date.now(),
     expiresAt: expTime,
     transactionId: null,
     paidAt: null
   };
 
-  const sessions = getSessions();
+  const sessions = await fetchSessionsAsync();
   sessions[ordCode] = sessionData;
-  saveSessions(sessions);
+  await saveSessionsAsync(sessions);
 
   res.json({
     ok: true,
@@ -54,10 +53,9 @@ module.exports = (req, res) => {
     amount: numAmount,
     formattedAmount: formatVND(numAmount),
     qrUrl,
-    payUrl: `https://sorae.tokyo/payment?code=${ordCode}&amount=${numAmount}`,
-    directUrl: `https://sorae.tokyo/payment/${ordCode}?amount=${numAmount}`,
-    subdomainUrl: `https://payment.sorae.tokyo/${ordCode}?amount=${numAmount}`,
-    cleanSubdomainUrl: `https://payment.sorae.tokyo/${ordCode}`,
+    payUrl: `https://payment.sorae.tokyo/${ordCode}`,
+    directUrl: `https://sorae.tokyo/payment/${ordCode}`,
+    subdomainUrl: `https://payment.sorae.tokyo/${ordCode}`,
     expiresAt: expTime,
     bank: BANK_CONFIG
   });

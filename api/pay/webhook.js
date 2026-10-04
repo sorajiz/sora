@@ -1,4 +1,4 @@
-const { getSessions, saveSessions, isTransactionProcessed, markTransactionProcessed, normalizeCode } = require('../_store');
+const { getSessions, saveSessions, saveSessionsAsync, isTransactionProcessed, markTransactionProcessed, normalizeCode } = require('../_store');
 
 /**
  * SePay Official Webhook Endpoint for Sora's Station (https://payment.sorae.tokyo)
@@ -88,7 +88,7 @@ module.exports = async (req, res) => {
       // Lưu mapping cho cả ORD... và SR... để web poll không bị miss
       sessions[ordCode] = session;
       if (srCode) sessions[srCode] = session;
-      saveSessions(sessions);
+      await saveSessionsAsync(sessions);
 
       // Đánh dấu giao dịch đã hoàn tất chống trùng lặp
       markTransactionProcessed(transId);

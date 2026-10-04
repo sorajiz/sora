@@ -83,10 +83,46 @@ function normalizeCode(rawCode) {
   return numMatch ? `ORD${numMatch[0]}` : c;
 }
 
+const CLOUD_MASTER_ID = 'ff808181a09d98f701a1078ee80a7454';
+const CLOUD_API_URL = 'https://api.restful-api.dev/objects/' + CLOUD_MASTER_ID;
+
+async function fetchSessionsAsync() {
+  const local = getSessions();
+  try {
+    const res = await fetch(CLOUD_API_URL, { signal: AbortSignal.timeout(2500) });
+    if (res.ok) {
+      const json = await res.json();
+      if (json && json.data && json.data.orders) {
+        memorySessions = { ...local, ...json.data.orders };
+        saveSessions(memorySessions);
+        return memorySessions;
+      }
+    }
+  } catch {}
+  return local;
+}
+
+async function saveSessionsAsync(data) {
+  saveSessions(data);
+  try {
+    await fetch(CLOUD_API_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'sora_payments_master_store',
+        data: { orders: data, updatedAt: Date.now() }
+      }),
+      signal: AbortSignal.timeout(2500)
+    });
+  } catch {}
+}
+
 module.exports = {
   BANK_CONFIG,
   getSessions,
   saveSessions,
+  fetchSessionsAsync,
+  saveSessionsAsync,
   isTransactionProcessed,
   markTransactionProcessed,
   formatVND,
