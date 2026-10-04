@@ -451,72 +451,6 @@
       text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
     }
 
-    /* ── STATUS PILL (LIVE INDICATOR) ── */
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 16px;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      margin: 0 auto 6px;
-      transform: translateZ(25px);
-      transition: all 0.3s ease;
-      width: fit-content;
-    }
-    .status-pill.open {
-      background: rgba(34, 197, 94, 0.16);
-      border: 1px solid rgba(74, 222, 128, 0.38);
-      color: #86efac;
-      box-shadow: 0 0 18px rgba(34, 197, 94, 0.22);
-    }
-    .status-pill.closed {
-      background: rgba(245, 158, 11, 0.16);
-      border: 1px solid rgba(251, 191, 36, 0.38);
-      color: #fde68a;
-      box-shadow: 0 0 18px rgba(245, 158, 11, 0.18);
-    }
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: currentColor;
-      box-shadow: 0 0 8px currentColor;
-    }
-    .status-pill.open .status-dot {
-      animation: pulseDot 2s ease-in-out infinite;
-    }
-    @keyframes pulseDot {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.35; transform: scale(0.8); }
-    }
-
-    /* ── SCHEDULE DETAILS FOOTER ── */
-    .schedule-meta {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      gap: 10px 18px;
-      margin-top: 4px;
-      font-size: 0.84rem;
-      color: rgba(255, 255, 255, 0.88);
-      font-weight: 600;
-      transform: translateZ(22px);
-      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-    }
-    .schedule-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 12px;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
     /* ── RESPONSIVE ── */
     @media (max-width: 600px) {
       .glass-card {
@@ -1016,10 +950,6 @@
 
       <!-- Title & Description (3D Floating Layer) -->
       <div class="header-box">
-        <div class="status-pill open" id="twStatusPill">
-          <span class="status-dot"></span>
-          <span id="twStatusText">Đang tải trạng thái...</span>
-        </div>
         <h1>Khung Giờ Hoạt Động</h1>
         <p class="desc">
           Lịch trực, tiếp nhận thanh toán và hỗ trợ chính thức tại Sora's Station.
@@ -1053,18 +983,6 @@
           </div>
         </div>
       </section>
-
-      <!-- SCHEDULE META BADGES -->
-      <div class="schedule-meta" aria-label="Khung giờ hoạt động chi tiết">
-        <div class="schedule-item">
-          <span>☀️ Mở ca:</span>
-          <strong>07:00 sáng mỗi ngày</strong>
-        </div>
-        <div class="schedule-item">
-          <span>🌙 Đóng ca:</span>
-          <strong>23:00 (T2 — T6) · 23:30 (T7 — CN)</strong>
-        </div>
-      </div>
 
       <!-- Semantic Schedule Information for SEO & Crawlers (Hidden from visual UI) -->
       <div style="display: none;" aria-hidden="true" data-schedule-info>
@@ -1156,12 +1074,10 @@
     (function () {
       "use strict";
 
-      var elCaption    = document.getElementById("cdCaption");
-      var elHours      = document.getElementById("cdHours");
-      var elMinutes    = document.getElementById("cdMinutes");
-      var elSeconds    = document.getElementById("cdSeconds");
-      var elStatusPill = document.getElementById("twStatusPill");
-      var elStatusText = document.getElementById("twStatusText");
+      var elCaption = document.getElementById("cdCaption");
+      var elHours   = document.getElementById("cdHours");
+      var elMinutes = document.getElementById("cdMinutes");
+      var elSeconds = document.getElementById("cdSeconds");
 
       function pad2(n) {
         return n < 10 ? "0" + n : String(n);
@@ -1183,53 +1099,33 @@
         var isWeekend = (day === 0 || day === 6);
         var curSec = (h * 60 + min) * 60 + s;
 
-        // ── QUY TẮC NÂNG CẤP TIMEWORK: ──
-        // ĐÚNG 07:00:00 SÁNG MỖI NGÀY MỚI BẮT ĐẦU TÍNH CA LÀM VIỆC CỦA NGÀY MỚI!
-        // Vừa qua ngày mới (00:00 - 06:59:59) VẪN LÀ NGHỈ CA, KHÔNG tính là ca mới cho đến đúng 7h sáng.
+        // ── KHUNG GIỜ HOẠT ĐỘNG: ──
+        // ĐÚNG 07:00:00 SÁNG MỚI BẮT ĐẦU TÍNH CA LÀM VIỆC!
+        // Nếu chưa tới ca (trước 07:00 sáng hoặc sau giờ đóng ca): Cứ giữ 00:00:00
         var openSec = 7 * 3600; // 07:00:00 sáng
         var closeSec = isWeekend ? (23 * 3600 + 30 * 60) : (23 * 3600); // 23:00 (T2-T6) hoặc 23:30 (T7-CN)
 
         var isOpen = (curSec >= openSec && curSec < closeSec);
-        var diffSec = 0;
 
         if (isOpen) {
-          // Trong ca trực: Đếm ngược đến giờ đóng ca
-          diffSec = closeSec - curSec;
+          // Trong ca trực: Tính đếm ngược đến giờ đóng ca
+          var diffSec = closeSec - curSec;
           if (elCaption) elCaption.textContent = "ĐẾM NGƯỢC GIỜ ĐÓNG CA";
-          if (elStatusPill) {
-            elStatusPill.className = "status-pill open";
-            if (elStatusText) elStatusText.textContent = "Đang trực ca (" + (isWeekend ? "07:00 — 23:30" : "07:00 — 23:00") + ")";
-          }
+
+          var remHours = Math.floor(diffSec / 3600);
+          var remMin   = Math.floor((diffSec % 3600) / 60);
+          var remSec   = diffSec % 60;
+
+          if (elHours)   elHours.textContent   = pad2(remHours);
+          if (elMinutes) elMinutes.textContent = pad2(remMin);
+          if (elSeconds) elSeconds.textContent = pad2(remSec);
         } else {
-          // Ngoài ca trực:
-          if (curSec < openSec) {
-            // Trường hợp: Vừa qua ngày mới (nửa đêm 00:00:00 đến trước 07:00:00 sáng)
-            // Đúng 7h sáng ngày mới mới bắt đầu tính ca!
-            diffSec = openSec - curSec;
-            if (elCaption) elCaption.textContent = "CA MỚI BẮT ĐẦU LÚC 07:00 SÁNG";
-            if (elStatusPill) {
-              elStatusPill.className = "status-pill closed";
-              if (elStatusText) elStatusText.textContent = "Nghỉ ca (Mở ca lúc 07:00 sáng nay)";
-            }
-          } else {
-            // Trường hợp: Sau giờ đóng ca đêm (23:00 / 23:30 đến 23:59:59)
-            // Đếm ngược qua nửa đêm đến đúng 07:00 sáng ngày mới
-            diffSec = (86400 - curSec) + (7 * 3600);
-            if (elCaption) elCaption.textContent = "CA MỚI BẮT ĐẦU LÚC 07:00 SÁNG";
-            if (elStatusPill) {
-              elStatusPill.className = "status-pill closed";
-              if (elStatusText) elStatusText.textContent = "Hết ca (Mở ca lúc 07:00 sáng mai)";
-            }
-          }
+          // Chưa tới ca trực (trước 07:00 sáng hoặc sau giờ đóng ca): Cứ giữ 00:00:00
+          if (elCaption) elCaption.textContent = "CHƯA TỚI CA TRỰC";
+          if (elHours)   elHours.textContent   = "00";
+          if (elMinutes) elMinutes.textContent = "00";
+          if (elSeconds) elSeconds.textContent = "00";
         }
-
-        var remHours = Math.floor(diffSec / 3600);
-        var remMin = Math.floor((diffSec % 3600) / 60);
-        var remSec = diffSec % 60;
-
-        if (elHours)   elHours.textContent   = pad2(remHours);
-        if (elMinutes) elMinutes.textContent = pad2(remMin);
-        if (elSeconds) elSeconds.textContent = pad2(remSec);
       }
 
       updateSchedule();
