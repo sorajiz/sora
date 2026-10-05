@@ -122,7 +122,7 @@ module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   const raw = (req.query.srCode || req.url.split('?')[0].split('/').pop() || '').trim().toUpperCase();
-  const isGeneral = (!raw || raw === 'GENERAL' || raw === 'SORA' || raw === 'DEFAULT' || raw === '_GENERAL_' || raw === 'ROOT');
+  const isGeneral = (!raw || !/(ORD|SR)\d+/i.test(raw) || ['GENERAL', 'SORA', 'DEFAULT', '_GENERAL_', 'ROOT', 'MENT', 'ORDMENT', 'PAYMENT', 'PAY'].includes(raw));
   const sinceParam = Number(req.query.since || 0);
 
   // Tải từ Cloud Master Store

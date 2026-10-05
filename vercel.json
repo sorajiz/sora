@@ -75,50 +75,6 @@
       ],
       "destination": "/timework",
       "permanent": false
-    },
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "host",
-          "value": "payment.sorae.tokyo"
-        }
-      ],
-      "destination": "/payment",
-      "permanent": false
-    },
-    {
-      "source": "/((?!assets|js|music|favicon|api|hooks|payment|pay|.*\\..*).*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "payment.sorae.tokyo"
-        }
-      ],
-      "destination": "/payment",
-      "permanent": false
-    },
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "host",
-          "value": "pay.sorae.tokyo"
-        }
-      ],
-      "destination": "/payment",
-      "permanent": false
-    },
-    {
-      "source": "/((?!assets|js|music|favicon|api|hooks|payment|pay|.*\\..*).*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "pay.sorae.tokyo"
-        }
-      ],
-      "destination": "/payment",
-      "permanent": false
     }
   ],
   "rewrites": [
@@ -204,7 +160,7 @@
           "value": "pay.sorae.tokyo"
         }
       ],
-      "destination": "/pay.html"
+      "destination": "/payment.html"
     },
     {
       "source": "/((?!assets|js|music|favicon|api|hooks|.*\\..*).*)",
@@ -214,7 +170,7 @@
           "value": "pay.sorae.tokyo"
         }
       ],
-      "destination": "/pay.html"
+      "destination": "/payment.html"
     },
     {
       "source": "/",

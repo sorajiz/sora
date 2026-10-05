@@ -6,36 +6,56 @@
         var h = (window.location.hostname || '').toLowerCase();
         var p = (window.location.pathname || '/').toLowerCase();
         if (p.startsWith('/pay') || p.startsWith('/payment') || /^\/(ord|sr)/i.test(p)) {
-          document.documentElement.style.display = 'none';
-          var segs = p.replace(/^\/(pay|payment)\/?/i, '').replace(/^\//, '').split('/').filter(Boolean);
-          var code = segs[0] || '';
-          var amt = segs[1] || '';
-          var targetUrl = '/pay' + (code ? '?code=' + encodeURIComponent(code) : '');
-          if (amt && /^\d+$/.test(amt)) {
-            targetUrl += (targetUrl.includes('?') ? '&' : '?') + 'amount=' + amt;
+          if (!p.endsWith('.html')) {
+            document.documentElement.style.display = 'none';
+            var cleanP = p.replace(/^\/(payment|pay)(\/|$)/i, '').replace(/^\//, '');
+            var segs = cleanP.split('/').filter(Boolean);
+            var code = '';
+            var amt = '';
+            for (var i = 0; i < segs.length; i++) {
+              if (!code && /(ORD|SR)\d+/i.test(segs[i])) {
+                code = segs[i].toUpperCase();
+              } else if (!amt && /^\d+$/.test(segs[i])) {
+                amt = segs[i];
+              }
+            }
+            var targetUrl = '/payment.html' + (code ? '?code=' + encodeURIComponent(code) : '');
+            if (amt) {
+              targetUrl += (targetUrl.includes('?') ? '&' : '?') + 'amount=' + amt;
+            }
+            if (window.location.search) {
+              var s = window.location.search.slice(1);
+              if (s) targetUrl += (targetUrl.includes('?') ? '&' : '?') + s;
+            }
+            window.location.replace(targetUrl + window.location.hash);
+            return;
           }
-          if (window.location.search) {
-            var s = window.location.search.slice(1);
-            targetUrl += (targetUrl.includes('?') ? '&' : '?') + s;
-          }
-          window.location.replace(targetUrl + window.location.hash);
-          return;
         }
         if (h === 'payment.sorae.tokyo' || h === 'pay.sorae.tokyo' || h.startsWith('payment.') || h.startsWith('pay.')) {
-          document.documentElement.style.display = 'none';
-          var segs = p.replace(/^\//, '').split('/').filter(Boolean);
-          var code = segs[0] || '';
-          var amt = segs[1] || '';
-          var targetUrl = '/pay' + (code ? '?code=' + encodeURIComponent(code) : '');
-          if (amt && /^\d+$/.test(amt)) {
-            targetUrl += (targetUrl.includes('?') ? '&' : '?') + 'amount=' + amt;
+          if (!p.endsWith('.html')) {
+            document.documentElement.style.display = 'none';
+            var cleanP = p.replace(/^\/(payment|pay)(\/|$)/i, '').replace(/^\//, '');
+            var segs = cleanP.split('/').filter(Boolean);
+            var code = '';
+            var amt = '';
+            for (var i = 0; i < segs.length; i++) {
+              if (!code && /(ORD|SR)\d+/i.test(segs[i])) {
+                code = segs[i].toUpperCase();
+              } else if (!amt && /^\d+$/.test(segs[i])) {
+                amt = segs[i];
+              }
+            }
+            var targetUrl = '/payment.html' + (code ? '?code=' + encodeURIComponent(code) : '');
+            if (amt) {
+              targetUrl += (targetUrl.includes('?') ? '&' : '?') + 'amount=' + amt;
+            }
+            if (window.location.search) {
+              var s = window.location.search.slice(1);
+              if (s) targetUrl += (targetUrl.includes('?') ? '&' : '?') + s;
+            }
+            window.location.replace(targetUrl + window.location.hash);
+            return;
           }
-          if (window.location.search) {
-            var s = window.location.search.slice(1);
-            targetUrl += (targetUrl.includes('?') ? '&' : '?') + s;
-          }
-          window.location.replace(targetUrl + window.location.hash);
-          return;
         }
         if (h === 'discord.sorae.tokyo' || h.startsWith('discord.')) {
           if (!p.startsWith('/discord')) {

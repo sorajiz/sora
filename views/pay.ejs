@@ -719,8 +719,18 @@
 
       // Extract all path segments & search params
       const urlParams = new URLSearchParams(window.location.search);
-      const cleanPath = window.location.pathname.replace(/^\/(pay|payment)\/?/i, '');
+      const rawPath = (window.location.pathname || '/').toLowerCase();
+      // Loại bỏ chính xác /payment hoặc /pay ở đầu chuỗi (không để sót lại "ment")
+      const cleanPath = rawPath.replace(/^\/(payment|pay)(\/|$)/i, '').replace(/^\//, '');
       const pathSegments = cleanPath.split('/').filter(Boolean);
+
+      const IGNORED_CODES = new Set(['PAY', 'PAYMENT', 'MENT', 'ORDMENT', 'SRMENT', 'INDEX', 'INDEX.HTML', 'GENERAL', 'SORA', 'DEFAULT', 'STATUS', 'ROOT']);
+
+      try {
+        localStorage.removeItem('sora_exp_ORDMENT');
+        localStorage.removeItem('sora_exp_MENT');
+        localStorage.removeItem('sora_exp_GENERAL');
+      } catch (e) {}
 
       let foundCode = null;
       let foundAmount = null;
@@ -729,7 +739,7 @@
       if (serverOrder) {
         if (serverOrder.ordCode || serverOrder.srCode) {
           const sc = (serverOrder.ordCode || serverOrder.srCode).toUpperCase();
-          if (sc !== 'GENERAL' && sc !== 'SORA' && sc !== 'DEFAULT' && sc !== 'ORD192') {
+          if (!IGNORED_CODES.has(sc) && /(ORD|SR)\d+/i.test(sc)) {
             foundCode = sc;
           }
         }
@@ -739,7 +749,7 @@
       // 2. Check query params (?code=, ?order=, ?sr=, ?memo=)
       if (!foundCode) {
         const qCode = urlParams.get('code') || urlParams.get('order') || urlParams.get('sr') || urlParams.get('memo');
-        if (qCode && !/^(general|sora|default)$/i.test(qCode.trim())) {
+        if (qCode && !IGNORED_CODES.has(qCode.trim().toUpperCase()) && /(ORD|SR)\d+/i.test(qCode.trim())) {
           foundCode = qCode.trim();
         }
       }
@@ -748,7 +758,7 @@
         if (qAmt && !isNaN(parseInt(qAmt, 10))) foundAmount = parseInt(qAmt, 10);
       }
 
-      // 3. Check path segments (e.g. /ORD198/10000 or /10000/ORD198)
+      // 3. Check path segments: CHỈ chấp nhận mã đơn dạng ORD... hoặc SR... (VD: ORD192, SR888)
       for (const seg of pathSegments) {
         const upper = seg.toUpperCase();
         if (!foundCode && /(ORD|SR)\d+/i.test(upper)) {
@@ -758,15 +768,7 @@
         }
       }
 
-      // Fallback first segment as code ONLY if it looks like an ORD/SR or custom order code (length >= 4 and not keyword)
-      if (!foundCode && pathSegments.length > 0) {
-        const firstSeg = pathSegments[0].toUpperCase();
-        if (/(ORD|SR)\d+/i.test(firstSeg) || (/^[A-Z0-9_-]{4,15}$/.test(firstSeg) && !/^(PAY|PAYMENT|GENERAL|SORA|INDEX|STATUS)$/i.test(firstSeg))) {
-          foundCode = firstSeg;
-        }
-      }
-
-      // 4. Check if code has embedded amount separator e.g. ORD198-10000 or ORD198_10000 or 10000-ORD198
+      // 4. Check if code has embedded amount separator e.g. ORD198-10000 or ORD198_10000
       if (foundCode && /[-_]/.test(foundCode)) {
         const parts = foundCode.split(/[-_]/);
         for (const p of parts) {
@@ -784,8 +786,8 @@
         if (hashMatch) foundAmount = parseInt(hashMatch[0], 10);
       }
 
-      // Xác định loại phiên: Đơn hàng cụ thể (isGeneral = false) hay Cổng thanh toán gốc tự do (isGeneral = true)
-      const isGeneral = !foundCode;
+      // Xác định loại phiên: Chỉ khi có mã đơn hợp lệ (ORD... hoặc SR...) mới là đơn hàng cụ thể, còn lại luôn là Cổng thanh toán tự do 24/7 không hết hạn
+      const isGeneral = !foundCode || !/(ORD|SR)\d+/i.test(foundCode);
       let ordCode = '';
       if (!isGeneral) {
         const rawCode = foundCode.toUpperCase();

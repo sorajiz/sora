@@ -527,9 +527,17 @@ function servePayPage(req, res) {
   }
 
   // Parse order code and dynamic amount from path or query parameters
-  const pathClean = req.path.replace(/^\/pay\/?|^\/payment\/?|^\//, '');
+  const pathClean = req.path.replace(/^\/(payment|pay)(\/|$)/i, '').replace(/^\//, '');
   const segments = pathClean.split('/').filter(Boolean);
-  const codeParam = req.params?.srCode || req.query?.code || req.query?.order || req.query?.sr || (segments.length > 0 ? segments[0] : null);
+  let codeParam = req.params?.srCode || req.query?.code || req.query?.order || req.query?.sr || null;
+  if (!codeParam && segments.length > 0) {
+    for (const seg of segments) {
+      if (/(ORD|SR)\d+/i.test(seg)) {
+        codeParam = seg;
+        break;
+      }
+    }
+  }
   const amountQuery = req.query?.amount || req.query?.amt || req.query?.price || req.query?.tien || (segments.length > 1 ? segments[1] : null);
 
   let orderData = null;
@@ -547,13 +555,6 @@ function servePayPage(req, res) {
         ordCode,
         amount: amountQuery ? parseInt(amountQuery, 10) : null
       };
-    }
-  } else if (codeParam && !/^(PAY|PAYMENT|GENERAL|SORA)$/i.test(codeParam) && isNaN(codeParam)) {
-    const rawCode = codeParam.toUpperCase();
-    const session = findPaySession(rawCode);
-    if (session) {
-      orderData = { ...session };
-      if (amountQuery) orderData.amount = parseInt(amountQuery, 10);
     }
   }
 
