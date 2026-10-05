@@ -675,7 +675,7 @@
           <div class="row-card">
             <div class="row-info">
               <span class="row-label">Nội Dung Chuyển Khoản</span>
-              <span class="row-val memo-val" id="valMemo">ORD---</span>
+              <span class="row-val memo-val" id="valMemo">sora developer</span>
             </div>
             <button class="btn-copy" data-target="copyMemo">Sao chép</button>
           </div>
@@ -695,7 +695,7 @@
         <img id="modalQrImg" src="" alt="Mã VietQR Phóng To" />
       </div>
       <div class="modal-info">
-        <p><strong id="modalAmount">0 đ</strong> · <span id="modalMemo">Sora Station</span></p>
+        <p><strong id="modalAmount">0 đ</strong> · <span id="modalMemo">sora developer</span></p>
       </div>
       <button class="btn-qr" id="btnModalDownload" style="width: 100%; padding: 8px 14px;">Tải ảnh QR này</button>
     </div>
@@ -798,7 +798,7 @@
         ordCode = 'GENERAL';
       }
 
-      const displayMemo = isGeneral ? 'Sora Station' : ordCode;
+      const displayMemo = isGeneral ? 'sora developer' : ordCode;
       let rawAmount = (foundAmount && !isNaN(foundAmount) && foundAmount > 0) ? foundAmount : null;
 
       // ── EXPIRATION & COUNTDOWN TIME SYNCHRONIZATION ──
@@ -846,7 +846,7 @@
       // Clean QR URL using VietQR qr_only template
       function getQRUrl(amt, memo) {
         const encName = encodeURIComponent(BANK_CONFIG.accountName);
-        const encMemo = encodeURIComponent(memo || 'Sora Station');
+        const encMemo = encodeURIComponent(memo || 'sora developer');
         const amtParam = (amt && !isNaN(amt) && amt > 0) ? `amount=${amt}&` : '';
         return `https://api.vietqr.io/image/${BANK_CONFIG.bin}-${BANK_CONFIG.stk}-qr_only.png?${amtParam}addInfo=${encMemo}&accountName=${encName}`;
       }

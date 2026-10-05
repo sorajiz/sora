@@ -270,7 +270,7 @@ app.get(['/api/pay', '/api/payment'], (req, res) => {
 app.get(['/api/pay/qr', '/api/payment/qr'], (req, res) => {
   const amount = parseInt(req.query.amount || req.query.amt || '0', 10);
   const rawCode = (req.query.code || req.query.order || req.query.sr || '').trim();
-  const ordCode = rawCode ? (rawCode.match(/\d+/) ? `ORD${rawCode.match(/\d+/)[0]}` : rawCode.toUpperCase()) : 'Sora Station';
+  const ordCode = rawCode ? (rawCode.match(/\d+/) ? `ORD${rawCode.match(/\d+/)[0]}` : rawCode.toUpperCase()) : 'sora developer';
   const qrUrl = getQRUrl(amount, ordCode);
 
   if (req.query.redirect === 'true' || req.query.raw === 'true') {
