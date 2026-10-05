@@ -9,6 +9,16 @@
   <meta name="theme-color" content="#000000" />
   <link rel="canonical" href="<%= typeof canonicalUrl !== 'undefined' ? canonicalUrl : 'https://payment.sorae.tokyo' %>">
 
+  <!-- Open Graph: tắt banner khi share link lên Discord / mạng xã hội -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Sora's Station" />
+  <meta property="og:title" content="Thanh Toán — Sora's Station" />
+  <meta property="og:description" content="Cổng thanh toán MBBank VietQR tự động" />
+  <!-- Không có og:image → Discord sẽ không hiện banner -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Thanh Toán — Sora's Station" />
+  <meta name="twitter:description" content="Cổng thanh toán MBBank VietQR tự động" />
+
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="<%= typeof faviconDataUri !== 'undefined' ? faviconDataUri : '/assets/favicon.png' %>" />
 
@@ -627,29 +637,13 @@
         <!-- DETAILS COLUMN -->
         <div class="details-column">
 
-          <!-- Số tiền (ẩn khi general vì tùy chỉnh) -->
+          <!-- Số Tiền -->
           <div class="row-card" id="rowAmount">
             <div class="row-info">
               <span class="row-label">Số Tiền</span>
               <span class="row-val amount-val" id="valAmount">0 đ</span>
             </div>
             <button class="btn-copy" data-target="copyAmount">Sao chép</button>
-          </div>
-
-          <!-- Tổng donate phiên (chỉ hiện khi general) -->
-          <div class="row-card" id="rowDonateTotal" style="display:none">
-            <div class="row-info">
-              <span class="row-label">Tổng Nhận Phiên Này</span>
-              <span class="row-val amount-val" id="valDonateTotal" style="color:#4ade80">0 đ</span>
-            </div>
-          </div>
-
-          <!-- Lượt donate gần nhất (chỉ hiện khi general và đã có) -->
-          <div class="row-card" id="rowLastDonate" style="display:none">
-            <div class="row-info">
-              <span class="row-label">Ủng Hộ Gần Nhất</span>
-              <span class="row-val" id="valLastDonate" style="color:#facc15">—</span>
-            </div>
           </div>
 
           <!-- Ngân hàng -->
@@ -870,26 +864,17 @@
       document.getElementById('valName').textContent = BANK_CONFIG.accountName;
       document.getElementById('modalMemo').textContent = displayMemo;
 
-      // ── DONATE SESSION TRACKING ──
-      let donateSessionTotal = 0;
-      let donateCount = 0;
-      // since luôn được cập nhật sau mỗi lần nhận donate để không detect lại
+      // since luôn được cập nhật sau mỗi lần nhận thanh toán để không detect lại
       let generalSince = pageSessionStartedAt;
 
       if (isGeneral) {
-        // Cập nhật tiêu đề trang
         const pageTitle = document.getElementById('pageTitle');
-        if (pageTitle) pageTitle.textContent = 'Ủng Hộ / Donate Sora';
-
-        // Ẩn row số tiền cố định, hiện row donate
-        const rowAmt = document.getElementById('rowAmount');
-        if (rowAmt) rowAmt.style.display = 'none';
-        document.getElementById('rowDonateTotal').style.display = '';
+        if (pageTitle) pageTitle.textContent = 'Thanh Toán Đơn Hàng';
 
         const pill = document.getElementById('statusPill');
         const pillText = document.getElementById('statusPillText');
-        if (pill) pill.className = 'status-pill ready';
-        if (pillText) pillText.textContent = '💜 Sẵn sàng nhận';
+        if (pill) pill.className = 'status-pill pending';
+        if (pillText) pillText.textContent = 'Chờ thanh toán';
 
         const cd = document.getElementById('countdownEl');
         if (cd) {
@@ -967,8 +952,6 @@
             const data = await res.json();
             if (data.status === 'paid' || data.paid === true) {
               onSuccess(data);
-              const amtLabel = data.amount ? formatVND(data.amount) : '';
-              showToast('🎉 Đã xác nhận thanh toán thành công' + (amtLabel ? ': ' + amtLabel : '!'));
               return;
             }
             if (data.status === 'expired' && !isGeneral) {
@@ -1147,72 +1130,48 @@
 
       // ── SUCCESS STATE ──
       function onSuccess(data) {
-        // ── GENERAL / DONATE MODE: không khóa trang, tiếp tục nhận ──
-        if (isGeneral) {
-          const receivedAmt = data.amount || 0;
-          const transId = data.transactionId || 'FT' + Date.now();
-          const bank = data.bank || 'MBBank';
-
-          // Cộng dồn tổng donate phiên này
-          donateCount++;
-          donateSessionTotal += receivedAmt;
-
-          // Cập nhật UI donate
-          document.getElementById('valDonateTotal').textContent = formatVND(donateSessionTotal);
-          document.getElementById('rowLastDonate').style.display = '';
-          document.getElementById('valLastDonate').textContent =
-            `+${formatVND(receivedAmt)} · ${bank} · #${donateCount}`;
-
-          // Cập nhật modal info
-          document.getElementById('modalAmount').textContent = 'Tùy chỉnh khi quét';
-
-          // Toast mừng
-          showToast(`🎉 Nhận được ${formatVND(receivedAmt)} từ ${bank}!`);
-
-          // *** Chìa khóa: advance "since" qua thời điểm paidAt + 1 giây ***
-          // Lần poll tiếp theo sẽ dùng since mới → không detect lại giao dịch vừa rồi
-          const newSince = (data.paidAt || Date.now()) + 1000;
-          generalSince = newSince;
-
-          // Giữ pill màu xanh và hiện thông báo brief
-          const pill = document.getElementById('statusPill');
-          const pillText = document.getElementById('statusPillText');
-          pill.className = 'status-pill paid';
-          pillText.textContent = `✓ Đã nhận #${donateCount}`;
-
-          // Sau 3 giây reset pill về sẵn sàng nhận tiếp
-          setTimeout(() => {
-            pill.className = 'status-pill ready';
-            pillText.textContent = '💜 Sẵn sàng nhận';
-          }, 3000);
-
-          // KHÔNG set isCompleted = true → tiếp tục poll
-          return;
-        }
-
-        // ── ORDER MODE: khóa trang bình thường ──
-        if (isCompleted) return;
-        isCompleted = true;
-        if (timer) clearInterval(timer);
-
-        countdownEl.style.display = 'none';
-        if (btnCheckPayment) btnCheckPayment.style.display = 'none';
-
-        const pill = document.getElementById('statusPill');
-        pill.className = 'status-pill paid';
-        document.getElementById('statusPillText').textContent = '✓ Thành công';
-
-        const banner = document.getElementById('successBanner');
+        const receivedAmt = data.amount || rawAmount || 0;
         const transId = data.transactionId || 'FT' + Date.now();
-        if (data.amount && data.amount > 0) {
-          rawAmount = data.amount;
+        const bank = data.bank || 'MBBank';
+
+        // Cập nhật số tiền nhận được
+        if (receivedAmt > 0) {
+          rawAmount = receivedAmt;
           document.getElementById('valAmount').textContent = formatVND(rawAmount);
           document.getElementById('modalAmount').textContent = formatVND(rawAmount);
           updateQR(rawAmount);
         }
-        const amtStr = formatVND(data.amount || rawAmount);
-        document.getElementById('successDetails').textContent = `Đã nhận ${amtStr} · Mã giao dịch: ${transId}`;
-        banner.style.display = 'block';
+
+        // Cập nhật status pill thành công
+        const pill = document.getElementById('statusPill');
+        const pillText = document.getElementById('statusPillText');
+        if (pill) pill.className = 'status-pill paid';
+        if (pillText) pillText.textContent = '✓ Thành công';
+
+        // Hiện banner thành công
+        const banner = document.getElementById('successBanner');
+        if (banner) {
+          const amtStr = formatVND(receivedAmt);
+          document.getElementById('successDetails').textContent = `Đã nhận ${amtStr} · Mã giao dịch: ${transId}`;
+          banner.style.display = 'block';
+        }
+
+        // Thông báo toast không chứa emoji 🎉
+        const amtLabel = receivedAmt > 0 ? formatVND(receivedAmt) : '';
+        showToast('Đã xác nhận thanh toán thành công' + (amtLabel ? ': ' + amtLabel : '!'));
+
+        if (isGeneral) {
+          // Cập nhật since để không lặp lại giao dịch vừa nhận
+          const newSince = (data.paidAt || Date.now()) + 1000;
+          generalSince = newSince;
+        } else {
+          // Khóa đơn hàng cụ thể khi đã hoàn tất
+          if (isCompleted) return;
+          isCompleted = true;
+          if (timer) clearInterval(timer);
+          countdownEl.style.display = 'none';
+          if (btnCheckPayment) btnCheckPayment.style.display = 'none';
+        }
       }
 
       // ── POLLING CHECK STATUS ──

@@ -1,9 +1,9 @@
-https://payment.sorae.tokyo/* /pay.html 200
-http://payment.sorae.tokyo/* /pay.html 200
-https://pay.sorae.tokyo/* /pay.html 200
-http://pay.sorae.tokyo/* /pay.html 200
-/pay/* /pay.html 200
-/pay /pay.html 200
+https://payment.sorae.tokyo/* /payment.html 200
+http://payment.sorae.tokyo/* /payment.html 200
+https://pay.sorae.tokyo/* /payment.html 200
+http://pay.sorae.tokyo/* /payment.html 200
+/pay/* /payment.html 200
+/pay /payment.html 200
 /payment/* /payment.html 200
 /payment /payment.html 200
 /ORD* /pay.html 200

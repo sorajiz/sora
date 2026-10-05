@@ -234,7 +234,7 @@ module.exports = async (req, res) => {
     return res.json({
       ok: true,
       orderId: ordCode,
-      srCode: ordCode,
+      srCode: raw.startsWith('SR') ? raw : srCode,
       ordCode,
       status: 'pending',
       amount: null,
@@ -253,7 +253,7 @@ module.exports = async (req, res) => {
   res.json({
     ok: true,
     orderId: session.ordCode || ordCode,
-    srCode: session.srCode || srCode,
+    srCode: raw.startsWith('SR') ? raw : (session.srCode || srCode),
     ordCode: session.ordCode || ordCode,
     amount: finalAmount,
     amountFormatted: finalAmount > 0 ? formatVND(finalAmount) : null,

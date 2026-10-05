@@ -75,6 +75,50 @@
       ],
       "destination": "/timework",
       "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "payment.sorae.tokyo"
+        }
+      ],
+      "destination": "/payment",
+      "permanent": false
+    },
+    {
+      "source": "/((?!assets|js|music|favicon|api|hooks|payment|pay|.*\\..*).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "payment.sorae.tokyo"
+        }
+      ],
+      "destination": "/payment",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "pay.sorae.tokyo"
+        }
+      ],
+      "destination": "/payment",
+      "permanent": false
+    },
+    {
+      "source": "/((?!assets|js|music|favicon|api|hooks|payment|pay|.*\\..*).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "pay.sorae.tokyo"
+        }
+      ],
+      "destination": "/payment",
+      "permanent": false
     }
   ],
   "rewrites": [
@@ -82,8 +126,8 @@
     { "source": "/hooks/sepay-payment/(.*)", "destination": "/api/hooks/sepay-payment" },
     { "source": "/pay", "destination": "/pay.html" },
     { "source": "/pay/(.*)", "destination": "/pay.html" },
-    { "source": "/payment", "destination": "/pay.html" },
-    { "source": "/payment/(.*)", "destination": "/pay.html" },
+    { "source": "/payment", "destination": "/payment.html" },
+    { "source": "/payment/(.*)", "destination": "/payment.html" },
     { "source": "/ORD:path*", "destination": "/pay.html" },
     { "source": "/ord:path*", "destination": "/pay.html" },
     { "source": "/SR:path*", "destination": "/pay.html" },
@@ -180,7 +224,7 @@
           "value": "payment.sorae.tokyo"
         }
       ],
-      "destination": "/pay.html"
+      "destination": "/payment.html"
     },
     {
       "source": "/((?!assets|js|music|favicon|api|hooks|.*\\..*).*)",
@@ -190,7 +234,7 @@
           "value": "payment.sorae.tokyo"
         }
       ],
-      "destination": "/pay.html"
+      "destination": "/payment.html"
     },
     { "source": "/favicon.ico", "destination": "/assets/favicon.ico" },
     { "source": "/favicon.png", "destination": "/assets/favicon.png" },
@@ -200,7 +244,7 @@
     { "source": "/discord", "destination": "/discord.html" },
     { "source": "/timework", "destination": "/timework.html" },
     { "source": "/timeworks", "destination": "/timework.html" },
-    { "source": "/((?!assets|js|music|favicon|api|hooks|pay|payment|ORD|SR|.*\\..*).*)", "destination": "/index.html" }
+    { "source": "/((?!assets|js|music|favicon|api|hooks|pay|payment|ORD|SR|ord|sr|.*\\..*).*)", "destination": "/index.html" }
   ],
   "headers": [
     {

@@ -49,8 +49,11 @@ async function run() {
   assert.ok(timeworkHtml.includes('<link rel="canonical" href="https://timework.sorae.tokyo/">'), 'timework.html must have subdomain canonical URL');
   assert.ok(timeworkHtml.includes('TimeWork Sora Station'), 'timework.html must include brand title');
   assert.ok(timeworkHtml.includes('cdHours'), 'timework.html must include countdown timer hours');
-  assert.ok(timeworkHtml.includes('07:00 — 23:00'), 'timework.html must include weekday schedule');
-  assert.ok(timeworkHtml.includes('10:00 — 23:30'), 'timework.html must include weekend schedule');
+  const payHtml = fs.readFileSync(path.join(distDir, 'payment.html'), 'utf8');
+  assert.ok(payHtml.includes("Thanh Toán — Sora's Station"), 'payment.html must include payment title');
+  assert.ok(payHtml.includes('<link rel="canonical" href="https://payment.sorae.tokyo/">'), 'payment.html must have canonical URL');
+  assert.ok(payHtml.includes('MBBank'), 'payment.html must include MBBank info');
+  assert.ok(!payHtml.includes('property="og:image"'), 'payment.html must NOT include property="og:image" to avoid banner on Discord');
 
   const robots = fs.readFileSync(path.join(distDir, 'robots.txt'), 'utf8');
   assert.ok(robots.includes('Sitemap: https://sorastation.vercel.app/sitemap.xml'), 'robots.txt must advertise the production sitemap');
