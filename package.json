@@ -33,7 +33,7 @@
     "express": "^5.2.1",
     "express-rate-limit": "^8.7.0",
     "helmet": "^8.3.0",
-    "javascript-obfuscator": "^5.8.0",
+    "javascript-obfuscator": "^5.8.1",
     "terser": "^5.51.2"
   },
   "devDependencies": {
