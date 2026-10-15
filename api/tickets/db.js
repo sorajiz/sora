@@ -35,7 +35,7 @@ async function getTranscriptFromDB(publicId) {
   try {
     // 1. Fetch transcript metadata
     const tRes = await p.query(
-      `SELECT id, close_operation_id, public_id, ticket_name, owner_discord_id,
+      `SELECT id, close_operation_id, public_id, ticket_name, owner_discord_id, guild_id,
               opened_at, closed_at, closed_by_discord_id, message_count,
               participant_count, attachment_count, image_count, video_count,
               audio_count, embed_count, sticker_count, reaction_count,
@@ -127,12 +127,30 @@ async function getTranscriptFromDB(publicId) {
       reactionsByMsg[r.message_id].push(r);
     }
 
+    // 7. Fetch stickers
+    const stickersByMsg = {};
+    try {
+      const sRes = await p.query(
+        `SELECT message_id, discord_sticker_id, name, description, format_type, source_url, r2_url
+         FROM ticket_stickers
+         WHERE transcript_id = $1`,
+        [transcriptId]
+      );
+      for (const s of sRes.rows) {
+        if (!stickersByMsg[s.message_id]) stickersByMsg[s.message_id] = [];
+        stickersByMsg[s.message_id].push(s);
+      }
+    } catch (sErr) {
+      // Table might be empty or optional
+    }
+
     // Combine into full message payload
     const messages = mRes.rows.map(m => ({
       ...m,
       attachments: attachmentsByMsg[m.id] || [],
       embeds: embedsByMsg[m.id] || [],
-      reactions: reactionsByMsg[m.id] || []
+      reactions: reactionsByMsg[m.id] || [],
+      stickers: stickersByMsg[m.id] || []
     }));
 
     return {

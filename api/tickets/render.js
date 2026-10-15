@@ -22,52 +22,81 @@ function parseDiscordMarkdown(content) {
   if (!content) return '';
   let s = escapeHtml(content);
 
-  // Code blocks ```lang\ncode```
+  // 1. Code blocks ```lang\ncode``` (preserve before other transforms)
+  const codeBlocks = [];
   s = s.replace(/```(?:([a-zA-Z0-9_+-]+)\n)?([\s\S]*?)```/g, (match, lang, code) => {
-    return `<pre class="code-block"><code>${code}</code></pre>`;
+    const idx = codeBlocks.length;
+    codeBlocks.push(`<pre class="code-block"><code>${code}</code></pre>`);
+    return `___CODE_BLOCK_${idx}___`;
   });
 
-  // Inline code `code`
-  s = s.replace(/`([^`]+)`/g, '<code class="code-inline">$1</code>');
+  // 2. Inline code `code`
+  const inlineCodes = [];
+  s = s.replace(/`([^`]+)`/g, (match, code) => {
+    const idx = inlineCodes.length;
+    inlineCodes.push(`<code class="code-inline">${code}</code>`);
+    return `___INLINE_CODE_${idx}___`;
+  });
 
-  // Spoilers ||spoiler||
-  s = s.replace(/\|\|(.*?)\|\|/g, '<span class="spoiler" onclick="this.classList.toggle(\'revealed\')">$1</span>');
+  // 3. Discord Markdown Custom Emoji Links: [name](https://cdn.discordapp.com/emojis/id.ext?params)
+  s = s.replace(/\[([a-zA-Z0-9_]+)\]\((https:\/\/cdn\.discordapp\.com\/emojis\/([0-9]+)\.(?:webp|png|gif)(?:\?[^)]*)?)\)/gi, (m, name, url, id) => {
+    return `<img class="custom-emoji" src="${url}" alt=":${name}:" title=":${name}:" loading="lazy">`;
+  });
 
-  // Bold ***bold italic*** or **bold**
-  s = s.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
-  s = s.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  // 4. Discord Markdown Sticker Links: [name](https://media.discordapp.net/stickers/id.ext?params) or cdn.discordapp.com
+  s = s.replace(/\[([a-zA-Z0-9_\s-]+)\]\((https:\/\/(?:media|cdn)\.discordapp\.(?:net|com)\/stickers\/([0-9]+)\.(?:png|webp|gif|json)(?:\?[^)]*)?)\)/gi, (m, name, url, id) => {
+    return `<div class="discord-sticker"><img src="${url}" alt="${name}" title="${name}" loading="lazy"></div>`;
+  });
 
-  // Italic *italic* or _italic_
-  s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-  s = s.replace(/_([^_]+)_/g, '<em>$1</em>');
+  // 5. Raw Discord Emoji CDN URLs (outside html attributes)
+  s = s.replace(/(^|[\s>(])(https:\/\/cdn\.discordapp\.com\/emojis\/([0-9]+)\.(?:webp|png|gif)(?:\?[^\s<"')]*)?)/gi, '$1<img class="custom-emoji" src="$2" loading="lazy">');
 
-  // Strikethrough ~~strike~~
-  s = s.replace(/~~(.*?)~~/g, '<del>$1</del>');
+  // 6. Raw Discord Sticker CDN URLs
+  s = s.replace(/(^|[\s>(])(https:\/\/(?:media|cdn)\.discordapp\.(?:net|com)\/stickers\/([0-9]+)\.(?:png|webp|gif|json)(?:\?[^\s<"')]*)?)/gi, '$1<div class="discord-sticker"><img src="$2" loading="lazy"></div>');
 
-  // Underline __underline__
-  s = s.replace(/__(.*?)__/g, '<u>$1</u>');
-
-  // Blockquotes > quote
-  s = s.replace(/^>(?:>)?\s?(.*)$/gm, '<blockquote class="quote-line">$1</blockquote>');
-
-  // Custom static and animated emojis: <:name:id> or <a:name:id>
+  // 7. Discord native custom emojis: <:name:id> or <a:name:id>
   s = s.replace(/&lt;(a?):([a-zA-Z0-9_]+):([0-9]+)&gt;/g, (m, anim, name, id) => {
     const ext = anim ? 'gif' : 'png';
     const url = `https://cdn.discordapp.com/emojis/${id}.${ext}?size=48&quality=lossless`;
     return `<img class="custom-emoji" src="${url}" alt=":${name}:" title=":${name}:" loading="lazy">`;
   });
 
-  // User mentions <@id>
+  // 8. Discord Timestamps <t:timestamp:style>
+  s = s.replace(/&lt;t:([0-9]+)(?::([a-zA-Z]))?&gt;/g, (m, ts) => {
+    const date = new Date(parseInt(ts, 10) * 1000);
+    const dateStr = date.toLocaleString('vi-VN');
+    return `<span class="discord-timestamp" title="${dateStr}">${dateStr}</span>`;
+  });
+
+  // 9. Standard Markdown links: [text](url)
+  s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+
+  // 10. Spoilers ||spoiler||
+  s = s.replace(/\|\|(.*?)\|\|/g, '<span class="spoiler" onclick="this.classList.toggle(\'revealed\')">$1</span>');
+
+  // 11. Bold, Italic, Strikethrough, Underline
+  s = s.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
+  s = s.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+  s = s.replace(/_([^_]+)_/g, '<em>$1</em>');
+  s = s.replace(/~~(.*?)~~/g, '<del>$1</del>');
+  s = s.replace(/__(.*?)__/g, '<u>$1</u>');
+
+  // 12. Blockquotes > quote
+  s = s.replace(/^&gt;(?:&gt;)?\s?(.*)$/gm, '<blockquote class="quote-line">$1</blockquote>');
+  s = s.replace(/^>(?:>)?\s?(.*)$/gm, '<blockquote class="quote-line">$1</blockquote>');
+
+  // 13. User mentions <@id>, Role mentions <@&id>, Channel mentions <#id>
   s = s.replace(/&lt;@!?([0-9]+)&gt;/g, '<span class="mention">@user</span>');
-
-  // Role mentions <@&id>
   s = s.replace(/&lt;@&amp;([0-9]+)&gt;/g, '<span class="mention role">@role</span>');
-
-  // Channel mentions <#id>
   s = s.replace(/&lt;#([0-9]+)&gt;/g, '<span class="mention channel">#channel</span>');
 
-  // Convert newlines to <br> (outside pre blocks)
+  // 14. Convert newlines to <br>
   s = s.replace(/\n/g, '<br>');
+
+  // Restore code blocks and inline code
+  s = s.replace(/___CODE_BLOCK_(\d+)___/g, (m, idx) => codeBlocks[parseInt(idx, 10)]);
+  s = s.replace(/___INLINE_CODE_(\d+)___/g, (m, idx) => inlineCodes[parseInt(idx, 10)]);
 
   return s;
 }
@@ -90,6 +119,11 @@ function renderPadeTranscriptPage({ transcript, users, messages }) {
   const messageCount = messages.length || transcript.message_count || 0;
   const wave = computeWaveParameters(publicId);
 
+  const guildId = transcript.guild_id || '1559458306664439879';
+  const guildIconUrl = transcript.guild_icon_url || (guildId === '1559458306664439879' 
+    ? 'https://cdn.discordapp.com/icons/1559458306664439879/9c07b41c9403f41d779867722d30ad2c.png?size=128' 
+    : `https://cdn.discordapp.com/icons/${guildId}/9c07b41c9403f41d779867722d30ad2c.png?size=128`);
+
   const openedDate = transcript.opened_at ? new Date(transcript.opened_at) : new Date();
   const closedDate = transcript.closed_at ? new Date(transcript.closed_at) : new Date();
   const durationSec = Math.max(0, Math.floor((closedDate - openedDate) / 1000));
@@ -99,7 +133,7 @@ function renderPadeTranscriptPage({ transcript, users, messages }) {
 
   // Safe OpenGraph preview (NO conversation leak)
   const ogTitle = `Pade Store • Ticket Transcript #${ticketName}`;
-  const ogDesc = `Bản ghi phiếu hỗ trợ #${ticketName} • ${messageCount} tin nhắn • Thời lượng ${durationStr} • Đã xác thực an toàn.`;
+  const ogDesc = `Bản ghi phiếu hỗ trợ #${ticketName} • ${messageCount} tin nhắn • Thời gian đóng: ${closedDate.toLocaleDateString('vi-VN')}.`;
 
   // Group messages consecutively by author within 5 minutes
   const messageGroups = [];
@@ -140,6 +174,31 @@ function renderPadeTranscriptPage({ transcript, users, messages }) {
       const fullDateStr = msgTime.toLocaleString('vi-VN');
       const renderedContent = parseDiscordMarkdown(m.content_original);
 
+      // Reply Reference Header
+      let replyHtml = '';
+      if (m.reference && (m.reference.referenced_message_id || m.reference.referenced_author_id)) {
+        const refUser = users[m.reference.referenced_author_id] || {};
+        const refAuthor = refUser.guild_display_name || refUser.global_name || refUser.username || 'User';
+        const refPreview = m.reference.content_preview ? parseDiscordMarkdown(m.reference.content_preview) : 'Tin nhắn gốc';
+        replyHtml = `
+          <div class="reply-context">
+            <svg class="reply-spine" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            <span class="reply-author">@${escapeHtml(refAuthor)}</span>
+            <span class="reply-preview">${refPreview}</span>
+          </div>
+        `;
+      }
+
+      // Structured Message Stickers
+      let stickerHtml = '';
+      if (m.stickers && m.stickers.length > 0) {
+        const stkTags = m.stickers.map(stk => {
+          const stkUrl = stk.r2_url || stk.source_url || `https://media.discordapp.net/stickers/${stk.discord_sticker_id}.png?size=160`;
+          return `<div class="discord-sticker"><img src="${escapeHtml(stkUrl)}" alt="${escapeHtml(stk.name)}" title="${escapeHtml(stk.name)}" loading="lazy"></div>`;
+        }).join('');
+        stickerHtml = `<div class="message-stickers">${stkTags}</div>`;
+      }
+
       // Attachments
       let attHtml = '';
       if (m.attachments && m.attachments.length > 0) {
@@ -149,26 +208,28 @@ function renderPadeTranscriptPage({ transcript, users, messages }) {
         for (const att of m.attachments) {
           const fn = (att.filename || '').toLowerCase();
           const ct = (att.content_type || '').toLowerCase();
-          const isImg = ct.startsWith('image/') || fn.endsWith('.png') || fn.endsWith('.jpg') || fn.endsWith('.webp') || fn.endsWith('.gif');
-          const isVid = ct.startsWith('video/') || fn.endsWith('.mp4') || fn.endsWith('.webm');
-          const isAud = ct.startsWith('audio/') || fn.endsWith('.mp3') || fn.endsWith('.wav');
+          const isImg = ct.startsWith('image/') || fn.endsWith('.png') || fn.endsWith('.jpg') || fn.endsWith('.jpeg') || fn.endsWith('.webp') || fn.endsWith('.gif');
+          const isVid = ct.startsWith('video/') || fn.endsWith('.mp4') || fn.endsWith('.webm') || fn.endsWith('.mov');
+          const isAud = ct.startsWith('audio/') || fn.endsWith('.mp3') || fn.endsWith('.ogg') || fn.endsWith('.wav');
+
+          const mediaUrl = att.r2_url || att.source_url;
 
           if (isImg) {
-            imgList.push(att);
+            imgList.push({ ...att, url: mediaUrl });
           } else if (isVid) {
-            fileList.push(`<div class="media-video"><video src="${escapeHtml(att.source_url)}" controls preload="metadata"></video></div>`);
+            fileList.push(`<div class="media-video"><video src="${escapeHtml(mediaUrl)}" controls preload="metadata"></video></div>`);
           } else if (isAud) {
-            fileList.push(`<div class="media-audio"><audio src="${escapeHtml(att.source_url)}" controls preload="none"></audio></div>`);
+            fileList.push(`<div class="media-audio"><audio src="${escapeHtml(mediaUrl)}" controls preload="none"></audio></div>`);
           } else {
-            fileList.push(`<div class="media-file"><a href="${escapeHtml(att.source_url)}" target="_blank" rel="noopener">📎 <span>${escapeHtml(att.filename)}</span> <span class="file-size">(${Math.round(att.size_bytes / 1024)} KB)</span></a></div>`);
+            fileList.push(`<div class="media-file"><a href="${escapeHtml(mediaUrl)}" target="_blank" rel="noopener">📎 <span>${escapeHtml(att.filename)}</span> <span class="file-size">(${Math.round(att.size_bytes / 1024)} KB)</span></a></div>`);
           }
         }
 
         if (imgList.length > 0) {
           const gridClass = imgList.length === 1 ? 'grid-1' : imgList.length === 2 ? 'grid-2' : 'grid-many';
           const imgTags = imgList.map(a => `
-            <div class="gallery-item" onclick="openLightbox('${escapeHtml(a.source_url)}')">
-              <img src="${escapeHtml(a.source_url)}" alt="${escapeHtml(a.filename)}" loading="lazy">
+            <div class="gallery-item" onclick="openLightbox('${escapeHtml(a.url)}')">
+              <img src="${escapeHtml(a.url)}" alt="${escapeHtml(a.filename)}" loading="lazy">
             </div>
           `).join('');
           attHtml += `<div class="media-gallery ${gridClass}">${imgTags}</div>`;
@@ -193,34 +254,48 @@ function renderPadeTranscriptPage({ transcript, users, messages }) {
 
           embedHtml += `
             <div class="embed-card" style="border-left-color: ${emb.color ? '#' + emb.color.toString(16).padStart(6, '0') : '#5865f2'}">
-              ${emb.title ? `<div class="embed-title">${emb.url ? `<a href="${escapeHtml(emb.url)}" target="_blank">${escapeHtml(emb.title)}</a>` : escapeHtml(emb.title)}</div>` : ''}
+              ${emb.author_name ? `<div class="embed-author">${emb.author_icon_url ? `<img class="embed-author-icon" src="${escapeHtml(emb.author_icon_url)}">` : ''}<span>${escapeHtml(emb.author_name)}</span></div>` : ''}
+              ${emb.title ? `<div class="embed-title">${emb.url ? `<a href="${escapeHtml(emb.url)}" target="_blank" rel="noopener">${escapeHtml(emb.title)}</a>` : escapeHtml(emb.title)}</div>` : ''}
               ${emb.description ? `<div class="embed-desc">${parseDiscordMarkdown(emb.description)}</div>` : ''}
               ${fieldsHtml ? `<div class="embed-fields-grid">${fieldsHtml}</div>` : ''}
+              ${emb.thumbnail_url ? `<div class="embed-thumbnail"><img src="${escapeHtml(emb.thumbnail_url)}" loading="lazy"></div>` : ''}
               ${emb.image_url ? `<div class="embed-image"><img src="${escapeHtml(emb.image_url)}" loading="lazy"></div>` : ''}
-              ${emb.footer_text ? `<div class="embed-footer">${escapeHtml(emb.footer_text)}</div>` : ''}
+              ${emb.footer_text ? `<div class="embed-footer">${emb.footer_icon_url ? `<img class="embed-footer-icon" src="${escapeHtml(emb.footer_icon_url)}">` : ''}<span>${escapeHtml(emb.footer_text)}</span></div>` : ''}
             </div>
           `;
         }
       }
 
-      // Reactions
+      // Reactions with Custom Emoji
       let reactHtml = '';
       if (m.reactions && m.reactions.length > 0) {
-        const pills = m.reactions.map(r => `
-          <div class="reaction-pill">
-            <span class="react-emoji">${escapeHtml(r.emoji_name)}</span>
-            <span class="react-count">${r.count}</span>
-          </div>
-        `).join('');
+        const pills = m.reactions.map(r => {
+          let emojiVisual = '';
+          if (r.emoji_id) {
+            const ext = r.animated ? 'gif' : 'png';
+            const url = `https://cdn.discordapp.com/emojis/${r.emoji_id}.${ext}?size=32&quality=lossless`;
+            emojiVisual = `<img class="react-custom-emoji" src="${url}" alt=":${escapeHtml(r.emoji_name)}:" loading="lazy">`;
+          } else {
+            emojiVisual = `<span class="react-emoji">${escapeHtml(r.emoji_name)}</span>`;
+          }
+          return `
+            <div class="reaction-pill">
+              ${emojiVisual}
+              <span class="react-count">${r.count}</span>
+            </div>
+          `;
+        }).join('');
         reactHtml = `<div class="reactions-row">${pills}</div>`;
       }
 
       itemsHtml += `
         <div class="message-item" id="message-${escapeHtml(m.discord_message_id)}">
+          ${replyHtml}
           <div class="msg-content-row">
             <div class="msg-text searchable-content">${renderedContent}</div>
             ${m.is_edited ? '<span class="edited-tag">(đã chỉnh sửa)</span>' : ''}
           </div>
+          ${stickerHtml}
           ${attHtml}
           ${embedHtml}
           ${reactHtml}
@@ -342,12 +417,9 @@ function renderPadeTranscriptPage({ transcript, users, messages }) {
       width: 44px;
       height: 44px;
       border-radius: 12px;
-      background: linear-gradient(135deg, #1e2230, #111216);
       border: 1px solid var(--border-accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
+      object-fit: cover;
+      display: block;
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
     }
     .brand-info h1 {
@@ -559,6 +631,128 @@ function renderPadeTranscriptPage({ transcript, users, messages }) {
       height: 22px;
       vertical-align: -4px;
       display: inline-block;
+      object-fit: contain;
+    }
+    .custom-emoji.jumbo {
+      width: 48px;
+      height: 48px;
+      vertical-align: middle;
+      display: inline-block;
+    }
+    .discord-sticker {
+      margin-top: 8px;
+      max-width: 160px;
+      max-height: 160px;
+      display: inline-block;
+    }
+    .discord-sticker img {
+      width: 100%;
+      height: 100%;
+      max-width: 160px;
+      max-height: 160px;
+      object-fit: contain;
+      display: block;
+    }
+    .message-stickers {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .reply-context {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      padding-left: 2px;
+    }
+    .reply-spine {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+      opacity: 0.7;
+      color: var(--accent);
+    }
+    .reply-author {
+      font-weight: 600;
+      color: #c7d2fe;
+    }
+    .reply-preview {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 420px;
+      color: var(--text-sub);
+    }
+    .react-custom-emoji {
+      width: 16px;
+      height: 16px;
+      vertical-align: -2px;
+      object-fit: contain;
+      display: inline-block;
+    }
+    .discord-timestamp {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      padding: 1px 4px;
+      font-size: 12.5px;
+      color: #cbd5e1;
+    }
+    .embed-author {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .embed-author-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .embed-thumbnail {
+      float: right;
+      max-width: 80px;
+      max-height: 80px;
+      margin-left: 12px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .embed-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .embed-image {
+      margin-top: 10px;
+      border-radius: 8px;
+      overflow: hidden;
+      max-width: 520px;
+    }
+    .embed-image img {
+      max-width: 100%;
+      border-radius: 8px;
+      display: block;
+    }
+    .embed-footer {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: var(--text-sub);
+      margin-top: 10px;
+    }
+    .embed-footer-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      object-fit: cover;
     }
     .mention {
       background: rgba(88, 101, 242, 0.15);
@@ -790,15 +984,11 @@ function renderPadeTranscriptPage({ transcript, users, messages }) {
     <!-- Navbar Header -->
     <header class="navbar">
       <div class="brand-block">
-        <div class="brand-logo">🛡️</div>
+        <img class="brand-logo" src="${escapeHtml(guildIconUrl)}" alt="Discord Server Icon" loading="lazy">
         <div class="brand-info">
           <h1>Pade Store Transcript</h1>
           <p>Phiếu hỗ trợ #${escapeHtml(ticketName)} &bull; ${messageCount} tin nhắn</p>
         </div>
-      </div>
-      <div class="nav-actions">
-        <span class="badge-verified"><span class="dot"></span> Đã Xác Thực</span>
-        <button class="btn-action" onclick="toggleSearch()" title="Tìm kiếm (Ctrl+F)">🔍 Tìm Kiếm</button>
       </div>
     </header>
 
@@ -811,10 +1001,6 @@ function renderPadeTranscriptPage({ transcript, users, messages }) {
       <div class="metric-card">
         <div class="metric-label">Tổng Tin Nhắn</div>
         <div class="metric-value">${messageCount}</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Thời Lượng</div>
-        <div class="metric-value">${escapeHtml(durationStr)}</div>
       </div>
       <div class="metric-card">
         <div class="metric-label">Thời Gian Đóng</div>
