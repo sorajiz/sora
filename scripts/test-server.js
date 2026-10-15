@@ -177,16 +177,19 @@ const server = app.listen(testPort, '127.0.0.1', async () => {
 
     // 1b. Discord Ticket Transcript Reverse Proxy Tests
     {
-      name: 'Ticket Transcript (/tickets/transcript) - Unconfigured Backend (503)',
+      name: 'Ticket Transcript (/tickets/transcript) - Unconfigured Backend (503 / Safe Degraded Mode)',
       path: '/tickets/transcript?user=123&id=ticket-01&token=xyz',
       expectedStatus: 503,
       before: () => {
         delete process.env.BOT_BACKEND_URL;
+        delete process.env.DATABASE_URL;
       },
       validate: (res, body) => {
         const ct = res.headers['content-type'] || '';
         if (!ct.includes('text/html')) return 'Content-Type must be text/html';
-        if (!body.includes('Chưa cấu hình BOT_BACKEND_URL')) return 'Must explain BOT_BACKEND_URL is not configured';
+        if (!body.includes('PADE STORE') && !body.includes('Pade Store')) return 'Must include Pade Store brand';
+        if (!body.includes('Transcript')) return 'Must explain transcript status';
+        if (body.includes('BOT_BACKEND_URL')) return 'Must NOT leak BOT_BACKEND_URL to customer (Spec §6)';
         return null;
       }
     },
