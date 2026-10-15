@@ -3,6 +3,32 @@ const zlib = require('zlib');
 const app = require('../server');
 
 const testPort = 3899;
+const mockBotPort = 3898;
+
+const mockBotServer = http.createServer((req, res) => {
+  const parsed = new URL(req.url, `http://127.0.0.1:${mockBotPort}`);
+  const user = parsed.searchParams.get('user');
+  const id = parsed.searchParams.get('id');
+  const token = parsed.searchParams.get('token');
+
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+
+  if (token === 'forbidden-token') {
+    res.statusCode = 403;
+    return res.end('<!DOCTYPE html><html><body><h1>403 Forbidden: Invalid Token</h1></body></html>');
+  }
+
+  if (id === 'non-existent') {
+    res.statusCode = 404;
+    return res.end('<!DOCTYPE html><html><body><h1>404 Ticket Not Found</h1></body></html>');
+  }
+
+  res.statusCode = 200;
+  return res.end(`<!DOCTYPE html><html><head><title>Transcript ${id}</title></head><body><div id="discord-transcript">Transcript for ticket: ${id}, user: ${user}, token: ${token}</div></body></html>`);
+});
+
+mockBotServer.listen(mockBotPort, '127.0.0.1');
+
 const server = app.listen(testPort, '127.0.0.1', async () => {
   console.log(`\n======================================================`);
   console.log(` 🧪 SORA COMPREHENSIVE TEST SUITE - PORT ${testPort}`);
@@ -145,6 +171,81 @@ const server = app.listen(testPort, '127.0.0.1', async () => {
         const json = JSON.parse(body);
         if (json.status !== 'ok') return 'Health status not ok';
         if (!json.app) return 'Missing app name in health check';
+        return null;
+      }
+    },
+
+    // 1b. Discord Ticket Transcript Reverse Proxy Tests
+    {
+      name: 'Ticket Transcript (/tickets/transcript) - Unconfigured Backend (503)',
+      path: '/tickets/transcript?user=123&id=ticket-01&token=xyz',
+      expectedStatus: 503,
+      before: () => {
+        delete process.env.BOT_BACKEND_URL;
+      },
+      validate: (res, body) => {
+        const ct = res.headers['content-type'] || '';
+        if (!ct.includes('text/html')) return 'Content-Type must be text/html';
+        if (!body.includes('Chưa cấu hình BOT_BACKEND_URL')) return 'Must explain BOT_BACKEND_URL is not configured';
+        return null;
+      }
+    },
+    {
+      name: 'Ticket Transcript Full Proxy Flow (/tickets/transcript?user=...&id=...&token=...)',
+      path: '/tickets/transcript?user=1265702432701284395&id=ticket-sora-01&token=secret-token-ok',
+      expectedStatus: 200,
+      before: () => {
+        process.env.BOT_BACKEND_URL = `http://127.0.0.1:${mockBotPort}`;
+      },
+      validate: (res, body) => {
+        const ct = res.headers['content-type'] || '';
+        if (!ct.includes('text/html')) return 'Content-Type must be text/html';
+        if (!body.includes('Transcript for ticket: ticket-sora-01')) return 'Missing ticket ID in transcript body';
+        if (!body.includes('user: 1265702432701284395')) return 'Missing user ID in transcript body';
+        if (!body.includes('token: secret-token-ok')) return 'Missing token in transcript body';
+        return null;
+      }
+    },
+    {
+      name: 'Ticket Shortlink Proxy (/t/:id?user=...&token=...)',
+      path: '/t/ticket-shortlink-99?user=1265702432701284395&token=secret-token-ok',
+      expectedStatus: 200,
+      validate: (res, body) => {
+        const ct = res.headers['content-type'] || '';
+        if (!ct.includes('text/html')) return 'Content-Type must be text/html';
+        if (!body.includes('Transcript for ticket: ticket-shortlink-99')) return 'Shortlink must forward ticket ID';
+        return null;
+      }
+    },
+    {
+      name: 'Transcript Subdomain Host Routing (Host: transcript.sorae.tokyo)',
+      path: '/tickets/transcript?user=1265702432701284395&id=subdomain-ticket&token=secret-token-ok',
+      expectedStatus: 200,
+      headers: { 'Host': 'transcript.sorae.tokyo' },
+      validate: (res, body) => {
+        if (!body.includes('Transcript for ticket: subdomain-ticket')) return 'Subdomain must proxy ticket transcript';
+        return null;
+      }
+    },
+    {
+      name: 'Ticket Transcript Bot 403 Forbidden Preservation',
+      path: '/tickets/transcript?user=123&id=ticket-01&token=forbidden-token',
+      expectedStatus: 403,
+      validate: (res, body) => {
+        const ct = res.headers['content-type'] || '';
+        if (!ct.includes('text/html')) return 'Content-Type must be text/html';
+        if (!body.includes('403 Forbidden: Invalid Token')) return 'Must preserve 403 body from bot';
+        return null;
+      }
+    },
+    {
+      name: 'Ticket Transcript Bot 404 Not Found Preservation',
+      path: '/tickets/transcript?user=123&id=non-existent&token=xyz',
+      expectedStatus: 404,
+      validate: (res, body) => {
+        const ct = res.headers['content-type'] || '';
+        if (!ct.includes('text/html')) return 'Content-Type must be text/html';
+        if (!body.includes('404 Ticket Not Found')) return 'Must preserve 404 body from bot';
         return null;
       }
     },
@@ -375,6 +476,9 @@ const server = app.listen(testPort, '127.0.0.1', async () => {
   let failed = 0;
 
   for (const t of tests) {
+    if (typeof t.before === 'function') {
+      t.before();
+    }
     const start = Date.now();
     await new Promise((resolve) => {
       http.get({
@@ -426,6 +530,7 @@ const server = app.listen(testPort, '127.0.0.1', async () => {
   }
 
   server.close(() => {
+    try { mockBotServer.close(); } catch {}
     console.log(`\n======================================================`);
     console.log(` 📊 Test Results: ${passed} passed, ${failed} failed (${tests.length} total)`);
     console.log(`======================================================\n`);

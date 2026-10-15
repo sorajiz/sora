@@ -78,6 +78,9 @@
     }
   ],
   "rewrites": [
+    { "source": "/tickets/transcript", "destination": "/api/tickets/transcript" },
+    { "source": "/tickets/transcript/(.*)", "destination": "/api/tickets/transcript" },
+    { "source": "/t/:id", "destination": "/api/tickets/transcript?id=:id" },
     { "source": "/hooks/sepay-payment", "destination": "/api/hooks/sepay-payment" },
     { "source": "/hooks/sepay-payment/(.*)", "destination": "/api/hooks/sepay-payment" },
     { "source": "/pay", "destination": "/pay.html" },
@@ -92,6 +95,26 @@
     { "source": "/:amount(\\d{3,9})/ord:path*", "destination": "/pay.html" },
     { "source": "/:amount(\\d{3,9})/SR:path*", "destination": "/pay.html" },
     { "source": "/:amount(\\d{3,9})/sr:path*", "destination": "/pay.html" },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "transcript.sorae.tokyo"
+        }
+      ],
+      "destination": "/api/tickets/transcript"
+    },
+    {
+      "source": "/((?!assets|js|music|favicon|api|hooks|.*\\..*).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "transcript.sorae.tokyo"
+        }
+      ],
+      "destination": "/api/tickets/transcript"
+    },
     {
       "source": "/",
       "has": [
@@ -200,7 +223,7 @@
     { "source": "/discord", "destination": "/discord.html" },
     { "source": "/timework", "destination": "/timework.html" },
     { "source": "/timeworks", "destination": "/timework.html" },
-    { "source": "/((?!assets|js|music|favicon|api|hooks|pay|payment|ORD|SR|ord|sr|.*\\..*).*)", "destination": "/index.html" }
+    { "source": "/((?!assets|js|music|favicon|api|hooks|pay|payment|tickets|t|ORD|SR|ord|sr|.*\\..*).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
@@ -233,6 +256,19 @@
         {
           "key": "Content-Security-Policy",
           "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://va.vercel-scripts.com https://api.vietqr.io; frame-ancestors 'none';"
+        }
+      ]
+    },
+    {
+      "source": "/(tickets|t|api/tickets|api/t)(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src * 'unsafe-inline' 'unsafe-eval' data: blob: https:; img-src * data: blob: https:; media-src * data: blob: https:; script-src * 'unsafe-inline' 'unsafe-eval'; style-src * 'unsafe-inline' https:; font-src * data:; frame-ancestors *;"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
         }
       ]
     },

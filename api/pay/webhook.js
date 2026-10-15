@@ -196,6 +196,40 @@ module.exports = async (req, res) => {
 
       markTransactionProcessed(transId);
       console.log(`[SePay Webhook] ℹ️ Ghi nhận giao dịch tự do: ${amount}đ (${content}) - Trans: ${transId}`);
+
+      // Đồng bộ tới Discord Bot để gửi log 1556356626750119956
+      const botWebhookEndpoints = [
+        process.env.BOT_WEBHOOK_URL,
+        'http://127.0.0.1:3000/api/sepay/webhook',
+        'http://localhost:3000/api/sepay/webhook',
+        'http://127.0.0.1:3000/webhook/payment'
+      ].filter(Boolean);
+
+      for (const botUrl of botWebhookEndpoints) {
+        try {
+          fetch(botUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'User-Agent': 'Sora-Website-Webhook/1.0'
+            },
+            body: JSON.stringify({
+              id: transId,
+              gateway: payload.gateway || payload.bankName || payload.bank || 'MBBank',
+              transactionDate: payload.transactionDate || new Date().toISOString(),
+              accountNumber: payload.accountNumber || '',
+              subAccount: payload.subAccount || '',
+              code: 'GENERAL',
+              content: content || 'Chuyen tien tu do',
+              transferType: 'in',
+              transferAmount: amount,
+              referenceCode: payload.referenceCode || transId
+            }),
+            signal: AbortSignal.timeout(1500)
+          }).catch(() => {});
+          break;
+        } catch {}
+      }
     }
 
     // 5. Phản hồi hợp lệ chuẩn SePay: HTTP 200 + body {"success": true}

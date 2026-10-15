@@ -1,3 +1,8 @@
+https://transcript.sorae.tokyo/* /api/tickets/transcript 200
+http://transcript.sorae.tokyo/* /api/tickets/transcript 200
+/tickets/transcript /api/tickets/transcript 200
+/tickets/transcript/* /api/tickets/transcript 200
+/t/* /api/tickets/transcript 200
 https://payment.sorae.tokyo/* /payment.html 200
 http://payment.sorae.tokyo/* /payment.html 200
 https://pay.sorae.tokyo/* /payment.html 200

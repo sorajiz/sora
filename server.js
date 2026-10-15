@@ -88,22 +88,30 @@ if (IS_PROD && process.env.FORCE_HTTPS === 'true') {
   cspDirectives.upgradeInsecureRequests = [];
 }
 
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: cspDirectives
-    },
-    crossOriginEmbedderPolicy: false,
-    crossOriginResourcePolicy: { policy: 'cross-origin' },
-    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
-    hsts: IS_PROD
-      ? { maxAge: 31536000, includeSubDomains: true, preload: true }
-      : false, // Disabled on localhost to prevent permanent HTTPS lock
-    noSniff: true,
-    xssFilter: true,
-    frameguard: { action: 'deny' }
-  })
-);
+const helmetMiddleware = helmet({
+  contentSecurityPolicy: {
+    directives: cspDirectives
+  },
+  crossOriginEmbedderPolicy: false,
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+  hsts: IS_PROD
+    ? { maxAge: 31536000, includeSubDomains: true, preload: true }
+    : false, // Disabled on localhost to prevent permanent HTTPS lock
+  noSniff: true,
+  xssFilter: true,
+  frameguard: { action: 'deny' }
+});
+
+app.use((req, res, next) => {
+  const p = req.path;
+  const host = (req.hostname || req.headers.host || '').toLowerCase();
+  // Bypass strict helmet CSP for transcript proxy so Discord assets/styles can render
+  if (p.startsWith('/tickets') || p.startsWith('/api/tickets') || p.startsWith('/t/') || p.startsWith('/api/t/') || host.startsWith('transcript.')) {
+    return next();
+  }
+  return helmetMiddleware(req, res, next);
+});
 
 // ----------------------------------------------------------------------------
 // 4. INTELLIGENT RATE LIMITING (ANTI-DDOS WITH LOCAL BYPASS)
@@ -594,6 +602,11 @@ app.use((req, res, next) => {
       return servePayPage(req, res);
     }
   }
+  if (host.startsWith('transcript.')) {
+    if (!req.path.startsWith('/assets/') && !req.path.startsWith('/js/') && !req.path.startsWith('/music/')) {
+      return ticketTranscriptHandler(req, res);
+    }
+  }
   next();
 });
 
@@ -699,6 +712,20 @@ app.all(['/api/pay/status/:srCode', '/api/pay/status'], (req, res) => {
   return payStatusHandler(req, res);
 });
 // NOTE: /pay, /payment, /ORD*, /SR* routes are handled by the servePayPage routes registered above (section 8)
+
+// ----------------------------------------------------------------------------
+// 8.6. DISCORD TICKET TRANSCRIPT REVERSE PROXY
+// ----------------------------------------------------------------------------
+const ticketTranscriptHandler = require('./api/tickets/transcript');
+
+app.all([
+  '/tickets/transcript',
+  '/api/tickets/transcript',
+  '/t/:id',
+  '/api/t/:id'
+], (req, res) => ticketTranscriptHandler(req, res));
+
+app.all(/^\/(api\/)?tickets\/transcript(\/.*)?$/, (req, res) => ticketTranscriptHandler(req, res));
 
 // ----------------------------------------------------------------------------
 // 9. LIGHTWEIGHT ASSET 404 & SPA ROUTE FALLBACK
