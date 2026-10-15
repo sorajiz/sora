@@ -18,8 +18,12 @@ function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
-function parseDiscordMarkdown(content) {
+function parseDiscordMarkdown(content, ctx = {}) {
   if (!content) return '';
+
+  const users = ctx.users || {};
+  const roles = ctx.roles || {};
+  const channels = ctx.channels || {};
 
   const stashes = [];
   function stash(html) {
@@ -79,7 +83,7 @@ function parseDiscordMarkdown(content) {
 
   // 10. Standard Markdown links: [text](url)
   s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (m, text, url) => {
-    return stash(`<a href="${url}" target="_blank" rel="noopener noreferrer">${text}</a>`);
+    return stash(`<a href="${url}" target="_blank" rel="noopener noreferrer nofollow ugc">${text}</a>`);
   });
 
   // 11. Spoilers ||spoiler||
@@ -99,9 +103,34 @@ function parseDiscordMarkdown(content) {
   s = s.replace(/^>(?:>)?\s?(.*)$/gm, '<blockquote class="quote-line">$1</blockquote>');
 
   // 14. User mentions <@id>, Role mentions <@&id>, Channel mentions <#id>
-  s = s.replace(/&lt;@!?([0-9]+)&gt;/g, '<span class="mention">@user</span>');
-  s = s.replace(/&lt;@&amp;([0-9]+)&gt;/g, '<span class="mention role">@role</span>');
-  s = s.replace(/&lt;#([0-9]+)&gt;/g, '<span class="mention channel">#channel</span>');
+  s = s.replace(/&lt;@!?([0-9]+)&gt;/g, (match, id) => {
+    const u = users[id];
+    const name = u ? (u.guild_display_name || u.global_name || u.username || 'user') : 'user';
+    const colorStyle = (u && u.display_color) ? ` style="color: #${u.display_color.toString(16).padStart(6, '0')};"` : '';
+    return `<span class="mention user"${colorStyle}>@${escapeHtml(name)}</span>`;
+  });
+
+  s = s.replace(/&lt;@&amp;([0-9]+)&gt;/g, (match, id) => {
+    const r = roles[id];
+    const name = r ? r.role_name : 'role';
+    const color = (r && r.color) ? `#${r.color.toString(16).padStart(6, '0')}` : '#5865f2';
+    let icon = '';
+    if (r && r.icon_url) {
+      icon = `<img class="role-mention-icon" src="${escapeHtml(r.icon_url)}" alt="">`;
+    } else if (r && r.unicode_emoji) {
+      icon = `<span class="role-mention-emoji">${escapeHtml(r.unicode_emoji)}</span>`;
+    }
+    return `<span class="mention role" style="color: ${color}; border-left: 2px solid ${color};">${icon}@${escapeHtml(name)}</span>`;
+  });
+
+  s = s.replace(/&lt;#([0-9]+)&gt;/g, (match, id) => {
+    const c = channels[id];
+    const name = c ? c.name : 'channel';
+    return `<span class="mention channel">#${escapeHtml(name)}</span>`;
+  });
+
+  s = s.replace(/@everyone/g, '<span class="mention everyone">@everyone</span>');
+  s = s.replace(/@here/g, '<span class="mention here">@here</span>');
 
   // 15. Convert newlines to <br>
   s = s.replace(/\n/g, '<br>');
@@ -124,7 +153,7 @@ function computeWaveParameters(seedStr) {
   return { pos1, pos2, opacity };
 }
 
-function renderPadeTranscriptPage({ transcript, users, messages }) {
+function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels = {}, messages = [] }) {
   const publicId = transcript.public_id || 'tr_default';
   const ticketName = transcript.ticket_name || 'ticket';
   const messageCount = messages.length || transcript.message_count || 0;
@@ -171,26 +200,36 @@ function renderPadeTranscriptPage({ transcript, users, messages }) {
   }
 
   // Render HTML message groups
+  const ctx = { users, roles, channels };
   let messagesHtml = '';
   for (const group of messageGroups) {
     const u = users[group.authorId] || {};
     const authorName = u.guild_display_name || u.global_name || u.username || 'User';
     const avatarUrl = u.avatar_url || 'https://cdn.discordapp.com/embed/avatars/0.png';
     const isBot = u.is_bot;
+    const authorColor = u.display_color ? `#${u.display_color.toString(16).padStart(6, '0')}` : '';
+    const authorColorStyle = authorColor ? ` style="color: ${authorColor};"` : '';
+
+    let roleIconHtml = '';
+    if (u.display_icon_url) {
+      roleIconHtml = `<img class="author-role-icon" src="${escapeHtml(u.display_icon_url)}" alt="${escapeHtml(u.display_icon_role || '')}" title="${escapeHtml(u.display_icon_role || '')}" loading="lazy">`;
+    } else if (u.display_unicode_emoji) {
+      roleIconHtml = `<span class="author-role-emoji" title="${escapeHtml(u.display_icon_role || '')}">${escapeHtml(u.display_unicode_emoji)}</span>`;
+    }
 
     let itemsHtml = '';
     for (const m of group.items) {
       const msgTime = new Date(m.timestamp);
       const timeStr = msgTime.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
       const fullDateStr = msgTime.toLocaleString('vi-VN');
-      const renderedContent = parseDiscordMarkdown(m.content_original);
+      const renderedContent = parseDiscordMarkdown(m.content_original, ctx);
 
       // Reply Reference Header
       let replyHtml = '';
       if (m.reference && (m.reference.referenced_message_id || m.reference.referenced_author_id)) {
         const refUser = users[m.reference.referenced_author_id] || {};
         const refAuthor = refUser.guild_display_name || refUser.global_name || refUser.username || 'User';
-        const refPreview = m.reference.content_preview ? parseDiscordMarkdown(m.reference.content_preview) : 'Tin nhắn gốc';
+        const refPreview = m.reference.content_preview ? parseDiscordMarkdown(m.reference.content_preview, ctx) : 'Tin nhắn gốc';
         replyHtml = `
           <div class="reply-context">
             <svg class="reply-spine" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
@@ -251,15 +290,25 @@ function renderPadeTranscriptPage({ transcript, users, messages }) {
         }
       }
 
-      // Embeds
+      // Embeds (Filter out empty shells / emoji / sticker preview unfurls)
       let embedHtml = '';
       if (m.embeds && m.embeds.length > 0) {
         for (const emb of m.embeds) {
           const fields = typeof emb.fields === 'string' ? JSON.parse(emb.fields) : (emb.fields || []);
+          const isEmojiOrSticker = (emb.thumbnail_url && (emb.thumbnail_url.includes('/emojis/') || emb.thumbnail_url.includes('/stickers/'))) ||
+                                  (emb.url && (emb.url.includes('/emojis/') || emb.url.includes('/stickers/')));
+          if (isEmojiOrSticker && !emb.title && !emb.description && fields.length === 0) {
+            continue; // Suppress empty embed previews for emojis/stickers
+          }
+          const hasContent = emb.title || emb.description || (fields && fields.length > 0) || emb.author_name || emb.image_url;
+          if (!hasContent) {
+            continue; // Avoid empty border bars
+          }
+
           const fieldsHtml = fields.map(f => `
             <div class="embed-field ${f.inline ? 'inline' : ''}">
               <div class="field-name">${escapeHtml(f.name)}</div>
-              <div class="field-val">${parseDiscordMarkdown(f.value)}</div>
+              <div class="field-val">${parseDiscordMarkdown(f.value, ctx)}</div>
             </div>
           `).join('');
 
@@ -267,7 +316,7 @@ function renderPadeTranscriptPage({ transcript, users, messages }) {
             <div class="embed-card" style="border-left-color: ${emb.color ? '#' + emb.color.toString(16).padStart(6, '0') : '#5865f2'}">
               ${emb.author_name ? `<div class="embed-author">${emb.author_icon_url ? `<img class="embed-author-icon" src="${escapeHtml(emb.author_icon_url)}">` : ''}<span>${escapeHtml(emb.author_name)}</span></div>` : ''}
               ${emb.title ? `<div class="embed-title">${emb.url ? `<a href="${escapeHtml(emb.url)}" target="_blank" rel="noopener">${escapeHtml(emb.title)}</a>` : escapeHtml(emb.title)}</div>` : ''}
-              ${emb.description ? `<div class="embed-desc">${parseDiscordMarkdown(emb.description)}</div>` : ''}
+              ${emb.description ? `<div class="embed-desc">${parseDiscordMarkdown(emb.description, ctx)}</div>` : ''}
               ${fieldsHtml ? `<div class="embed-fields-grid">${fieldsHtml}</div>` : ''}
               ${emb.thumbnail_url ? `<div class="embed-thumbnail"><img src="${escapeHtml(emb.thumbnail_url)}" loading="lazy"></div>` : ''}
               ${emb.image_url ? `<div class="embed-image"><img src="${escapeHtml(emb.image_url)}" loading="lazy"></div>` : ''}
@@ -321,7 +370,8 @@ function renderPadeTranscriptPage({ transcript, users, messages }) {
         <img class="group-avatar" src="${escapeHtml(avatarUrl)}" alt="${escapeHtml(authorName)}" loading="lazy">
         <div class="group-body">
           <div class="group-header">
-            <span class="author-name searchable-content">${escapeHtml(authorName)}</span>
+            <span class="author-name searchable-content"${authorColorStyle}>${escapeHtml(authorName)}</span>
+            ${roleIconHtml}
             ${isBot ? '<span class="badge-bot">BOT</span>' : ''}
             <span class="group-time" title="${escapeHtml(group.firstTime.toISOString())}">${escapeHtml(firstTimeStr)}</span>
           </div>
@@ -562,6 +612,22 @@ function renderPadeTranscriptPage({ transcript, users, messages }) {
       font-size: 15px;
       color: #fff;
     }
+    .author-role-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      vertical-align: -3px;
+      object-fit: contain;
+      margin-left: 2px;
+      display: inline-block;
+    }
+    .author-role-emoji {
+      font-size: 15px;
+      line-height: 1;
+      vertical-align: -1px;
+      margin-left: 2px;
+      display: inline-block;
+    }
     .badge-bot {
       background: var(--accent);
       color: #fff;
@@ -773,6 +839,40 @@ function renderPadeTranscriptPage({ transcript, users, messages }) {
       font-weight: 500;
       font-size: 13.5px;
     }
+    .mention.role {
+      background: rgba(88, 101, 242, 0.12);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .role-mention-icon {
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+      vertical-align: -2px;
+      object-fit: contain;
+    }
+    .role-mention-emoji {
+      font-size: 13px;
+      vertical-align: -1px;
+    }
+    .img-fallback-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text-muted);
+      font-size: 12.5px;
+      margin: 6px 0;
+    }
+    .img-fallback-card .fallback-icon { font-size: 16px; opacity: 0.8; }
+    .img-fallback-card .fallback-text { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
 
     /* Media Gallery & Lightbox */
     .media-gallery {
@@ -1162,8 +1262,29 @@ function renderPadeTranscriptPage({ transcript, users, messages }) {
       }
     });
 
-    // Deep link hash jump on load
+    // Safe Image Error Fallback - replaces broken images with clean card
+    function attachImageFallbacks() {
+      document.querySelectorAll('img').forEach(img => {
+        img.addEventListener('error', function() {
+          if (this.dataset.fallbackHandled) return;
+          this.dataset.fallbackHandled = 'true';
+          if (this.classList.contains('group-avatar') || this.classList.contains('brand-logo')) {
+            this.src = 'https://cdn.discordapp.com/embed/avatars/0.png';
+            return;
+          }
+          const card = document.createElement('div');
+          card.className = 'img-fallback-card';
+          const altText = this.getAttribute('alt') || 'Tập tin ảnh';
+          const safeAlt = altText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          card.innerHTML = '<span class="fallback-icon">⚠️</span> <span class="fallback-text">Ảnh không khả dụng &bull; ' + safeAlt + '</span>';
+          this.replaceWith(card);
+        });
+      });
+    }
+
+    // Deep link hash jump on load & image fallback attachment
     window.addEventListener('DOMContentLoaded', () => {
+      attachImageFallbacks();
       if (window.location.hash) {
         const target = document.querySelector(window.location.hash);
         if (target) {

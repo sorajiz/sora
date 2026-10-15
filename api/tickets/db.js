@@ -57,7 +57,9 @@ async function getTranscriptFromDB(publicId) {
     // 2. Fetch users snapshot
     const uRes = await p.query(
       `SELECT discord_user_id, username, global_name, guild_display_name,
-              avatar_hash, guild_avatar_hash, avatar_url, is_bot, is_system
+              avatar_hash, guild_avatar_hash, avatar_url, is_bot, is_system,
+              display_color_role, display_color, display_icon_role,
+              display_icon_asset_id, display_unicode_emoji, member_left
        FROM ticket_user_snapshots
        WHERE transcript_id = $1`,
       [transcriptId]
@@ -65,6 +67,32 @@ async function getTranscriptFromDB(publicId) {
     const users = {};
     for (const u of uRes.rows) {
       users[u.discord_user_id] = u;
+    }
+
+    // 2b. Fetch roles snapshot
+    const rRes = await p.query(
+      `SELECT discord_role_id, role_name, position, color,
+              icon_hash, icon_asset_id, icon_url, unicode_emoji
+       FROM ticket_role_snapshots
+       WHERE transcript_id = $1`,
+      [transcriptId]
+    );
+    const roles = {};
+    for (const r of rRes.rows) {
+      roles[r.discord_role_id] = r;
+    }
+
+    // Connect user role icons if available
+    for (const u of Object.values(users)) {
+      if (u.display_icon_role) {
+        for (const r of Object.values(roles)) {
+          if (r.role_name === u.display_icon_role) {
+            if (r.icon_url) u.display_icon_url = r.icon_url;
+            if (r.unicode_emoji) u.display_unicode_emoji = r.unicode_emoji;
+            break;
+          }
+        }
+      }
     }
 
     // 3. Fetch messages in strict chronological order
@@ -115,14 +143,14 @@ async function getTranscriptFromDB(publicId) {
     }
 
     // 6. Fetch reactions
-    const rRes = await p.query(
+    const reactRes = await p.query(
       `SELECT message_id, emoji_id, emoji_name, animated, count
        FROM ticket_reactions
        WHERE transcript_id = $1`,
       [transcriptId]
     );
     const reactionsByMsg = {};
-    for (const r of rRes.rows) {
+    for (const r of reactRes.rows) {
       if (!reactionsByMsg[r.message_id]) reactionsByMsg[r.message_id] = [];
       reactionsByMsg[r.message_id].push(r);
     }
@@ -156,6 +184,7 @@ async function getTranscriptFromDB(publicId) {
     return {
       transcript,
       users,
+      roles,
       messages
     };
   } catch (err) {

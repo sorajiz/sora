@@ -399,10 +399,29 @@ module.exports = async (req, res) => {
         }));
       }
 
+      const isDownload = queryParams.get('action') === 'download' || (req.url && req.url.includes('/download'));
+      if (isDownload) {
+        const displayCode = dbData.transcript.public_id ? dbData.transcript.public_id.substring(0, 8) : 'export';
+        let safeSlug = (dbData.transcript.ticket_name || 'ticket')
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/đ/g, 'd')
+          .replace(/Đ/g, 'D')
+          .toLowerCase()
+          .replace(/[^a-z0-9-_]+/g, '-')
+          .replace(/^-+|-+$/g, '')
+          .substring(0, 50);
+        if (!safeSlug) safeSlug = 'ticket';
+        const filename = `ticket-${safeSlug}-${displayCode}.html`;
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+      }
+
       const htmlPage = renderPadeTranscriptPage(dbData);
       res.status(200);
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
-      res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
+      if (!isDownload) {
+        res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
+      }
       return res.send(htmlPage);
     }
   } catch (dbErr) {
