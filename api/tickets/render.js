@@ -20,83 +20,94 @@ function escapeHtml(str) {
 
 function parseDiscordMarkdown(content) {
   if (!content) return '';
-  let s = escapeHtml(content);
 
-  // 1. Code blocks ```lang\ncode``` (preserve before other transforms)
-  const codeBlocks = [];
-  s = s.replace(/```(?:([a-zA-Z0-9_+-]+)\n)?([\s\S]*?)```/g, (match, lang, code) => {
-    const idx = codeBlocks.length;
-    codeBlocks.push(`<pre class="code-block"><code>${code}</code></pre>`);
-    return `___CODE_BLOCK_${idx}___`;
+  const stashes = [];
+  function stash(html) {
+    const idx = stashes.length;
+    stashes.push(html);
+    return `@@@TOKEN_${idx}@@@`;
+  }
+
+  // 1. Code blocks ```lang\ncode``` (stash before escaping)
+  let s = String(content).replace(/```(?:([a-zA-Z0-9_+-]+)\n)?([\s\S]*?)```/g, (match, lang, code) => {
+    return stash(`<pre class="code-block"><code>${escapeHtml(code)}</code></pre>`);
   });
 
-  // 2. Inline code `code`
-  const inlineCodes = [];
+  // 2. Inline code `code` (stash before escaping)
   s = s.replace(/`([^`]+)`/g, (match, code) => {
-    const idx = inlineCodes.length;
-    inlineCodes.push(`<code class="code-inline">${code}</code>`);
-    return `___INLINE_CODE_${idx}___`;
+    return stash(`<code class="code-inline">${escapeHtml(code)}</code>`);
   });
 
-  // 3. Discord Markdown Custom Emoji Links: [name](https://cdn.discordapp.com/emojis/id.ext?params)
-  s = s.replace(/\[([a-zA-Z0-9_]+)\]\((https:\/\/cdn\.discordapp\.com\/emojis\/([0-9]+)\.(?:webp|png|gif)(?:\?[^)]*)?)\)/gi, (m, name, url, id) => {
-    return `<img class="custom-emoji" src="${url}" alt=":${name}:" title=":${name}:" loading="lazy">`;
+  // 3. Escape HTML on remainder
+  s = escapeHtml(s);
+
+  // 4. Discord Markdown Custom Emoji Links: [name](https://cdn.discordapp.com/emojis/id.ext?params)
+  s = s.replace(/\[([^\]]+)\]\((https:\/\/cdn\.discordapp\.com\/emojis\/([0-9]+)\.(?:webp|png|gif)(?:\?[^)]*)?)\)/gi, (m, rawName, url, id) => {
+    const cleanName = rawName.replace(/<[^>]+>/g, '').replace(/[*_~]/g, '').trim();
+    return stash(`<img class="custom-emoji" src="${url}" alt=":${cleanName}:" title=":${cleanName}:" loading="lazy">`);
   });
 
-  // 4. Discord Markdown Sticker Links: [name](https://media.discordapp.net/stickers/id.ext?params) or cdn.discordapp.com
-  s = s.replace(/\[([a-zA-Z0-9_\s-]+)\]\((https:\/\/(?:media|cdn)\.discordapp\.(?:net|com)\/stickers\/([0-9]+)\.(?:png|webp|gif|json)(?:\?[^)]*)?)\)/gi, (m, name, url, id) => {
-    return `<div class="discord-sticker"><img src="${url}" alt="${name}" title="${name}" loading="lazy"></div>`;
+  // 5. Discord Markdown Sticker Links: [name](https://media.discordapp.net/stickers/id.ext?params) or cdn.discordapp.com
+  s = s.replace(/\[([^\]]+)\]\((https:\/\/(?:media|cdn)\.discordapp\.(?:net|com)\/stickers\/([0-9]+)\.(?:png|webp|gif|json)(?:\?[^)]*)?)\)/gi, (m, rawName, url, id) => {
+    const cleanName = rawName.replace(/<[^>]+>/g, '').replace(/[*_~]/g, '').trim();
+    return stash(`<div class="discord-sticker"><img src="${url}" alt="${cleanName}" title="${cleanName}" loading="lazy"></div>`);
   });
 
-  // 5. Raw Discord Emoji CDN URLs (outside html attributes)
-  s = s.replace(/(^|[\s>(])(https:\/\/cdn\.discordapp\.com\/emojis\/([0-9]+)\.(?:webp|png|gif)(?:\?[^\s<"')]*)?)/gi, '$1<img class="custom-emoji" src="$2" loading="lazy">');
+  // 6. Raw Discord Emoji CDN URLs
+  s = s.replace(/(^|[\s>(])(https:\/\/cdn\.discordapp\.com\/emojis\/([0-9]+)\.(?:webp|png|gif)(?:\?[^\s<"')]*)?)/gi, (m, prefix, url, id) => {
+    return prefix + stash(`<img class="custom-emoji" src="${url}" loading="lazy">`);
+  });
 
-  // 6. Raw Discord Sticker CDN URLs
-  s = s.replace(/(^|[\s>(])(https:\/\/(?:media|cdn)\.discordapp\.(?:net|com)\/stickers\/([0-9]+)\.(?:png|webp|gif|json)(?:\?[^\s<"')]*)?)/gi, '$1<div class="discord-sticker"><img src="$2" loading="lazy"></div>');
+  // 7. Raw Discord Sticker CDN URLs
+  s = s.replace(/(^|[\s>(])(https:\/\/(?:media|cdn)\.discordapp\.(?:net|com)\/stickers\/([0-9]+)\.(?:png|webp|gif|json)(?:\?[^\s<"')]*)?)/gi, (m, prefix, url, id) => {
+    return prefix + stash(`<div class="discord-sticker"><img src="${url}" loading="lazy"></div>`);
+  });
 
-  // 7. Discord native custom emojis: <:name:id> or <a:name:id>
+  // 8. Discord native custom emojis: <:name:id> or <a:name:id>
   s = s.replace(/&lt;(a?):([a-zA-Z0-9_]+):([0-9]+)&gt;/g, (m, anim, name, id) => {
     const ext = anim ? 'gif' : 'png';
     const url = `https://cdn.discordapp.com/emojis/${id}.${ext}?size=48&quality=lossless`;
-    return `<img class="custom-emoji" src="${url}" alt=":${name}:" title=":${name}:" loading="lazy">`;
+    return stash(`<img class="custom-emoji" src="${url}" alt=":${name}:" title=":${name}:" loading="lazy">`);
   });
 
-  // 8. Discord Timestamps <t:timestamp:style>
+  // 9. Discord Timestamps <t:timestamp:style>
   s = s.replace(/&lt;t:([0-9]+)(?::([a-zA-Z]))?&gt;/g, (m, ts) => {
     const date = new Date(parseInt(ts, 10) * 1000);
     const dateStr = date.toLocaleString('vi-VN');
-    return `<span class="discord-timestamp" title="${dateStr}">${dateStr}</span>`;
+    return stash(`<span class="discord-timestamp" title="${dateStr}">${dateStr}</span>`);
   });
 
-  // 9. Standard Markdown links: [text](url)
-  s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+  // 10. Standard Markdown links: [text](url)
+  s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (m, text, url) => {
+    return stash(`<a href="${url}" target="_blank" rel="noopener noreferrer">${text}</a>`);
+  });
 
-  // 10. Spoilers ||spoiler||
+  // 11. Spoilers ||spoiler||
   s = s.replace(/\|\|(.*?)\|\|/g, '<span class="spoiler" onclick="this.classList.toggle(\'revealed\')">$1</span>');
 
-  // 11. Bold, Italic, Strikethrough, Underline
+  // 12. Bold, Italic, Strikethrough, Underline
   s = s.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
   s = s.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-  s = s.replace(/_([^_]+)_/g, '<em>$1</em>');
-  s = s.replace(/~~(.*?)~~/g, '<del>$1</del>');
+  s = s.replace(/___(.*?)___/g, '<u><em>$1</em></u>');
   s = s.replace(/__(.*?)__/g, '<u>$1</u>');
+  s = s.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+  s = s.replace(/_([^_\n]+)_/g, '<em>$1</em>');
+  s = s.replace(/~~(.*?)~~/g, '<del>$1</del>');
 
-  // 12. Blockquotes > quote
+  // 13. Blockquotes > quote
   s = s.replace(/^&gt;(?:&gt;)?\s?(.*)$/gm, '<blockquote class="quote-line">$1</blockquote>');
   s = s.replace(/^>(?:>)?\s?(.*)$/gm, '<blockquote class="quote-line">$1</blockquote>');
 
-  // 13. User mentions <@id>, Role mentions <@&id>, Channel mentions <#id>
+  // 14. User mentions <@id>, Role mentions <@&id>, Channel mentions <#id>
   s = s.replace(/&lt;@!?([0-9]+)&gt;/g, '<span class="mention">@user</span>');
   s = s.replace(/&lt;@&amp;([0-9]+)&gt;/g, '<span class="mention role">@role</span>');
   s = s.replace(/&lt;#([0-9]+)&gt;/g, '<span class="mention channel">#channel</span>');
 
-  // 14. Convert newlines to <br>
+  // 15. Convert newlines to <br>
   s = s.replace(/\n/g, '<br>');
 
-  // Restore code blocks and inline code
-  s = s.replace(/___CODE_BLOCK_(\d+)___/g, (m, idx) => codeBlocks[parseInt(idx, 10)]);
-  s = s.replace(/___INLINE_CODE_(\d+)___/g, (m, idx) => inlineCodes[parseInt(idx, 10)]);
+  // 16. Restore all stashed tokens
+  s = s.replace(/@@@TOKEN_(\d+)@@@/g, (m, idx) => stashes[parseInt(idx, 10)] || '');
 
   return s;
 }
