@@ -2125,15 +2125,21 @@ function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels
           const originalUrl = this.src || '';
           const card = document.createElement('div');
           card.className = 'img-fallback-card';
+          card.dataset.originalUrl = originalUrl;
           const altText = this.getAttribute('alt') || 'Tập tin ảnh';
           const safeAlt = altText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-          const safeUrl = originalUrl.replace(/'/g, "\\'");
           card.innerHTML = '<span class="fallback-icon">⚠️</span>' +
             '<div class="fallback-body">' +
               '<span class="fallback-text">Ảnh không khả dụng &bull; ' + safeAlt + '</span>' +
               '<span class="fallback-sub">Không thể tải tệp hình ảnh</span>' +
             '</div>' +
-            '<button class="fallback-retry-btn" onclick="retryImage(this, \'' + safeUrl + '\')">Thử lại</button>';
+            '<button class="fallback-retry-btn">Thử lại</button>';
+          const retryBtn = card.querySelector('.fallback-retry-btn');
+          if (retryBtn) {
+            retryBtn.onclick = function() {
+              retryImage(this, card.dataset.originalUrl);
+            };
+          }
           const container = this.closest('.transcript-media-frame') || this.closest('.gallery-item-frame') || this;
           container.replaceWith(card);
         });
