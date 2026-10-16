@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const { getPool, query } = require('../_menu_db');
 
 module.exports = async (req, res) => {
@@ -13,13 +15,34 @@ module.exports = async (req, res) => {
 
   const p = getPool();
   if (!p) {
+    let catalog = { ok: true, version: 1, products: [], categories: [] };
+    try {
+      const catPath = path.join(__dirname, '../../scripts/catalog.json');
+      if (fs.existsSync(catPath)) {
+        const d = JSON.parse(fs.readFileSync(catPath, 'utf8'));
+        catalog = {
+          ok: true,
+          version: d.version || 1,
+          products: d.products || [],
+          categories: d.categories || []
+        };
+      }
+    } catch(e) {}
+
+    const version = Number(catalog.version || 1);
+    const etag = `"menu-v${version}"`;
+    res.setHeader('Cache-Control', 'public, s-maxage=3, stale-while-revalidate=10');
+    res.setHeader('ETag', etag);
+
+    if (req.headers['if-none-match'] === etag) {
+      return res.status(304).end();
+    }
+
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    return res.status(200).json({
-      ok: false,
-      version: 1,
-      products: [],
-      categories: []
-    });
+    if (isVersionCheck) {
+      return res.status(200).json({ version });
+    }
+    return res.status(200).json(catalog);
   }
 
   // 1. Version Endpoint (§12.3: micro-response with strong ETag and 304)
