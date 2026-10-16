@@ -14,8 +14,8 @@
 
 const fs = require('fs');
 const path = require('path');
-const { getTranscriptFromDB, getMediaAssetFromDB } = require('./db');
-const { renderPadeTranscriptPage } = require('./render');
+const { getTranscriptFromDB, getMediaAssetFromDB } = require('../../lib/tickets/db');
+const { renderPadeTranscriptPage } = require('../../lib/tickets/render');
 
 function renderLandingPage() {
   return `<!DOCTYPE html>

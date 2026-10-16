@@ -78,7 +78,10 @@
     }
   ],
   "rewrites": [
-    { "source": "/api/menu", "destination": "/api/menu/index" },
+    { "source": "/api/menu", "destination": "/api/menu" },
+    { "source": "/api/menu/(.*)", "destination": "/api/menu" },
+    { "source": "/api/auth/(.*)", "destination": "/api/menu" },
+    { "source": "/api/admin/(.*)", "destination": "/api/menu" },
     { "source": "/tickets/transcript", "destination": "/api/tickets/transcript" },
     { "source": "/tickets/transcript/(.*)", "destination": "/api/tickets/transcript" },
     { "source": "/t/:id/download/html", "destination": "/api/tickets/transcript?id=:id&action=download" },

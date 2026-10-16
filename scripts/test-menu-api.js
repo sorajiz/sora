@@ -2,7 +2,7 @@ const assert = require('assert');
 const http = require('http');
 const crypto = require('crypto');
 const app = require('../server');
-const { getPool, query } = require('../api/_menu_db');
+const { getPool, query } = require('../lib/menu/db');
 
 function makeRequest(server, path, options = {}) {
   return new Promise((resolve, reject) => {
