@@ -831,99 +831,94 @@
       margin: 0.4rem 0.65rem;
     }
 
-    /* ── PRODUCT GRID (CLEAN MENU ROWS) ── */
+    /* ── PRODUCT GRID (2-COLUMN GRID ON MOBILE & TABLET, AUTO-FILL ON DESKTOP) ── */
     .product-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+      align-items: stretch;
     }
 
     .product-card {
       background: var(--ink);
       border: 1px solid var(--card-border);
-      border-radius: 0.875rem;
-      padding: 0;
-      transition: all 0.15s ease;
+      border-radius: 1rem;
+      padding: 0.875rem;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.65rem;
+      min-width: 0;
       cursor: default;
     }
     .product-card:hover {
       border-color: var(--card-border-hover);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      transform: translateY(-2px);
     }
 
-    .card-header {
+    .card-top-row {
       display: flex;
       align-items: flex-start;
-      gap: 1rem;
-      margin-bottom: 1rem;
+      justify-content: space-between;
+      gap: 0.5rem;
     }
 
-    /* Square Icon Tile (56–76px) */
+    /* Square Icon Tile */
     .product-tile {
-      width: 4rem;
-      height: 4rem;
-      min-width: 4rem;
-      border-radius: 0.875rem;
+      width: 2.75rem;
+      height: 2.75rem;
+      min-width: 2.75rem;
+      border-radius: 0.65rem;
       background: var(--graphite);
       border: 1px solid var(--card-border);
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
       overflow: hidden;
-      position: relative;
-      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
     }
     .product-tile img {
-      width: 2.75rem;
-      height: 2.75rem;
+      width: 1.85rem;
+      height: 1.85rem;
       object-fit: contain;
     }
     .product-tile .tile-unicode {
-      font-size: 2rem;
+      font-size: 1.35rem;
       line-height: 1;
     }
 
-    .card-meta {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .card-category-row {
+    .card-labels {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
-      margin-bottom: 0.25rem;
-    }
-
-    .card-category-name {
-      font-size: 0.6875rem;
-      font-weight: 700;
-      color: var(--silver-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .card-badges {
-      display: flex;
-      gap: 0.35rem;
       flex-wrap: wrap;
+      gap: 0.3rem;
+      justify-content: flex-end;
+      align-items: flex-start;
+      min-height: 1.25rem;
     }
 
     .badge {
-      font-size: 0.6875rem;
+      font-size: 0.65rem;
       font-weight: 700;
-      padding: 0.15rem 0.45rem;
+      padding: 0.15rem 0.4rem;
       border-radius: 0.35rem;
+      line-height: 1.2;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
     }
     .badge-sale {
-      background: rgba(239, 68, 68, 0.12);
+      background: rgba(239, 68, 68, 0.14);
       color: #f87171;
-      border: 1px solid rgba(239, 68, 68, 0.25);
+      border: 1px solid rgba(239, 68, 68, 0.28);
+    }
+    .badge-tag {
+      background: rgba(96, 165, 250, 0.12);
+      color: #93c5fd;
+      border: 1px solid rgba(96, 165, 250, 0.25);
     }
     .badge-draft {
       background: rgba(245, 158, 11, 0.15);
@@ -936,93 +931,74 @@
       border: 1px solid rgba(141, 141, 150, 0.25);
     }
 
-    .card-title {
-      font-size: 1.0625rem;
-      font-weight: 700;
-      color: var(--white);
-      line-height: 1.35;
-      margin-bottom: 0.35rem;
+    .card-body {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
     }
 
-    .card-desc {
-      font-size: 0.8125rem;
-      color: var(--text-sub);
-      font-weight: 300;
-      line-height: 1.5;
-      margin-bottom: 1.125rem;
+    .card-product-title {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.3;
+      letter-spacing: -0.01em;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      word-break: break-word;
     }
 
-    /* Inline custom emojis inside descriptions */
-    .discord-inline-emoji {
-      width: 1.15rem;
-      height: 1.15rem;
-      vertical-align: -0.2rem;
-      object-fit: contain;
-      display: inline-block;
-      margin: 0 0.1rem;
+    .card-product-sub {
+      font-size: 0.75rem;
+      color: var(--ash);
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-word;
     }
 
-    .card-footer {
+    .card-pricing-row {
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
-      padding-top: 0.875rem;
+      gap: 0.5rem;
+      padding-top: 0.5rem;
       border-top: 1px solid rgba(255, 255, 255, 0.05);
-      gap: 0.75rem;
     }
 
-    .card-pricing {
+    .card-price-stack {
       display: flex;
       flex-direction: column;
     }
 
     .card-price {
       font-family: var(--font-display);
-      font-size: 1.25rem;
+      font-size: 1.0625rem;
       font-weight: 800;
-      color: var(--white);
+      color: #ffffff;
       letter-spacing: -0.01em;
+      line-height: 1.2;
+      white-space: nowrap;
     }
 
     .card-compare {
-      font-size: 0.75rem;
+      font-size: 0.6875rem;
       color: var(--ash);
       text-decoration: line-through;
+      line-height: 1.2;
+      white-space: nowrap;
     }
 
-    .card-actions-wrapper {
+    .card-admin-actions {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-    }
-
-    .btn-card-order {
-      background: rgba(255, 255, 255, 0.06);
-      color: var(--white);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 0.45rem 0.85rem;
-      border-radius: 0.625rem;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
       gap: 0.35rem;
-      transition: all 0.2s ease;
-      cursor: pointer;
-    }
-    .btn-card-order:hover {
-      background: var(--white);
-      color: var(--void);
-      border-color: var(--white);
-      box-shadow: 0 4px 14px rgba(255, 255, 255, 0.18);
-    }
-    .btn-card-order:active {
-      transform: scale(0.96);
     }
 
     /* Admin quick action buttons on card */
@@ -1049,108 +1025,6 @@
       background: rgba(239, 68, 68, 0.2);
       border-color: rgba(239, 68, 68, 0.4);
       color: #f87171;
-    }
-
-    /* ── MENU ROW LAYOUT ── */
-
-    .menu-row-main {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem 1rem;
-      gap: 0.75rem;
-      min-height: 64px;
-      user-select: none;
-    }
-
-    .menu-row-left {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      min-width: 0;
-      flex: 1;
-    }
-
-    .menu-row-tile {
-      width: 2.75rem;
-      height: 2.75rem;
-      min-width: 2.75rem;
-      border-radius: 0.65rem;
-      background: var(--graphite);
-      border: 1px solid var(--card-border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      overflow: hidden;
-    }
-    .menu-row-tile img {
-      width: 1.85rem;
-      height: 1.85rem;
-      object-fit: contain;
-    }
-    .menu-row-tile .tile-unicode {
-      font-size: 1.35rem;
-    }
-
-    .menu-row-info {
-      min-width: 0;
-      flex: 1;
-    }
-
-    .menu-title-line {
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      margin-bottom: 0.15rem;
-      flex-wrap: wrap;
-    }
-
-    .menu-row-title {
-      font-size: 0.9375rem;
-      font-weight: 700;
-      color: var(--white);
-      line-height: 1.25;
-      letter-spacing: -0.01em;
-    }
-
-    .menu-row-sub {
-      font-size: 0.75rem;
-      color: var(--ash);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      line-height: 1.25;
-    }
-
-    .menu-row-right {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-      flex-shrink: 0;
-      text-align: right;
-    }
-
-    .menu-row-pricing {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-    }
-
-    .menu-row-price {
-      font-family: var(--font-display);
-      font-size: 1.0625rem;
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: -0.01em;
-      white-space: nowrap;
-    }
-
-    .menu-row-compare {
-      font-size: 0.6875rem;
-      color: var(--ash);
-      text-decoration: line-through;
-      white-space: nowrap;
     }
 
     /* ── MODALS GENERAL ── */
@@ -1464,16 +1338,20 @@
         display: none;
       }
       .mobile-category-bar {
-        display: flex;
+        display: flex !important;
         position: sticky;
         top: 3.75rem;
         z-index: 40;
-        background: rgba(6, 6, 7, 0.92);
+        background: rgba(6, 6, 7, 0.94);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         padding: 0.65rem 1rem 0.75rem;
         margin: -0.5rem -1rem 1.25rem -1rem;
         border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 0.75rem;
       }
       .nav-admin-tools {
         margin-left: 0.5rem;
@@ -1515,7 +1393,9 @@
         display: none;
       }
       .mobile-category-bar {
-        display: none !important;
+        display: flex !important;
+        padding: 0.5rem 0.65rem 0.65rem;
+        margin: -0.25rem -0.65rem 0.85rem -0.65rem;
       }
       .toolbar-row {
         margin-bottom: 0.65rem;
@@ -1532,30 +1412,46 @@
         margin-bottom: 0.65rem;
       }
 
-      /* Sleek single-row price menu */
-      .menu-row-main {
-        padding: 0.65rem 0.75rem;
-        gap: 0.6rem;
-        min-height: 52px;
+      /* 2-Column Grid on Mobile - EXACTLY 2 items per row */
+      .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 0.55rem !important;
       }
-      .menu-row-tile {
+      .product-card {
+        padding: 0.65rem;
+        border-radius: 0.85rem;
+        gap: 0.45rem;
+      }
+      .product-tile {
         width: 2.25rem;
         height: 2.25rem;
         min-width: 2.25rem;
         border-radius: 0.5rem;
       }
-      .menu-row-tile img {
+      .product-tile img {
         width: 1.5rem;
         height: 1.5rem;
       }
-      .menu-row-title {
-        font-size: 0.875rem;
+      .product-tile .tile-unicode {
+        font-size: 1.15rem;
       }
-      .menu-row-sub {
+      .badge {
+        font-size: 0.6rem;
+        padding: 0.1rem 0.35rem;
+      }
+      .card-product-title {
+        font-size: 0.8125rem;
+        line-height: 1.25;
+      }
+      .card-product-sub {
         font-size: 0.6875rem;
+        -webkit-line-clamp: 1;
       }
-      .menu-row-price {
+      .card-price {
         font-size: 0.9375rem;
+      }
+      .card-compare {
+        font-size: 0.625rem;
       }
       .form-row-2 {
         grid-template-columns: 1fr;
@@ -2121,10 +2017,27 @@
       if (window.innerWidth >= 960) toggleMorphMenu(false);
     });
 
-    // ── RENDER CATEGORIES (DESKTOP SIDEBAR & MORPH MENU DROPDOWN) ──
+    // Helper to extract tag labels from product name brackets, e.g. [ Nuôi Mail ], [ Không Nuôi Mail ]
+    function parseProductTagsAndTitle(rawName) {
+      const tags = [];
+      if (!rawName) return { title: '', tags };
+
+      const cleanTitle = rawName.replace(/\[\s*(.*?)\s*\]/g, (match, tag) => {
+        if (tag && tag.trim()) tags.push(tag.trim());
+        return '';
+      }).trim();
+
+      return {
+        title: cleanTitle || rawName,
+        tags
+      };
+    }
+
+    // ── RENDER CATEGORIES (DESKTOP SIDEBAR, MOBILE CATEGORY BAR & MORPH MENU DROPDOWN) ──
     function renderCategories() {
       const sidebarContainer = document.getElementById('categoryList');
       const morphContainer = document.getElementById('morphMenuList');
+      const mobileCatBar = document.getElementById('mobileCategoryBar');
 
       // Calculate total active count
       const totalCount = allProducts.filter(p => isPreviewMode ? true : p.status === 'ACTIVE').length;
@@ -2167,7 +2080,36 @@
         });
       }
 
-      // 2. Floating Morph Menu Dropdown Render (Ảnh 1)
+      // 2. Mobile Swipeable Category Bar (Label Pills)
+      if (mobileCatBar) {
+        mobileCatBar.innerHTML = '';
+        allCategories.forEach(cat => {
+          const catProducts = allProducts.filter(p => (p.category_slug === cat.slug || p.category_id === cat.id) && (isPreviewMode ? true : p.status === 'ACTIVE'));
+          const count = catProducts.length;
+
+          const pill = document.createElement('button');
+          pill.type = 'button';
+          pill.className = 'mobile-cat-pill ' + (currentCategory === cat.slug ? 'active' : '');
+
+          const emojiInfo = parseDiscordEmoji(cat.emoji);
+          let iconHtml = '📦';
+          if (emojiInfo && emojiInfo.isCustom) {
+            iconHtml = `<img src="${emojiInfo.url}" alt="${emojiInfo.name}" style="width: 1rem; height: 1rem; object-fit: contain;" />`;
+          } else if (emojiInfo && emojiInfo.text) {
+            iconHtml = emojiInfo.text;
+          }
+
+          pill.innerHTML = `
+            <span>${iconHtml}</span>
+            <span>${cat.name}</span>
+            <span class="cat-pill-count">${count}</span>
+          `;
+          pill.onclick = () => selectCategory(cat.slug);
+          mobileCatBar.appendChild(pill);
+        });
+      }
+
+      // 3. Floating Morph Menu Dropdown Render (Ảnh 1)
       if (morphContainer) {
         morphContainer.innerHTML = '';
         allCategories.forEach(cat => {
@@ -2235,7 +2177,7 @@
       if (titleEl) titleEl.textContent = found ? found.name : slug;
     }
 
-    // ── RENDER PRODUCTS (CLEAN, ELEGANT PRICE ROWS - ZERO BUTTON CLUTTER) ──
+    // ── RENDER PRODUCTS (2-COLUMN CARDS WITH BADGES & CLEAN LABELS) ──
     function renderProducts() {
       const grid = document.getElementById('productGrid');
       if (!grid) return;
@@ -2283,7 +2225,7 @@
 
       list.forEach(p => {
         const card = document.createElement('div');
-        card.className = 'product-card menu-row-card';
+        card.className = 'product-card';
         card.id = `card-${p.id}`;
 
         // Emoji / Icon parsing
@@ -2300,34 +2242,35 @@
         const isSoldOut = p.status === 'SOLD_OUT';
         const isDraft = p.status === 'DRAFT';
         const hasSale = Number(p.compare_at_price) > Number(p.price_amount);
+        const parsed = parseProductTagsAndTitle(p.name);
 
         card.innerHTML = `
-          <div class="menu-row-main">
-            <div class="menu-row-left">
-              <div class="menu-row-tile">${tileContent}</div>
-              <div class="menu-row-info">
-                <div class="menu-title-line">
-                  <span class="menu-row-title">${p.name}</span>
-                  ${isDraft ? '<span class="badge badge-draft">Draft</span>' : ''}
-                  ${isSoldOut ? '<span class="badge badge-soldout">Hết hàng</span>' : ''}
-                  ${hasSale ? '<span class="badge badge-sale">Sale</span>' : ''}
-                </div>
-                <div class="menu-row-sub">${p.short_description || p.category_name || 'Chính hãng Pade Store'}</div>
-              </div>
+          <div class="card-top-row">
+            <div class="product-tile">${tileContent}</div>
+            <div class="card-labels">
+              ${hasSale ? '<span class="badge badge-sale">Sale</span>' : ''}
+              ${parsed.tags.map(t => `<span class="badge badge-tag">${t}</span>`).join('')}
+              ${isSoldOut ? '<span class="badge badge-soldout">Hết hàng</span>' : ''}
+              ${isDraft ? '<span class="badge badge-draft">Draft</span>' : ''}
             </div>
+          </div>
 
-            <div class="menu-row-right">
-              <div class="menu-row-pricing">
-                <span class="menu-row-price">${formatBrandMoney(p.price_amount)}</span>
-                ${hasSale ? `<span class="menu-row-compare">${formatBrandMoney(p.compare_at_price)}</span>` : ''}
-              </div>
-              ${isAdmin ? `
-                <div style="display: flex; gap: 0.35rem; margin-left: 0.5rem;">
-                  <button class="btn-card-admin" type="button" title="Sửa sản phẩm" onclick="openEditProductModal('${p.id}')">✏️</button>
-                  <button class="btn-card-admin delete" type="button" title="Xóa/Lưu trữ" onclick="openDeleteProductModal('${p.id}')">🗑️</button>
-                </div>
-              ` : ''}
+          <div class="card-body">
+            <h3 class="card-product-title" title="${p.name}">${parsed.title}</h3>
+            <p class="card-product-sub">${p.short_description || p.category_name || 'Chính hãng Pade Store'}</p>
+          </div>
+
+          <div class="card-pricing-row">
+            <div class="card-price-stack">
+              <span class="card-price">${formatBrandMoney(p.price_amount)}</span>
+              ${hasSale ? `<span class="card-compare">${formatBrandMoney(p.compare_at_price)}</span>` : ''}
             </div>
+            ${isAdmin ? `
+              <div class="card-admin-actions">
+                <button class="btn-card-admin" type="button" title="Sửa sản phẩm" onclick="openEditProductModal('${p.id}')">✏️</button>
+                <button class="btn-card-admin delete" type="button" title="Xóa/Lưu trữ" onclick="openDeleteProductModal('${p.id}')">🗑️</button>
+              </div>
+            ` : ''}
           </div>
         `;
 
