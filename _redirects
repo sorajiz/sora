@@ -19,6 +19,12 @@ https://timework.sorae.tokyo/* /timework.html 200
 http://timework.sorae.tokyo/* /timework.html 200
 https://timeworks.sorae.tokyo/* /timework.html 200
 http://timeworks.sorae.tokyo/* /timework.html 200
+https://menu.sorae.tokyo/api/* /api/:splat 200
+http://menu.sorae.tokyo/api/* /api/:splat 200
+https://menu.sorae.tokyo/* /menu.html 200
+http://menu.sorae.tokyo/* /menu.html 200
+/menu/* /menu.html 200
+/menu /menu.html 200
 /favicon.ico /assets/favicon.ico 200
 /favicon.png /assets/favicon.png 200
 /intro   /intro.html   200
