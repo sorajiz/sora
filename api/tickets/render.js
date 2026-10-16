@@ -1832,7 +1832,7 @@ function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels
       <div class="lightbox-stage">
         <button class="lightbox-nav-btn prev" id="lightboxPrevBtn" onclick="navigateLightbox(-1)" title="Ảnh trước (Mũi tên trái)" aria-label="Ảnh trước">❮</button>
         <div class="lightbox-img-wrap" onclick="closeLightboxOnBackdropClick(event)">
-          <img class="lightbox-img" id="lightboxImg" src="" alt="Zoomed Media">
+          <img class="lightbox-img" id="lightboxImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E" alt="Zoomed Media">
         </div>
         <button class="lightbox-nav-btn next" id="lightboxNextBtn" onclick="navigateLightbox(1)" title="Ảnh tiếp theo (Mũi tên phải)" aria-label="Ảnh tiếp theo">❯</button>
       </div>
@@ -2122,7 +2122,7 @@ function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels
 
     // Safe Image Error Fallback - replaces broken images with clean card
     function attachImageFallbacks() {
-      document.querySelectorAll('img').forEach(img => {
+      document.querySelectorAll('img:not(#lightboxImg)').forEach(img => {
         img.addEventListener('error', function() {
           if (this.dataset.fallbackHandled) return;
           this.dataset.fallbackHandled = 'true';
