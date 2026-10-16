@@ -1987,7 +1987,7 @@ function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels
           filename: el.dataset.filename || 'image.png',
           width: el.dataset.width || '',
           height: el.dataset.height || '',
-          size: el.dataset.size ? formatBytes(parseInt(item.dataset.size, 10)) : ''
+          size: el.dataset.size ? formatBytes(parseInt(el.dataset.size, 10)) : ''
         }];
         currentGalleryIdx = 0;
       }
