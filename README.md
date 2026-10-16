@@ -145,11 +145,20 @@ Configuration is pre-set in `vercel.json`:
 - `outputDirectory`: `dist`
 - Security headers and SPA rewrites are handled natively.
 
-### Cloudflare Pages
-- Root directory: `./`
-- Build command: `npm run build`
-- Output directory: `dist`
-- Handled automatically via `_redirects` and `_routes.json`.
+---
+
+## 🛍️ Pade Store Menu (`https://menu.sorae.tokyo`)
+
+Dedicated production digital store & service catalog website for **Pade Store**:
+
+- **Subdomain**: [https://menu.sorae.tokyo](https://menu.sorae.tokyo)
+- **Features**:
+  - **Left Sidebar**: Desktop sidebar with category list, Discord custom emoji icons, and live product counts.
+  - **Interactive Grid**: High-fidelity product cards with 64x64px square icon tiles, VND currency formatting (`₫`), compare-at strikethrough prices, and Sale badges.
+  - **Discord Custom Emoji Engine**: Native parsing and rendering of static `<:name:id>` and animated `<a:name:id>` emojis via Discord CDN.
+  - **Discord OAuth2 & Virtual Owner**: Secure PKCE session flow with automatic server-side Admin privilege for Owner Discord ID `386528085681635328`.
+  - **Live Synchronization**: Real-time micro-version polling with ETag 304 caching — updates prices immediately upon Admin save without redeploying Vercel.
+  - **Admin CRUD & Audit Log**: Full product creation, editing (with optimistic concurrency check), and archiving with complete change trail in PostgreSQL.
 
 ---
 
