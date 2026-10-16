@@ -631,88 +631,225 @@
       gap: 0.75rem;
     }
 
-    .btn-category-dropdown {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      background: var(--ink);
+    /* ── MORPH MENU NAVIGATION (MATCHING ẢNH 1) ── */
+    .btn-morph-menu {
+      background: transparent;
       border: 1px solid var(--card-border);
       color: var(--white);
-      padding: 0.4rem 0.8rem;
-      border-radius: 0.65rem;
-      font-size: 0.8125rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .btn-category-dropdown:hover {
-      background: var(--steel);
-      border-color: rgba(201, 204, 210, 0.3);
-    }
-    .cat-total-badge {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--silver);
-      font-size: 0.6875rem;
-      font-weight: 700;
-      padding: 0.05rem 0.45rem;
-      border-radius: 9999px;
-    }
-
-    .view-mode-toggle {
-      display: inline-flex;
-      background: var(--ink);
-      border: 1px solid var(--card-border);
-      border-radius: 0.65rem;
-      padding: 0.2rem;
-      gap: 0.2rem;
-    }
-    .btn-view-toggle {
+      width: 2.35rem;
+      height: 2.35rem;
+      border-radius: 0.625rem;
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      z-index: 120;
+    }
+    .btn-morph-menu:hover {
+      background: var(--steel);
+      border-color: rgba(201, 204, 210, 0.35);
+    }
+    .morph-svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      overflow: visible;
+    }
+    .morph-line {
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+      transform-origin: 12px 12px;
+    }
+    /* Snappy morph to X icon when open */
+    .btn-morph-menu.is-open {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+    .btn-morph-menu.is-open .morph-line-1 {
+      transform: translateY(6px) rotate(45deg);
+    }
+    .btn-morph-menu.is-open .morph-line-2 {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+    .btn-morph-menu.is-open .morph-line-3 {
+      transform: translateY(-6px) rotate(-45deg);
+    }
+
+    /* Floating Dropdown Card (Ảnh 1) */
+    .morph-menu-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 104;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .morph-menu-backdrop.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .morph-menu-dropdown {
+      position: fixed;
+      top: 4.25rem;
+      right: 1.25rem;
+      left: 1.25rem;
+      max-width: 440px;
+      margin: 0 auto;
+      background: #0d0d10;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 1.25rem;
+      padding: 0.875rem 0.65rem;
+      z-index: 105;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      opacity: 0;
+      transform: translateY(-12px) scale(0.96);
+      pointer-events: none;
+      transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .morph-menu-dropdown.is-open {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .morph-menu-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.25rem 0.65rem 0.65rem 0.65rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: 0.5rem;
+    }
+    .morph-menu-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--white);
+    }
+    .morph-menu-logo {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 0.375rem;
+      object-fit: cover;
+    }
+    .morph-menu-close {
       background: transparent;
       border: none;
-      color: var(--ash);
-      padding: 0.3rem 0.65rem;
-      border-radius: 0.45rem;
-      font-size: 0.75rem;
-      font-weight: 700;
+      color: var(--silver-dim);
+      width: 2rem;
+      height: 2rem;
+      border-radius: 0.5rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
       transition: all 0.15s ease;
     }
-    .btn-view-toggle:hover {
+    .morph-menu-close:hover {
       color: var(--white);
-    }
-    .btn-view-toggle.active {
-      background: var(--steel);
-      color: var(--white);
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+      background: rgba(255, 255, 255, 0.08);
     }
 
-    /* ── PRODUCT GRID ── */
+    .morph-menu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .morph-menu-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      color: #b2b2be;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      background: transparent;
+      border: 1px solid transparent;
+      width: 100%;
+      text-align: left;
+      font-family: var(--font-sans);
+    }
+    .morph-menu-item:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .morph-menu-item.active {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.15);
+      font-weight: 700;
+    }
+
+    .morph-menu-item-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .morph-menu-item-icon {
+      width: 1.35rem;
+      height: 1.35rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .morph-menu-item-icon img {
+      width: 1.25rem;
+      height: 1.25rem;
+      object-fit: contain;
+    }
+
+    .morph-menu-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--ash);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.1rem 0.5rem;
+      border-radius: 9999px;
+    }
+    .morph-menu-item.active .morph-menu-badge {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .morph-menu-divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
+      margin: 0.4rem 0.65rem;
+    }
+
+    /* ── PRODUCT GRID (CLEAN MENU ROWS) ── */
     .product-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
     }
 
     .product-card {
       background: var(--ink);
       border: 1px solid var(--card-border);
-      border-radius: 1.25rem;
-      padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 0.875rem;
+      padding: 0;
+      transition: all 0.15s ease;
       position: relative;
       overflow: hidden;
       cursor: default;
     }
     .product-card:hover {
-      transform: translateY(-2px);
       border-color: var(--card-border-hover);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
     }
 
     .card-header {
@@ -914,23 +1051,7 @@
       color: #f87171;
     }
 
-    /* ── MENU LIST MODE (COMPACT MOBILE & DESKTOP MENU) ── */
-    .product-grid.list-mode {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .product-grid.list-mode .product-card {
-      padding: 0;
-      border-radius: 0.875rem;
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-      cursor: pointer;
-    }
-    .product-grid.list-mode .product-card:hover {
-      border-color: var(--card-border-hover);
-      transform: none;
-    }
+    /* ── MENU ROW LAYOUT ── */
 
     .menu-row-main {
       display: flex;
@@ -1030,133 +1151,6 @@
       color: var(--ash);
       text-decoration: line-through;
       white-space: nowrap;
-    }
-
-    .menu-chevron-icon {
-      color: var(--ash);
-      transition: transform 0.25s ease;
-      flex-shrink: 0;
-    }
-    .product-card.accordion-open .menu-chevron-icon {
-      transform: rotate(180deg);
-      color: var(--white);
-    }
-
-    /* Inline Accordion Detail */
-    .menu-accordion-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1), padding 0.25s ease;
-      background: rgba(13, 13, 16, 0.5);
-      padding: 0 1rem;
-    }
-    .product-card.accordion-open .menu-accordion-content {
-      max-height: 600px;
-      padding: 0.85rem 1rem 1rem 1rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .accordion-desc-body {
-      font-size: 0.8125rem;
-      color: var(--text-sub);
-      line-height: 1.55;
-      margin-bottom: 0.875rem;
-    }
-
-    .accordion-highlights {
-      display: flex;
-      gap: 0.45rem;
-      flex-wrap: wrap;
-      margin-bottom: 0.875rem;
-    }
-
-    .highlight-pill {
-      font-size: 0.6875rem;
-      font-weight: 600;
-      padding: 0.2rem 0.5rem;
-      border-radius: 0.375rem;
-      background: var(--graphite);
-      border: 1px solid var(--card-border);
-      color: var(--silver-dim);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
-
-    .accordion-actions {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .btn-menu-buy {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      background: #5865f2;
-      color: #fff;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 0.45rem 0.85rem;
-      border-radius: 0.5rem;
-      text-decoration: none;
-      transition: all 0.15s ease;
-      box-shadow: 0 2px 8px rgba(88, 101, 242, 0.3);
-    }
-    .btn-menu-buy:hover {
-      background: #4752c4;
-      transform: translateY(-1px);
-    }
-
-    .btn-menu-copy {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      background: var(--steel);
-      border: 1px solid var(--card-border);
-      color: var(--silver);
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 0.45rem 0.75rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .btn-menu-copy:hover {
-      background: var(--graphite);
-      color: #fff;
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-
-    .category-quick-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.5rem;
-    }
-    .btn-quick-cat {
-      background: var(--graphite);
-      border: 1px solid var(--card-border);
-      border-radius: 0.75rem;
-      padding: 0.65rem 0.75rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--text-sub);
-      cursor: pointer;
-      font-size: 0.8125rem;
-      font-weight: 600;
-      text-align: left;
-      transition: all 0.15s ease;
-    }
-    .btn-quick-cat:hover {
-      background: var(--steel);
-      color: #fff;
-    }
-    .btn-quick-cat.active {
-      background: rgba(201, 204, 210, 0.1);
-      border-color: rgba(201, 204, 210, 0.35);
-      color: #fff;
     }
 
     /* ── MODALS GENERAL ── */
@@ -1452,6 +1446,15 @@
     }
 
     /* ── RESPONSIVE ADAPTATIONS (MOBILE & TABLET EXCELLENCE) ── */
+    @media (min-width: 960px) {
+      .btn-morph-menu {
+        display: none !important;
+      }
+      .morph-menu-dropdown, .morph-menu-backdrop {
+        display: none !important;
+      }
+    }
+
     @media (max-width: 959px) {
       .menu-layout {
         grid-template-columns: 1fr;
@@ -1512,18 +1515,7 @@
         display: none;
       }
       .mobile-category-bar {
-        position: sticky;
-        top: 3.1rem;
-        z-index: 40;
-        background: rgba(6, 6, 7, 0.94);
-        padding: 0.35rem 0.65rem 0.45rem;
-        margin: -0.4rem -0.65rem 0.65rem -0.65rem;
-        gap: 0.35rem;
-      }
-      .mobile-cat-pill {
-        padding: 0.35rem 0.75rem;
-        font-size: 0.75rem;
-        gap: 0.35rem;
+        display: none !important;
       }
       .toolbar-row {
         margin-bottom: 0.65rem;
@@ -1539,77 +1531,22 @@
       .grid-info-bar {
         margin-bottom: 0.65rem;
       }
-      .btn-category-dropdown {
-        padding: 0.3rem 0.65rem;
-        font-size: 0.75rem;
-      }
-      .btn-view-toggle {
-        padding: 0.25rem 0.55rem;
-        font-size: 0.6875rem;
-      }
 
-      /* In Grid Mode on Mobile: 2 Compact Columns */
-      .product-grid.grid-mode {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.65rem;
-      }
-      .product-grid.grid-mode .product-card {
-        padding: 0.75rem;
-        border-radius: 0.875rem;
-      }
-      .product-grid.grid-mode .card-header {
-        flex-direction: column;
-        gap: 0.45rem;
-        margin-bottom: 0.45rem;
-      }
-      .product-grid.grid-mode .product-tile {
-        width: 2.75rem;
-        height: 2.75rem;
-        min-width: 2.75rem;
-        border-radius: 0.625rem;
-      }
-      .product-grid.grid-mode .product-tile img {
-        width: 1.85rem;
-        height: 1.85rem;
-      }
-      .product-grid.grid-mode .card-title {
-        font-size: 0.875rem;
-        line-height: 1.3;
-        margin-bottom: 0.2rem;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-      .product-grid.grid-mode .card-desc {
-        display: none;
-      }
-      .product-grid.grid-mode .card-footer {
-        padding-top: 0.45rem;
-        align-items: center;
-      }
-      .product-grid.grid-mode .card-price {
-        font-size: 0.9375rem;
-      }
-      .product-grid.grid-mode .card-compare {
-        font-size: 0.6875rem;
-      }
-
-      /* In List Mode on Mobile: Ultra-sleek single-tap rows */
+      /* Sleek single-row price menu */
       .menu-row-main {
         padding: 0.65rem 0.75rem;
         gap: 0.6rem;
-        min-height: 56px;
+        min-height: 52px;
       }
       .menu-row-tile {
-        width: 2.35rem;
-        height: 2.35rem;
-        min-width: 2.35rem;
+        width: 2.25rem;
+        height: 2.25rem;
+        min-width: 2.25rem;
         border-radius: 0.5rem;
       }
       .menu-row-tile img {
-        width: 1.6rem;
-        height: 1.6rem;
+        width: 1.5rem;
+        height: 1.5rem;
       }
       .menu-row-title {
         font-size: 0.875rem;
@@ -1619,12 +1556,6 @@
       }
       .menu-row-price {
         font-size: 0.9375rem;
-      }
-      .menu-accordion-content {
-        padding: 0 0.75rem;
-      }
-      .product-card.accordion-open .menu-accordion-content {
-        padding: 0.65rem 0.75rem 0.75rem 0.75rem;
       }
       .form-row-2 {
         grid-template-columns: 1fr;
@@ -1681,8 +1612,37 @@
           <span class="role-badge role-member" id="userRoleBadge">MEMBER</span>
           <a href="/api/auth/logout" class="btn-logout" title="Đăng xuất">Đăng xuất</a>
         </div>
+
+        <!-- Snappy Morphing Menu Hamburger Icon (Mobile - Image 1 parity) -->
+        <button class="btn-morph-menu" id="btnMorphMenu" onclick="toggleMorphMenu()" type="button" aria-label="Toggle navigation menu" title="Mở danh mục menu">
+          <svg class="morph-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path class="morph-line morph-line-1" d="M4 6h16"></path>
+            <path class="morph-line morph-line-2" d="M4 12h16"></path>
+            <path class="morph-line morph-line-3" d="M4 18h16"></path>
+          </svg>
+        </button>
       </div>
     </header>
+
+    <!-- Floating Morphing Menu Backdrop & Dropdown (Ảnh 1) -->
+    <div class="morph-menu-backdrop" id="morphMenuBackdrop" onclick="toggleMorphMenu(false)"></div>
+    <div class="morph-menu-dropdown" id="morphMenuDropdown" role="dialog" aria-label="Menu chuyển mục">
+      <div class="morph-menu-header">
+        <div class="morph-menu-brand">
+          <img src="https://cdn.discordapp.com/icons/1559458306664439879/9c07b41c9403f41d779867722d30ad2c.png?size=64" alt="Pade Store" onerror="this.onerror=null;this.src='/assets/pade-guild-icon.png';" class="morph-menu-logo" />
+          <span>Pade Store</span>
+        </div>
+        <button class="morph-menu-close" onclick="toggleMorphMenu(false)" type="button" aria-label="Đóng menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="morph-menu-list" id="morphMenuList">
+        <!-- Populated dynamically via JavaScript -->
+      </div>
+    </div>
 
     <!-- Preview Mode Indicator Banner -->
     <div class="preview-banner" id="previewBanner">
@@ -1729,27 +1689,13 @@
           </div>
 
           <div class="grid-info-bar">
-            <button class="btn-category-dropdown" id="btnCategoryDropdown" onclick="openQuickCategoriesModal()" type="button" title="Bấm để chọn nhanh danh mục khác">
-              <span id="activeCategoryTitle">Nitro Discord</span>
-              <span class="cat-total-badge" id="categoryBadgeCount">...</span>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-
-            <div class="view-mode-toggle" id="viewModeToggle">
-              <button class="btn-view-toggle active" id="btnViewList" onclick="setViewMode('list')" type="button" title="Chế độ Bảng Menu gọn gàng">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
-                <span>Menu</span>
-              </button>
-              <button class="btn-view-toggle" id="btnViewGrid" onclick="setViewMode('grid')" type="button" title="Chế độ Lưới">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-                <span>Lưới</span>
-              </button>
-            </div>
+            <span class="active-category-title" id="activeCategoryTitle" style="color: var(--white); font-weight: 700; font-size: 0.9375rem;">Nitro Discord</span>
+            <span class="product-count-label" id="categoryBadgeCount" style="color: var(--silver-dim); font-size: 0.8125rem;">...</span>
           </div>
         </div>
 
-        <!-- Product Cards (Default: list-mode for optimal mobile experience) -->
-        <div class="product-grid list-mode" id="productGrid">
+        <!-- Product Cards (Clean, sleek price menu) -->
+        <div class="product-grid" id="productGrid">
           <!-- Rendered via JavaScript -->
         </div>
       </main>
@@ -1997,20 +1943,6 @@
     </div>
   </div>
 
-  <!-- ── 6. QUICK CATEGORIES MODAL (FOR MOBILE 1-TAP JUMP) ── -->
-  <div class="modal-overlay" id="quickCategoriesModal">
-    <div class="modal-box" style="max-width: 440px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-        <h3 style="font-family: var(--font-display); font-size: 1.125rem; font-weight: 800; color: #fff;">
-          Chọn danh mục sản phẩm
-        </h3>
-        <button class="modal-close-btn" onclick="closeModal('quickCategoriesModal')">&times;</button>
-      </div>
-      <div class="category-quick-grid" id="quickCategoriesGrid">
-        <!-- Rendered via JS -->
-      </div>
-    </div>
-  </div>
 
   <!-- Live Toast Notification -->
   <div class="toast-container">
@@ -2168,14 +2100,37 @@
       }
     }
 
-    // ── RENDER CATEGORIES (SIDEBAR & MOBILE) ──
+    // ── MORPH MENU NAVIGATION (ẢNH 1 PARITY) ──
+    function toggleMorphMenu(forceState) {
+      const btn = document.getElementById('btnMorphMenu');
+      const dropdown = document.getElementById('morphMenuDropdown');
+      const backdrop = document.getElementById('morphMenuBackdrop');
+      if (!btn || !dropdown || !backdrop) return;
+
+      const isOpen = typeof forceState === 'boolean' ? forceState : !dropdown.classList.contains('is-open');
+      btn.classList.toggle('is-open', isOpen);
+      dropdown.classList.toggle('is-open', isOpen);
+      backdrop.classList.toggle('is-open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') toggleMorphMenu(false);
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 960) toggleMorphMenu(false);
+    });
+
+    // ── RENDER CATEGORIES (DESKTOP SIDEBAR & MORPH MENU DROPDOWN) ──
     function renderCategories() {
       const sidebarContainer = document.getElementById('categoryList');
-      const mobileContainer = document.getElementById('mobileCategoryBar');
+      const morphContainer = document.getElementById('morphMenuList');
 
       // Calculate total active count
       const totalCount = allProducts.filter(p => isPreviewMode ? true : p.status === 'ACTIVE').length;
-      document.getElementById('sidebarTotalCount').textContent = totalCount;
+      const sidebarCountEl = document.getElementById('sidebarTotalCount');
+      if (sidebarCountEl) sidebarCountEl.textContent = totalCount;
 
       // Fallback: If currentCategory is not in list of active categories, select first category
       if (!allCategories.some(c => c.slug === currentCategory)) {
@@ -2183,48 +2138,91 @@
       }
 
       // 1. Desktop Sidebar Render
-      sidebarContainer.innerHTML = '';
+      if (sidebarContainer) {
+        sidebarContainer.innerHTML = '';
+        allCategories.forEach(cat => {
+          const catProducts = allProducts.filter(p => (p.category_slug === cat.slug || p.category_id === cat.id) && (isPreviewMode ? true : p.status === 'ACTIVE'));
+          const count = catProducts.length;
 
-      // 2. Mobile Container Render
-      mobileContainer.innerHTML = '';
+          const item = document.createElement('button');
+          item.type = 'button';
+          item.className = 'category-item ' + (currentCategory === cat.slug ? 'active' : '');
 
-      allCategories.forEach(cat => {
-        const catProducts = allProducts.filter(p => (p.category_slug === cat.slug || p.category_id === cat.id) && (isPreviewMode ? true : p.status === 'ACTIVE'));
-        const count = catProducts.length;
+          const emojiInfo = parseDiscordEmoji(cat.emoji);
+          let iconHtml = '📦';
+          if (emojiInfo && emojiInfo.isCustom) {
+            iconHtml = `<img src="${emojiInfo.url}" alt="${emojiInfo.name}" loading="lazy" />`;
+          } else if (emojiInfo && emojiInfo.text) {
+            iconHtml = emojiInfo.text;
+          }
 
-        // Desktop item
-        const item = document.createElement('button');
-        item.className = 'category-item ' + (currentCategory === cat.slug ? 'active' : '');
+          item.innerHTML = `
+            <div class="category-left">
+              <span class="category-icon">${iconHtml}</span>
+              <span class="category-label">${cat.name}</span>
+            </div>
+            <span class="category-badge">${count}</span>
+          `;
+          item.onclick = () => selectCategory(cat.slug);
+          sidebarContainer.appendChild(item);
+        });
+      }
 
-        const emojiInfo = parseDiscordEmoji(cat.emoji);
-        let iconHtml = '📦';
-        if (emojiInfo && emojiInfo.isCustom) {
-          iconHtml = `<img src="${emojiInfo.url}" alt="${emojiInfo.name}" loading="lazy" />`;
-        } else if (emojiInfo && emojiInfo.text) {
-          iconHtml = emojiInfo.text;
-        }
+      // 2. Floating Morph Menu Dropdown Render (Ảnh 1)
+      if (morphContainer) {
+        morphContainer.innerHTML = '';
+        allCategories.forEach(cat => {
+          const catProducts = allProducts.filter(p => (p.category_slug === cat.slug || p.category_id === cat.id) && (isPreviewMode ? true : p.status === 'ACTIVE'));
+          const count = catProducts.length;
 
-        item.innerHTML = `
-          <div class="category-left">
-            <span class="category-icon">${iconHtml}</span>
-            <span class="category-label">${cat.name}</span>
+          const mBtn = document.createElement('button');
+          mBtn.type = 'button';
+          mBtn.className = 'morph-menu-item ' + (currentCategory === cat.slug ? 'active' : '');
+
+          const emojiInfo = parseDiscordEmoji(cat.emoji);
+          let iconHtml = '📦';
+          if (emojiInfo && emojiInfo.isCustom) {
+            iconHtml = `<img src="${emojiInfo.url}" alt="${emojiInfo.name}" loading="lazy" />`;
+          } else if (emojiInfo && emojiInfo.text) {
+            iconHtml = emojiInfo.text;
+          }
+
+          mBtn.innerHTML = `
+            <div class="morph-menu-item-left">
+              <span class="morph-menu-item-icon">${iconHtml}</span>
+              <span>${cat.name}</span>
+            </div>
+            <span class="morph-menu-badge">${count}</span>
+          `;
+          mBtn.onclick = () => {
+            selectCategory(cat.slug);
+            toggleMorphMenu(false);
+          };
+          morphContainer.appendChild(mBtn);
+        });
+
+        // Bottom divider + Discord Pade Store community link (Image 1 style)
+        const divider = document.createElement('div');
+        divider.className = 'morph-menu-divider';
+        morphContainer.appendChild(divider);
+
+        const discordItem = document.createElement('a');
+        discordItem.href = 'https://discord.gg/YzEaab34kV';
+        discordItem.target = '_blank';
+        discordItem.rel = 'noopener noreferrer';
+        discordItem.className = 'morph-menu-item';
+        discordItem.innerHTML = `
+          <div class="morph-menu-item-left">
+            <span class="morph-menu-item-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#5865f2"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+            </span>
+            <span>Discord Pade Store</span>
           </div>
-          <span class="category-badge">${count}</span>
+          <span style="font-size: 0.75rem; color: #5865f2; font-weight: 600;">Tham gia ↗</span>
         `;
-        item.onclick = () => selectCategory(cat.slug);
-        sidebarContainer.appendChild(item);
-
-        // Mobile item (Pill chip)
-        const mBtn = document.createElement('button');
-        mBtn.className = 'mobile-cat-pill ' + (currentCategory === cat.slug ? 'active' : '');
-        mBtn.innerHTML = `
-          <span class="category-icon" style="width: 1.15rem; height: 1.15rem; display: inline-flex; align-items: center; justify-content: center;">${iconHtml}</span>
-          <span>${cat.name}</span>
-          <span class="cat-pill-count">${count}</span>
-        `;
-        mBtn.onclick = () => selectCategory(cat.slug);
-        mobileContainer.appendChild(mBtn);
-      });
+        discordItem.onclick = () => toggleMorphMenu(false);
+        morphContainer.appendChild(discordItem);
+      }
     }
 
     function selectCategory(slug) {
@@ -2236,19 +2234,12 @@
       const found = allCategories.find(c => c.slug === slug);
       const titleEl = document.getElementById('activeCategoryTitle');
       if (titleEl) titleEl.textContent = found ? found.name : slug;
-
-      // Auto scroll active mobile pill into center view smoothly
-      setTimeout(() => {
-        const activeMobilePill = document.querySelector('.mobile-cat-pill.active');
-        if (activeMobilePill) {
-          activeMobilePill.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-        }
-      }, 50);
     }
 
-    // ── RENDER PRODUCTS (LIST MENU & GRID MODES) ──
+    // ── RENDER PRODUCTS (CLEAN, ELEGANT PRICE ROWS - ZERO BUTTON CLUTTER) ──
     function renderProducts() {
       const grid = document.getElementById('productGrid');
+      if (!grid) return;
       const foldedQ = foldVietnamese(searchQuery);
 
       let list = allProducts.filter(p => {
@@ -2276,18 +2267,7 @@
       }
 
       const badgeCountEl = document.getElementById('categoryBadgeCount');
-      if (badgeCountEl) badgeCountEl.textContent = list.length;
-
-      // Ensure grid has correct view mode class
-      if (currentViewMode === 'list') {
-        grid.classList.add('list-mode');
-        grid.classList.remove('grid-mode');
-      } else {
-        grid.classList.remove('list-mode');
-        grid.classList.add('grid-mode');
-      }
-      document.getElementById('btnViewList')?.classList.toggle('active', currentViewMode === 'list');
-      document.getElementById('btnViewGrid')?.classList.toggle('active', currentViewMode === 'grid');
+      if (badgeCountEl) badgeCountEl.textContent = `${list.length} sản phẩm`;
 
       if (list.length === 0) {
         grid.innerHTML = `
@@ -2300,8 +2280,11 @@
       }
 
       grid.innerHTML = '';
+      const isAdmin = currentUser && currentUser.isAdmin;
+
       list.forEach(p => {
         const card = document.createElement('div');
+        card.className = 'product-card menu-row-card';
         card.id = `card-${p.id}`;
 
         // Emoji / Icon parsing
@@ -2318,170 +2301,39 @@
         const isSoldOut = p.status === 'SOLD_OUT';
         const isDraft = p.status === 'DRAFT';
         const hasSale = Number(p.compare_at_price) > Number(p.price_amount);
-        const isAdmin = currentUser && currentUser.isAdmin;
 
-        if (currentViewMode === 'list') {
-          card.className = 'product-card menu-row-card';
-          card.innerHTML = `
-            <div class="menu-row-main" onclick="toggleProductAccordion('${p.id}')">
-              <div class="menu-row-left">
-                <div class="menu-row-tile">${tileContent}</div>
-                <div class="menu-row-info">
-                  <div class="menu-title-line">
-                    <span class="menu-row-title">${p.name}</span>
-                    ${isDraft ? '<span class="badge badge-draft">Draft</span>' : ''}
-                    ${isSoldOut ? '<span class="badge badge-soldout">Hết hàng</span>' : ''}
-                    ${hasSale ? '<span class="badge badge-sale">Sale</span>' : ''}
-                  </div>
-                  <div class="menu-row-sub">${p.short_description || p.category_name || 'Chính hãng Pade Store'}</div>
+        card.innerHTML = `
+          <div class="menu-row-main">
+            <div class="menu-row-left">
+              <div class="menu-row-tile">${tileContent}</div>
+              <div class="menu-row-info">
+                <div class="menu-title-line">
+                  <span class="menu-row-title">${p.name}</span>
+                  ${isDraft ? '<span class="badge badge-draft">Draft</span>' : ''}
+                  ${isSoldOut ? '<span class="badge badge-soldout">Hết hàng</span>' : ''}
+                  ${hasSale ? '<span class="badge badge-sale">Sale</span>' : ''}
                 </div>
-              </div>
-
-              <div class="menu-row-right">
-                <div class="menu-row-pricing">
-                  <span class="menu-row-price">${formatBrandMoney(p.price_amount)}</span>
-                  ${hasSale ? `<span class="menu-row-compare">${formatBrandMoney(p.compare_at_price)}</span>` : ''}
-                </div>
-                <svg class="menu-chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <div class="menu-row-sub">${p.short_description || p.category_name || 'Chính hãng Pade Store'}</div>
               </div>
             </div>
 
-            <div class="menu-accordion-content">
-              <div class="accordion-desc-body">
-                ${renderSafeDescription(p.description || p.short_description || 'Sản phẩm dịch vụ chính hãng tại Pade Store.')}
-              </div>
-              <div class="accordion-highlights">
-                <span class="highlight-pill">⚡ Kích hoạt: Siêu tốc</span>
-                <span class="highlight-pill">🛡️ Bảo hành: Trọn gói</span>
-                <span class="highlight-pill">🏷️ SKU: ${p.sku}</span>
-              </div>
-              <div class="accordion-actions">
-                <a href="https://discord.gg/YzEaab34kV" target="_blank" rel="noopener noreferrer" class="btn-menu-buy" onclick="event.stopPropagation()">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-                  <span>Mở Ticket Discord</span>
-                </a>
-                <button class="btn-menu-copy" type="button" onclick="event.stopPropagation(); copyProductTicket('${p.name.replace(/'/g, "\\'")}', '${p.sku}', '${formatBrandMoney(p.price_amount)}')">
-                  <span>📋 Sao chép mã</span>
-                </button>
-                ${isAdmin ? `
-                  <button class="btn-card-admin" type="button" title="Sửa sản phẩm" onclick="event.stopPropagation(); openEditProductModal('${p.id}')">✏️</button>
-                  <button class="btn-card-admin delete" type="button" title="Xóa/Lưu trữ" onclick="event.stopPropagation(); openDeleteProductModal('${p.id}')">🗑️</button>
-                ` : ''}
-              </div>
-            </div>
-          `;
-        } else {
-          card.className = 'product-card';
-          card.innerHTML = `
-            <div>
-              <div class="card-header">
-                <div class="product-tile">${tileContent}</div>
-                <div class="card-meta">
-                  <div class="card-category-row">
-                    <span class="card-category-name">${p.category_name || 'DỊCH VỤ'}</span>
-                    <div class="card-badges">
-                      ${isDraft ? '<span class="badge badge-draft">Draft</span>' : ''}
-                      ${isSoldOut ? '<span class="badge badge-soldout">Hết hàng</span>' : ''}
-                      ${hasSale ? '<span class="badge badge-sale">Sale</span>' : ''}
-                    </div>
-                  </div>
-                  <h3 class="card-title">${p.name}</h3>
-                </div>
-              </div>
-              <p class="card-desc">${p.short_description || p.description || 'Sản phẩm chính hãng tại Pade Store.'}</p>
-            </div>
-
-            <div class="card-footer">
-              <div class="card-pricing">
-                <span class="card-price">${formatBrandMoney(p.price_amount)}</span>
-                ${hasSale ? `<span class="card-compare">${formatBrandMoney(p.compare_at_price)}</span>` : ''}
+            <div class="menu-row-right">
+              <div class="menu-row-pricing">
+                <span class="menu-row-price">${formatBrandMoney(p.price_amount)}</span>
+                ${hasSale ? `<span class="menu-row-compare">${formatBrandMoney(p.compare_at_price)}</span>` : ''}
               </div>
               ${isAdmin ? `
-                <div class="card-actions-wrapper">
+                <div style="display: flex; gap: 0.35rem; margin-left: 0.5rem;">
                   <button class="btn-card-admin" type="button" title="Sửa sản phẩm" onclick="openEditProductModal('${p.id}')">✏️</button>
                   <button class="btn-card-admin delete" type="button" title="Xóa/Lưu trữ" onclick="openDeleteProductModal('${p.id}')">🗑️</button>
                 </div>
-              ` : `
-                <a href="https://discord.gg/YzEaab34kV" target="_blank" rel="noopener noreferrer" class="btn-menu-buy" style="padding: 0.35rem 0.65rem;">
-                  <span>Ticket</span>
-                </a>
-              `}
+              ` : ''}
             </div>
-          `;
-        }
+          </div>
+        `;
 
         grid.appendChild(card);
       });
-    }
-
-    function toggleProductAccordion(id) {
-      const card = document.getElementById(`card-${id}`);
-      if (!card) return;
-      card.classList.toggle('accordion-open');
-    }
-
-    function copyProductTicket(name, sku, price) {
-      const text = `${name} (${sku}) - Giá: ${price}`;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => {
-          showToast(`Đã sao chép: ${name} ✧`);
-        }).catch(() => {
-          showToast(`Mã SP: ${sku} ✧`);
-        });
-      } else {
-        showToast(`Mã SP: ${sku} ✧`);
-      }
-    }
-
-    function setViewMode(mode) {
-      currentViewMode = mode;
-      localStorage.setItem('pade_menu_view', mode);
-      const grid = document.getElementById('productGrid');
-      if (grid) {
-        if (mode === 'list') {
-          grid.classList.add('list-mode');
-          grid.classList.remove('grid-mode');
-        } else {
-          grid.classList.remove('list-mode');
-          grid.classList.add('grid-mode');
-        }
-      }
-      document.getElementById('btnViewList')?.classList.toggle('active', mode === 'list');
-      document.getElementById('btnViewGrid')?.classList.toggle('active', mode === 'grid');
-      renderProducts();
-    }
-
-    function openQuickCategoriesModal() {
-      const container = document.getElementById('quickCategoriesGrid');
-      if (!container) return;
-      container.innerHTML = '';
-      allCategories.forEach(cat => {
-        const catProducts = allProducts.filter(p => (p.category_slug === cat.slug || p.category_id === cat.id) && (isPreviewMode ? true : p.status === 'ACTIVE'));
-        const count = catProducts.length;
-
-        const emojiInfo = parseDiscordEmoji(cat.emoji);
-        let iconHtml = '📦';
-        if (emojiInfo && emojiInfo.isCustom) {
-          iconHtml = `<img src="${emojiInfo.url}" alt="${emojiInfo.name}" style="width: 1.25rem; height: 1.25rem; object-fit: contain;" />`;
-        } else if (emojiInfo && emojiInfo.text) {
-          iconHtml = emojiInfo.text;
-        }
-
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'btn-quick-cat ' + (currentCategory === cat.slug ? 'active' : '');
-        btn.innerHTML = `
-          <span>${iconHtml}</span>
-          <span style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${cat.name}</span>
-          <span class="cat-pill-count">${count}</span>
-        `;
-        btn.onclick = () => {
-          selectCategory(cat.slug);
-          closeModal('quickCategoriesModal');
-        };
-        container.appendChild(btn);
-      });
-      openModal('quickCategoriesModal');
     }
 
     // ── QUICK VIEW MODAL ──
