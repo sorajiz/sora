@@ -254,12 +254,7 @@ async function build() {
     });
 
     fs.writeFileSync(path.join(distDir, 'menu.html'), menuRendered, 'utf8');
-
-    const menuDir = path.join(distDir, 'menu');
-    if (!fs.existsSync(menuDir)) fs.mkdirSync(menuDir, { recursive: true });
-    fs.writeFileSync(path.join(menuDir, 'index.html'), menuRendered, 'utf8');
-
-    console.log('  ✓ Built dist/menu.html & dist/menu/index.html');
+    console.log('  ✓ Built dist/menu.html');
   }
 
 

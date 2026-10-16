@@ -75,53 +75,9 @@
       ],
       "destination": "/timework",
       "permanent": false
-    },
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "host",
-          "value": "menu.sorae.tokyo"
-        }
-      ],
-      "destination": "/menu",
-      "permanent": false
-    },
-    {
-      "source": "/((?!assets|js|music|favicon|menu|api|.*\\..*).*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "menu.sorae.tokyo"
-        }
-      ],
-      "destination": "/menu",
-      "permanent": false
     }
   ],
   "rewrites": [
-    { "source": "/menu", "destination": "/menu.html" },
-    { "source": "/menu/(.*)", "destination": "/menu.html" },
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "host",
-          "value": "menu.sorae.tokyo"
-        }
-      ],
-      "destination": "/menu.html"
-    },
-    {
-      "source": "/((?!assets|js|music|favicon|api|.*\\..*).*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "menu.sorae.tokyo"
-        }
-      ],
-      "destination": "/menu.html"
-    },
     { "source": "/tickets/transcript", "destination": "/api/tickets/transcript" },
     { "source": "/tickets/transcript/(.*)", "destination": "/api/tickets/transcript" },
     { "source": "/t/:id/download/html", "destination": "/api/tickets/transcript?id=:id&action=download" },
@@ -227,6 +183,26 @@
       "has": [
         {
           "type": "host",
+          "value": "menu.sorae.tokyo"
+        }
+      ],
+      "destination": "/menu.html"
+    },
+    {
+      "source": "/((?!assets|js|music|favicon|api|.*\\..*).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "menu.sorae.tokyo"
+        }
+      ],
+      "destination": "/menu.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
           "value": "pay.sorae.tokyo"
         }
       ],
@@ -271,7 +247,6 @@
     { "source": "/timework", "destination": "/timework.html" },
     { "source": "/timeworks", "destination": "/timework.html" },
     { "source": "/menu", "destination": "/menu.html" },
-    { "source": "/menu/(.*)", "destination": "/menu.html" },
     { "source": "/((?!assets|js|music|favicon|api|hooks|pay|payment|tickets|t|ORD|SR|ord|sr|menu|.*\\..*).*)", "destination": "/index.html" }
   ],
   "headers": [
