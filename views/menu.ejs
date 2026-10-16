@@ -731,27 +731,29 @@
     }
 
     // ── APPLICATION STATE ──
-    let allProducts = [];
-    let allCategories = [];
+    let allProducts = <%- JSON.stringify(typeof catalog !== 'undefined' && catalog && catalog.products ? catalog.products : []) %>;
+    let allCategories = <%- JSON.stringify(typeof catalog !== 'undefined' && catalog && catalog.categories ? catalog.categories : []) %>;
     let currentCategory = "ALL";
     let searchQuery = "";
-    let currentVersion = 1;
+    let currentVersion = <%= typeof catalog !== 'undefined' && catalog && catalog.version ? catalog.version : 1 %>;
 
-    // Load initial catalog
+    // Load initial catalog (progressive enhancement)
     async function loadCatalog() {
       try {
         const res = await fetch("/api/menu");
-        if (!res.ok) throw new Error("Catalog fetch failed");
-        const data = await res.json();
-        allProducts = data.products || [];
-        allCategories = data.categories || [];
-        currentVersion = data.version || 1;
-        renderCategories();
-        renderProducts();
-        checkUrlProductParam();
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.products && data.products.length > 0) {
+            allProducts = data.products;
+            allCategories = data.categories || allCategories;
+            currentVersion = data.version || currentVersion;
+            renderCategories();
+            renderProducts();
+            checkUrlProductParam();
+          }
+        }
       } catch (err) {
-        console.error("Catalog load error:", err);
-        document.getElementById("productCountLabel").textContent = "Không thể tải danh mục trực tiếp. Đang thử lại...";
+        console.warn("API refresh fallback to embedded catalog:", err.message);
       }
     }
 
@@ -931,7 +933,10 @@
       if (!document.hidden) checkVersion();
     });
 
-    // Boot
+    // Boot: render pre-seeded catalog instantly (0ms latency), then refresh & sync
+    renderCategories();
+    renderProducts();
+    checkUrlProductParam();
     loadCatalog();
     startLiveSync();
   </script>

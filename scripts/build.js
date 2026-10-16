@@ -238,6 +238,16 @@ async function build() {
   // Step 4e: Render Dedicated Pade Store Menu Website strictly into dist/
   const menuTemplate = path.join(viewsDir, 'menu.ejs');
   if (fs.existsSync(menuTemplate)) {
+    let catalog = { categories: [], products: [], settings: null, version: 1 };
+    const catalogPath = path.join(__dirname, 'catalog.json');
+    if (fs.existsSync(catalogPath)) {
+      try {
+        catalog = JSON.parse(fs.readFileSync(catalogPath, 'utf8'));
+      } catch (e) {
+        console.warn('Failed to parse catalog.json:', e.message);
+      }
+    }
+
     const menuData = {
       ...sharedData,
       title: "Pade Store · a little menu / for things you love 𐙚",
@@ -246,7 +256,8 @@ async function build() {
       siteUrl: 'https://menu.sorae.tokyo',
       profileUrl: 'https://sorae.tokyo',
       faviconDataUri,
-      buildHash
+      buildHash,
+      catalog
     };
 
     const menuRendered = await ejs.renderFile(menuTemplate, menuData, {
@@ -254,7 +265,12 @@ async function build() {
     });
 
     fs.writeFileSync(path.join(distDir, 'menu.html'), menuRendered, 'utf8');
-    console.log('  ✓ Built dist/menu.html');
+
+    // Also write dist/api/menu.json for instant static API responses
+    const apiDistDir = path.join(distDir, 'api');
+    if (!fs.existsSync(apiDistDir)) fs.mkdirSync(apiDistDir, { recursive: true });
+    fs.writeFileSync(path.join(apiDistDir, 'menu.json'), JSON.stringify(catalog, null, 2), 'utf8');
+    console.log('  ✓ Built dist/menu.html & dist/api/menu.json');
   }
 
 
