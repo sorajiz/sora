@@ -119,42 +119,6 @@
       "status": "ACTIVE",
       "created_at": "2026-10-16T09:46:37.999Z",
       "updated_at": "2026-10-16T12:55:57.744Z"
-    },
-    {
-      "id": "2cad244c-b55c-4c40-aeaf-44b0b9134045",
-      "slug": "subscriptions",
-      "name": "Gói đăng ký",
-      "description": "Các gói đăng ký xem phim, giải trí cao cấp",
-      "emoji": "💎",
-      "image_asset_id": null,
-      "sort_order": 11,
-      "status": "ACTIVE",
-      "created_at": "2026-10-16T09:46:37.999Z",
-      "updated_at": "2026-10-16T12:55:58.009Z"
-    },
-    {
-      "id": "fbbf132b-65fb-4ba9-8851-9826ff7ce4ae",
-      "slug": "services",
-      "name": "Dịch vụ khác",
-      "description": "Tiện ích và dịch vụ kỹ thuật số độc quyền",
-      "emoji": "🎫",
-      "image_asset_id": null,
-      "sort_order": 12,
-      "status": "ACTIVE",
-      "created_at": "2026-10-16T09:46:37.999Z",
-      "updated_at": "2026-10-16T12:55:58.274Z"
-    },
-    {
-      "id": "014f0e75-883f-4daa-b82d-4dfcfd0f0cc5",
-      "slug": "test",
-      "name": "Test",
-      "description": "Khu vực thử nghiệm sản phẩm mới",
-      "emoji": "🧪",
-      "image_asset_id": null,
-      "sort_order": 13,
-      "status": "ACTIVE",
-      "created_at": "2026-10-16T12:55:58.541Z",
-      "updated_at": "2026-10-16T12:55:58.541Z"
     }
   ],
   "products": [
@@ -207,31 +171,6 @@
       "category_name": "Server Boost",
       "category_emoji": "<a:boosts:1498672467378704388>",
       "category_slug": "boost"
-    },
-    {
-      "id": "4bc1cb14-453a-428b-8386-e5455071cfa3",
-      "slug": "netflix-premium-4k-uhd",
-      "sku": "NETFLIX-4K",
-      "name": "Netflix Premium 4K UHD",
-      "short_description": "Tài Khoản Netflix Gói Cao Cấp 4K HDR",
-      "description": "> **Profile Riêng 1 Tháng:** 65.000 VNĐ\n> **Profile Riêng 3 Tháng:** 185.000 VNĐ\n- Đầy đủ phụ đề Tiếng Việt, xem mượt mà trên Smart TV, PC, Điện thoại.\n- Bảo hành 1 đổi 1 suốt thời gian sử dụng.",
-      "price_amount": "65000",
-      "compare_at_price": "90000",
-      "stock_mode": "UNLIMITED",
-      "stock_quantity": "999",
-      "status": "ACTIVE",
-      "is_featured": true,
-      "is_available": true,
-      "sort_order": 3,
-      "discord_select_label": "Netflix Premium 4K UHD",
-      "discord_select_description": "Tài Khoản Netflix Gói Cao Cấp 4K HDR",
-      "discord_select_emoji_name": "🍿",
-      "discord_select_emoji_id": null,
-      "discord_select_emoji_animated": false,
-      "version": "1",
-      "category_name": "Gói đăng ký",
-      "category_emoji": "💎",
-      "category_slug": "subscriptions"
     },
     {
       "id": "01ce625a-99fd-400e-a20a-0157d4082f3a",
@@ -409,31 +348,6 @@
       "category_slug": "canva"
     },
     {
-      "id": "777ef9b8-e305-4252-863c-ea0e9594efc0",
-      "slug": "google-gemini-advanced-ai-pro",
-      "sku": "GEMINI-PRO",
-      "name": "Google Gemini Advanced / AI Pro",
-      "short_description": "Trợ Lý Trí Tuệ Nhân Tạo Thông Minh Nhất Từ Google",
-      "description": "> **Gemini Advanced 1 Tháng:** 500.000 VNĐ\n- Bao gồm 2TB Google One lưu trữ drive/photos.",
-      "price_amount": "500000",
-      "compare_at_price": "1500000",
-      "stock_mode": "UNLIMITED",
-      "stock_quantity": "999",
-      "status": "ACTIVE",
-      "is_featured": false,
-      "is_available": true,
-      "sort_order": 11,
-      "discord_select_label": "Google Gemini Advanced / AI Pro",
-      "discord_select_description": "Trợ Lý Trí Tuệ Nhân Tạo Thông Minh Nhất Từ Google",
-      "discord_select_emoji_name": "✨",
-      "discord_select_emoji_id": null,
-      "discord_select_emoji_animated": false,
-      "version": "1",
-      "category_name": "Dịch vụ khác",
-      "category_emoji": "🎫",
-      "category_slug": "services"
-    },
-    {
       "id": "97c47480-c4a3-4e1b-ba63-987c019e5ea8",
       "slug": "nitro-boost-1-thang",
       "sku": "NITRO-BOOST-1M",
@@ -601,5 +515,5 @@
     "updated_at": "2026-10-16T09:46:37.999Z",
     "updated_by": null
   },
-  "version": 1
+  "version": 26
 }

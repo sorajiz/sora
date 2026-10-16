@@ -275,7 +275,7 @@ async function build() {
 
 
   // Step 5: Copy static assets to dist/assets
-  const assetFiles = ['favicon.ico', 'favicon.png', 'luminous-flow.png', 'banner.png', 'banner.jpg', 'liquid-glass-bg.jpg', 'sora-store-icon.png'];
+  const assetFiles = ['favicon.ico', 'favicon.png', 'luminous-flow.png', 'banner.png', 'banner.jpg', 'liquid-glass-bg.jpg', 'sora-store-icon.png', 'pade-guild-icon.png'];
   assetFiles.forEach(file => {
     const src = path.join(projectRoot, 'assets', file);
     if (fs.existsSync(src)) {
@@ -287,6 +287,7 @@ async function build() {
   copyFileIfExists(path.join(projectRoot, 'assets', 'favicon.ico'), path.join(distDir, 'favicon.ico'));
   copyFileIfExists(path.join(projectRoot, 'assets', 'favicon.png'), path.join(distDir, 'favicon.png'));
   copyFileIfExists(path.join(projectRoot, 'assets', 'sora-store-icon.png'), path.join(distDir, 'assets', 'sora-store-icon.png'));
+  copyFileIfExists(path.join(projectRoot, 'assets', 'pade-guild-icon.png'), path.join(distDir, 'assets', 'pade-guild-icon.png'));
   copyFileIfExists(path.join(projectRoot, 'assets', 'banner.png'), path.join(distDir, 'banner.png'));
   copyFileIfExists(path.join(projectRoot, 'assets', 'banner.jpg'), path.join(distDir, 'banner.jpg'));
   copyFileIfExists(path.join(projectRoot, 'assets', 'liquid-glass-bg.jpg'), path.join(distDir, 'liquid-glass-bg.jpg'));

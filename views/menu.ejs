@@ -142,8 +142,17 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
       font-size: 1.125rem;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      flex-shrink: 0;
+    }
+    .nav-brand-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: inherit;
+      display: block;
     }
 
     .nav-brand-text {
@@ -151,16 +160,6 @@
       font-weight: 800;
       font-size: 1.125rem;
       letter-spacing: -0.02em;
-    }
-
-    .nav-brand-badge {
-      font-size: 0.6875rem;
-      padding: 0.15rem 0.5rem;
-      border-radius: 9999px;
-      background: rgba(201, 204, 210, 0.1);
-      border: 1px solid rgba(201, 204, 210, 0.2);
-      color: var(--silver);
-      font-weight: 600;
     }
 
     /* Admin Navigation Controls */
@@ -1145,9 +1144,10 @@
     <header class="navbar">
       <div class="nav-left">
         <a href="/" class="nav-brand">
-          <div class="nav-brand-logo">𐙚</div>
+          <div class="nav-brand-logo">
+            <img src="https://cdn.discordapp.com/icons/1559458306664439879/9c07b41c9403f41d779867722d30ad2c.png?size=128" alt="Pade Store" onerror="this.onerror=null;this.src='/assets/pade-guild-icon.png';" />
+          </div>
           <span class="nav-brand-text">Pade Store</span>
-          <span class="nav-brand-badge">Menu</span>
         </a>
 
         <!-- Admin Toolbar (Rendered on Server Verification) -->
@@ -1228,13 +1228,6 @@
               </svg>
               <input type="text" id="searchInput" class="search-input" placeholder="Tìm kiếm sản phẩm, SKU hoặc dịch vụ..." />
             </div>
-
-            <select id="sortSelect" class="sort-select">
-              <option value="default">Sắp xếp: Mặc định</option>
-              <option value="price_asc">Giá: Thấp đến Cao</option>
-              <option value="price_desc">Giá: Cao đến Thấp</option>
-              <option value="name_asc">Tên: A → Z</option>
-            </select>
           </div>
 
           <div class="grid-info-bar">
@@ -1258,14 +1251,12 @@
       <div class="modal-product-header">
         <div class="product-tile" id="modalProductTile"></div>
         <div>
-          <span class="modal-sku" id="modalSku">SKU</span>
           <h2 class="modal-title" id="modalTitle">Tên sản phẩm</h2>
         </div>
       </div>
       <div class="modal-price-bar">
         <span class="modal-price" id="modalPrice">0 ₫</span>
         <span class="modal-compare" id="modalComparePrice"></span>
-        <span class="badge badge-sale" id="modalStatusBadge">Sẵn sàng</span>
       </div>
       <div class="modal-desc-title">Mô tả sản phẩm</div>
       <div class="modal-desc-body" id="modalDesc">...</div>
@@ -1830,7 +1821,6 @@
 
     // ── QUICK VIEW MODAL ──
     function openQuickView(product) {
-      document.getElementById('modalSku').textContent = product.sku;
       document.getElementById('modalTitle').textContent = product.name;
       document.getElementById('modalPrice').textContent = formatBrandMoney(product.price_amount);
 
@@ -1853,19 +1843,6 @@
         tileHtml = `<span class="tile-unicode">${emojiInfo.text}</span>`;
       }
       document.getElementById('modalProductTile').innerHTML = tileHtml;
-
-      // Status badge
-      const badge = document.getElementById('modalStatusBadge');
-      if (product.status === 'SOLD_OUT') {
-        badge.className = 'badge badge-soldout';
-        badge.textContent = 'Hết hàng';
-      } else if (product.status === 'DRAFT') {
-        badge.className = 'badge badge-draft';
-        badge.textContent = 'Bản nháp (Draft)';
-      } else {
-        badge.className = 'badge badge-sale';
-        badge.textContent = hasSale ? 'Khuyến mãi' : 'Sẵn sàng';
-      }
 
       document.getElementById('modalDesc').innerHTML = renderSafeDescription(product.description || product.short_description || 'Sản phẩm dịch vụ chính hãng tại Pade Store.');
 
@@ -2127,10 +2104,13 @@
       renderProducts();
     });
 
-    document.getElementById('sortSelect').addEventListener('change', (e) => {
-      currentSort = e.target.value;
-      renderProducts();
-    });
+    const sortSelectEl = document.getElementById('sortSelect');
+    if (sortSelectEl) {
+      sortSelectEl.addEventListener('change', (e) => {
+        currentSort = e.target.value;
+        renderProducts();
+      });
+    }
 
     document.getElementById('btnTogglePreview').addEventListener('click', togglePreviewMode);
     document.getElementById('btnManageProducts').addEventListener('click', openManageProductsModal);
