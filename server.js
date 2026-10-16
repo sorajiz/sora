@@ -481,7 +481,8 @@ const PAGES = {
   contact: 'contact.html',
   discord: 'discord.html',
   timework: 'timework.html',
-  pay: 'pay.html'
+  pay: 'pay.html',
+  menu: 'menu.html'
 };
 
 function serveHtmlPage(fileName, res) {
@@ -607,6 +608,11 @@ app.use((req, res, next) => {
       return ticketTranscriptHandler(req, res);
     }
   }
+  if (host.startsWith('menu.')) {
+    if (!req.path.startsWith('/api/') && !req.path.startsWith('/assets/') && !req.path.startsWith('/js/') && !req.path.startsWith('/music/')) {
+      return serveHtmlPage(PAGES.menu, res);
+    }
+  }
   next();
 });
 
@@ -633,6 +639,10 @@ app.get(['/discord', '/discord.html'], (req, res) => {
 
 app.get(['/timework', '/timework.html', '/timeworks', '/timeworks.html'], (req, res) => {
   serveHtmlPage(PAGES.timework, res);
+});
+
+app.get(['/menu', '/menu.html'], (req, res) => {
+  serveHtmlPage(PAGES.menu, res);
 });
 
 app.get([

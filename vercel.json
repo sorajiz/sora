@@ -75,9 +75,33 @@
       ],
       "destination": "/timework",
       "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "menu.sorae.tokyo"
+        }
+      ],
+      "destination": "/menu",
+      "permanent": false
+    },
+    {
+      "source": "/((?!assets|js|music|favicon|menu|api|.*\\..*).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "menu.sorae.tokyo"
+        }
+      ],
+      "destination": "/menu",
+      "permanent": false
     }
   ],
   "rewrites": [
+    { "source": "/menu", "destination": "/menu.html" },
+    { "source": "/menu/(.*)", "destination": "/menu.html" },
     { "source": "/api/menu", "destination": "/api/menu" },
     { "source": "/api/menu/(.*)", "destination": "/api/menu" },
     { "source": "/api/auth/(.*)", "destination": "/api/menu" },

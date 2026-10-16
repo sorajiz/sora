@@ -153,6 +153,26 @@ const server = app.listen(testPort, '127.0.0.1', async () => {
       }
     },
     {
+      name: 'Menu Subdomain Host Routing (/ with Host: menu.sorae.tokyo)',
+      path: '/',
+      expectedStatus: 200,
+      headers: { 'Host': 'menu.sorae.tokyo' },
+      validate: (res, body) => {
+        if (!body.includes('Bảng giá') && !body.includes('Pade Store')) return 'Missing Menu heading or Pade Store title';
+        if (!body.includes('Khám phá các sản phẩm và dịch vụ')) return 'Missing Menu subtitle';
+        return null;
+      }
+    },
+    {
+      name: 'Menu Clean Route (/menu)',
+      path: '/menu',
+      expectedStatus: 200,
+      validate: (res, body) => {
+        if (!body.includes('Bảng giá') && !body.includes('Pade Store')) return 'Missing Menu heading';
+        return null;
+      }
+    },
+    {
       name: 'Payment API Status (/api/pay/status/SR192)',
       path: '/api/pay/status/SR192',
       expectedStatus: 200,

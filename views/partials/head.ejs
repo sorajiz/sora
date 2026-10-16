@@ -67,6 +67,11 @@
             document.documentElement.style.display = 'none';
             window.location.replace('/timework' + window.location.search + window.location.hash);
           }
+        } else if (h === 'menu.sorae.tokyo' || h.startsWith('menu.')) {
+          if (!p.startsWith('/menu') && !p.startsWith('/api/')) {
+            document.documentElement.style.display = 'none';
+            window.location.replace('/menu' + window.location.search + window.location.hash);
+          }
         }
       } catch (e) {}
     })();
