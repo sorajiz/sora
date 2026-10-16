@@ -1511,17 +1511,13 @@ function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels
       background: rgba(0, 0, 0, 0.88);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: center;
       z-index: 1000;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 180ms ease, visibility 180ms ease;
     }
     .lightbox-modal.active {
-      opacity: 1;
-      visibility: visible;
+      display: flex !important;
     }
     .lightbox-backdrop {
       position: absolute;
@@ -2099,6 +2095,12 @@ function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels
         document.body.style.overflow = 'hidden';
       }
     }
+
+    window.openLightboxFromElement = openLightboxFromElement;
+    window.closeLightbox = closeLightbox;
+    window.navigateLightbox = navigateLightbox;
+    window.openLightbox = openLightbox;
+    window.closeLightboxOnBackdropClick = closeLightboxOnBackdropClick;
 
     // Scroll UX - Jump to bottom button
     const jumpBtn = document.getElementById('jumpBtn');
