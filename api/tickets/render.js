@@ -1966,24 +1966,30 @@ function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels
     let currentGalleryIdx = 0;
 
     function openLightboxFromElement(el) {
-      const group = el.dataset.galleryGroup;
+      const target = (el && el.closest) ? (el.closest('.transcript-image-wrap, .gallery-item-frame') || el) : el;
+      if (!target) return;
+      const group = target.dataset.galleryGroup;
       if (group) {
         const items = Array.from(document.querySelectorAll('[data-gallery-group="' + group + '"]'));
-        currentGallery = items.map(item => ({
-          url: item.dataset.fullUrl || '',
-          filename: item.dataset.filename || 'image.png',
-          width: item.dataset.width || '',
-          height: item.dataset.height || '',
-          size: item.dataset.size ? formatBytes(parseInt(item.dataset.size, 10)) : ''
-        }));
-        currentGalleryIdx = parseInt(el.dataset.galleryIndex || '0', 10);
+        currentGallery = items.map(item => {
+          const fbImg = item.querySelector ? item.querySelector('img') : null;
+          return {
+            url: item.dataset.fullUrl || (fbImg ? fbImg.src : (item.src || '')),
+            filename: item.dataset.filename || (fbImg ? (fbImg.getAttribute('alt') || 'image.png') : 'image.png'),
+            width: item.dataset.width || '',
+            height: item.dataset.height || '',
+            size: item.dataset.size ? formatBytes(parseInt(item.dataset.size, 10)) : ''
+          };
+        });
+        currentGalleryIdx = parseInt(target.dataset.galleryIndex || '0', 10);
       } else {
+        const fbImg = target.querySelector ? target.querySelector('img') : null;
         currentGallery = [{
-          url: el.dataset.fullUrl || '',
-          filename: el.dataset.filename || 'image.png',
-          width: el.dataset.width || '',
-          height: el.dataset.height || '',
-          size: el.dataset.size ? formatBytes(parseInt(el.dataset.size, 10)) : ''
+          url: target.dataset.fullUrl || (fbImg ? fbImg.src : (target.src || '')),
+          filename: target.dataset.filename || (fbImg ? (fbImg.getAttribute('alt') || 'image.png') : 'image.png'),
+          width: target.dataset.width || '',
+          height: target.dataset.height || '',
+          size: target.dataset.size ? formatBytes(parseInt(target.dataset.size, 10)) : ''
         }];
         currentGalleryIdx = 0;
       }

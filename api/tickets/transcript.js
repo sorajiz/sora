@@ -572,7 +572,7 @@ module.exports = async (req, res) => {
       res.status(200);
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
       if (!isDownload) {
-        res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
+        res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
       }
       return res.send(htmlPage);
     }
