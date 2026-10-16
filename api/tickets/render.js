@@ -18,6 +18,65 @@ function escapeHtml(str) {
     .replace(/'/g, '&#039;');
 }
 
+function getMediaDimensions(w, h) {
+  if (!w || !h || w <= 0 || h <= 0) {
+    return {
+      sizeClass: 'size-default',
+      style: 'max-width: min(460px, 100%); max-height: 420px;'
+    };
+  }
+
+  const ratio = w / h;
+
+  // 1. SMALL: w <= 200 && h <= 200 (never upscale!)
+  if (w <= 200 && h <= 200) {
+    const pw = Math.max(128, Math.min(w, 200));
+    const ph = Math.round(pw / ratio);
+    return {
+      sizeClass: 'size-small',
+      style: `max-width: ${pw}px; max-height: ${Math.max(ph, 140)}px; aspect-ratio: ${w}/${h};`
+    };
+  }
+
+  // 2. VERY TALL / LONG SCREENSHOT: h >= w * 1.8 (e.g. 1242x2688)
+  if (h >= w * 1.8) {
+    return {
+      sizeClass: 'size-tall',
+      style: `max-width: min(300px, 100%); max-height: 480px; aspect-ratio: ${w}/${h};`
+    };
+  }
+
+  // 3. PORTRAIT: h > w * 1.2 (e.g. 1080x1920)
+  if (h > w * 1.2) {
+    return {
+      sizeClass: 'size-portrait',
+      style: `max-width: min(330px, 100%); max-height: 440px; aspect-ratio: ${w}/${h};`
+    };
+  }
+
+  // 4. PANORAMA: w >= h * 2.2
+  if (w >= h * 2.2) {
+    return {
+      sizeClass: 'size-panorama',
+      style: `max-width: min(540px, 100%); max-height: 240px; aspect-ratio: ${w}/${h};`
+    };
+  }
+
+  // 5. LANDSCAPE: w > h * 1.2 (e.g. 1920x1080)
+  if (w > h * 1.2) {
+    return {
+      sizeClass: 'size-landscape',
+      style: `max-width: min(460px, 100%); max-height: 320px; aspect-ratio: ${w}/${h};`
+    };
+  }
+
+  // 6. SQUARE: 0.85 <= ratio <= 1.2 (e.g. 1080x1080)
+  return {
+    sizeClass: 'size-square',
+    style: `max-width: min(360px, 100%); max-height: 360px; aspect-ratio: ${w}/${h};`
+  };
+}
+
 function parseDiscordMarkdown(content, ctx = {}) {
   if (!content) return '';
 
@@ -362,14 +421,58 @@ function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels
           }
         }
 
-        if (imgList.length > 0) {
-          const gridClass = imgList.length === 1 ? 'grid-1' : imgList.length === 2 ? 'grid-2' : 'grid-many';
-          const imgTags = imgList.map(a => `
-            <div class="gallery-item" onclick="openLightbox('${escapeHtml(a.url)}')">
-              <img src="${escapeHtml(a.url)}" alt="${escapeHtml(a.filename)}" loading="lazy">
+        if (imgList.length === 1) {
+          const a = imgList[0];
+          const dim = getMediaDimensions(a.width, a.height);
+          attHtml += `
+            <div class="transcript-media-frame ${dim.sizeClass}" style="${dim.style}">
+              <div class="transcript-image-wrap" onclick="openLightboxFromElement(this)"
+                   data-full-url="${escapeHtml(a.url)}"
+                   data-filename="${escapeHtml(a.filename)}"
+                   data-width="${a.width || ''}"
+                   data-height="${a.height || ''}"
+                   data-size="${a.size_bytes || ''}">
+                <img class="transcript-image" src="${escapeHtml(a.url)}" alt="${escapeHtml(a.filename)}" loading="lazy" decoding="async">
+                <div class="media-hover-overlay">
+                  <span class="media-hover-action">
+                    <svg class="zoom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="11" cy="11" r="8"></circle>
+                      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                      <line x1="11" y1="8" x2="11" y2="14"></line>
+                      <line x1="8" y1="11" x2="14" y2="11"></line>
+                    </svg>
+                    Mở
+                  </span>
+                </div>
+              </div>
+            </div>
+          `;
+        } else if (imgList.length > 1) {
+          const galleryId = `gal-${m.id || m.discord_message_id || Math.random().toString(36).slice(2, 8)}`;
+          const galleryClass = imgList.length === 2 ? 'gallery-2' : imgList.length === 3 ? 'gallery-3' : imgList.length === 4 ? 'gallery-4' : 'gallery-many';
+          const imgTags = imgList.map((a, idx) => `
+            <div class="gallery-item-frame" onclick="openLightboxFromElement(this)"
+                 data-gallery-group="${galleryId}"
+                 data-gallery-index="${idx}"
+                 data-full-url="${escapeHtml(a.url)}"
+                 data-filename="${escapeHtml(a.filename)}"
+                 data-width="${a.width || ''}"
+                 data-height="${a.height || ''}"
+                 data-size="${a.size_bytes || ''}">
+              <img class="gallery-thumb" src="${escapeHtml(a.url)}" alt="${escapeHtml(a.filename)}" loading="lazy" decoding="async">
+              <div class="media-hover-overlay">
+                <span class="media-hover-action">
+                  <svg class="zoom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    <line x1="11" y1="8" x2="11" y2="14"></line>
+                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                  </svg>
+                </span>
+              </div>
             </div>
           `).join('');
-          attHtml += `<div class="media-gallery ${gridClass}">${imgTags}</div>`;
+          attHtml += `<div class="transcript-gallery ${galleryClass}">${imgTags}</div>`;
         }
 
         if (fileList.length > 0) {
@@ -695,8 +798,8 @@ function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels
       background: rgba(255, 255, 255, 0.015);
     }
     .group-avatar {
-      width: 44px;
-      height: 44px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       flex-shrink: 0;
       background: #1e2230;
@@ -916,10 +1019,15 @@ function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels
       margin-top: 10px;
       border-radius: 8px;
       overflow: hidden;
-      max-width: 520px;
+      max-width: 460px;
+      max-height: 360px;
     }
     .embed-image img {
-      max-width: 100%;
+      width: 100%;
+      height: 100%;
+      max-width: 460px;
+      max-height: 360px;
+      object-fit: contain;
       border-radius: 8px;
       display: block;
     }
@@ -1100,22 +1208,171 @@ function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels
       display: block;
     }
 
-    /* Media Gallery & Lightbox */
+    /* Pade Store Transcript Premium Media System V5 */
+    .transcript-media-frame {
+      display: block;
+      width: fit-content;
+      max-width: min(460px, 100%);
+      margin-top: 8px;
+      background: #0d0f13;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    .transcript-media-frame:hover {
+      border-color: rgba(255, 255, 255, 0.16);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    }
+    .transcript-media-frame.size-small {
+      border-radius: 10px;
+    }
+    .transcript-media-frame.size-portrait,
+    .transcript-media-frame.size-tall {
+      max-width: min(330px, 100%);
+    }
+
+    .transcript-image-wrap {
+      position: relative;
+      cursor: zoom-in;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 0;
+    }
+    .transcript-image {
+      display: block;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: inherit;
+      object-fit: contain;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+    .transcript-image-wrap:hover .transcript-image {
+      filter: brightness(1.02);
+      transform: scale(1.008);
+    }
+
+    .media-hover-overlay {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.18s ease;
+      z-index: 2;
+    }
+    .transcript-image-wrap:hover .media-hover-overlay,
+    .gallery-item-frame:hover .media-hover-overlay {
+      opacity: 1;
+    }
+    .media-hover-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(13, 15, 19, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: #f8fafc;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 6px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .media-hover-action .zoom-icon {
+      width: 13px;
+      height: 13px;
+      stroke: #cbd5e1;
+    }
+
+    /* Multi-Image Adaptive Gallery */
+    .transcript-gallery {
+      margin-top: 8px;
+      display: grid;
+      gap: 6px;
+      max-width: 560px;
+      width: 100%;
+    }
+    .transcript-gallery.gallery-2 {
+      grid-template-columns: 1fr 1fr;
+      height: 220px;
+    }
+    .transcript-gallery.gallery-3 {
+      grid-template-columns: 3fr 2fr;
+      grid-template-rows: 1fr 1fr;
+      height: 280px;
+    }
+    .transcript-gallery.gallery-4 {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      height: 320px;
+    }
+    .transcript-gallery.gallery-many {
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    }
+
+    .gallery-item-frame {
+      position: relative;
+      background: #0d0f13;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+      cursor: zoom-in;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+    .gallery-item-frame:hover {
+      border-color: rgba(255, 255, 255, 0.18);
+      z-index: 1;
+    }
+    .gallery-item-frame .gallery-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+    .gallery-item-frame:hover .gallery-thumb {
+      transform: scale(1.02);
+      filter: brightness(1.03);
+    }
+
+    /* Coordinated outer corners for galleries */
+    .transcript-gallery.gallery-2 .gallery-item-frame:nth-child(1) { border-radius: 12px 4px 4px 12px; }
+    .transcript-gallery.gallery-2 .gallery-item-frame:nth-child(2) { border-radius: 4px 12px 12px 4px; }
+
+    .transcript-gallery.gallery-3 .gallery-item-frame:nth-child(1) { grid-row: span 2; border-radius: 12px 4px 4px 12px; }
+    .transcript-gallery.gallery-3 .gallery-item-frame:nth-child(2) { border-radius: 4px 12px 4px 4px; }
+    .transcript-gallery.gallery-3 .gallery-item-frame:nth-child(3) { border-radius: 4px 4px 12px 4px; }
+
+    .transcript-gallery.gallery-4 .gallery-item-frame:nth-child(1) { border-radius: 12px 4px 4px 4px; }
+    .transcript-gallery.gallery-4 .gallery-item-frame:nth-child(2) { border-radius: 4px 12px 4px 4px; }
+    .transcript-gallery.gallery-4 .gallery-item-frame:nth-child(3) { border-radius: 4px 4px 4px 12px; }
+    .transcript-gallery.gallery-4 .gallery-item-frame:nth-child(4) { border-radius: 4px 4px 12px 4px; }
+
+    .transcript-gallery.gallery-many .gallery-item-frame {
+      aspect-ratio: 1;
+      border-radius: 8px;
+    }
+
+    /* Legacy compatibility */
     .media-gallery {
       margin-top: 8px;
       display: grid;
-      gap: 8px;
-      max-width: 540px;
+      gap: 6px;
+      max-width: 560px;
     }
     .media-gallery.grid-1 { grid-template-columns: 1fr; }
     .media-gallery.grid-2 { grid-template-columns: 1fr 1fr; }
-    .media-gallery.grid-many { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+    .media-gallery.grid-many { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
     .gallery-item {
       border-radius: 10px;
       overflow: hidden;
       border: 1px solid var(--border);
       cursor: zoom-in;
-      background: #000;
+      background: #0d0f13;
     }
     .gallery-item img {
       width: 100%;
@@ -1247,23 +1504,225 @@ function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels
     .mark-found { background: var(--highlight); color: #fff; border-radius: 2px; }
     .mark-found.current { background: #f59e0b; color: #000; font-weight: bold; }
 
-    /* Lightbox Modal */
+    /* Premium Lightbox Modal V5 */
     .lightbox-modal {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.9);
-      display: none;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 200;
-      cursor: zoom-out;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 180ms ease, visibility 180ms ease;
     }
-    .lightbox-modal.active { display: flex; }
+    .lightbox-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .lightbox-backdrop {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 1;
+    }
+    .lightbox-container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 95vw;
+      max-height: 95vh;
+      transform: scale(0.985);
+      transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .lightbox-modal.active .lightbox-container {
+      transform: scale(1);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .lightbox-modal, .lightbox-container { transition: none !important; }
+    }
+
+    .lightbox-header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 12px;
+      background: rgba(13, 15, 19, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: #e2e8f0;
+    }
+    .lightbox-counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.06);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .lightbox-filename {
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 60vw;
+    }
+    .lightbox-close-btn {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .lightbox-close-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .lightbox-stage {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 92vw;
+      max-height: 82vh;
+    }
+    .lightbox-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(13, 15, 19, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      z-index: 10;
+      transition: background 0.15s, transform 0.15s;
+      user-select: none;
+    }
+    .lightbox-nav-btn:hover {
+      background: rgba(28, 30, 39, 0.95);
+      transform: translateY(-50%) scale(1.08);
+    }
+    .lightbox-nav-btn.prev { left: -56px; }
+    .lightbox-nav-btn.next { right: -56px; }
+
+    .lightbox-img-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 92vw;
+      max-height: 80vh;
+    }
     .lightbox-img {
-      max-width: 90vw;
-      max-height: 90vh;
-      border-radius: 12px;
-      box-shadow: 0 16px 50px rgba(0,0,0,0.8);
+      max-width: 92vw;
+      max-height: 80vh;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.8);
+      display: block;
+    }
+
+    .lightbox-footer {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 12px;
+      background: rgba(13, 15, 19, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .lightbox-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .lightbox-meta-sep { opacity: 0.5; }
+    .lightbox-download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      padding: 5px 10px;
+      color: #f8fafc;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 12px;
+      transition: background 0.15s;
+    }
+    .lightbox-download-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      text-decoration: none;
+    }
+    .lightbox-download-btn .download-icon {
+      width: 13px;
+      height: 13px;
+    }
+
+    /* Fallback Card with Retry Button */
+    .img-fallback-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #0d0f13;
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 8px 14px;
+      color: var(--text-muted);
+      font-size: 12px;
+      margin: 6px 0;
+      max-width: min(460px, 100%);
+    }
+    .img-fallback-card .fallback-icon { font-size: 15px; opacity: 0.8; }
+    .img-fallback-card .fallback-body { display: flex; flex-direction: column; gap: 2px; }
+    .img-fallback-card .fallback-text { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #cbd5e1; }
+    .img-fallback-card .fallback-sub { font-size: 11px; color: var(--text-sub); }
+    .fallback-retry-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 5px;
+      color: #f8fafc;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      margin-left: auto;
+    }
+    .fallback-retry-btn:hover { background: rgba(255, 255, 255, 0.15); }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .lightbox-nav-btn.prev { left: 8px; }
+      .lightbox-nav-btn.next { right: 8px; }
+      .transcript-media-frame { max-width: 100%; }
+      .transcript-gallery { max-width: 100%; }
+      .group-avatar { width: 34px; height: 34px; }
     }
 
     /* Floating Jump to Latest Button */
@@ -1365,9 +1824,38 @@ function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels
     <button class="search-btn" onclick="toggleSearch()">✕</button>
   </div>
 
-  <!-- Image Lightbox Modal -->
-  <div class="lightbox-modal" id="lightboxModal" onclick="closeLightbox()">
-    <img class="lightbox-img" id="lightboxImg" src="" alt="Zoomed Media">
+  <!-- Upgraded Premium Lightbox Modal V5 -->
+  <div class="lightbox-modal" id="lightboxModal" role="dialog" aria-modal="true" aria-label="Xem ảnh phóng to">
+    <div class="lightbox-backdrop" onclick="closeLightbox()"></div>
+    <div class="lightbox-container">
+      <div class="lightbox-header">
+        <span class="lightbox-counter" id="lightboxCounter">1 / 1</span>
+        <span class="lightbox-filename" id="lightboxFilename">image.png</span>
+        <button class="lightbox-close-btn" onclick="closeLightbox()" title="Đóng (Esc)" aria-label="Đóng">✕</button>
+      </div>
+      <div class="lightbox-stage">
+        <button class="lightbox-nav-btn prev" id="lightboxPrevBtn" onclick="navigateLightbox(-1)" title="Ảnh trước (Mũi tên trái)" aria-label="Ảnh trước">❮</button>
+        <div class="lightbox-img-wrap" onclick="closeLightboxOnBackdropClick(event)">
+          <img class="lightbox-img" id="lightboxImg" src="" alt="Zoomed Media">
+        </div>
+        <button class="lightbox-nav-btn next" id="lightboxNextBtn" onclick="navigateLightbox(1)" title="Ảnh tiếp theo (Mũi tên phải)" aria-label="Ảnh tiếp theo">❯</button>
+      </div>
+      <div class="lightbox-footer">
+        <div class="lightbox-meta">
+          <span id="lightboxDimensions"></span>
+          <span class="lightbox-meta-sep" id="lightboxMetaSep">&bull;</span>
+          <span id="lightboxFileSize"></span>
+        </div>
+        <a class="lightbox-download-btn" id="lightboxDownloadBtn" href="" target="_blank" rel="noopener noreferrer" download>
+          <svg class="download-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Tải ảnh gốc</span>
+        </a>
+      </div>
+    </div>
   </div>
 
   <!-- Floating Jump to Latest Button -->
@@ -1401,6 +1889,18 @@ function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels
       if (e.key === 'Escape') {
         if (searchPanel.classList.contains('active')) toggleSearch();
         closeLightbox();
+      }
+      if (e.key === 'ArrowLeft') {
+        const modal = document.getElementById('lightboxModal');
+        if (modal && modal.classList.contains('active')) {
+          navigateLightbox(-1);
+        }
+      }
+      if (e.key === 'ArrowRight') {
+        const modal = document.getElementById('lightboxModal');
+        if (modal && modal.classList.contains('active')) {
+          navigateLightbox(1);
+        }
       }
     });
 
@@ -1465,15 +1965,139 @@ function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels
       updateSearchNav();
     }
 
-    // Lightbox
-    function openLightbox(url) {
+    // Lightbox & Gallery System V5
+    let currentGallery = [];
+    let currentGalleryIdx = 0;
+
+    function openLightboxFromElement(el) {
+      const group = el.dataset.galleryGroup;
+      if (group) {
+        const items = Array.from(document.querySelectorAll('[data-gallery-group="' + group + '"]'));
+        currentGallery = items.map(item => ({
+          url: item.dataset.fullUrl || '',
+          filename: item.dataset.filename || 'image.png',
+          width: item.dataset.width || '',
+          height: item.dataset.height || '',
+          size: item.dataset.size ? formatBytes(parseInt(item.dataset.size, 10)) : ''
+        }));
+        currentGalleryIdx = parseInt(el.dataset.galleryIndex || '0', 10);
+      } else {
+        currentGallery = [{
+          url: el.dataset.fullUrl || '',
+          filename: el.dataset.filename || 'image.png',
+          width: el.dataset.width || '',
+          height: el.dataset.height || '',
+          size: el.dataset.size ? formatBytes(parseInt(item.dataset.size, 10)) : ''
+        }];
+        currentGalleryIdx = 0;
+      }
+      renderLightboxView();
       const modal = document.getElementById('lightboxModal');
-      const img = document.getElementById('lightboxImg');
-      img.src = url;
-      modal.classList.add('active');
+      if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
     }
+
+    function renderLightboxView() {
+      if (!currentGallery.length) return;
+      const item = currentGallery[currentGalleryIdx];
+      const img = document.getElementById('lightboxImg');
+      const counter = document.getElementById('lightboxCounter');
+      const filename = document.getElementById('lightboxFilename');
+      const dims = document.getElementById('lightboxDimensions');
+      const size = document.getElementById('lightboxFileSize');
+      const sep = document.getElementById('lightboxMetaSep');
+      const downloadBtn = document.getElementById('lightboxDownloadBtn');
+      const prevBtn = document.getElementById('lightboxPrevBtn');
+      const nextBtn = document.getElementById('lightboxNextBtn');
+
+      if (img) {
+        img.src = item.url;
+        img.alt = item.filename;
+      }
+      if (filename) filename.textContent = item.filename;
+
+      if (currentGallery.length > 1) {
+        if (counter) {
+          counter.textContent = (currentGalleryIdx + 1) + ' / ' + currentGallery.length;
+          counter.style.display = 'inline-block';
+        }
+        if (prevBtn) prevBtn.style.display = 'flex';
+        if (nextBtn) nextBtn.style.display = 'flex';
+      } else {
+        if (counter) counter.style.display = 'none';
+        if (prevBtn) prevBtn.style.display = 'none';
+        if (nextBtn) nextBtn.style.display = 'none';
+      }
+
+      if (item.width && item.height) {
+        if (dims) {
+          dims.textContent = item.width + ' × ' + item.height;
+          dims.style.display = 'inline';
+        }
+      } else {
+        if (dims) dims.style.display = 'none';
+      }
+
+      if (item.size) {
+        if (size) {
+          size.textContent = item.size;
+          size.style.display = 'inline';
+        }
+        if (sep) sep.style.display = (item.width && item.height) ? 'inline' : 'none';
+      } else {
+        if (size) size.style.display = 'none';
+        if (sep) sep.style.display = 'none';
+      }
+
+      if (downloadBtn) {
+        downloadBtn.href = item.url;
+      }
+    }
+
+    function navigateLightbox(step) {
+      if (currentGallery.length <= 1) return;
+      currentGalleryIdx = (currentGalleryIdx + step + currentGallery.length) % currentGallery.length;
+      renderLightboxView();
+    }
+
     function closeLightbox() {
-      document.getElementById('lightboxModal').classList.remove('active');
+      const modal = document.getElementById('lightboxModal');
+      if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function closeLightboxOnBackdropClick(e) {
+      if (e.target === e.currentTarget) {
+        closeLightbox();
+      }
+    }
+
+    function formatBytes(bytes) {
+      if (!bytes || isNaN(bytes)) return '';
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    function openLightbox(url) {
+      currentGallery = [{
+        url: url,
+        filename: 'image.png',
+        width: '',
+        height: '',
+        size: ''
+      }];
+      currentGalleryIdx = 0;
+      renderLightboxView();
+      const modal = document.getElementById('lightboxModal');
+      if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
     }
 
     // Scroll UX - Jump to bottom button
@@ -1498,14 +2122,38 @@ function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels
             this.src = 'https://cdn.discordapp.com/embed/avatars/0.png';
             return;
           }
+          const originalUrl = this.src || '';
           const card = document.createElement('div');
           card.className = 'img-fallback-card';
           const altText = this.getAttribute('alt') || 'Tập tin ảnh';
           const safeAlt = altText.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-          card.innerHTML = '<span class="fallback-icon">⚠️</span> <span class="fallback-text">Ảnh không khả dụng &bull; ' + safeAlt + '</span>';
-          this.replaceWith(card);
+          const safeUrl = originalUrl.replace(/'/g, "\\'");
+          card.innerHTML = '<span class="fallback-icon">⚠️</span>' +
+            '<div class="fallback-body">' +
+              '<span class="fallback-text">Ảnh không khả dụng &bull; ' + safeAlt + '</span>' +
+              '<span class="fallback-sub">Không thể tải tệp hình ảnh</span>' +
+            '</div>' +
+            '<button class="fallback-retry-btn" onclick="retryImage(this, \'' + safeUrl + '\')">Thử lại</button>';
+          const container = this.closest('.transcript-media-frame') || this.closest('.gallery-item-frame') || this;
+          container.replaceWith(card);
         });
       });
+    }
+
+    function retryImage(btn, originalUrl) {
+      const card = btn.closest('.img-fallback-card');
+      if (!card || !originalUrl) return;
+      btn.textContent = 'Đang tải...';
+      const img = new Image();
+      const sep = originalUrl.indexOf('?') !== -1 ? '&' : '?';
+      img.src = originalUrl + sep + '_retry=' + Date.now();
+      img.onload = () => {
+        location.reload();
+      };
+      img.onerror = () => {
+        btn.textContent = 'Thất bại';
+        setTimeout(() => { btn.textContent = 'Thử lại'; }, 2000);
+      };
     }
 
     // Deep link hash jump on load & image fallback attachment
