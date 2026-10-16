@@ -19,15 +19,6 @@ https://timework.sorae.tokyo/* /timework.html 200
 http://timework.sorae.tokyo/* /timework.html 200
 https://timeworks.sorae.tokyo/* /timework.html 200
 http://timeworks.sorae.tokyo/* /timework.html 200
-/api/auth/discord/login /api/auth/discord/login 200
-/api/auth/discord/callback /api/auth/discord/callback 200
-/api/auth/me /api/auth/me 200
-/api/auth/logout /api/auth/logout 200
-/api/menu /api/menu/index 200
-/api/admin/menu/products /api/admin/menu/products 200
-/api/admin/menu/product /api/admin/menu/product 200
-/api/admin/menu/categories /api/admin/menu/categories 200
-/api/admin/menu/audit /api/admin/menu/audit 200
 https://menu.sorae.tokyo/* /menu.html 200
 http://menu.sorae.tokyo/* /menu.html 200
 /favicon.ico /assets/favicon.ico 200
