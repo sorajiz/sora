@@ -2020,7 +2020,6 @@
     let currentVersion = <%= typeof catalog !== 'undefined' && catalog && catalog.version ? catalog.version : 1 %>;
     let currentUser = null;
     let isPreviewMode = false;
-    let currentViewMode = localStorage.getItem('pade_menu_view') || 'list';
 
     // Toast Helper
     function showToast(msg) {
@@ -2654,7 +2653,6 @@
     }
 
     // Initial render from embedded catalog (instant 0ms!), then verify auth & sync
-    setViewMode(currentViewMode);
     renderCategories();
     renderProducts();
     checkAuth();
