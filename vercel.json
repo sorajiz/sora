@@ -101,8 +101,7 @@
   ],
   "rewrites": [
     { "source": "/menu", "destination": "/menu.html" },
-    { "source": "/api/menu", "destination": "/api/menu" },
-    { "source": "/api/menu/(.*)", "destination": "/api/menu" },
+    { "source": "/menu/(.*)", "destination": "/menu.html" },
     {
       "source": "/",
       "has": [
@@ -271,7 +270,9 @@
     { "source": "/discord", "destination": "/discord.html" },
     { "source": "/timework", "destination": "/timework.html" },
     { "source": "/timeworks", "destination": "/timework.html" },
-    { "source": "/((?!assets|js|music|favicon|api|hooks|pay|payment|tickets|t|ORD|SR|ord|sr|.*\\..*).*)", "destination": "/index.html" }
+    { "source": "/menu", "destination": "/menu.html" },
+    { "source": "/menu/(.*)", "destination": "/menu.html" },
+    { "source": "/((?!assets|js|music|favicon|api|hooks|pay|payment|tickets|t|ORD|SR|ord|sr|menu|.*\\..*).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
@@ -330,7 +331,7 @@
       ]
     },
     {
-      "source": "/(.*\\.html|/|/intro|/skills|/contact|/discord)",
+      "source": "/(.*\\.html|/|/intro|/skills|/contact|/discord|/timework|/menu)",
       "headers": [
         {
           "key": "Cache-Control",
