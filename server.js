@@ -728,6 +728,29 @@ app.all([
 app.all(/^\/(api\/)?tickets\/transcript(\/.*)?$/, (req, res) => ticketTranscriptHandler(req, res));
 
 // ----------------------------------------------------------------------------
+// 8.7. PADE STORE MENU & AUTH API HANDLERS
+// ----------------------------------------------------------------------------
+const menuCatalogHandler = require('./api/menu/index');
+const authDiscordLoginHandler = require('./api/auth/discord/login');
+const authDiscordCallbackHandler = require('./api/auth/discord/callback');
+const authMeHandler = require('./api/auth/me');
+const authLogoutHandler = require('./api/auth/logout');
+const adminProductsHandler = require('./api/admin/menu/products');
+const adminProductHandler = require('./api/admin/menu/product');
+const adminCategoriesHandler = require('./api/admin/menu/categories');
+const adminAuditHandler = require('./api/admin/menu/audit');
+
+app.all('/api/menu', (req, res) => menuCatalogHandler(req, res));
+app.all('/api/auth/discord/login', (req, res) => authDiscordLoginHandler(req, res));
+app.all('/api/auth/discord/callback', (req, res) => authDiscordCallbackHandler(req, res));
+app.all('/api/auth/me', (req, res) => authMeHandler(req, res));
+app.all('/api/auth/logout', (req, res) => authLogoutHandler(req, res));
+app.all('/api/admin/menu/products', (req, res) => adminProductsHandler(req, res));
+app.all('/api/admin/menu/product', (req, res) => adminProductHandler(req, res));
+app.all('/api/admin/menu/categories', (req, res) => adminCategoriesHandler(req, res));
+app.all('/api/admin/menu/audit', (req, res) => adminAuditHandler(req, res));
+
+// ----------------------------------------------------------------------------
 // 9. LIGHTWEIGHT ASSET 404 & SPA ROUTE FALLBACK
 // ----------------------------------------------------------------------------
 // If an asset (.css, .js, .png, .json, etc.) is missing, return a fast 404

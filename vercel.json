@@ -75,32 +75,10 @@
       ],
       "destination": "/timework",
       "permanent": false
-    },
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "host",
-          "value": "menu.sorae.tokyo"
-        }
-      ],
-      "destination": "/menu",
-      "permanent": false
-    },
-    {
-      "source": "/((?!assets|js|music|favicon|menu|api|.*\\..*).*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "menu.sorae.tokyo"
-        }
-      ],
-      "destination": "/menu",
-      "permanent": false
     }
   ],
   "rewrites": [
-    { "source": "/api/menu", "destination": "/api/menu.json" },
+    { "source": "/api/menu", "destination": "/api/menu/index" },
     { "source": "/tickets/transcript", "destination": "/api/tickets/transcript" },
     { "source": "/tickets/transcript/(.*)", "destination": "/api/tickets/transcript" },
     { "source": "/t/:id/download/html", "destination": "/api/tickets/transcript?id=:id&action=download" },
