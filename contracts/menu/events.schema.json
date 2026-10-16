@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PadeMenuOutboxEvent",
+  "type": "object",
+  "required": ["event_id", "type", "schema", "aggregate_id", "public_version", "occurred_at", "trace_id"],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "MENU_PRODUCT_CREATED",
+        "MENU_PRODUCT_UPDATED",
+        "MENU_PRODUCT_ARCHIVED",
+        "MENU_CATEGORY_CHANGED",
+        "MENU_SETTINGS_CHANGED",
+        "MENU_MEDIA_CHANGED",
+        "MENU_PUBLICATION_REPAIR_REQUESTED"
+      ]
+    },
+    "schema": {
+      "type": "string",
+      "const": "pade.menu.v2"
+    },
+    "aggregate_id": {
+      "type": "string"
+    },
+    "public_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "trace_id": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

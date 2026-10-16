@@ -1,0 +1,29 @@
+{
+  "description": "Unicode round-trip vectors for Pade Store brand typography and text discipline",
+  "brand_glyphs": "𓆩 𓆪 𐙚 𖦹 ⟡ ༒ 𓍼 ⋆ ✧ 〰 ⌒ ﹏ ♡ ❝ ❜ ′ ｡ ､ ﹒ ⏜ ╰ »",
+  "combining_sequence": "ִ ࣪",
+  "brand_samples": [
+    "𓆩 Nitro 𓆪",
+    "một chút xinh xắn 𐙚 ✧",
+    "Pade Store ⏜ 𐙚 menu ִ ࣪ !",
+    "những món nhỏ xinh đang đợi bạn ở bên dưới ♡"
+  ],
+  "vietnamese_nfc": "cà phê sữa đá thơm ngon tuyệt vời",
+  "vietnamese_nfd": "ca\u0300 phe\u0302 s\u01b0\u0303a \u0111a\u0301 th\u01a1m ngon tuy\u00ea\u0323t v\u01a1\u0300i",
+  "xss_vectors": [
+    "<script>alert(1)</script>",
+    "<img src=x onerror=alert(1)>",
+    "javascript:alert(1)",
+    "data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="
+  ],
+  "banned_control_chars": [
+    "\u0000",
+    "\u0007",
+    "\u0008",
+    "\u001b",
+    "\u202a",
+    "\u202e",
+    "\u2066",
+    "\u2069"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "currency": "VND",
+  "symbol": "₫",
+  "test_cases": [
+    { "input_minor": 0, "expected": "₫0" },
+    { "input_minor": 99000, "expected": "₫99.000" },
+    { "input_minor": 105000, "expected": "₫105.000" },
+    { "input_minor": 1000000, "expected": "₫1.000.000" },
+    { "input_minor": 90000, "expected": "₫90.000" },
+    { "input_minor": 25000, "expected": "₫25.000" },
+    { "input_minor": 850000, "expected": "₫850.000" },
+    { "input_minor": 145000, "expected": "₫145.000" }
+  ]
+}

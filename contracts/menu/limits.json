@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "2.1.0",
+  "limits": {
+    "discord_select_menu_label": {
+      "max_length": 100,
+      "unit": "grapheme_and_utf16",
+      "official_docs_url": "https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-option-structure",
+      "verified_on": "2026-10-16"
+    },
+    "discord_select_menu_description": {
+      "max_length": 100,
+      "unit": "grapheme_and_utf16",
+      "official_docs_url": "https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-option-structure",
+      "verified_on": "2026-10-16"
+    },
+    "discord_select_menu_value": {
+      "max_length": 100,
+      "unit": "utf8_bytes",
+      "official_docs_url": "https://discord.com/developers/docs/interactions/message-components#select-menu-object-select-option-structure",
+      "verified_on": "2026-10-16"
+    },
+    "discord_select_menu_options_count": {
+      "max": 25,
+      "official_docs_url": "https://discord.com/developers/docs/interactions/message-components#select-menu-object",
+      "verified_on": "2026-10-16"
+    },
+    "discord_embed_title": {
+      "max_length": 256,
+      "official_docs_url": "https://discord.com/developers/docs/resources/channel#embed-object-embed-limits",
+      "verified_on": "2026-10-16"
+    },
+    "discord_embed_description": {
+      "max_length": 4096,
+      "official_docs_url": "https://discord.com/developers/docs/resources/channel#embed-object-embed-limits",
+      "verified_on": "2026-10-16"
+    },
+    "discord_embed_fields_count": {
+      "max": 25,
+      "official_docs_url": "https://discord.com/developers/docs/resources/channel#embed-object-embed-limits",
+      "verified_on": "2026-10-16"
+    },
+    "discord_embed_field_name": {
+      "max_length": 256,
+      "official_docs_url": "https://discord.com/developers/docs/resources/channel#embed-object-embed-limits",
+      "verified_on": "2026-10-16"
+    },
+    "discord_embed_field_value": {
+      "max_length": 1024,
+      "official_docs_url": "https://discord.com/developers/docs/resources/channel#embed-object-embed-limits",
+      "verified_on": "2026-10-16"
+    },
+    "discord_embed_footer_text": {
+      "max_length": 2048,
+      "official_docs_url": "https://discord.com/developers/docs/resources/channel#embed-object-embed-limits",
+      "verified_on": "2026-10-16"
+    },
+    "discord_embed_total_characters": {
+      "max": 6000,
+      "official_docs_url": "https://discord.com/developers/docs/resources/channel#embed-object-embed-limits",
+      "verified_on": "2026-10-16"
+    },
+    "product_sku_regex": "^[A-Z0-9][A-Z0-9-]{1,31}$",
+    "product_slug_regex": "^[a-z0-9]+(-[a-z0-9]+)*$",
+    "product_slug_max_length": 64
+  }
+}

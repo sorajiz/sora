@@ -1,0 +1,127 @@
+{
+  "version": "2.1.0",
+  "cases": [
+    {
+      "name": "empty_catalog",
+      "input": {
+        "store_name": "Pade Store",
+        "menu_description": "PADE STORE · the menu is being prepared 𐙚 · check back soon.",
+        "products": []
+      },
+      "expected_payload": {
+        "embeds": [
+          {
+            "title": "Pade Store",
+            "description": "PADE STORE · the menu is being prepared 𐙚 · check back soon.",
+            "color": 855309
+          }
+        ],
+        "components": []
+      }
+    },
+    {
+      "name": "single_active_product",
+      "input": {
+        "store_name": "Pade Store",
+        "menu_description": "❝  ﹒  **Pade Store**  ⏜  𐙚  menu ִ ࣪ !",
+        "products": [
+          {
+            "sku": "NITRO-BOOSTS",
+            "name": "Nitro Boosts Login",
+            "price_amount": 90000,
+            "status": "ACTIVE",
+            "discord_select_label": "Nitro Boosts",
+            "discord_select_description": "Nitro Boosts Giá Rẻ / Done Nhanh",
+            "discord_select_emoji_name": "nicho",
+            "discord_select_emoji_id": "1498671634524016792",
+            "discord_select_emoji_animated": true
+          }
+        ]
+      },
+      "expected_payload": {
+        "embeds": [
+          {
+            "title": "Pade Store",
+            "description": "❝  ﹒  **Pade Store**  ⏜  𐙚  menu ִ ࣪ !",
+            "color": 855309
+          }
+        ],
+        "components": [
+          {
+            "type": 1,
+            "components": [
+              {
+                "type": 3,
+                "custom_id": "menu:select_product",
+                "placeholder": "Chọn sản phẩm bạn muốn xem...",
+                "options": [
+                  {
+                    "label": "Nitro Boosts",
+                    "value": "NITRO-BOOSTS",
+                    "description": "Nitro Boosts Giá Rẻ / Done Nhanh - ₫90.000",
+                    "emoji": {
+                      "name": "nicho",
+                      "id": "1498671634524016792",
+                      "animated": true
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "sold_out_product",
+      "input": {
+        "store_name": "Pade Store",
+        "menu_description": "Store Menu",
+        "products": [
+          {
+            "sku": "BOOST-X2",
+            "name": "Server Boost x2",
+            "price_amount": 18000,
+            "status": "SOLD_OUT",
+            "discord_select_label": "Server Boost x2 (Hết hàng)",
+            "discord_select_description": "Tạm thời hết slot",
+            "discord_select_emoji_name": "boosts",
+            "discord_select_emoji_id": null,
+            "discord_select_emoji_animated": false
+          }
+        ]
+      },
+      "expected_payload": {
+        "embeds": [
+          {
+            "title": "Pade Store",
+            "description": "Store Menu",
+            "color": 855309
+          }
+        ],
+        "components": [
+          {
+            "type": 1,
+            "components": [
+              {
+                "type": 3,
+                "custom_id": "menu:select_product",
+                "placeholder": "Chọn sản phẩm bạn muốn xem...",
+                "options": [
+                  {
+                    "label": "Server Boost x2 (Hết hàng)",
+                    "value": "BOOST-X2",
+                    "description": "[Hết hàng] Tạm thời hết slot - ₫18.000",
+                    "emoji": {
+                      "name": "boosts"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

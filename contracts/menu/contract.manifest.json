@@ -1,0 +1,11 @@
+{
+  "CONTRACT_VERSION": "c89b87c262e9d5ffd20e73aac74a1772adcc9f5a21682cc33adcf5086e5fef5c",
+  "copy.vi.json": "d2ee2523a43881d20018bae7bbbc95686c41882087098cd0525bc1ef065e77f3",
+  "events.schema.json": "4e54eaf1be5c364a7a5e813937eed618e94b4622675f168c9ea27fccbf03e909",
+  "fixtures/render/golden.json": "b5817a86082425459ac6a4e5a4a31a6961d863cf4afd9758a9d432f8abed12f6",
+  "fixtures/text/markdown.json": "b08219445de51056c8d1de941a723f2fb792e4a59700b466e0fa1da28b808723",
+  "fixtures/text/money.json": "066e5d56a5665243f066df21cfd53a1d669011a74491c6f501c0d157eff12dc4",
+  "fixtures/text/unicode.json": "22bc0507ed1334a9a5226c6a891ee68f8e468c941c777a63300b928a5c21b40f",
+  "limits.json": "d4224650b587ccf92567a4b50261eea0a88e339a76be8fe819ac26d6866e1246",
+  "schema.snapshot.sql": "41016b71c9356c156638b4d32f687b0c6554c522a2bd8bdda218f84a32d42eee"
+}

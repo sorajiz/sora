@@ -1,0 +1,19 @@
+{
+  "test_cases": [
+    {
+      "input": "**Nitro Boosts Login 1 Tháng:** 90.000 VNĐ\n> Bảo hành trọn đời.\n-# Subtext note here\n[TOS](https://menu.sorae.tokyo/tos)",
+      "expected_ast": {
+        "type": "root",
+        "has_bold": true,
+        "has_blockquote": true,
+        "has_subtext": true,
+        "has_masked_link": true
+      }
+    },
+    {
+      "input": "Check this [unsafe link](javascript:alert(1)) and <script>alert(1)</script>",
+      "sanitized_output_discord": "Check this [unsafe link]() and &lt;script&gt;alert(1)&lt;/script&gt;",
+      "disallowed_protocols": ["javascript:", "data:"]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "version": "2.1.0",
+  "store_name": "Pade Store",
+  "tagline": "a little menu / for things you love 𐙚",
+  "subtitle": "products & services, kept simple.",
+  "seed_discord_description": "❝  ﹒  **Pade Store**  ⏜  𐙚  menu ִ ࣪ !\n\n′  · ｡   ghé một chút, chọn điều bạn thích  !   ⌒⌒\n  ╰  những món nhỏ xinh đang đợi bạn ở bên dưới ♡\n\n  {{tos}}  »  {{rules}}  »  {{support}}\n    menu · sale · order  ⋆ ˚ ｡\n      ·   ✧   ·   ﹏\n\n〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰\n\n  ′ 〰 ❜  ､   Pade Store   ､ ❛ //",
+  "empty_menu_notice": "PADE STORE · the menu is being prepared 𐙚 · check back soon.",
+  "error_menu_notice": "PADE STORE · Menu Temporarily Unavailable · Please try again shortly. · Reference: {{reference_id}}",
+  "sold_out_badge": "Hết hàng",
+  "sale_badge": "Sale",
+  "quick_view_cta": "Xem nhanh",
+  "buy_ticket_cta": "Mua hàng / Mở Ticket",
+  "live_update_toast": "Menu vừa được cập nhật ✧"
+}
