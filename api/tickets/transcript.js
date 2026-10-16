@@ -330,6 +330,96 @@ function renderErrorPage({ status, title, heading, message, referenceId }) {
 </html>`;
 }
 
+function renderProcessingPage({ ticketId, status }) {
+  return `<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pade Store • Đang Đóng Gói Transcript</title>
+  <meta http-equiv="refresh" content="2">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c0d11;
+      --card-bg: rgba(22, 24, 31, 0.85);
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #f8fafc;
+      --text-muted: #949ba4;
+      --accent: #5865f2;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(circle at 50% 20%, #151822 0%, var(--bg) 80%);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      line-height: 1.6;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      max-width: 520px;
+      width: 100%;
+      padding: 36px 32px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      text-align: center;
+    }
+    .spinner {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 20px;
+      border: 3px solid rgba(88, 101, 242, 0.2);
+      border-radius: 50%;
+      border-top-color: var(--accent);
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .status-pill {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      background: rgba(88, 101, 242, 0.15);
+      border: 1px solid rgba(88, 101, 242, 0.3);
+      font-size: 11px;
+      font-weight: 700;
+      color: #818cf8;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    h1 { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+    p { color: var(--text-muted); font-size: 14px; margin-bottom: 20px; }
+    .auto-refresh-note {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="spinner"></div>
+    <div class="status-pill">${status || 'PROCESSING'}</div>
+    <h1>Bản Ghi Đang Được Đóng Gói</h1>
+    <p>Bản ghi hội thoại đang được hoàn tất đối soát và niêm phong mật mã bảo mật. Vui lòng đợi trong giây lát.</p>
+    <div class="auto-refresh-note">⏳ Trang sẽ tự động tải lại sau 2 giây...</div>
+  </div>
+</body>
+</html>`;
+}
+
 module.exports = async (req, res) => {
   // CORS & Security Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -425,14 +515,39 @@ module.exports = async (req, res) => {
   try {
     const dbData = await getTranscriptFromDB(ticketId);
     if (dbData && dbData.transcript) {
-      if (dbData.transcript.revoked_at) {
+      const status = (dbData.transcript.status || '').toUpperCase();
+
+      // REVOKED -> 410 privacy-safe unavailable page
+      if (dbData.transcript.revoked_at || status === 'REVOKED') {
         res.status(410);
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
         return res.send(renderErrorPage({
           status: 410,
-          title: 'Pade Store • Bản Ghi Đã Hết Hạn',
-          heading: 'Bản Ghi Transcript Đã Hết Hạn',
-          message: 'Bản ghi transcript này đã được thu hồi hoặc hết hạn theo chính sách bảo mật.'
+          title: 'Pade Store • Bản Ghi Đã Thu Hồi',
+          heading: 'Bản Ghi Transcript Đã Thu Hồi',
+          message: 'Bản ghi transcript này đã được thu hồi hoặc xóa bỏ theo chính sách bảo mật.'
+        }));
+      }
+
+      // FAILED -> 503 service / archive unavailable
+      if (status === 'FAILED') {
+        res.status(503);
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        return res.send(renderErrorPage({
+          status: 503,
+          title: 'Pade Store • Bản Ghi Không Khả Dụng',
+          heading: 'Bản Ghi Lưu Trữ Không Khả Dụng',
+          message: 'Không thể tải bản ghi transcript do sự cố trong quá trình lưu trữ và niêm phong.'
+        }));
+      }
+
+      // PROCESSING / VERIFYING / INITIALIZING / COLLECTING -> Sleek processing page with auto-refresh
+      if (status === 'PROCESSING' || status === 'VERIFYING' || status === 'COLLECTING' || status === 'INITIALIZING') {
+        res.status(202);
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        return res.send(renderProcessingPage({
+          ticketId,
+          status
         }));
       }
 
