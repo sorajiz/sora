@@ -2167,6 +2167,12 @@ function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels
     // Deep link hash jump on load & image fallback attachment
     window.addEventListener('DOMContentLoaded', () => {
       attachImageFallbacks();
+      document.querySelectorAll('.transcript-image-wrap, .gallery-item-frame').forEach(el => {
+        el.addEventListener('click', function(e) {
+          e.preventDefault();
+          openLightboxFromElement(this);
+        });
+      });
       if (window.location.hash) {
         const target = document.querySelector(window.location.hash);
         if (target) {
