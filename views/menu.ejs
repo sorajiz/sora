@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pade Store · a little menu / for things you love 𐙚</title>
+  <meta name="description" content="ghé một chút, chọn điều bạn thích! Bảng menu sản phẩm & dịch vụ Discord chính thức tại Pade Store." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#060607" />
+  <link rel="canonical" href="https://menu.sorae.tokyo" />
+
+  <!-- OpenGraph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="vi_VN" />
+  <meta property="og:site_name" content="Pade Store" />
+  <meta property="og:title" content="PADE STORE · a little menu / for things you love 𐙚" />
+  <meta property="og:description" content="products & services, kept simple." />
+  <meta property="og:url" content="https://menu.sorae.tokyo" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="PADE STORE · a little menu 𐙚" />
+  <meta name="twitter:description" content="products & services, kept simple." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/assets/favicon.png" />
+  <link rel="shortcut icon" type="image/png" href="/assets/favicon.png" />
+
+  <!-- Google Fonts: Plus Jakarta Sans & Outfit (Vietnamese subsets) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── PADE STORE DESIGN SYSTEM (§7) ── */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --void: #060607;
+      --ink: #0d0d0f;
+      --graphite: #151518;
+      --steel: #1e1e22;
+      --card-border: #2b2b30;
+      --ash: #8d8d96;
+      --text-sub: #b9b9c1;
+      --off-white: #ececf0;
+      --white: #fafafa;
+      --silver: #c9ccd2;
+      --silver-dim: #9a9da5;
+      --silver-glow: rgba(201, 204, 210, 0.12);
+      --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-display: "Outfit", var(--font-sans);
+      --font-mono: "JetBrains Mono", monospace;
+    }
+
+    html, body {
+      background-color: var(--void);
+      color: var(--off-white);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* Ambient background waves */
+    .silver-wave-deco {
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120vw;
+      height: 80vh;
+      background: radial-gradient(ellipse at 50% 20%, rgba(201, 204, 210, 0.05) 0%, rgba(13, 13, 15, 0.8) 60%, transparent 80%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ambient-bloom {
+      position: fixed;
+      bottom: -10%;
+      right: 10%;
+      width: 50vw;
+      height: 50vh;
+      background: radial-gradient(circle, rgba(201, 204, 210, 0.02) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .app-container {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(6, 6, 7, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0.875rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      text-decoration: none;
+      color: var(--white);
+    }
+
+    .nav-brand-logo {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 0.625rem;
+      background: linear-gradient(135deg, #2b2b30, #151518);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .nav-brand-text {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.125rem;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-brand-badge {
+      font-size: 0.6875rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 9999px;
+      background: rgba(201, 204, 210, 0.1);
+      border: 1px solid rgba(201, 204, 210, 0.2);
+      color: var(--silver);
+      font-weight: 600;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+    }
+
+    .btn-discord {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #5865f2;
+      color: #fff;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: 0.75rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(88, 101, 242, 0.25);
+    }
+    .btn-discord:hover {
+      background: #4752c4;
+      transform: translateY(-1px);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 4rem 1.5rem 2.5rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero-pretitle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--silver);
+      background: rgba(201, 204, 210, 0.06);
+      border: 1px solid rgba(201, 204, 210, 0.15);
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.25rem, 6vw, 3.75rem);
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 0.875rem;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(0.9375rem, 2.5vw, 1.125rem);
+      color: var(--text-sub);
+      font-weight: 300;
+      max-width: 540px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.6;
+    }
+
+    .hero-deco {
+      color: var(--silver-dim);
+      font-size: 0.875rem;
+      letter-spacing: 0.2em;
+      user-select: none;
+      margin-bottom: 2rem;
+    }
+
+    /* ── FILTER & SEARCH TOOLBAR ── */
+    .toolbar-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem 1.5rem;
+      width: 100%;
+    }
+
+    .search-box {
+      position: relative;
+      margin-bottom: 1.25rem;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--graphite);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      padding: 0.875rem 1rem 0.875rem 2.75rem;
+      font-size: 0.9375rem;
+      color: var(--white);
+      font-family: var(--font-sans);
+      transition: all 0.2s ease;
+      outline: none;
+    }
+    .search-input:focus {
+      border-color: var(--silver);
+      box-shadow: 0 0 0 3px var(--silver-glow);
+    }
+    .search-input::placeholder {
+      color: var(--ash);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--ash);
+      pointer-events: none;
+    }
+
+    .chips-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      scrollbar-width: none;
+    }
+    .chips-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip-btn {
+      background: var(--ink);
+      border: 1px solid var(--card-border);
+      color: var(--text-sub);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      padding: 0.45rem 0.95rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+      font-family: var(--font-sans);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .chip-btn:hover {
+      background: var(--steel);
+      color: var(--white);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .chip-btn.active {
+      background: var(--white);
+      color: var(--void);
+      border-color: var(--white);
+      font-weight: 700;
+    }
+
+    /* ── PRODUCT GRID ── */
+    .grid-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+      width: 100%;
+    }
+
+    .grid-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      font-size: 0.8125rem;
+      color: var(--ash);
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .product-card {
+      background: var(--ink);
+      border: 1px solid var(--card-border);
+      border-radius: 1.125rem;
+      padding: 1.125rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .product-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(201, 204, 210, 0.3);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-category {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      color: var(--silver-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .card-status-badge {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      padding: 0.15rem 0.45rem;
+      border-radius: 0.375rem;
+    }
+    .badge-sale {
+      background: rgba(239, 68, 68, 0.12);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+    .badge-soldout {
+      background: rgba(141, 141, 150, 0.12);
+      color: var(--ash);
+      border: 1px solid rgba(141, 141, 150, 0.25);
+    }
+
+    .card-title {
+      font-size: 1.0625rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.375rem;
+      line-height: 1.35;
+    }
+
+    .card-desc {
+      font-size: 0.8125rem;
+      color: var(--text-sub);
+      font-weight: 300;
+      margin-bottom: 1.125rem;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-bottom {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding-top: 0.875rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .card-pricing {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-price {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.01em;
+    }
+
+    .card-compare-price {
+      font-size: 0.75rem;
+      color: var(--ash);
+      text-decoration: line-through;
+    }
+
+    .btn-view {
+      background: var(--steel);
+      color: var(--off-white);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.4rem 0.85rem;
+      border-radius: 0.625rem;
+      transition: all 0.15s ease;
+    }
+    .product-card:hover .btn-view {
+      background: var(--white);
+      color: var(--void);
+    }
+
+    /* ── QUICK VIEW MODAL ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal-content {
+      background: var(--ink);
+      border: 1px solid var(--card-border);
+      border-radius: 1.5rem;
+      max-width: 640px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 1.75rem;
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      transform: scale(0.96);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .modal-overlay.active .modal-content {
+      transform: scale(1);
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: var(--steel);
+      border: 1px solid var(--card-border);
+      color: var(--text-sub);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.125rem;
+      transition: all 0.15s;
+    }
+    .modal-close-btn:hover {
+      background: var(--white);
+      color: var(--void);
+    }
+
+    .modal-sku {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      color: var(--ash);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.15rem 0.45rem;
+      border-radius: 0.25rem;
+      display: inline-block;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-price-bar {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .modal-price {
+      font-family: var(--font-display);
+      font-size: 1.875rem;
+      font-weight: 900;
+      color: var(--white);
+    }
+
+    .modal-desc-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--silver-dim);
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-desc-body {
+      font-size: 0.875rem;
+      line-height: 1.6;
+      color: var(--text-sub);
+      white-space: pre-line;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .btn-buy {
+      flex: 1;
+      background: var(--white);
+      color: var(--void);
+      font-weight: 700;
+      font-size: 0.875rem;
+      padding: 0.875rem;
+      border-radius: 0.875rem;
+      text-align: center;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.15s ease;
+    }
+    .btn-buy:hover {
+      background: var(--silver);
+    }
+
+    /* ── LIVE TOAST ── */
+    .toast-container {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 1000;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: var(--graphite);
+      border: 1px solid rgba(201, 204, 210, 0.3);
+      color: var(--white);
+      padding: 0.75rem 1.125rem;
+      border-radius: 0.875rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .hero {
+        padding: 3rem 1rem 1.75rem;
+      }
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="silver-wave-deco"></div>
+  <div class="ambient-bloom"></div>
+
+  <div class="app-container">
+    <!-- Navbar -->
+    <header class="navbar">
+      <a href="/" class="nav-brand">
+        <div class="nav-brand-logo">𐙚</div>
+        <span class="nav-brand-text">Pade Store</span>
+        <span class="nav-brand-badge">Menu</span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="https://discord.gg/YzEaab34kV" target="_blank" rel="noopener noreferrer" class="btn-discord">
+          <svg width="18" height="14" viewBox="0 0 18 14" fill="currentColor">
+            <path d="M15.22 1.13A14.6 14.6 0 0011.66 0a.06.06 0 00-.03.03 9.77 9.77 0 00-.43.88 13.56 13.56 0 00-4.4 0 8.7 8.7 0 00-.43-.88.06.06 0 00-.04-.03A14.58 14.58 0 002.77 1.13a.06.06 0 00-.03.02C.37 4.74-.29 8.25.09 11.72a.07.07 0 00.03.05 14.7 14.7 0 004.42 2.22.06.06 0 00.07-.02c.34-.46.65-.95.91-1.47a.06.06 0 00-.03-.09 9.68 9.68 0 01-1.38-.66.06.06 0 010-.1c.1-.07.19-.15.28-.23a.06.06 0 01.06-.01 10.45 10.45 0 009.18 0 .06.06 0 01.06.01c.1.08.19.16.28.23a.06.06 0 010 .1 9.3 9.3 0 01-1.38.66.06.06 0 00-.03.09c.27.52.57 1.01.91 1.47a.06.06 0 00.07.02 14.64 14.64 0 004.43-2.22.06.06 0 00.03-.05c.46-4.02-.75-7.5-2.65-10.57a.06.06 0 00-.03-.02zM6.02 9.61c-.87 0-1.58-.8-1.58-1.78s.7-1.78 1.58-1.78c.89 0 1.6.8 1.59 1.78 0 .98-.7 1.78-1.59 1.78zm5.96 0c-.87 0-1.58-.8-1.58-1.78s.7-1.78 1.58-1.78c.89 0 1.6.8 1.59 1.78 0 .98-.7 1.78-1.59 1.78z"/>
+          </svg>
+          <span>Vào Discord</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-pretitle">𐙚 &nbsp; OFFICIAL MENU WEBSITE &nbsp; 𐙚</div>
+      <h1 class="hero-title">PADE STORE</h1>
+      <p class="hero-subtitle">a little menu / for things you love 𐙚<br>products & services, kept simple.</p>
+      <div class="hero-deco">⋆ ˚ ｡ ✧ ﹏ ⌒ 𐙚 ⌒ ﹏ ✧ ｡ ˚ ⋆</div>
+    </section>
+
+    <!-- Search & Filter Toolbar -->
+    <div class="toolbar-container">
+      <div class="search-box">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="searchInput" class="search-input" placeholder="Tìm sản phẩm, SKU hoặc gói dịch vụ (ví dụ: nitro, boosts)..." />
+      </div>
+
+      <div class="chips-row" id="chipsRow">
+        <button class="chip-btn active" data-category="ALL">Tất cả sản phẩm</button>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <main class="grid-container">
+      <div class="grid-header">
+        <span id="productCountLabel">Đang tải sản phẩm...</span>
+        <span>Một menu · Discord & Website</span>
+      </div>
+
+      <div class="product-grid" id="productGrid">
+        <!-- Rendered via JavaScript -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Quick View Modal -->
+  <div class="modal-overlay" id="quickViewModal">
+    <div class="modal-content">
+      <button class="modal-close-btn" id="modalCloseBtn">&times;</button>
+      <span class="modal-sku" id="modalSku">SKU</span>
+      <h2 class="modal-title" id="modalTitle">Tên sản phẩm</h2>
+      <div class="modal-price-bar">
+        <span class="modal-price" id="modalPrice">₫0</span>
+        <span class="modal-status-badge badge-sale" id="modalStatusBadge">ACTIVE</span>
+      </div>
+      <div class="modal-desc-title">Mô tả chi tiết</div>
+      <div class="modal-desc-body" id="modalDesc">...</div>
+      <div class="modal-actions">
+        <a href="https://discord.gg/YzEaab34kV" target="_blank" rel="noopener noreferrer" class="btn-buy" id="modalBuyBtn">
+          <span>Mua Hàng / Tạo Ticket Trên Discord</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="7" y1="17" x2="17" y2="7"></line>
+            <polyline points="7 7 17 7 17 17"></polyline>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Toast -->
+  <div class="toast-container">
+    <div class="toast" id="liveToast">
+      <span>✧</span>
+      <span>Menu vừa được cập nhật ✧</span>
+    </div>
+  </div>
+
+  <script>
+    // ── PADE BRAND UTILITIES (§S3, §S4) ──
+    function formatBrandMoney(amountMinor) {
+      if (amountMinor === null || amountMinor === undefined) return "";
+      let val = 0;
+      if (typeof amountMinor === "number") val = Math.max(0, Math.round(amountMinor));
+      else val = Math.max(0, parseInt(amountMinor, 10) || 0);
+      const str = val.toString().replace(/\\B(?=(\\d{3})+(?!\\d))/g, ".");
+      return "₫" + str;
+    }
+
+    function foldVietnamese(str) {
+      if (!str) return "";
+      return str.toLowerCase().replace(/đ/g, "d").normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").trim();
+    }
+
+    // ── APPLICATION STATE ──
+    let allProducts = [];
+    let allCategories = [];
+    let currentCategory = "ALL";
+    let searchQuery = "";
+    let currentVersion = 1;
+
+    // Load initial catalog
+    async function loadCatalog() {
+      try {
+        const res = await fetch("/api/menu");
+        if (!res.ok) throw new Error("Catalog fetch failed");
+        const data = await res.json();
+        allProducts = data.products || [];
+        allCategories = data.categories || [];
+        currentVersion = data.version || 1;
+        renderCategories();
+        renderProducts();
+        checkUrlProductParam();
+      } catch (err) {
+        console.error("Catalog load error:", err);
+        document.getElementById("productCountLabel").textContent = "Không thể tải danh mục trực tiếp. Đang thử lại...";
+      }
+    }
+
+    function renderCategories() {
+      const container = document.getElementById("chipsRow");
+      container.innerHTML = '<button class="chip-btn ' + (currentCategory === "ALL" ? "active" : "") + '" data-category="ALL">Tất cả sản phẩm</button>';
+
+      allCategories.forEach(cat => {
+        const btn = document.createElement("button");
+        btn.className = "chip-btn " + (currentCategory === cat.slug ? "active" : "");
+        btn.setAttribute("data-category", cat.slug);
+        btn.innerHTML = (cat.emoji ? cat.emoji + " " : "") + cat.name;
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".chip-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          currentCategory = cat.slug;
+          renderProducts();
+        });
+        container.appendChild(btn);
+      });
+
+      // Default ALL chip listener
+      container.querySelector('[data-category="ALL"]').addEventListener("click", (e) => {
+        document.querySelectorAll(".chip-btn").forEach(b => b.classList.remove("active"));
+        e.target.classList.add("active");
+        currentCategory = "ALL";
+        renderProducts();
+      });
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById("productGrid");
+      const foldedQ = foldVietnamese(searchQuery);
+
+      const filtered = allProducts.filter(p => {
+        const matchCat = currentCategory === "ALL" || p.category_slug === currentCategory;
+        if (!matchCat) return false;
+        if (!foldedQ) return true;
+        const nameFold = foldVietnamese(p.name);
+        const skuFold = foldVietnamese(p.sku);
+        const descFold = foldVietnamese(p.short_description || "");
+        return nameFold.includes(foldedQ) || skuFold.includes(foldedQ) || descFold.includes(foldedQ);
+      });
+
+      document.getElementById("productCountLabel").textContent = "Hiển thị " + filtered.length + " sản phẩm";
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; color: var(--ash);">' +
+          '<div style="font-size: 2rem; margin-bottom: 0.5rem;">𐙚</div>' +
+          '<p>Không tìm thấy sản phẩm nào phù hợp với tìm kiếm của bạn.</p></div>';
+        return;
+      }
+
+      grid.innerHTML = "";
+      filtered.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "product-card";
+        const isSoldOut = p.status === "SOLD_OUT";
+
+        card.innerHTML = `
+          <div>
+            <div class="card-top">
+              <span class="card-category">${p.category_name || "DỊCH VỤ"}</span>
+              ${isSoldOut ? '<span class="card-status-badge badge-soldout">Hết hàng</span>' : (p.compare_at_price ? '<span class="card-status-badge badge-sale">Sale</span>' : '')}
+            </div>
+            <h3 class="card-title">${p.name}</h3>
+            <p class="card-desc">${p.short_description || p.description || "Sản phẩm chất lượng cao chính hãng Pade Store."}</p>
+          </div>
+          <div class="card-bottom">
+            <div class="card-pricing">
+              <span class="card-price">${formatBrandMoney(p.price_amount)}</span>
+              ${p.compare_at_price ? `<span class="card-compare-price">${formatBrandMoney(p.compare_at_price)}</span>` : ''}
+            </div>
+            <button class="btn-view" type="button">Xem nhanh</button>
+          </div>
+        `;
+
+        card.addEventListener("click", () => openQuickView(p));
+        grid.appendChild(card);
+      });
+    }
+
+    // ── QUICK VIEW MODAL ──
+    function openQuickView(product) {
+      document.getElementById("modalSku").textContent = product.sku;
+      document.getElementById("modalTitle").textContent = product.name;
+      document.getElementById("modalPrice").textContent = formatBrandMoney(product.price_amount);
+      document.getElementById("modalDesc").textContent = product.description || product.short_description || "Sản phẩm dịch vụ chất lượng cao từ Pade Store.";
+
+      const badge = document.getElementById("modalStatusBadge");
+      if (product.status === "SOLD_OUT") {
+        badge.className = "card-status-badge badge-soldout";
+        badge.textContent = "Hết hàng";
+      } else {
+        badge.className = "card-status-badge badge-sale";
+        badge.textContent = "Sẵn sàng";
+      }
+
+      const modal = document.getElementById("quickViewModal");
+      modal.classList.add("active");
+
+      // Update URL query state (?product=<slug>)
+      const url = new URL(window.location);
+      url.searchParams.set("product", product.slug || product.sku);
+      window.history.pushState({}, "", url);
+    }
+
+    function closeQuickView() {
+      const modal = document.getElementById("quickViewModal");
+      modal.classList.remove("active");
+
+      const url = new URL(window.location);
+      url.searchParams.delete("product");
+      window.history.pushState({}, "", url);
+    }
+
+    document.getElementById("modalCloseBtn").addEventListener("click", closeQuickView);
+    document.getElementById("quickViewModal").addEventListener("click", (e) => {
+      if (e.target.id === "quickViewModal") closeQuickView();
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeQuickView();
+    });
+
+    function checkUrlProductParam() {
+      const params = new URLSearchParams(window.location.search);
+      const productSlug = params.get("product");
+      if (productSlug && allProducts.length > 0) {
+        const found = allProducts.find(p => (p.slug === productSlug) || (p.sku.toLowerCase() === productSlug.toLowerCase()));
+        if (found) openQuickView(found);
+      }
+    }
+
+    // Search input listener
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+      searchQuery = e.target.value;
+      renderProducts();
+    });
+
+    // ── REALTIME LIVESYNC (§12.3) ──
+    let pollInterval = null;
+
+    function showToast() {
+      const toast = document.getElementById("liveToast");
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 4000);
+    }
+
+    async function checkVersion() {
+      if (document.hidden) return; // Paused while tab is hidden (§12.3)
+
+      try {
+        const res = await fetch("/api/menu?action=version", {
+          headers: { "If-None-Match": `"menu-v${currentVersion}"` }
+        });
+
+        if (res.status === 200) {
+          const data = await res.json();
+          if (data.version && data.version !== currentVersion) {
+            currentVersion = data.version;
+            showToast();
+            await loadCatalog(); // Refresh catalog data
+          }
+        }
+      } catch (err) {
+        // Silent backoff on error
+      }
+    }
+
+    function startLiveSync() {
+      if (pollInterval) clearInterval(pollInterval);
+      pollInterval = setInterval(checkVersion, 3000);
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) checkVersion();
+    });
+
+    // Boot
+    loadCatalog();
+    startLiveSync();
+  </script>
+</body>
+</html>

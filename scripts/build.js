@@ -235,6 +235,34 @@ async function build() {
     console.log('  ✓ Built dist/pay.html, dist/payment.html & subdirectories');
   }
 
+  // Step 4e: Render Dedicated Pade Store Menu Website strictly into dist/
+  const menuTemplate = path.join(viewsDir, 'menu.ejs');
+  if (fs.existsSync(menuTemplate)) {
+    const menuData = {
+      ...sharedData,
+      title: "Pade Store · a little menu / for things you love 𐙚",
+      description: "ghé một chút, chọn điều bạn thích! Bảng menu sản phẩm & dịch vụ Discord chính thức tại Pade Store.",
+      canonicalUrl: 'https://menu.sorae.tokyo/',
+      siteUrl: 'https://menu.sorae.tokyo',
+      profileUrl: 'https://sorae.tokyo',
+      faviconDataUri,
+      buildHash
+    };
+
+    const menuRendered = await ejs.renderFile(menuTemplate, menuData, {
+      root: viewsDir
+    });
+
+    fs.writeFileSync(path.join(distDir, 'menu.html'), menuRendered, 'utf8');
+
+    const menuDir = path.join(distDir, 'menu');
+    if (!fs.existsSync(menuDir)) fs.mkdirSync(menuDir, { recursive: true });
+    fs.writeFileSync(path.join(menuDir, 'index.html'), menuRendered, 'utf8');
+
+    console.log('  ✓ Built dist/menu.html & dist/menu/index.html');
+  }
+
+
   // Step 5: Copy static assets to dist/assets
   const assetFiles = ['favicon.ico', 'favicon.png', 'luminous-flow.png', 'banner.png', 'banner.jpg', 'liquid-glass-bg.jpg', 'sora-store-icon.png'];
   assetFiles.forEach(file => {
