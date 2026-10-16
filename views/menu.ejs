@@ -480,9 +480,49 @@
       gap: 0.5rem;
       padding-bottom: 0.75rem;
       margin-bottom: 1.25rem;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
     }
     .mobile-category-bar::-webkit-scrollbar {
       display: none;
+    }
+
+    .mobile-cat-pill {
+      background: var(--ink);
+      border: 1px solid var(--card-border);
+      color: var(--text-sub);
+      padding: 0.5rem 0.95rem;
+      border-radius: 9999px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-shrink: 0;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .mobile-cat-pill:active {
+      transform: scale(0.96);
+    }
+    .mobile-cat-pill.active {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(201, 204, 210, 0.05));
+      border-color: rgba(201, 204, 210, 0.45);
+      color: var(--white);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    }
+    .mobile-cat-pill .cat-pill-count {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--ash);
+      font-size: 0.6875rem;
+      padding: 0.05rem 0.45rem;
+      border-radius: 9999px;
+      font-weight: 700;
+    }
+    .mobile-cat-pill.active .cat-pill-count {
+      background: rgba(255, 255, 255, 0.2);
+      color: var(--white);
     }
 
     /* ── MAIN CONTENT AREA ── */
@@ -608,12 +648,12 @@
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
       overflow: hidden;
-      cursor: pointer;
+      cursor: default;
     }
     .product-card:hover {
-      transform: translateY(-3px);
+      transform: translateY(-2px);
       border-color: var(--card-border-hover);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
     }
 
     .card-header {
@@ -764,20 +804,29 @@
       gap: 0.4rem;
     }
 
-    .btn-card-view {
-      background: var(--steel);
-      color: var(--off-white);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+    .btn-card-order {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--white);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       font-size: 0.75rem;
-      font-weight: 600;
+      font-weight: 700;
       padding: 0.45rem 0.85rem;
       border-radius: 0.625rem;
-      transition: all 0.15s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.2s ease;
       cursor: pointer;
     }
-    .product-card:hover .btn-card-view {
+    .btn-card-order:hover {
       background: var(--white);
       color: var(--void);
+      border-color: var(--white);
+      box-shadow: 0 4px 14px rgba(255, 255, 255, 0.18);
+    }
+    .btn-card-order:active {
+      transform: scale(0.96);
     }
 
     /* Admin quick action buttons on card */
@@ -1098,30 +1147,91 @@
       opacity: 1;
     }
 
-    /* ── RESPONSIVE ADAPTATIONS ── */
+    /* ── RESPONSIVE ADAPTATIONS (MOBILE & TABLET EXCELLENCE) ── */
     @media (max-width: 959px) {
       .menu-layout {
         grid-template-columns: 1fr;
-        padding: 1.25rem 1rem 3rem;
+        padding: 0.75rem 1rem 3.5rem;
       }
       .menu-sidebar {
-        display: none; /* Collapses to top horizontal chips on mobile/tablet */
+        display: none;
       }
       .mobile-category-bar {
         display: flex;
+        position: sticky;
+        top: 3.75rem;
+        z-index: 40;
+        background: rgba(6, 6, 7, 0.92);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        padding: 0.65rem 1rem 0.75rem;
+        margin: -0.5rem -1rem 1.25rem -1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
       }
       .nav-admin-tools {
         margin-left: 0.5rem;
         padding-left: 0.5rem;
       }
+      .main-title {
+        font-size: 1.85rem;
+      }
+      .main-subtitle {
+        font-size: 0.875rem;
+        margin-bottom: 1rem;
+      }
+      .toolbar-row {
+        margin-bottom: 1rem;
+      }
     }
 
     @media (max-width: 640px) {
       .navbar {
-        padding: 0.625rem 1rem;
+        padding: 0.625rem 0.875rem;
+      }
+      .menu-layout {
+        padding: 0.5rem 0.75rem 3.5rem;
+      }
+      .mobile-category-bar {
+        padding: 0.5rem 0.75rem;
+        margin: -0.5rem -0.75rem 1rem -0.75rem;
+        gap: 0.4rem;
       }
       .product-grid {
         grid-template-columns: 1fr;
+        gap: 0.875rem;
+      }
+      .product-card {
+        padding: 1.125rem;
+        border-radius: 1rem;
+      }
+      .card-header {
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+      }
+      .product-tile {
+        width: 3.5rem;
+        height: 3.5rem;
+        min-width: 3.5rem;
+        border-radius: 0.75rem;
+      }
+      .product-tile img {
+        width: 2.25rem;
+        height: 2.25rem;
+      }
+      .card-title {
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+      }
+      .card-desc {
+        font-size: 0.8125rem;
+        margin-bottom: 0.875rem;
+      }
+      .card-price {
+        font-size: 1.25rem;
+      }
+      .btn-card-order {
+        padding: 0.45rem 0.9rem;
+        font-size: 0.8125rem;
       }
       .form-row-2 {
         grid-template-columns: 1fr;
@@ -1131,6 +1241,9 @@
       }
       .user-name {
         display: none;
+      }
+      .btn-discord span {
+        font-size: 0.8125rem;
       }
     }
   </style>
@@ -1232,7 +1345,7 @@
 
           <div class="grid-info-bar">
             <span id="productCountLabel">Đang tải sản phẩm...</span>
-            <span id="activeCategoryTitle">Tất cả sản phẩm</span>
+            <span id="activeCategoryTitle">Nitro Discord</span>
           </div>
         </div>
 
@@ -1555,7 +1668,7 @@
     // ── APPLICATION STATE ──
     let allProducts = <%- JSON.stringify(typeof catalog !== 'undefined' && catalog && catalog.products ? catalog.products : []) %>;
     let allCategories = <%- JSON.stringify(typeof catalog !== 'undefined' && catalog && catalog.categories ? catalog.categories : []) %>;
-    let currentCategory = 'ALL';
+    let currentCategory = 'nitro';
     let searchQuery = '';
     let currentSort = 'default';
     let currentVersion = <%= typeof catalog !== 'undefined' && catalog && catalog.version ? catalog.version : 1 %>;
@@ -1648,28 +1761,16 @@
       const totalCount = allProducts.filter(p => isPreviewMode ? true : p.status === 'ACTIVE').length;
       document.getElementById('sidebarTotalCount').textContent = totalCount;
 
+      // Fallback: If currentCategory is not in list of active categories, select first category
+      if (!allCategories.some(c => c.slug === currentCategory)) {
+        currentCategory = allCategories[0] ? allCategories[0].slug : 'nitro';
+      }
+
       // 1. Desktop Sidebar Render
       sidebarContainer.innerHTML = '';
 
-      // Item: ALL
-      const allItem = document.createElement('button');
-      allItem.className = 'category-item ' + (currentCategory === 'ALL' ? 'active' : '');
-      allItem.innerHTML = `
-        <div class="category-left">
-          <span class="category-icon">𐙚</span>
-          <span class="category-label">Tất cả sản phẩm</span>
-        </div>
-        <span class="category-badge">${totalCount}</span>
-      `;
-      allItem.onclick = () => selectCategory('ALL');
-      sidebarContainer.appendChild(allItem);
-
-      // Mobile Bar Item: ALL
-      mobileContainer.innerHTML = `
-        <button class="category-item ${currentCategory === 'ALL' ? 'active' : ''}" style="width: auto; padding: 0.4rem 0.8rem;" onclick="selectCategory('ALL')">
-          𐙚 Tất cả (${totalCount})
-        </button>
-      `;
+      // 2. Mobile Container Render
+      mobileContainer.innerHTML = '';
 
       allCategories.forEach(cat => {
         const catProducts = allProducts.filter(p => (p.category_slug === cat.slug || p.category_id === cat.id) && (isPreviewMode ? true : p.status === 'ACTIVE'));
@@ -1697,11 +1798,14 @@
         item.onclick = () => selectCategory(cat.slug);
         sidebarContainer.appendChild(item);
 
-        // Mobile item
+        // Mobile item (Pill chip)
         const mBtn = document.createElement('button');
-        mBtn.className = 'category-item ' + (currentCategory === cat.slug ? 'active' : '');
-        mBtn.style.cssText = 'width: auto; padding: 0.4rem 0.8rem; white-space: nowrap;';
-        mBtn.innerHTML = `<span class="category-icon" style="width: 1.1rem; height: 1.1rem; margin-right: 0.35rem;">${iconHtml}</span> ${cat.name} (${count})`;
+        mBtn.className = 'mobile-cat-pill ' + (currentCategory === cat.slug ? 'active' : '');
+        mBtn.innerHTML = `
+          <span class="category-icon" style="width: 1.15rem; height: 1.15rem; display: inline-flex; align-items: center; justify-content: center;">${iconHtml}</span>
+          <span>${cat.name}</span>
+          <span class="cat-pill-count">${count}</span>
+        `;
         mBtn.onclick = () => selectCategory(cat.slug);
         mobileContainer.appendChild(mBtn);
       });
@@ -1714,7 +1818,7 @@
 
       // Update active category title
       const found = allCategories.find(c => c.slug === slug);
-      document.getElementById('activeCategoryTitle').textContent = slug === 'ALL' ? 'Tất cả sản phẩm' : (found ? found.name : slug);
+      document.getElementById('activeCategoryTitle').textContent = found ? found.name : slug;
     }
 
     // ── RENDER PRODUCTS GRID ──
@@ -1725,7 +1829,7 @@
       let list = allProducts.filter(p => {
         if (!isPreviewMode && p.status === 'DRAFT') return false;
 
-        const matchCat = currentCategory === 'ALL' || p.category_slug === currentCategory;
+        const matchCat = p.category_slug === currentCategory;
         if (!matchCat) return false;
 
         if (!foldedQ) return true;
@@ -1752,7 +1856,7 @@
         grid.innerHTML = `
           <div style="grid-column: 1/-1; text-align: center; padding: 4rem 1rem; color: var(--ash);">
             <div style="font-size: 2.25rem; margin-bottom: 0.75rem;">𐙚</div>
-            <p style="font-size: 0.9375rem; color: var(--text-sub);">Không tìm thấy sản phẩm nào phù hợp với bộ lọc.</p>
+            <p style="font-size: 0.9375rem; color: var(--text-sub);">Không tìm thấy sản phẩm nào trong danh mục này.</p>
           </div>
         `;
         return;
@@ -1805,16 +1909,18 @@
               ${hasSale ? `<span class="card-compare">${formatBrandMoney(p.compare_at_price)}</span>` : ''}
             </div>
             <div class="card-actions-wrapper">
-              <button class="btn-card-view" type="button">Xem chi tiết</button>
+              <a href="https://discord.gg/YzEaab34kV" target="_blank" rel="noopener noreferrer" class="btn-card-order" title="Tạo ticket đặt hàng trên Discord">
+                <span>Đặt mua</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </a>
               ${isAdmin ? `
-                <button class="btn-card-admin" type="button" title="Sửa sản phẩm" onclick="event.stopPropagation(); openEditProductModal('${p.id}')">✏️</button>
-                <button class="btn-card-admin delete" type="button" title="Xóa/Lưu trữ" onclick="event.stopPropagation(); openDeleteProductModal('${p.id}')">🗑️</button>
+                <button class="btn-card-admin" type="button" title="Sửa sản phẩm" onclick="openEditProductModal('${p.id}')">✏️</button>
+                <button class="btn-card-admin delete" type="button" title="Xóa/Lưu trữ" onclick="openDeleteProductModal('${p.id}')">🗑️</button>
               ` : ''}
             </div>
           </div>
         `;
 
-        card.addEventListener('click', () => openQuickView(p));
         grid.appendChild(card);
       });
     }
@@ -2139,7 +2245,6 @@
     // Initial render from embedded catalog (instant 0ms!), then verify auth & sync
     renderCategories();
     renderProducts();
-    checkUrlParam();
     checkAuth();
     loadCatalog();
     startLiveSync();

@@ -1,4 +1,5 @@
 {
+  "version": 30,
   "categories": [
     {
       "id": "eba2e486-603f-4c23-be25-bceacf447686",
@@ -10,19 +11,8 @@
       "sort_order": 1,
       "status": "ACTIVE",
       "created_at": "2026-10-16T09:46:37.999Z",
-      "updated_at": "2026-10-16T12:55:55.252Z"
-    },
-    {
-      "id": "ccff47de-00ed-47ed-aef9-6512747edeb9",
-      "slug": "nitro-trial",
-      "name": "Nitro Trial",
-      "description": "Trial dành cho tài khoản mới chưa từng dùng Nitro",
-      "emoji": "<a:Nichobasic:1499105974072377418>",
-      "image_asset_id": null,
-      "sort_order": 2,
-      "status": "ACTIVE",
-      "created_at": "2026-10-16T12:55:55.571Z",
-      "updated_at": "2026-10-16T12:55:55.571Z"
+      "updated_at": "2026-10-16T12:55:55.252Z",
+      "product_count": "10"
     },
     {
       "id": "dd551025-2757-4b90-b94c-e461da5e9bcc",
@@ -34,7 +24,8 @@
       "sort_order": 3,
       "status": "ACTIVE",
       "created_at": "2026-10-16T09:46:37.999Z",
-      "updated_at": "2026-10-16T12:55:55.844Z"
+      "updated_at": "2026-10-16T12:55:55.844Z",
+      "product_count": "1"
     },
     {
       "id": "bf445e26-92d6-40eb-843a-2ca23358de34",
@@ -46,7 +37,8 @@
       "sort_order": 4,
       "status": "ACTIVE",
       "created_at": "2026-10-16T12:55:56.108Z",
-      "updated_at": "2026-10-16T12:55:56.108Z"
+      "updated_at": "2026-10-16T12:55:56.108Z",
+      "product_count": "1"
     },
     {
       "id": "7270bd4a-1b90-4e99-87f2-06ea4f46e850",
@@ -58,19 +50,8 @@
       "sort_order": 5,
       "status": "ACTIVE",
       "created_at": "2026-10-16T12:55:56.372Z",
-      "updated_at": "2026-10-16T12:55:56.372Z"
-    },
-    {
-      "id": "959d3822-4514-47c3-be05-bece859bd518",
-      "slug": "minecraft",
-      "name": "Minecraft Premium",
-      "description": "Tài khoản Minecraft Java & Bedrock chính hãng",
-      "emoji": "⛏️",
-      "image_asset_id": null,
-      "sort_order": 6,
-      "status": "ACTIVE",
-      "created_at": "2026-10-16T12:55:56.637Z",
-      "updated_at": "2026-10-16T12:55:56.637Z"
+      "updated_at": "2026-10-16T12:55:56.372Z",
+      "product_count": "1"
     },
     {
       "id": "3a9c902d-104f-429f-af53-d7375ae7f013",
@@ -82,7 +63,8 @@
       "sort_order": 7,
       "status": "ACTIVE",
       "created_at": "2026-10-16T12:55:56.918Z",
-      "updated_at": "2026-10-16T12:55:56.918Z"
+      "updated_at": "2026-10-16T12:55:56.918Z",
+      "product_count": "1"
     },
     {
       "id": "f1360b05-57d7-4eaa-846e-af2a58f31738",
@@ -94,19 +76,8 @@
       "sort_order": 8,
       "status": "ACTIVE",
       "created_at": "2026-10-16T12:55:57.207Z",
-      "updated_at": "2026-10-16T12:55:57.207Z"
-    },
-    {
-      "id": "bf196444-73cb-49be-b3aa-d3ac15bb458c",
-      "slug": "discord-acc",
-      "name": "Discord Account",
-      "description": "Tài khoản Discord năm cũ, full verif",
-      "emoji": "<:dsc:1497292544453644329>",
-      "image_asset_id": null,
-      "sort_order": 9,
-      "status": "ACTIVE",
-      "created_at": "2026-10-16T12:55:57.479Z",
-      "updated_at": "2026-10-16T12:55:57.479Z"
+      "updated_at": "2026-10-16T12:55:57.207Z",
+      "product_count": "1"
     },
     {
       "id": "0e032b3f-03ad-4c4e-8f9f-8add9c7fa9e7",
@@ -118,7 +89,8 @@
       "sort_order": 10,
       "status": "ACTIVE",
       "created_at": "2026-10-16T09:46:37.999Z",
-      "updated_at": "2026-10-16T12:55:57.744Z"
+      "updated_at": "2026-10-16T12:55:57.744Z",
+      "product_count": "2"
     }
   ],
   "products": [
@@ -143,6 +115,8 @@
       "discord_select_emoji_id": "1498671634524016792",
       "discord_select_emoji_animated": true,
       "version": "1",
+      "created_at": "2026-10-16T09:46:37.999Z",
+      "updated_at": "2026-10-16T12:55:58.811Z",
       "category_name": "Nitro Discord",
       "category_emoji": "<a:nicho:1498671634524016792>",
       "category_slug": "nitro"
@@ -168,34 +142,38 @@
       "discord_select_emoji_id": "1498672467378704388",
       "discord_select_emoji_animated": true,
       "version": "1",
+      "created_at": "2026-10-16T09:46:37.999Z",
+      "updated_at": "2026-10-16T12:55:59.083Z",
       "category_name": "Server Boost",
       "category_emoji": "<a:boosts:1498672467378704388>",
       "category_slug": "boost"
     },
     {
-      "id": "01ce625a-99fd-400e-a20a-0157d4082f3a",
-      "slug": "nitro-trial-3-thang",
-      "sku": "NITRO-TRIAL",
-      "name": "Nitro Trial 3 Tháng",
-      "short_description": "Trial Dành Cho Tài Khoản Mới Chưa Từng Dùng Nitro",
-      "description": "> **Nitro trial 3 tháng:** 55.000 VNĐ\n> **Nitro trial 4 tháng:** 70.000 VNĐ\n> **Promo Link 3 Tháng:** 40.000 VNĐ\n- Yêu Cầu: Tài Khoản Tạo Trên 1 Tháng Chưa Từng Dùng Nitro.\n- Bảo Hành 3 Tháng.",
-      "price_amount": "55000",
-      "compare_at_price": "80000",
+      "id": "0d0b51e9-31d8-42f4-b7fe-d9a2c1aff6cb",
+      "slug": "nitro-boost-1-nam",
+      "sku": "NITRO-BOOST-1Y",
+      "name": "Nitro Boost 1 Năm",
+      "short_description": "Gói Tiết Kiệm Nhất Cho Tín Đồ Discord",
+      "description": "Trọn gói 12 tháng Nitro kèm 2 Server Boosts. Tiết kiệm hơn 60% so với mua hàng tháng.",
+      "price_amount": "800000",
+      "compare_at_price": null,
       "stock_mode": "UNLIMITED",
-      "stock_quantity": "999",
+      "stock_quantity": "0",
       "status": "ACTIVE",
-      "is_featured": false,
+      "is_featured": true,
       "is_available": true,
-      "sort_order": 4,
-      "discord_select_label": "Nitro Trial 3 Tháng",
-      "discord_select_description": "Trial Dành Cho Tài Khoản Mới Chưa Từng Dùng Nitro",
-      "discord_select_emoji_name": "Nichobasic",
-      "discord_select_emoji_id": "1499105974072377418",
+      "sort_order": 16,
+      "discord_select_label": "Nitro Boost 1 Năm",
+      "discord_select_description": "Gói Tiết Kiệm Nhất Cho Tín Đồ Discord",
+      "discord_select_emoji_name": "nicho",
+      "discord_select_emoji_id": "1498671634524016792",
       "discord_select_emoji_animated": true,
       "version": "1",
-      "category_name": "Nitro Trial",
-      "category_emoji": "<a:Nichobasic:1499105974072377418>",
-      "category_slug": "nitro-trial"
+      "created_at": "2026-10-16T12:56:02.995Z",
+      "updated_at": "2026-10-16T12:56:02.995Z",
+      "category_name": "Nitro Discord",
+      "category_emoji": "<a:nicho:1498671634524016792>",
+      "category_slug": "nitro"
     },
     {
       "id": "4a0918d7-f7ed-4f6c-ad00-3713e8812704",
@@ -218,6 +196,8 @@
       "discord_select_emoji_id": "1560011544371269773",
       "discord_select_emoji_animated": false,
       "version": "1",
+      "created_at": "2026-10-16T09:46:37.999Z",
+      "updated_at": "2026-10-16T12:55:59.886Z",
       "category_name": "Decoration",
       "category_emoji": "<:ped_emoji_11:1560011544371269773>",
       "category_slug": "deco"
@@ -243,6 +223,8 @@
       "discord_select_emoji_id": "1560011544371269773",
       "discord_select_emoji_animated": false,
       "version": "1",
+      "created_at": "2026-10-16T09:46:37.999Z",
+      "updated_at": "2026-10-16T12:56:00.152Z",
       "category_name": "Decoration",
       "category_emoji": "<:ped_emoji_11:1560011544371269773>",
       "category_slug": "deco"
@@ -268,9 +250,38 @@
       "discord_select_emoji_id": "1483467082367500448",
       "discord_select_emoji_animated": false,
       "version": "1",
+      "created_at": "2026-10-16T09:46:37.999Z",
+      "updated_at": "2026-10-16T12:56:00.419Z",
       "category_name": "YouTube Premium",
       "category_emoji": "<:yuotube:1483467082367500448>",
       "category_slug": "youtube"
+    },
+    {
+      "id": "01ce625a-99fd-400e-a20a-0157d4082f3a",
+      "slug": "nitro-trial-3-thang",
+      "sku": "NITRO-TRIAL",
+      "name": "Nitro Trial 3 Tháng",
+      "short_description": "Trial Dành Cho Tài Khoản Mới Chưa Từng Dùng Nitro",
+      "description": "> **Nitro trial 3 tháng:** 55.000 VNĐ\n> **Nitro trial 4 tháng:** 70.000 VNĐ\n> **Promo Link 3 Tháng:** 40.000 VNĐ\n- Yêu Cầu: Tài Khoản Tạo Trên 1 Tháng Chưa Từng Dùng Nitro.\n- Bảo Hành 3 Tháng.",
+      "price_amount": "55000",
+      "compare_at_price": "80000",
+      "stock_mode": "UNLIMITED",
+      "stock_quantity": "999",
+      "status": "ACTIVE",
+      "is_featured": false,
+      "is_available": true,
+      "sort_order": 8,
+      "discord_select_label": "Nitro Trial 3 Tháng",
+      "discord_select_description": "Trial Dành Cho Tài Khoản Mới Chưa Từng Dùng Nitro",
+      "discord_select_emoji_name": "nicho",
+      "discord_select_emoji_id": "1498671634524016792",
+      "discord_select_emoji_animated": true,
+      "version": "1",
+      "created_at": "2026-10-16T09:46:37.999Z",
+      "updated_at": "2026-10-16T12:55:59.619Z",
+      "category_name": "Nitro Discord",
+      "category_emoji": "<a:nicho:1498671634524016792>",
+      "category_slug": "nitro"
     },
     {
       "id": "e6f5a808-9379-4a21-b020-bac914e4fafb",
@@ -293,6 +304,8 @@
       "discord_select_emoji_id": "1560012189648035840",
       "discord_select_emoji_animated": false,
       "version": "1",
+      "created_at": "2026-10-16T09:46:37.999Z",
+      "updated_at": "2026-10-16T12:56:00.691Z",
       "category_name": "Spotify Premium",
       "category_emoji": "<:ped_emoji_23:1560012189648035840>",
       "category_slug": "spotify"
@@ -318,9 +331,38 @@
       "discord_select_emoji_id": "1483467161174540348",
       "discord_select_emoji_animated": false,
       "version": "1",
+      "created_at": "2026-10-16T09:46:37.999Z",
+      "updated_at": "2026-10-16T12:56:00.958Z",
       "category_name": "CapCut Pro",
       "category_emoji": "<:cutcut:1483467161174540348>",
       "category_slug": "capcut"
+    },
+    {
+      "id": "ab81b8ce-818d-4116-8323-3cfe9b4afb0e",
+      "slug": "nitro-trial-4-thang",
+      "sku": "NITRO-TRIAL-4M",
+      "name": "Nitro Trial 4 Tháng",
+      "short_description": "Trial 4 Tháng Dành Cho Tài Khoản Mới Chưa Từng Dùng Nitro",
+      "description": "> **Nitro trial 4 tháng:** 70.000 VNĐ\\n- Yêu Cầu: Tài Khoản Tạo Trên 1 Tháng Chưa Từng Dùng Nitro.\\n- Bảo Hành 4 Tháng.",
+      "price_amount": "70000",
+      "compare_at_price": "100000",
+      "stock_mode": "UNLIMITED",
+      "stock_quantity": "0",
+      "status": "ACTIVE",
+      "is_featured": false,
+      "is_available": true,
+      "sort_order": 9,
+      "discord_select_label": null,
+      "discord_select_description": null,
+      "discord_select_emoji_name": "nicho",
+      "discord_select_emoji_id": "1498671634524016792",
+      "discord_select_emoji_animated": true,
+      "version": "1",
+      "created_at": "2026-10-16T13:53:10.185Z",
+      "updated_at": "2026-10-16T13:53:10.185Z",
+      "category_name": "Nitro Discord",
+      "category_emoji": "<a:nicho:1498671634524016792>",
+      "category_slug": "nitro"
     },
     {
       "id": "0dfaeeca-b224-4c4e-9738-e4528fbf847a",
@@ -343,9 +385,38 @@
       "discord_select_emoji_id": "1497292473188225124",
       "discord_select_emoji_animated": false,
       "version": "1",
+      "created_at": "2026-10-16T09:46:37.999Z",
+      "updated_at": "2026-10-16T12:56:01.247Z",
       "category_name": "Canva Pro",
       "category_emoji": "<:canva:1497292473188225124>",
       "category_slug": "canva"
+    },
+    {
+      "id": "bfc86e44-9864-45ab-a2ad-00135088cac2",
+      "slug": "nitro-basic-1-nam",
+      "sku": "NITRO-BASIC-1Y",
+      "name": "Nitro Basic 1 Năm",
+      "short_description": "Gói Basic Cả Năm Tiết Kiệm Emoji Toàn Discord",
+      "description": "> **Nitro Basic Login 1 Năm:** 340.000 VNĐ\\n- Đăng nhập bảo mật chính hãng.\\n- Sử dụng emoji và sticker trên toàn Discord.",
+      "price_amount": "340000",
+      "compare_at_price": "480000",
+      "stock_mode": "UNLIMITED",
+      "stock_quantity": "0",
+      "status": "ACTIVE",
+      "is_featured": false,
+      "is_available": true,
+      "sort_order": 11,
+      "discord_select_label": null,
+      "discord_select_description": null,
+      "discord_select_emoji_name": "Nichobasic",
+      "discord_select_emoji_id": "1499105974072377418",
+      "discord_select_emoji_animated": true,
+      "version": "1",
+      "created_at": "2026-10-16T13:53:10.466Z",
+      "updated_at": "2026-10-16T13:53:10.466Z",
+      "category_name": "Nitro Discord",
+      "category_emoji": "<a:nicho:1498671634524016792>",
+      "category_slug": "nitro"
     },
     {
       "id": "97c47480-c4a3-4e1b-ba63-987c019e5ea8",
@@ -368,6 +439,8 @@
       "discord_select_emoji_id": "1498671634524016792",
       "discord_select_emoji_animated": true,
       "version": "1",
+      "created_at": "2026-10-16T12:56:01.779Z",
+      "updated_at": "2026-10-16T12:56:01.779Z",
       "category_name": "Nitro Discord",
       "category_emoji": "<a:nicho:1498671634524016792>",
       "category_slug": "nitro"
@@ -393,6 +466,8 @@
       "discord_select_emoji_id": "1498671634524016792",
       "discord_select_emoji_animated": true,
       "version": "1",
+      "created_at": "2026-10-16T12:56:02.047Z",
+      "updated_at": "2026-10-16T12:56:02.047Z",
       "category_name": "Nitro Discord",
       "category_emoji": "<a:nicho:1498671634524016792>",
       "category_slug": "nitro"
@@ -418,6 +493,8 @@
       "discord_select_emoji_id": "1498671634524016792",
       "discord_select_emoji_animated": true,
       "version": "1",
+      "created_at": "2026-10-16T12:56:02.313Z",
+      "updated_at": "2026-10-16T12:56:02.313Z",
       "category_name": "Nitro Discord",
       "category_emoji": "<a:nicho:1498671634524016792>",
       "category_slug": "nitro"
@@ -443,31 +520,8 @@
       "discord_select_emoji_id": "1498671634524016792",
       "discord_select_emoji_animated": true,
       "version": "1",
-      "category_name": "Nitro Discord",
-      "category_emoji": "<a:nicho:1498671634524016792>",
-      "category_slug": "nitro"
-    },
-    {
-      "id": "0d0b51e9-31d8-42f4-b7fe-d9a2c1aff6cb",
-      "slug": "nitro-boost-1-nam",
-      "sku": "NITRO-BOOST-1Y",
-      "name": "Nitro Boost 1 Năm",
-      "short_description": "Gói Tiết Kiệm Nhất Cho Tín Đồ Discord",
-      "description": "Trọn gói 12 tháng Nitro kèm 2 Server Boosts. Tiết kiệm hơn 60% so với mua hàng tháng.",
-      "price_amount": "800000",
-      "compare_at_price": null,
-      "stock_mode": "UNLIMITED",
-      "stock_quantity": "0",
-      "status": "ACTIVE",
-      "is_featured": true,
-      "is_available": true,
-      "sort_order": 16,
-      "discord_select_label": "Nitro Boost 1 Năm",
-      "discord_select_description": "Gói Tiết Kiệm Nhất Cho Tín Đồ Discord",
-      "discord_select_emoji_name": "nicho",
-      "discord_select_emoji_id": "1498671634524016792",
-      "discord_select_emoji_animated": true,
-      "version": "1",
+      "created_at": "2026-10-16T12:56:02.577Z",
+      "updated_at": "2026-10-16T12:56:02.577Z",
       "category_name": "Nitro Discord",
       "category_emoji": "<a:nicho:1498671634524016792>",
       "category_slug": "nitro"
@@ -493,27 +547,11 @@
       "discord_select_emoji_id": "1499105974072377418",
       "discord_select_emoji_animated": true,
       "version": "1",
+      "created_at": "2026-10-16T12:56:03.278Z",
+      "updated_at": "2026-10-16T12:56:03.278Z",
       "category_name": "Nitro Discord",
       "category_emoji": "<a:nicho:1498671634524016792>",
       "category_slug": "nitro"
     }
-  ],
-  "settings": {
-    "id": "89a697b6-6930-4747-9bc5-3782431f0a05",
-    "store_name": "Pade Store",
-    "tagline": "a little menu for things you love 𐙚",
-    "description_template": "❝  ﹒  **Pade Store**  ⏜  𐙚  menu ִ ࣪ !\n\n′  · ｡   ghé một chút, chọn điều bạn thích  !   ⌒⌒\n  ╰  những món nhỏ xinh đang đợi bạn ở bên dưới ♡\n\n  [TOS]({{tos_url}})  »  [rules]({{rules_url}})  »  [support]({{support_url}})\n    menu · sale · order  ⋆ ˚ ｡\n      ·   ✧   ·   ﹏\n\n〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰〰\n\n  ′ 〰 ❜  ､   Pade Store   ､ ❛ //",
-    "thumbnail_url": "https://cdn.discordapp.com/attachments/1499807811050274957/1556356064285560954/thumb.png",
-    "banner_url": "https://cdn.discordapp.com/attachments/1499807811050274957/1556356064285560954/banner.png",
-    "tos_url": "https://menu.sorae.tokyo/tos",
-    "rules_url": "https://menu.sorae.tokyo/rules",
-    "support_url": "https://discord.gg/pade",
-    "sale_url": "https://menu.sorae.tokyo/sale",
-    "discord_invite_url": "https://discord.gg/pade",
-    "website_url": "https://menu.sorae.tokyo",
-    "currency": "VND",
-    "updated_at": "2026-10-16T09:46:37.999Z",
-    "updated_by": null
-  },
-  "version": 26
+  ]
 }
