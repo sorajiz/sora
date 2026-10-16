@@ -1281,15 +1281,7 @@
       </div>
 
       <div class="nav-right">
-        <!-- Guest Login Button -->
-        <a href="/api/auth/discord/login" class="btn-discord" id="btnLoginDiscord">
-          <svg width="18" height="14" viewBox="0 0 18 14" fill="currentColor">
-            <path d="M15.22 1.13A14.6 14.6 0 0011.66 0a.06.06 0 00-.03.03 9.77 9.77 0 00-.43.88 13.56 13.56 0 00-4.4 0 8.7 8.7 0 00-.43-.88.06.06 0 00-.04-.03A14.58 14.58 0 002.77 1.13a.06.06 0 00-.03.02C.37 4.74-.29 8.25.09 11.72a.07.07 0 00.03.05 14.7 14.7 0 004.42 2.22.06.06 0 00.07-.02c.34-.46.65-.95.91-1.47a.06.06 0 00-.03-.09 9.68 9.68 0 01-1.38-.66.06.06 0 010-.1c.1-.07.19-.15.28-.23a.06.06 0 01.06-.01 10.45 10.45 0 009.18 0 .06.06 0 01.06.01c.1.08.19.16.28.23a.06.06 0 010 .1 9.3 9.3 0 01-1.38.66.06.06 0 00-.03.09c.27.52.57 1.01.91 1.47a.06.06 0 00.07.02 14.64 14.64 0 004.43-2.22.06.06 0 00.03-.05c.46-4.02-.75-7.5-2.65-10.57a.06.06 0 00-.03-.02zM6.02 9.61c-.87 0-1.58-.8-1.58-1.78s.7-1.78 1.58-1.78c.89 0 1.6.8 1.59 1.78 0 .98-.7 1.78-1.59 1.78zm5.96 0c-.87 0-1.58-.8-1.58-1.78s.7-1.78 1.58-1.78c.89 0 1.6.8 1.59 1.78 0 .98-.7 1.78-1.59 1.78z"/>
-          </svg>
-          <span>Đăng nhập Discord</span>
-        </a>
-
-        <!-- Authenticated Profile Chip -->
+        <!-- Authenticated Profile Chip (Shown when admin/owner is logged in) -->
         <div class="user-profile-chip" id="userProfileChip">
           <img src="/assets/favicon.png" alt="Avatar" class="user-avatar" id="userAvatarImg" />
           <span class="user-name" id="userNameLabel">User</span>
@@ -1701,7 +1693,8 @@
           const data = await res.json();
           if (data && data.authenticated) {
             currentUser = data;
-            document.getElementById('btnLoginDiscord').style.display = 'none';
+            const loginBtn = document.getElementById('btnLoginDiscord');
+            if (loginBtn) loginBtn.style.display = 'none';
             const chip = document.getElementById('userProfileChip');
             chip.classList.add('show');
             document.getElementById('userNameLabel').textContent = data.username || 'User';
@@ -1908,16 +1901,12 @@
               <span class="card-price">${formatBrandMoney(p.price_amount)}</span>
               ${hasSale ? `<span class="card-compare">${formatBrandMoney(p.compare_at_price)}</span>` : ''}
             </div>
-            <div class="card-actions-wrapper">
-              <a href="https://discord.gg/YzEaab34kV" target="_blank" rel="noopener noreferrer" class="btn-card-order" title="Tạo ticket đặt hàng trên Discord">
-                <span>Đặt mua</span>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-              </a>
-              ${isAdmin ? `
+            ${isAdmin ? `
+              <div class="card-actions-wrapper">
                 <button class="btn-card-admin" type="button" title="Sửa sản phẩm" onclick="openEditProductModal('${p.id}')">✏️</button>
                 <button class="btn-card-admin delete" type="button" title="Xóa/Lưu trữ" onclick="openDeleteProductModal('${p.id}')">🗑️</button>
-              ` : ''}
-            </div>
+              </div>
+            ` : ''}
           </div>
         `;
 
