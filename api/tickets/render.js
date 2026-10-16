@@ -153,6 +153,93 @@ function computeWaveParameters(seedStr) {
   return { pos1, pos2, opacity };
 }
 
+function renderDiscordComponent(comp, ctx) {
+  if (!comp) return '';
+  const type = comp.type;
+
+  // 1. Container (type 17 or 15)
+  if (type === 17 || type === 15) {
+    const children = (comp.components || []).map(c => renderDiscordComponent(c, ctx)).join('');
+    const accentStyle = comp.accent_color ? ` style="border-left: 3px solid #${comp.accent_color.toString(16).padStart(6, '0')};"` : '';
+    return `<div class="discord-component-container"${accentStyle}>${children}</div>`;
+  }
+
+  // 2. Section (type 9)
+  if (type === 9) {
+    const children = (comp.components || []).map(c => renderDiscordComponent(c, ctx)).join('');
+    let accessoryHtml = '';
+    if (comp.accessory) {
+      accessoryHtml = `<div class="section-accessory">${renderDiscordComponent(comp.accessory, ctx)}</div>`;
+    }
+    return `
+      <div class="discord-component-section">
+        <div class="section-content">${children}</div>
+        ${accessoryHtml}
+      </div>
+    `;
+  }
+
+  // 3. TextDisplay (type 10)
+  if (type === 10) {
+    const parsedText = parseDiscordMarkdown(comp.content || '', ctx);
+    return `<div class="discord-component-text">${parsedText}</div>`;
+  }
+
+  // 4. Separator (type 14)
+  if (type === 14) {
+    const hasDivider = comp.divider !== false;
+    const spacing = comp.spacing === 2 ? 'large' : 'small';
+    return `<div class="discord-component-separator ${hasDivider ? 'divider' : ''} spacing-${spacing}"></div>`;
+  }
+
+  // 5. Thumbnail (type 11)
+  if (type === 11) {
+    const url = (comp.media && comp.media.url) || comp.url || '';
+    if (!url) return '';
+    return `<div class="discord-component-thumbnail"><img src="${escapeHtml(url)}" alt="thumbnail" loading="lazy"></div>`;
+  }
+
+  // 6. MediaGallery (type 12)
+  if (type === 12) {
+    const items = (comp.items || []).map(it => {
+      const u = (it.media && it.media.url) || it.url || '';
+      return `<div class="gallery-item" onclick="openLightbox('${escapeHtml(u)}')"><img src="${escapeHtml(u)}" alt="" loading="lazy"></div>`;
+    }).join('');
+    return `<div class="discord-component-media-gallery">${items}</div>`;
+  }
+
+  // 7. ActionRow (type 1)
+  if (type === 1) {
+    const children = (comp.components || []).map(c => renderDiscordComponent(c, ctx)).join('');
+    return `<div class="discord-component-action-row">${children}</div>`;
+  }
+
+  // 8. Button (type 2)
+  if (type === 2) {
+    const styleClass = comp.style === 1 ? 'btn-primary' : comp.style === 3 ? 'btn-success' : comp.style === 4 ? 'btn-danger' : comp.style === 5 ? 'btn-link' : 'btn-secondary';
+    let emojiHtml = '';
+    if (comp.emoji) {
+      if (comp.emoji.id) {
+        const ext = comp.emoji.animated ? 'gif' : 'png';
+        emojiHtml = `<img class="btn-emoji" src="https://cdn.discordapp.com/emojis/${comp.emoji.id}.${ext}?size=32" alt="">`;
+      } else if (comp.emoji.name) {
+        emojiHtml = `<span class="btn-emoji">${escapeHtml(comp.emoji.name)}</span>`;
+      }
+    }
+    const label = comp.label ? `<span>${escapeHtml(comp.label)}</span>` : '';
+    if (comp.url) {
+      return `<a class="discord-btn-snapshot ${styleClass}" href="${escapeHtml(comp.url)}" target="_blank" rel="noopener">${emojiHtml}${label}</a>`;
+    }
+    return `<span class="discord-btn-snapshot ${styleClass}">${emojiHtml}${label}</span>`;
+  }
+
+  // Fallback for sub-components or unhandled
+  if (Array.isArray(comp.components)) {
+    return comp.components.map(c => renderDiscordComponent(c, ctx)).join('');
+  }
+  return '';
+}
+
 function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels = {}, messages = [] }) {
   const publicId = transcript.public_id || 'tr_default';
   const ticketName = transcript.ticket_name || 'ticket';
@@ -348,13 +435,32 @@ function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels
         reactHtml = `<div class="reactions-row">${pills}</div>`;
       }
 
+      // Components V2 (e.g. Welcome Message container)
+      let compHtml = '';
+      if (m.components) {
+        let tree = m.components;
+        if (typeof tree === 'string') {
+          try { tree = JSON.parse(tree); } catch (e) {}
+        }
+        if (Array.isArray(tree)) {
+          compHtml = `<div class="discord-components-tree">${tree.map(c => renderDiscordComponent(c, ctx)).join('')}</div>`;
+        } else if (tree && typeof tree === 'object') {
+          compHtml = `<div class="discord-components-tree">${renderDiscordComponent(tree, ctx)}</div>`;
+        }
+      }
+
+      const hasContent = renderedContent && renderedContent.trim().length > 0;
+
       itemsHtml += `
         <div class="message-item" id="message-${escapeHtml(m.discord_message_id)}">
           ${replyHtml}
-          <div class="msg-content-row">
-            <div class="msg-text searchable-content">${renderedContent}</div>
-            ${m.is_edited ? '<span class="edited-tag">(đã chỉnh sửa)</span>' : ''}
-          </div>
+          ${hasContent ? `
+            <div class="msg-content-row">
+              <div class="msg-text searchable-content">${renderedContent}</div>
+              ${m.is_edited ? '<span class="edited-tag">(đã chỉnh sửa)</span>' : ''}
+            </div>
+          ` : ''}
+          ${compHtml}
           ${stickerHtml}
           ${attHtml}
           ${embedHtml}
@@ -873,6 +979,126 @@ function renderPadeTranscriptPage({ transcript, users = {}, roles = {}, channels
     }
     .img-fallback-card .fallback-icon { font-size: 16px; opacity: 0.8; }
     .img-fallback-card .fallback-text { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+
+    /* Discord Components V2 System */
+    .discord-components-tree {
+      margin: 8px 0;
+      max-width: 540px;
+    }
+    .discord-component-container {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin: 6px 0;
+      backdrop-filter: blur(12px);
+    }
+    .discord-component-section {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 6px 0;
+    }
+    .discord-component-section .section-content {
+      flex: 1;
+      min-width: 0;
+    }
+    .discord-component-section .section-accessory {
+      flex-shrink: 0;
+    }
+    .discord-component-thumbnail img {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      object-fit: cover;
+      display: block;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .discord-component-text {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-main);
+      word-break: break-word;
+    }
+    .discord-component-text h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #fff;
+    }
+    .discord-component-separator {
+      margin: 10px 0;
+      height: 1px;
+      background: transparent;
+    }
+    .discord-component-separator.divider {
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .discord-component-separator.spacing-large {
+      margin: 16px 0;
+    }
+    .discord-component-action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 8px 0;
+    }
+    .discord-btn-snapshot {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: default;
+      user-select: none;
+      text-decoration: none;
+      line-height: 1.3;
+      border: 1px solid transparent;
+    }
+    .discord-btn-snapshot.btn-primary {
+      background: #5865f2;
+      color: #fff;
+    }
+    .discord-btn-snapshot.btn-secondary {
+      background: #313338;
+      color: #dbdee1;
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+    .discord-btn-snapshot.btn-success {
+      background: #23a55a;
+      color: #fff;
+    }
+    .discord-btn-snapshot.btn-danger {
+      background: #da373c;
+      color: #fff;
+    }
+    .discord-btn-snapshot.btn-link {
+      background: #2b2d31;
+      color: #00a8fc;
+      border-color: rgba(255, 255, 255, 0.06);
+    }
+    .discord-btn-snapshot .btn-emoji {
+      width: 16px;
+      height: 16px;
+      object-fit: contain;
+      vertical-align: -2px;
+    }
+    .discord-component-media-gallery {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 8px 0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .discord-component-media-gallery img {
+      max-width: 100%;
+      border-radius: 8px;
+      display: block;
+    }
 
     /* Media Gallery & Lightbox */
     .media-gallery {

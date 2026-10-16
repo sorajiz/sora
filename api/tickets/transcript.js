@@ -14,7 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { getTranscriptFromDB } = require('./db');
+const { getTranscriptFromDB, getMediaAssetFromDB } = require('./db');
 const { renderPadeTranscriptPage } = require('./render');
 
 function renderLandingPage() {
@@ -374,6 +374,43 @@ module.exports = async (req, res) => {
     ticketId = ticketId.replace(/\.html$/, '');
     if (!queryParams.has('id')) {
       queryParams.set('id', ticketId);
+    }
+  }
+
+  let mediaAssetId = queryParams.get('media') || queryParams.get('asset') || null;
+  if (!mediaAssetId && req.url) {
+    try {
+      const parsed = new URL(req.url, 'http://localhost');
+      const segs = parsed.pathname.split('/').filter(Boolean);
+      const mIdx = segs.findIndex(s => s === 'media');
+      if (mIdx !== -1 && segs[mIdx + 1]) {
+        mediaAssetId = segs[mIdx + 1];
+      }
+    } catch (e) {}
+  }
+
+  // 1b. Serve media binary asset from PostgreSQL ticket_media_assets
+  if (ticketId && mediaAssetId) {
+    try {
+      const media = await getMediaAssetFromDB(ticketId, mediaAssetId);
+      if (media && media.data) {
+        res.status(200);
+        res.setHeader('Content-Type', media.content_type || 'application/octet-stream');
+        res.setHeader('Content-Length', media.size_bytes || media.data.length);
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+        if (media.sha256) {
+          res.setHeader('ETag', `"${media.sha256}"`);
+        }
+        return res.send(media.data);
+      }
+      res.status(404);
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+      return res.send('Asset Not Found');
+    } catch (mErr) {
+      console.error('[TRANSCRIPT] Media lookup error:', mErr);
+      res.status(500);
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+      return res.send('Internal Media Error');
     }
   }
 

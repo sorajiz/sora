@@ -82,6 +82,7 @@
     { "source": "/tickets/transcript/(.*)", "destination": "/api/tickets/transcript" },
     { "source": "/t/:id/download/html", "destination": "/api/tickets/transcript?id=:id&action=download" },
     { "source": "/t/:id/download", "destination": "/api/tickets/transcript?id=:id&action=download" },
+    { "source": "/t/:id/media/:assetId", "destination": "/api/tickets/transcript?id=:id&media=:assetId" },
     { "source": "/t/:id", "destination": "/api/tickets/transcript?id=:id" },
     { "source": "/hooks/sepay-payment", "destination": "/api/hooks/sepay-payment" },
     { "source": "/hooks/sepay-payment/(.*)", "destination": "/api/hooks/sepay-payment" },

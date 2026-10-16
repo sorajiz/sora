@@ -172,13 +172,30 @@ async function getTranscriptFromDB(publicId) {
       // Table might be empty or optional
     }
 
+    // 8. Fetch components v2
+    const componentsByMsg = {};
+    try {
+      const cRes = await p.query(
+        `SELECT message_id, component_tree
+         FROM ticket_components
+         WHERE transcript_id = $1`,
+        [transcriptId]
+      );
+      for (const c of cRes.rows) {
+        componentsByMsg[c.message_id] = c.component_tree;
+      }
+    } catch (cErr) {
+      // Components table optional
+    }
+
     // Combine into full message payload
     const messages = mRes.rows.map(m => ({
       ...m,
       attachments: attachmentsByMsg[m.id] || [],
       embeds: embedsByMsg[m.id] || [],
       reactions: reactionsByMsg[m.id] || [],
-      stickers: stickersByMsg[m.id] || []
+      stickers: stickersByMsg[m.id] || [],
+      components: componentsByMsg[m.id] || null
     }));
 
     return {
@@ -193,7 +210,33 @@ async function getTranscriptFromDB(publicId) {
   }
 }
 
+async function getMediaAssetFromDB(publicId, assetId) {
+  const p = getPool();
+  if (!p) return null;
+
+  try {
+    const res = await p.query(
+      `SELECT a.content_type, a.size_bytes, a.data, a.sha256
+       FROM ticket_media_assets a
+       JOIN ticket_transcripts t ON t.id = a.transcript_id
+       WHERE (t.public_id = $1 OR t.ticket_name = $1)
+         AND a.asset_id = $2
+       LIMIT 1`,
+      [publicId, assetId]
+    );
+
+    if (res.rows.length === 0) {
+      return null;
+    }
+    return res.rows[0];
+  } catch (err) {
+    console.error('[DATABASE] Error reading media asset:', err);
+    return null;
+  }
+}
+
 module.exports = {
   getPool,
-  getTranscriptFromDB
+  getTranscriptFromDB,
+  getMediaAssetFromDB
 };
