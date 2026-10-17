@@ -1,6 +1,6 @@
 # Pade Store Menu Website V2 — Progress & Checkpoints
 
-Last Updated: 2026-10-17
+Last Updated: 2026-10-18
 Status: COMPLETE (All Core Items Verified, C-D Manual Steps Documented)
 Branch: main
 
@@ -17,7 +17,8 @@ Branch: main
 - [x] **Phase 8: Hardening** — CSP, XSS inertness, presigned direct R2 uploads with binary magic-byte sniffing (SVG rejected), scale benchmarks
 - [x] **Phase 9: Build & Deployment** — `apps/menu/vercel.json`, `scripts/vercel-ignore-menu.js`, production `next build` (109 kB First Load JS), `MANUAL-STEPS.md`
 - [x] **Phase 10: Skills, Verification & Report** — 7 agent skills in `.agents/skills/`, contract verification (0 drift), full evidence report
-- [x] **Phase 11: Visual Refresh (Mono / Gradient / Waves)** — premium dark UI/UX pass over the public storefront
+- [x] **Phase 11: Visual Refresh (Mono / Gradient / Waves)** — premium dark UI/UX pass over the `apps/menu` storefront
+- [x] **Phase 12: Live Menu FX Refresh** — same mono/gradient/wave language applied to the **actually deployed** page
 
 ---
 
@@ -92,5 +93,67 @@ text block; no ornaments inside buttons, inputs or select labels.
 render parity, signature, text) · `next build` compiled successfully, `/` First Load JS **112 kB**
 (7.91 kB route) · production server returns `200` with aurora, wave, grid, shine and spotlight
 markup present in the HTML.
+
+---
+
+## Phase 12: Live Menu FX Refresh (deployment-topology correction)
+
+**Finding (important):** the publicly served `menu.sorae.tokyo` page is **not** `apps/menu`. The live
+document is produced by the **root Vercel deployment**:
+
+```
+views/menu.ejs  ──(scripts/build.js)──▶  dist/menu.html
+vercel.json: host menu.sorae.tokyo ──rewrite──▶ /menu.html     (+ /api/menu → dist/api/menu.js)
+```
+
+Evidence: the live HTML has no `/_next/static/*` chunks, and it does contain the inline
+`PADE STORE PREMIUM DESIGN SYSTEM` `<style>` plus `btn-morph-menu` / `ambient-bloom` markup, i.e. the
+EJS template. `apps/menu` (Phase 2–11) remains a parallel, not-yet-served migration target and was
+left untouched by Phase 12.
+
+**Scope:** `views/menu.ejs` only (self-contained page: inline `<style>` at `:34`, body at `:1471`,
+inline `<script>` at the end). EJS templates are rendered **as-is** into `dist/`; the root
+`minifyCss` pipeline only applies to `style.css`, so the inline FX layer is not minified — which is
+why the wave `url("data:image/svg+xml,…")` payloads survive intact.
+
+**Premium FX layer appended to the existing system** (nothing was rewritten; the new block is last,
+so it refines the base rules without breaking the markup contract):
+
+- **Ambient FX** — `.pade-fx` stage (`position: fixed`, `z-index: 0`, `pointer-events: none`):
+  `.fx-aurora` light pool, **3 seamless wave bands**, `.fx-grid` (68px, radially masked), `.fx-grain`
+  (5% `feTurbulence`).
+- **Seamless waves** — each band is `width: calc(100% + 1440px)` with a `repeat-x` 1440px tile and
+  loops by exactly one period (`@keyframes fx-wave { to { transform: translateX(-1440px) } }`).
+  Because the shift is a whole period, the loop cannot seam at any viewport width — no
+  percentage/tile mismatch and no empty strip on ultra-wide screens. Durations 31s / 21s / 15s give
+  parallax; each tile is a gradient-filled sine band whose trailing edge fades to transparent.
+- **Aurora** — `.ambient-bloom` / `.ambient-accent` re-tuned to silver-only radial pools with
+  `transform`-only drift (28s / 34s alternate).
+- **Gradient borders** — product cards and dialogs switch to the
+  `padding-box` + `border-box` double-background trick, brightening on hover.
+- **Pointer spotlight** — `--mx` / `--my` written from a single delegated, rAF-throttled
+  `pointermove` listener on `#productGrid` (survives every re-render, no per-card listener).
+- **Gradient-metal type** — navbar wordmark, `#activeCategoryTitle`, card price and modal price use
+  `background-clip: text` over the silver→white gradient.
+- **Glass surfaces** — navbar, sidebar, morph dropdown and toast only (backdrop-filter rule kept).
+- **Hairlines** — `--grad-hair` (centre-bright) under the navbar, sidebar header, main header,
+  modal price bar and card pricing row.
+- **Scroll progress hairline** — 2px `scaleX()` bar driven by one passive scroll listener.
+- **Strict monochrome pass** — every remaining hue was removed or overridden: badges
+  (sale = solid white, tag = silver, draft = dashed, sold-out = dim), role chips, `.btn-admin-create`,
+  `.btn-admin-preview.active`, `.btn-discord` + its morph-menu entry (Discord blue → silver), the
+  delete-confirm red → white outline, and both `accent-color: #ec4899` checkboxes. `--pink-soft` /
+  `--pink-dim` are re-pointed to silver.
+
+**Accessibility & performance:** all animation is `transform` / `opacity`; bands carry
+`will-change: transform` + `backface-visibility: hidden` to stay on the compositor; a single
+`@media (prefers-reduced-motion: reduce)` block disables aurora drift, waves, card rise, sheen and
+toast pulse and also neutralises the nav CTA lift. The spotlight writes CSS variables only.
+
+**Verification:** `npm run build` → `dist/menu.html` rebuilt (0 unrendered EJS markers; inline
+`<style>` braces balanced 315/315; 6 keyframe blocks; both `<script>` tags present); all four
+`data:image/svg+xml` payloads decode and are well-formed; `npm test` → 41 + 7 passing.
+
+**Commit:** `2469cdb` on `main` (1 file, +729 / −7).
 
 
