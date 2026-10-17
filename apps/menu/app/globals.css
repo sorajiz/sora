@@ -2,18 +2,55 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================================
+   PADE STORE · MONOCHROME DESIGN SYSTEM
+   Palette discipline: void / graphite / silver. No neon, no RGB, no purple SaaS.
+   All motion is GPU-cheap (transform + opacity) and honours reduced-motion.
+   ============================================================================ */
+
 :root {
-  --void: #060607;
-  --ink: #0d0d0f;
-  --graphite: #151518;
-  --steel: #1e1e22;
-  --line: #2b2b30;
-  --ash: #8d8d96;
-  --text-2: #b9b9c1;
-  --off-white: #ececf0;
-  --white: #fafafa;
-  --silver-accent: #c9ccd2;
+  /* --- Core surfaces --- */
+  --void: #050506;
+  --ink: #0b0b0e;
+  --graphite: #131317;
+  --steel: #1c1c22;
+  --elevated: #212128;
+
+  /* --- Hairlines --- */
+  --line: #2a2a32;
+  --line-soft: rgba(255, 255, 255, 0.06);
+  --line-strong: rgba(255, 255, 255, 0.14);
+
+  /* --- Type --- */
+  --white: #fbfbfd;
+  --off-white: #edeef2;
+  --text-2: #b8b9c2;
+  --ash: #85868f;
+
+  /* --- Silver accents --- */
+  --silver-accent: #d0d3d9;
   --silver-dim: #9a9da5;
+  --silver-deep: #6a6d75;
+
+  /* --- Glow / depth --- */
+  --glow-soft: rgba(208, 211, 217, 0.1);
+  --glow-mid: rgba(208, 211, 217, 0.18);
+  --glow-strong: rgba(255, 255, 255, 0.3);
+  --shadow-deep: 0 26px 64px -30px rgba(0, 0, 0, 0.95);
+
+  /* --- Gradients --- */
+  --grad-silver: linear-gradient(180deg, #ffffff 0%, #e7e8ec 44%, #a7aab2 100%);
+  --grad-panel: linear-gradient(180deg, rgba(24, 24, 30, 0.92) 0%, rgba(11, 11, 14, 0.96) 100%);
+  --grad-line: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.02) 42%,
+    rgba(208, 211, 217, 0.16) 100%
+  );
+
+  /* --- Motion --- */
+  --ease-out-quint: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-soft: cubic-bezier(0.4, 0, 0.2, 1);
 
   --background: var(--void);
   --foreground: var(--off-white);
@@ -27,41 +64,477 @@ body {
   font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* Layered GPU-cheap background (§7) */
+/* ============================================================================
+   1. AMBIENT BACKGROUND STACK
+   ============================================================================ */
+
+/* Base gradient wash (kept cheap: static gradients only) */
 .pade-bg-layer {
-  background: 
-    radial-gradient(ellipse 90% 60% at 50% -15%, rgba(201, 204, 210, 0.08), transparent 70%),
-    radial-gradient(circle at 80% 25%, rgba(255, 255, 255, 0.02), transparent 45%),
-    linear-gradient(180deg, var(--void) 0%, var(--ink) 40%, var(--void) 100%);
+  background:
+    radial-gradient(ellipse 90% 60% at 50% -15%, rgba(208, 211, 217, 0.09), transparent 70%),
+    radial-gradient(circle at 82% 22%, rgba(255, 255, 255, 0.025), transparent 45%),
+    radial-gradient(circle at 12% 62%, rgba(154, 157, 165, 0.05), transparent 48%),
+    linear-gradient(180deg, var(--void) 0%, var(--ink) 38%, var(--graphite) 62%, var(--void) 100%);
 }
 
+/* Fixed, non-interactive FX shell */
+.pade-bg-fx {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* --- Aurora blobs: soft silver light, slowly drifting --- */
+.pade-aurora {
+  position: absolute;
+  inset: -20% -10% auto -10%;
+  height: 120vh;
+}
+
+.pade-aurora__blob {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  will-change: transform;
+  opacity: 0.55;
+}
+
+.pade-aurora__blob--a {
+  top: -12%;
+  left: 8%;
+  width: 46vw;
+  height: 46vw;
+  background: radial-gradient(circle, rgba(208, 211, 217, 0.13) 0%, transparent 62%);
+  animation: auroraShift 34s var(--ease-in-out-soft) infinite alternate;
+}
+
+.pade-aurora__blob--b {
+  top: 6%;
+  right: 4%;
+  width: 38vw;
+  height: 38vw;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.07) 0%, transparent 60%);
+  animation: auroraShift 46s var(--ease-in-out-soft) infinite alternate-reverse;
+}
+
+.pade-aurora__blob--c {
+  top: 34%;
+  left: 38%;
+  width: 30vw;
+  height: 30vw;
+  background: radial-gradient(circle, rgba(154, 157, 165, 0.09) 0%, transparent 64%);
+  animation: auroraShift 56s var(--ease-in-out-soft) infinite alternate;
+}
+
+/* --- Fine engineering grid: masked so it dissolves into the void --- */
+.pade-grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 58% at 50% 6%, #000 0%, transparent 78%);
+  mask-image: radial-gradient(ellipse 80% 58% at 50% 6%, #000 0%, transparent 78%);
+  opacity: 0.5;
+}
+
+/* --- Film grain (static, ~4% opacity: depth without blending costs) --- */
+.pade-grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  pointer-events: none;
+}
+
+/* --- Waves: seamless tiled SVG bands drifting across the hero --- */
+.pade-wave-stack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 420px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.55) 45%, transparent 100%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.55) 45%, transparent 100%);
+}
+
+.pade-wave-stack svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.pade-wave {
+  will-change: transform;
+}
+
+.pade-wave--back {
+  animation: waveDrift 46s linear infinite;
+}
+
+.pade-wave--mid {
+  animation: waveDrift 32s linear infinite reverse;
+}
+
+.pade-wave--front {
+  animation: waveDrift 22s linear infinite;
+}
+
+/* Legacy single-blob decorative layer (kept for compatibility) */
 .silver-wave-deco {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 480px;
-  background: radial-gradient(circle at 50% 0%, rgba(201, 204, 210, 0.06) 0%, transparent 75%);
+  background: radial-gradient(circle at 50% 0%, rgba(208, 211, 217, 0.07) 0%, transparent 75%);
   pointer-events: none;
   z-index: 0;
 }
 
-/* Glassmorphism Card for products */
+/* ============================================================================
+   2. SURFACES
+   ============================================================================ */
+
+/* Gradient-bordered product surface with pointer spotlight */
 .pade-card {
-  background: rgba(13, 13, 15, 0.85);
-  border: 1px solid var(--line);
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, background 0.2s ease;
+  position: relative;
+  border: 1px solid transparent;
+  background:
+    var(--grad-panel) padding-box,
+    var(--grad-line) border-box;
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.02) inset, 0 10px 30px -24px rgba(0, 0, 0, 0.9);
+  transition:
+    transform 0.32s var(--ease-out-quint),
+    box-shadow 0.32s ease,
+    background 0.32s ease;
+}
+
+.pade-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    240px circle at var(--mx, 50%) var(--my, 0%),
+    rgba(255, 255, 255, 0.09),
+    transparent 62%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .pade-card:hover {
-  background: rgba(21, 21, 24, 0.95);
-  border-color: var(--silver-dim);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  background:
+    linear-gradient(180deg, rgba(30, 30, 37, 0.96) 0%, rgba(14, 14, 18, 0.98) 100%) padding-box,
+    linear-gradient(120deg, rgba(255, 255, 255, 0.3) 0%, rgba(208, 211, 217, 0.14) 48%, rgba(255, 255, 255, 0.26) 100%) border-box;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.04) inset,
+    var(--shadow-deep),
+    0 0 34px -14px var(--glow-mid);
 }
 
-/* Discord preview skin (§9) */
+.pade-card:hover::before {
+  opacity: 1;
+}
+
+.pade-card:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--void),
+    0 0 0 4px var(--silver-dim),
+    var(--shadow-deep);
+}
+
+/* Frosted panel — small surfaces only (navbar, dialogs, toasts) */
+.pade-glass {
+  background: linear-gradient(180deg, rgba(13, 13, 17, 0.82) 0%, rgba(8, 8, 11, 0.88) 100%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  backdrop-filter: blur(14px) saturate(120%);
+  border: 1px solid var(--line-soft);
+}
+
+.pade-panel {
+  background: var(--grad-panel);
+  border: 1px solid var(--line);
+}
+
+.pade-panel--soft {
+  background: linear-gradient(180deg, rgba(28, 28, 34, 0.55) 0%, rgba(13, 13, 17, 0.55) 100%);
+  border: 1px solid var(--line-soft);
+}
+
+/* Dialog shell: gradient border + deep drop shadow (no hover transform) */
+.pade-dialog {
+  position: relative;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(180deg, rgba(18, 18, 23, 0.985) 0%, rgba(10, 10, 13, 0.99) 100%) padding-box,
+    linear-gradient(140deg, rgba(255, 255, 255, 0.24) 0%, rgba(208, 211, 217, 0.08) 46%, rgba(255, 255, 255, 0.18) 100%) border-box;
+  box-shadow:
+    var(--shadow-deep),
+    0 0 70px -34px rgba(208, 211, 217, 0.38);
+}
+
+/* Hairline divider with a soft silver core */
+.pade-divider {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.16) 22%,
+    rgba(208, 211, 217, 0.3) 50%,
+    rgba(255, 255, 255, 0.16) 78%,
+    transparent 100%
+  );
+  opacity: 0.55;
+}
+
+/* ============================================================================
+   3. CONTROLS
+   ============================================================================ */
+
+.pade-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  font-weight: 500;
+  transition:
+    transform 0.2s var(--ease-out-quint),
+    box-shadow 0.25s ease,
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.pade-btn:active {
+  transform: scale(0.97);
+}
+
+/* Primary: silver -> white gradient face, dark ink label */
+.pade-btn-primary {
+  background: var(--grad-silver);
+  color: var(--void);
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.7) inset,
+    0 10px 26px -14px rgba(208, 211, 217, 0.5);
+}
+
+.pade-btn-primary:hover {
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.8) inset,
+    0 14px 34px -14px rgba(255, 255, 255, 0.4);
+  filter: brightness(1.04);
+}
+
+/* Ghost: hairline panel that lifts to silver on hover */
+.pade-btn-ghost {
+  background: linear-gradient(180deg, rgba(24, 24, 30, 0.9) 0%, rgba(11, 11, 14, 0.9) 100%);
+  color: var(--off-white);
+  border: 1px solid var(--line);
+}
+
+.pade-btn-ghost:hover {
+  border-color: var(--line-strong);
+  color: var(--white);
+  background: linear-gradient(180deg, rgba(33, 33, 40, 0.95) 0%, rgba(15, 15, 19, 0.95) 100%);
+  box-shadow: 0 0 24px -14px var(--glow-mid);
+}
+
+/* Sheen sweep for premium CTAs (transform-only: composited, no layout pass) */
+.pade-btn-sheen {
+  overflow: hidden;
+}
+
+.pade-btn-sheen::after {
+  content: "";
+  position: absolute;
+  top: -60%;
+  bottom: -60%;
+  left: 0;
+  width: 50%;
+  transform: translateX(-170%) rotate(18deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.pade-btn-sheen:hover::after {
+  opacity: 1;
+  animation: sheen 0.9s var(--ease-out-quint);
+}
+
+/* Chips */
+.pade-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+  border-radius: 0.75rem;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(22, 22, 27, 0.9) 0%, rgba(11, 11, 14, 0.9) 100%);
+  color: var(--text-2);
+  transition:
+    color 0.22s ease,
+    border-color 0.22s ease,
+    background 0.22s ease,
+    transform 0.22s var(--ease-out-quint),
+    box-shadow 0.22s ease;
+}
+
+.pade-chip:hover {
+  color: var(--white);
+  border-color: var(--line-strong);
+  transform: translateY(-1px);
+}
+
+.pade-chip--active {
+  background: var(--grad-silver);
+  color: var(--void);
+  border-color: rgba(255, 255, 255, 0.65);
+  font-weight: 600;
+  box-shadow: 0 8px 22px -14px rgba(208, 211, 217, 0.6);
+}
+
+/* Inputs */
+.pade-input {
+  background: linear-gradient(180deg, rgba(18, 18, 22, 0.94) 0%, rgba(9, 9, 12, 0.94) 100%);
+  border: 1px solid var(--line);
+  color: var(--white);
+  transition: border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+}
+
+.pade-input::placeholder {
+  color: var(--ash);
+}
+
+.pade-input:focus {
+  outline: none;
+  border-color: var(--silver-dim);
+  box-shadow: 0 0 0 3px rgba(208, 211, 217, 0.12), 0 0 26px -12px var(--glow-mid);
+}
+
+/* ============================================================================
+   4. TYPE TREATMENTS
+   ============================================================================ */
+
+.pade-gradient-text {
+  background: var(--grad-silver);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Animated silver sweep across a headline */
+.pade-shine-text {
+  background: linear-gradient(
+    100deg,
+    #9a9da5 0%,
+    #ffffff 42%,
+    #edeef2 52%,
+    #9a9da5 100%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: textSheen 7s var(--ease-in-out-soft) infinite;
+}
+
+.pade-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--silver-dim);
+}
+
+.pade-mono {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================================
+   5. BADGES & MICRO-DETAILS
+   ============================================================================ */
+
+.pade-badge-hot {
+  background: var(--grad-silver);
+  color: var(--void);
+  box-shadow: 0 6px 18px -10px rgba(255, 255, 255, 0.5);
+}
+
+.pade-badge-soft {
+  background: rgba(11, 11, 14, 0.72);
+  border: 1px solid var(--line-strong);
+  color: var(--silver-accent);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.pade-dot-live {
+  position: relative;
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: var(--silver-accent);
+}
+
+.pade-dot-live::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 9999px;
+  border: 1px solid var(--silver-accent);
+  opacity: 0.6;
+  animation: pulseRing 2.4s var(--ease-out-quint) infinite;
+}
+
+/* ============================================================================
+   6. UTILITIES
+   ============================================================================ */
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.pade-mask-fade-x {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+
+/* ============================================================================
+   7. DISCORD PREVIEW SKIN (§9) — untouched parity surface
+   ============================================================================ */
+
 .discord-bg {
   background-color: #313338;
   color: #dbdee1;
@@ -96,27 +569,141 @@ body {
   background-color: #4752c4;
 }
 
-/* Subtle scrollbars */
+/* ============================================================================
+   8. SCROLLBARS
+   ============================================================================ */
+
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: var(--void);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--steel);
-  border-radius: 3px;
+  background: linear-gradient(180deg, var(--steel), var(--line));
+  border-radius: 9999px;
+  border: 2px solid var(--void);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--line);
+  background: linear-gradient(180deg, var(--line), var(--silver-deep));
 }
 
+/* ============================================================================
+   9. KEYFRAMES
+   ============================================================================ */
+
+@keyframes auroraShift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(6%, 4%, 0) scale(1.08);
+  }
+  100% {
+    transform: translate3d(-5%, 6%, 0) scale(1.02);
+  }
+}
+
+@keyframes waveDrift {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-1440px);
+  }
+}
+
+@keyframes sheen {
+  0% {
+    transform: translateX(-170%) rotate(18deg);
+  }
+  100% {
+    transform: translateX(340%) rotate(18deg);
+  }
+}
+
+@keyframes textSheen {
+  0%,
+  100% {
+    background-position: 180% 0;
+  }
+  50% {
+    background-position: -20% 0;
+  }
+}
+
+@keyframes pulseRing {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.7;
+  }
+  70%,
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+@keyframes riseIn {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-rise-in {
+  animation: riseIn 0.6s var(--ease-out-quint) both;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s var(--ease-out-quint) both;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.28s var(--ease-out-quint) both;
+}
+
+/* ============================================================================
+   10. ACCESSIBILITY
+   ============================================================================ */
+
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .pade-aurora__blob,
+  .pade-wave {
+    animation: none !important;
   }
 }

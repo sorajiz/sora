@@ -13,31 +13,21 @@ module.exports = {
         ink: 'var(--ink)',
         graphite: 'var(--graphite)',
         steel: 'var(--steel)',
+        elevated: 'var(--elevated)',
         line: 'var(--line)',
         ash: 'var(--ash)',
         text2: 'var(--text-2)',
         offWhite: 'var(--off-white)',
         silverAccent: 'var(--silver-accent)',
         silverDim: 'var(--silver-dim)',
+        silverDeep: 'var(--silver-deep)',
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', '-apple-system', 'sans-serif'],
         display: ['var(--font-display)', 'system-ui', '-apple-system', 'sans-serif'],
       },
-      animation: {
-        'fade-in': 'fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-        'scale-in': 'scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-      },
-      keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
-        },
-        scaleIn: {
-          '0%': { opacity: '0', transform: 'scale(0.96)' },
-          '100%': { opacity: '1', transform: 'scale(1)' },
-        },
-      },
+      // Motion primitives live in globals.css so keyframes stay next to the
+      // layered background FX that use them (aurora, waves, sheen, spotlight).
     },
   },
   plugins: [],

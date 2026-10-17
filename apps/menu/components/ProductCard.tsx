@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import Image from 'next/image';
 import { MenuProduct } from '../lib/types';
 import { formatBrandMoney } from '../lib/domain/money';
@@ -12,6 +12,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, onQuickPreview }: ProductCardProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
+
   const isSoldOut =
     product.status === 'SOLD_OUT' ||
     (product.stock_mode === 'TRACKED' && product.stock_quantity <= 0);
@@ -26,20 +28,37 @@ export function ProductCard({ product, onQuickPreview }: ProductCardProps) {
       ? Math.round(((compareNum - priceNum) / compareNum) * 100)
       : null;
 
+  /** Feed the CSS spotlight the pointer position (CSSOM only: CSP-safe, no re-render). */
+  const handlePointerMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    const el = cardRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    el.style.setProperty('--mx', `${event.clientX - rect.left}px`);
+    el.style.setProperty('--my', `${event.clientY - rect.top}px`);
+  };
+
   return (
     <div
+      ref={cardRef}
+      onMouseMove={handlePointerMove}
       onClick={() => onQuickPreview(product)}
-      className="group pade-card rounded-2xl overflow-hidden flex flex-col justify-between h-full cursor-pointer relative"
+      className="group pade-card rounded-2xl overflow-hidden flex flex-col justify-between h-full cursor-pointer"
     >
-      {/* Product Image Area */}
+      {/* Product media */}
       <div className="relative w-full aspect-[4/3] bg-[var(--graphite)] overflow-hidden flex items-center justify-center p-3">
+        {/* Inner vignette + top hairline highlight */}
+        <span className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(255,255,255,0.07),transparent_65%)]" />
+        <span className="pointer-events-none absolute top-0 inset-x-6 h-px bg-gradient-to-r from-transparent via-[rgba(255,255,255,0.22)] to-transparent" />
+
         {product.primary_image ? (
           <Image
             src={product.primary_image}
             alt={product.name}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-contain group-hover:scale-105 transition-transform duration-300 p-2"
+            className={`object-contain p-2 transition-transform duration-500 ease-out group-hover:scale-[1.07] ${
+              isSoldOut ? 'grayscale opacity-55' : ''
+            }`}
             loading="lazy"
           />
         ) : (
@@ -54,62 +73,59 @@ export function ProductCard({ product, onQuickPreview }: ProductCardProps) {
         {/* Badges */}
         <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1.5 z-10">
           {product.is_featured && (
-            <span className="px-2 py-0.5 rounded-md bg-[var(--white)] text-[var(--void)] text-[10px] font-bold tracking-wider uppercase shadow-sm">
+            <span className="pade-badge-hot px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wider uppercase">
               HOT ✦
             </span>
           )}
           {discountPercent && !isSoldOut && (
-            <span className="px-2 py-0.5 rounded-md bg-[var(--ink)] text-[var(--silver-accent)] text-[10px] font-semibold border border-[var(--line)]">
+            <span className="pade-badge-soft px-2 py-0.5 rounded-md text-[10px] font-semibold">
               -{discountPercent}%
             </span>
           )}
           {isSoldOut && (
-            <span className="px-2 py-0.5 rounded-md bg-[var(--graphite)] text-[var(--ash)] text-[10px] font-medium border border-[var(--line)]">
+            <span className="px-2 py-0.5 rounded-md bg-[var(--steel)]/90 text-[var(--ash)] text-[10px] font-medium border border-[var(--line)]">
               Hết hàng
             </span>
           )}
         </div>
 
-        {/* Quick View Hover overlay */}
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 flex items-center justify-center space-x-1.5 transition-opacity duration-200 text-white text-xs font-medium">
-          <Eye className="w-4 h-4" />
-          <span>Xem nhanh</span>
+        {/* Quick view overlay */}
+        <div className="absolute inset-0 z-10 flex items-center justify-center gap-1.5 bg-gradient-to-t from-black/70 via-black/35 to-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-white text-xs font-medium">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--void)]/70 border border-[var(--line-strong)] backdrop-blur-[2px]">
+            <Eye className="w-3.5 h-3.5" />
+            <span>Xem nhanh</span>
+          </span>
         </div>
       </div>
 
-      {/* Card Content */}
-      <div className="p-4 flex-1 flex flex-col justify-between">
+      {/* Card body */}
+      <div className="relative z-10 p-4 flex-1 flex flex-col justify-between">
         <div>
-          {/* Category & SKU */}
-          <div className="flex items-center justify-between text-[11px] text-[var(--ash)] mb-1">
-            <span>{product.category_name || 'Sản phẩm'}</span>
-            <span className="text-[var(--ash)] font-mono text-[10px]">{product.sku}</span>
+          <div className="flex items-center justify-between gap-2 text-[11px] text-[var(--ash)] mb-1.5">
+            <span className="truncate">{product.category_name || 'Sản phẩm'}</span>
+            <span className="pade-mono text-[10px] text-[var(--ash)] shrink-0">{product.sku}</span>
           </div>
 
-          {/* Product Name */}
-          <h3 className="text-sm font-semibold text-[var(--white)] group-hover:text-[var(--silver-accent)] transition-colors line-clamp-1 mb-1">
+          <h3 className="text-sm font-semibold text-[var(--white)] group-hover:text-[var(--silver-accent)] transition-colors line-clamp-1 mb-1.5">
             {product.name}
           </h3>
 
-          {/* Short Description */}
           <p className="text-xs text-[var(--text-2)] line-clamp-2 font-light leading-relaxed mb-3">
             {product.short_description || product.description || 'Ưu đãi đặc biệt từ Pade Store.'}
           </p>
         </div>
 
-        {/* Price & Action Row */}
-        <div className="pt-3 border-t border-[var(--line)] flex items-center justify-between mt-auto">
-          <div>
-            <div className="flex items-baseline space-x-1.5">
-              <span className="text-base font-bold text-[var(--white)] tracking-tight">
-                {formatBrandMoney(product.price_amount)}
+        {/* Price + action */}
+        <div className="pt-3 border-t border-[var(--line)] flex items-center justify-between gap-2 mt-auto">
+          <div className="flex items-baseline gap-1.5 min-w-0">
+            <span className="text-base font-bold text-[var(--white)] tracking-tight truncate">
+              {formatBrandMoney(product.price_amount)}
+            </span>
+            {compareNum && compareNum > priceNum && (
+              <span className="text-xs text-[var(--ash)] line-through shrink-0">
+                {formatBrandMoney(product.compare_at_price)}
               </span>
-              {compareNum && compareNum > priceNum && (
-                <span className="text-xs text-[var(--ash)] line-through">
-                  {formatBrandMoney(product.compare_at_price)}
-                </span>
-              )}
-            </div>
+            )}
           </div>
 
           <button
@@ -117,10 +133,10 @@ export function ProductCard({ product, onQuickPreview }: ProductCardProps) {
               e.stopPropagation();
               onQuickPreview(product);
             }}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
               isSoldOut
-                ? 'bg-[var(--graphite)] text-[var(--ash)] cursor-not-allowed'
-                : 'bg-[var(--off-white)] text-[var(--void)] hover:bg-[var(--white)] shadow-sm'
+                ? 'bg-[var(--graphite)] text-[var(--ash)] cursor-not-allowed border border-[var(--line)]'
+                : 'pade-btn pade-btn-primary px-3 py-1.5 text-xs'
             }`}
           >
             {isSoldOut ? 'Hết hàng' : 'Xem nhanh'}

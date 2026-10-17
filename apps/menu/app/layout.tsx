@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Outfit } from "next/font/google";
+import { AmbientBackgroundFX } from "../components/AmbientBackgroundFX";
 import "./globals.css";
 
 const sans = Plus_Jakarta_Sans({
@@ -33,6 +34,13 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#050506",
+  colorScheme: "dark",
+  width: "device-width",
+  initialScale: 1,
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -40,8 +48,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi" className={`dark ${sans.variable} ${display.variable}`}>
-      <body className="bg-[var(--void)] text-[var(--off-white)] antialiased min-h-screen selection:bg-[var(--silver-dim)] selection:text-[var(--void)] font-sans">
-        <div className="silver-wave-deco" />
+      <body className="bg-[var(--void)] text-[var(--off-white)] antialiased min-h-screen selection:bg-[var(--silver-accent)] selection:text-[var(--void)] font-sans">
+        <AmbientBackgroundFX />
         <div className="relative z-10 flex flex-col min-h-screen">
           {children}
         </div>

@@ -101,9 +101,10 @@ export function LiveSync({ initialVersion, isAdmin = false }: LiveSyncProps) {
   if (!showToast) return null;
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 animate-fade-in pointer-events-none">
-      <div className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-[var(--ink)]/95 border border-[var(--silver-dim)] text-xs text-[var(--white)] shadow-2xl backdrop-blur-md">
-        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+    <div className="fixed bottom-5 right-5 z-50 animate-scale-in pointer-events-none">
+      <div className="relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl pade-glass shadow-[var(--shadow-deep)] text-xs text-[var(--white)] overflow-hidden">
+        <span className="pointer-events-none absolute top-0 inset-x-6 h-px bg-gradient-to-r from-transparent via-[rgba(255,255,255,0.35)] to-transparent" />
+        <span className="pade-dot-live text-emerald-300 bg-emerald-300" />
         <span className="font-medium">Menu vừa được cập nhật ✧</span>
       </div>
     </div>
