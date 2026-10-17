@@ -19,6 +19,7 @@ Branch: main
 - [x] **Phase 10: Skills, Verification & Report** — 7 agent skills in `.agents/skills/`, contract verification (0 drift), full evidence report
 - [x] **Phase 11: Visual Refresh (Mono / Gradient / Waves)** — premium dark UI/UX pass over the `apps/menu` storefront
 - [x] **Phase 12: Live Menu FX Refresh** — same mono/gradient/wave language applied to the **actually deployed** page
+- [x] **Phase 13: Gradient Waves + Mobile / Morph-Menu Cleanup** — waves rebuilt to scale with the viewport, chip bar removed ≤959px, morph header + Discord row dropped
 
 ---
 
@@ -155,5 +156,66 @@ toast pulse and also neutralises the nav CTA lift. The spotlight writes CSS vari
 `data:image/svg+xml` payloads decode and are well-formed; `npm test` → 41 + 7 passing.
 
 **Commit:** `2469cdb` on `main` (1 file, +729 / −7).
+
+---
+
+## Phase 13: Gradient Waves + Mobile / Morph-Menu Cleanup
+
+**Scope:** the live page only — `views/menu.ejs` (the root Vercel deployment served at
+`menu.sorae.tokyo`). `apps/menu` remains untouched. Follow-up to five screenshots from the user.
+
+**1. Background rebuilt as a real "Gradient Waves" stack.** The Phase 12 waves read as one dark
+hill on a phone because a single 1440px period is wider than the viewport, the fills faded
+*downward* (bright crest → transparent bottom, which inverts the classic look), and a bottom-left
+ambient pool competed with the bands. The replacement is a four-layer stack:
+
+- `--wp` (wave period) is now a token: `1100px` desktop, `860px` ≤959px, `620px` ≤640px, with
+  `height: calc(var(--wp) / 4)` and `background-size: var(--wp) auto` — the waves scale with the
+  screen instead of being cropped by it, so a phone sees crests rather than a 1/3-period sweep.
+- Every layer is phase-shifted (`background-position-x: -170px / -340px / -510px`), so the four
+  crests sit at different heights and horizontal offsets and read as stacked waves.
+- Each tile is a silver/white gradient fill with stops `bright edge → body → base`
+  (e.g. `.22 → .10 → .05`): the crest keeps a lit leading edge and the overlapping fills accumulate
+  downward into a genuine vertical gradient (#141414 → #2d2d2d over the void #060607).
+- Seamlessness is still exact (one whole period per loop). Because a custom property inside
+  `@keyframes` is resolved once per animation instance — and would seam if `--wp` changed on resize —
+  the `fx-wave` distance is declared explicitly per breakpoint and must stay in sync with `--wp`.
+- `.ambient-accent` moved from the bottom-left to the top-left so the bottom of the page belongs to
+  the waves; `fx-grid` overlay opacity lowered `0.035 → 0.024`.
+
+**2. Mobile fit (image 2).** Verified with headless Chrome + CDP at 360 / 390 / 820 / 1440 px:
+`scrollWidth === clientWidth`, empty overflow-offender list, `2 × 180px` grid at 390px. The visible
+clipping in the screenshot was the oversized wave mass, not layout overflow.
+
+**3. Category chip row removed on small screens (image 3).** `.mobile-category-bar` is now
+`display: none !important` at ≤959px. The morph menu lists every category with its product count and
+the morph button is visible from 959px down (`.btn-morph-menu` only hides at `min-width: 960px`), so
+category navigation is unaffected.
+
+**4. Discord row removed from the morph menu (image 4).** The divider + "Discord Pade Store" community
+link block was deleted from the dropdown renderer.
+
+**5. Morph-menu header removed (image 5).** The "Pade Store" brand row and its ✕ button are gone from
+the markup; the dropdown is now just the list (padding tightened to `0.6rem`). Closing still works via
+the backdrop, and the morph button itself morphs into an ✕ while open.
+
+**Verification:** `npm run build` → `dist/menu.html` (0 unrendered EJS markers; inline `<style>`
+braces balanced 325/325; 5 `data:image/svg+xml` payloads; `--wp` declared 3×; `fx-waveband-4` present;
+0 occurrences of "Discord Pade Store"; no `morph-menu-header` markup left). CDP runs at
+360/390/820/1440 px confirm no horizontal overflow, the hidden chip bar, the headerless 11-row morph
+list, and the per-breakpoint wave geometry (155 / 215 / 275px tall deltas for 620 / 860 / 1100px
+periods). Mobile, desktop and morph-open screenshots were visually reviewed.
+
+**Known pre-existing test failure (not caused by this change):** `scripts/test-menu-api.js` step 7
+asserts the audit log contains `PRODUCT_CREATE` / `PRODUCT_EDIT` / `PRODUCT_ARCHIVE`, but the server
+writes `CREATE` / `EDIT` / `ARCHIVE` (`lib/menu/admin.js`), and the legacy rows carrying the old names
+have dropped out of the endpoint's `LIMIT 50` window. Steps 1–6 pass; `test-build.js` (41/41) and
+`test-server.js` pass. The API code and the test were left untouched (out of scope).
+
+**Uncommitted but untouched:** `scripts/catalog.json` and `scripts/seed-catalog.js` have pending
+working-tree changes (a database catalog export, v30 → v67) that predate this work and are unrelated
+to the UI; they were left as found and excluded from the commit.
+
+**Commit:** `040573b` on `main` (1 file, +62 / −66).
 
 
