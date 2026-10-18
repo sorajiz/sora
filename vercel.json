@@ -141,6 +141,28 @@
       ],
       "destination": "/tos",
       "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "tutorial.sorae.tokyo"
+        }
+      ],
+      "destination": "/tutorial",
+      "permanent": false
+    },
+    {
+      "source": "/((?!assets|js|music|favicon|tutorial|.*\\..*).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "tutorial.sorae.tokyo"
+        }
+      ],
+      "destination": "/tutorial",
+      "permanent": false
     }
   ],
   "rewrites": [
@@ -148,6 +170,8 @@
     { "source": "/rules/(.*)", "destination": "/rules.html" },
     { "source": "/tos", "destination": "/tos.html" },
     { "source": "/tos/(.*)", "destination": "/tos.html" },
+    { "source": "/tutorial", "destination": "/tutorial.html" },
+    { "source": "/tutorial/(.*)", "destination": "/tutorial.html" },
     { "source": "/menu", "destination": "/menu.html" },
     { "source": "/menu/(.*)", "destination": "/menu.html" },
     { "source": "/api/menu", "destination": "/api/menu" },
@@ -325,6 +349,7 @@
     { "source": "/menu", "destination": "/menu.html" },
     { "source": "/rules", "destination": "/rules.html" },
     { "source": "/tos", "destination": "/tos.html" },
+    { "source": "/tutorial", "destination": "/tutorial.html" },
     {
       "source": "/",
       "has": [
@@ -365,7 +390,27 @@
       ],
       "destination": "/tos.html"
     },
-    { "source": "/((?!assets|js|music|favicon|api|hooks|pay|payment|tickets|t|ORD|SR|ord|sr|menu|rules|tos|.*\\..*).*)", "destination": "/index.html" }
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "tutorial.sorae.tokyo"
+        }
+      ],
+      "destination": "/tutorial.html"
+    },
+    {
+      "source": "/((?!assets|js|music|favicon|.*\\..*).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "tutorial.sorae.tokyo"
+        }
+      ],
+      "destination": "/tutorial.html"
+    },
+    { "source": "/((?!assets|js|music|favicon|api|hooks|pay|payment|tickets|t|ORD|SR|ord|sr|menu|rules|tos|tutorial|.*\\..*).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
@@ -397,7 +442,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://va.vercel-scripts.com https://api.vietqr.io; frame-ancestors 'none';"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; media-src 'self' data: blob:; connect-src 'self' https://va.vercel-scripts.com https://api.vietqr.io; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com; frame-ancestors 'none';"
         }
       ]
     },
@@ -424,7 +469,7 @@
       ]
     },
     {
-      "source": "/(.*\\.html|/|/intro|/skills|/contact|/discord|/timework|/menu|/rules|/tos)",
+      "source": "/(.*\\.html|/|/intro|/skills|/contact|/discord|/timework|/menu|/rules|/tos|/tutorial)",
       "headers": [
         {
           "key": "Cache-Control",

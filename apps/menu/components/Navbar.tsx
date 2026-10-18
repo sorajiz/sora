@@ -20,8 +20,7 @@ interface UserProfile {
 
 const NAV_LINKS = [
   { label: 'Menu', key: 'menu' },
-  { label: 'Rules', key: 'rules' },
-  { label: 'ToS', key: 'tos' },
+  { label: 'Sale', key: 'sale' },
   { label: 'Support', key: 'support' },
   { label: 'Discord', key: 'discord' },
 ] as const;
@@ -51,10 +50,8 @@ export function Navbar({
     switch (key) {
       case 'menu':
         return '/';
-      case 'rules':
-        return '/rules';
-      case 'tos':
-        return '/tos';
+      case 'sale':
+        return saleUrl;
       case 'support':
         return supportUrl;
       case 'discord':

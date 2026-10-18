@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= typeof title !== 'undefined' ? title : 'Tutorial · Pade Community' %></title>
+  <meta name="description" content="Hướng dẫn kích hoạt Nitro Trial, bật 2FA, lấy mã dự phòng và quy trình mua hàng tại Pade Store." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0c0d12" />
+  <link rel="canonical" href="<%= typeof canonicalUrl !== 'undefined' ? canonicalUrl : 'https://tutorial.sorae.tokyo' %>" />
+
+  <!-- OpenGraph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="vi_VN" />
+  <meta property="og:site_name" content="Pade Store & Community" />
+  <meta property="og:title" content="Tutorial · Pade Community" />
+  <meta property="og:description" content="Hướng dẫn kích hoạt Nitro Trial, bật xác thực 2FA và lấy mã dự phòng chi tiết." />
+  <meta property="og:url" content="https://tutorial.sorae.tokyo" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Tutorial · Pade Community" />
+  <meta name="twitter:description" content="Hướng dẫn kích hoạt Nitro Trial, bật 2FA và lấy mã dự phòng." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="<%= typeof faviconDataUri !== 'undefined' ? faviconDataUri : '/assets/favicon.png' %>" />
+  <link rel="shortcut icon" type="image/png" href="/assets/favicon.png" />
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg-base: #0c0d12;
+      --bg-surface: #13141a;
+      --bg-surface-elevated: #181922;
+      --bg-sidebar-pill: #21232d;
+      --bg-badge: #1b1c24;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.16);
+      --border-focus: rgba(255, 255, 255, 0.28);
+      --text-white: #ffffff;
+      --text-main: #f1f2f6;
+      --text-sub: #c5c8d4;
+      --text-muted: #838896;
+      --text-dim: #5c606e;
+      --accent-amber: #f59e0b;
+      --accent-amber-bg: #1c160c;
+      --accent-amber-border: rgba(245, 158, 11, 0.35);
+      --accent-blue: #38bdf8;
+      --accent-red: #ef4444;
+      --accent-green: #22c55e;
+      --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: "JetBrains Mono", monospace;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .ambient-mesh {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at 15% 15%, rgba(33, 35, 45, 0.4) 0%, transparent 60%),
+                  radial-gradient(circle at 85% 85%, rgba(20, 21, 28, 0.6) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 100%;
+      background: linear-gradient(90deg, #5865f2, #38bdf8, #a855f7);
+      transform-origin: 0% 50%;
+      transform: scaleX(0);
+      z-index: 100;
+      transition: transform 0.08s ease-out;
+    }
+
+    /* ── HEADER / TOPBAR (ẢNH 2 CHUẨN ĐẸP) ── */
+    .top-header {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      z-index: 50;
+      background: rgba(12, 13, 18, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .top-header-inner {
+      max-width: 1260px;
+      margin: 0 auto;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-avatar {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid var(--border-strong);
+      background: #181920;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .brand-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .brand-name {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-white);
+      letter-spacing: -0.02em;
+    }
+
+    /* Sliding Tabs Navigation */
+    .nav-tabs-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid var(--border-subtle);
+      border-radius: 9999px;
+      padding: 4px;
+    }
+
+    .nav-pill-slider {
+      position: absolute;
+      top: 4px;
+      bottom: 4px;
+      left: 4px;
+      width: 0;
+      background: var(--bg-sidebar-pill);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 9999px;
+      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    .nav-tab-link {
+      position: relative;
+      z-index: 1;
+      padding: 0.45rem 1.15rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-radius: 9999px;
+      transition: color 0.18s ease;
+      white-space: nowrap;
+    }
+
+    .nav-tab-link.active {
+      color: var(--text-white);
+      font-weight: 700;
+    }
+
+    .nav-tab-link:hover {
+      color: var(--text-white);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 0.45rem 0.65rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* ── 2-COLUMN LAYOUT ── */
+    .layout-wrapper {
+      position: relative;
+      z-index: 10;
+      max-width: 1260px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 6rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 3.5rem;
+    }
+
+    .sidebar {
+      width: 270px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 5rem;
+      max-height: calc(100vh - 6.5rem);
+      overflow-y: auto;
+      padding-right: 0.75rem;
+      scrollbar-width: thin;
+      scrollbar-color: #2b2e3b transparent;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .sidebar::-webkit-scrollbar-thumb {
+      background: #2b2e3b;
+      border-radius: 4px;
+    }
+
+    .sidebar-group {
+      margin-bottom: 2rem;
+    }
+
+    .sidebar-heading {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.65rem;
+      padding-left: 0.85rem;
+    }
+
+    .sidebar-nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .sidebar-nav-item {
+      position: relative;
+    }
+
+    .sidebar-nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.55rem 0.95rem;
+      border-radius: 0.55rem;
+      color: var(--text-sub);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.12s ease;
+      user-select: none;
+    }
+
+    .sidebar-nav-link:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-white);
+    }
+
+    .sidebar-nav-link.active {
+      background: var(--bg-sidebar-pill);
+      color: var(--text-white);
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    .nav-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--text-dim);
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+
+    .sidebar-nav-link.active .nav-dot {
+      background-color: #ffffff;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 880px;
+    }
+
+    .content-eyebrow {
+      font-size: 0.78125rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-muted);
+      margin-bottom: 0.65rem;
+      display: inline-block;
+    }
+
+    .hero-title {
+      font-size: clamp(2.25rem, 4.5vw, 3.4rem);
+      font-weight: 900;
+      color: var(--text-white);
+      letter-spacing: -0.03em;
+      line-height: 1.12;
+      margin-bottom: 1.25rem;
+    }
+
+    .meta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid var(--border-subtle);
+      border-radius: 9999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.8125rem;
+      color: var(--text-sub);
+      margin-bottom: 2rem;
+    }
+
+    .meta-badge-link {
+      color: var(--text-white);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.15s ease;
+    }
+
+    .meta-badge-link:hover {
+      text-decoration: underline;
+      color: var(--accent-blue);
+    }
+
+    .section-divider {
+      border: 0;
+      border-top: 1px solid var(--border-subtle);
+      margin: 2.25rem 0;
+    }
+
+    .tos-section {
+      scroll-margin-top: 5.5rem;
+      position: relative;
+    }
+
+    .section-header-row {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    .number-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      background: var(--bg-badge);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--text-white);
+      letter-spacing: -0.015em;
+      line-height: 1.3;
+    }
+
+    .section-anchor-btn {
+      opacity: 0;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 1rem;
+      margin-left: 0.35rem;
+      transition: all 0.15s ease;
+    }
+
+    .tos-section:hover .section-anchor-btn {
+      opacity: 1;
+    }
+
+    .section-lead-text {
+      font-size: 0.95rem;
+      color: var(--text-sub);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    .rules-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin: 0.85rem 0;
+    }
+
+    .rules-list-item {
+      position: relative;
+      padding-left: 1.25rem;
+      font-size: 0.9375rem;
+      color: var(--text-main);
+      line-height: 1.65;
+    }
+
+    .rules-list-item::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      top: -0.05rem;
+      color: var(--text-dim);
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .rules-list-item strong {
+      color: var(--text-white);
+      font-weight: 700;
+    }
+
+    .rule-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1.25rem 1.45rem;
+      margin: 1.15rem 0;
+    }
+
+    .rule-card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* Promo Check Card */
+    .promo-checker-box {
+      background: linear-gradient(135deg, #131722, #0f1118);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 0.85rem;
+      padding: 1.35rem;
+      margin: 1.25rem 0;
+    }
+
+    .promo-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: #5865F2;
+      color: #fff;
+      font-size: 0.875rem;
+      font-weight: 700;
+      padding: 0.65rem 1.25rem;
+      border-radius: 0.55rem;
+      text-decoration: none;
+      margin-top: 0.85rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 16px rgba(88, 101, 242, 0.35);
+    }
+
+    .promo-link-btn:hover {
+      background: #4752c4;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(88, 101, 242, 0.45);
+    }
+
+    /* Video Embed Container (Responsive 16:9) */
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 */
+      height: 0;
+      border-radius: 0.85rem;
+      overflow: hidden;
+      border: 1px solid var(--border-strong);
+      background: #000;
+      margin: 1.25rem 0;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--border-subtle);
+      background: #090a0d;
+      padding: 3rem 1.5rem;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+    }
+
+    .footer-inner {
+      max-width: 1260px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .footer-link {
+      color: var(--text-sub);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .footer-link:hover {
+      color: var(--text-white);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #1c1d26;
+      border: 1px solid var(--border-strong);
+      color: var(--text-white);
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.55rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 900px) {
+      .layout-wrapper {
+        flex-direction: column;
+        gap: 2rem;
+        padding-top: 1.5rem;
+      }
+
+      .mobile-menu-btn {
+        display: inline-flex;
+      }
+
+      .sidebar {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 82vw;
+        max-width: 320px;
+        height: 100vh;
+        max-height: 100vh;
+        background: #101117;
+        z-index: 200;
+        padding: 1.5rem;
+        box-shadow: 10px 0 40px rgba(0, 0, 0, 0.7);
+        border-right: 1px solid var(--border-subtle);
+      }
+
+      .sidebar.open {
+        display: block;
+      }
+
+      .sidebar-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(4px);
+        z-index: 199;
+      }
+
+      .sidebar-backdrop.open {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="reading-progress" id="readingProgress"></div>
+  <div class="ambient-mesh"></div>
+
+  <!-- Header with Smooth Sliding Tabs (Ảnh 2) -->
+  <header class="top-header">
+    <div class="top-header-inner">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <button class="mobile-menu-btn" id="mobileMenuToggle" aria-label="Mở danh mục hướng dẫn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          <span>Mục Lục</span>
+        </button>
+
+        <a href="/" class="brand-group">
+          <div class="brand-avatar">
+            <img src="/assets/pade-guild-icon.png" alt="Pade Community" onerror="this.onerror=null;this.src='/assets/favicon.png';" />
+          </div>
+          <span class="brand-name">Pade Community</span>
+        </a>
+      </div>
+
+      <!-- Sliding Tabs Navigation -->
+      <nav class="nav-tabs-wrapper" id="navTabsWrapper" aria-label="Main Subdomain Navigation">
+        <div class="nav-pill-slider" id="navPillSlider"></div>
+        <a href="/rules" class="nav-tab-link" data-tab="rules">Server Rules</a>
+        <a href="/tos" class="nav-tab-link" data-tab="tos">Terms of Service</a>
+        <a href="/tutorial" class="nav-tab-link active" data-tab="tutorial">Tutorial</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- 2-Column Layout Wrapper -->
+  <div class="layout-wrapper">
+    <!-- Left Sidebar -->
+    <aside class="sidebar" id="pageSidebar">
+      <div class="sidebar-group">
+        <div class="sidebar-heading">MỤC LỤC HƯỚNG DẪN</div>
+        <ul class="sidebar-nav-list">
+          <li class="sidebar-nav-item">
+            <a href="#yeu-cau-bat-buoc" class="sidebar-nav-link active">
+              <span class="nav-dot"></span>
+              <span>Yêu cầu bắt buộc</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#mua-tu-dong" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Yêu cầu mua tự động</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#kiem-tra-link" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Kiểm tra link Trial</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#huong-dan-2fa" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Bật 2FA & Mã dự phòng</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#video-huong-dan" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Video hướng dẫn</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Right Main Article Area -->
+    <main class="main-content">
+      <span class="content-eyebrow">HƯỚNG DẪN CHI TIẾT</span>
+      <h1 class="hero-title">Tutorial</h1>
+
+      <!-- Meta Pill (discord.gg/pade) -->
+      <div class="meta-badge">
+        <span>🎂 Cập nhật lần cuối: 2026 · <a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" class="meta-badge-link">discord.gg/pade</a></span>
+      </div>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 01: Yêu cầu bắt buộc -->
+      <section class="tos-section" id="yeu-cau-bat-buoc">
+        <div class="section-header-row">
+          <span class="number-badge">01</span>
+          <h2 class="section-title">Yêu cầu bắt buộc</h2>
+          <a href="#yeu-cau-bat-buoc" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#yeu-cau-bat-buoc', event)">#</a>
+        </div>
+        <p class="section-lead-text">
+          Để đủ điều kiện đăng ký và kích hoạt gói Discord Nitro Trial, tài khoản của bạn cần đáp ứng các tiêu chuẩn sau:
+        </p>
+        <ul class="rules-list">
+          <li class="rules-list-item">Tài khoản cần mua Nitro Trial <strong>phải tạo được trên 1 tháng</strong>.</li>
+          <li class="rules-list-item">Tài khoản <strong>không sử dụng Nitro</strong> (mua thẳng, quà tặng Gift Link hoặc Random) từ Discord trong vòng <strong>12 tháng trở lại đây</strong>.</li>
+          <li class="rules-list-item">Tài khoản chưa từng sử dụng Nitro lần nào (hoặc đã hết hạn hoàn toàn hơn 1 năm).</li>
+          <li class="rules-list-item">Tài khoản đã từng dùng các gói Nitro dùng thử 3 ngày / 7 ngày / Orbs <strong>vẫn có thể sử dụng được Trial bình thường</strong>.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 02: Yêu cầu khi mua tự động -->
+      <section class="tos-section" id="mua-tu-dong">
+        <div class="section-header-row">
+          <span class="number-badge">02</span>
+          <h2 class="section-title">Yêu cầu khi mua tự động</h2>
+          <a href="#mua-tu-dong" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#mua-tu-dong', event)">#</a>
+        </div>
+        <ul class="rules-list">
+          <li class="rules-list-item">Tài khoản cần mua <strong>không được liên kết bất cứ thẻ thanh toán nào</strong> (Nếu có thẻ sẵn thì tạo ticket để nhân viên hỗ trợ mua thủ công).</li>
+          <li class="rules-list-item">Tài khoản bị gắn cờ (Flagged) cũng phải tạo ticket để mua thủ công.</li>
+          <li class="rules-list-item">Tài khoản <strong>bắt buộc phải có ảnh đại diện (Avatar)</strong>.</li>
+          <li class="rules-list-item">Tài khoản cần mua đã từng sử dụng trial (hơn 1 năm trước) <strong>bắt buộc tạo ticket để mua</strong>.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 03: Kiểm tra link Trial -->
+      <section class="tos-section" id="kiem-tra-link">
+        <div class="section-header-row">
+          <span class="number-badge">03</span>
+          <h2 class="section-title">Kiểm tra tính hợp lệ của tài khoản</h2>
+          <a href="#kiem-tra-link" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#kiem-tra-link', event)">#</a>
+        </div>
+
+        <div class="promo-checker-box">
+          <p style="font-size: 0.95rem; color: #fff; font-weight: 600; line-height: 1.6;">
+            Ấn vào link kiểm tra bên dưới, nếu Discord thông báo:<br>
+            <span style="color: #38bdf8; font-weight: 700;">"Xin lỗi, có vẻ như mã đã được đổi"</span> (Sorry, looks like this code has been redeemed)<br>
+            thì tài khoản của bạn <strong>hoàn toàn đủ điều kiện</strong> sử dụng Nitro Trial!
+          </p>
+          <a href="https://promos.discord.gg/HCxVfuJt9AbXzXtSw5yRnv9J" target="_blank" rel="noopener noreferrer" class="promo-link-btn">
+            <span>Kiểm tra link Nitro Trial ngay ↗</span>
+          </a>
+        </div>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 04: Bật 2FA & Lấy Mã Dự Phòng -->
+      <section class="tos-section" id="huong-dan-2fa">
+        <div class="section-header-row">
+          <span class="number-badge">04</span>
+          <h2 class="section-title">Hướng dẫn Bật 2FA & Lấy Mã Dự Phòng</h2>
+          <a href="#huong-dan-2fa" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#huong-dan-2fa', event)">#</a>
+        </div>
+
+        <div class="rule-card">
+          <div class="rule-card-title">💻 Các bước thực hiện trên Máy tính (PC / Web):</div>
+          <ul class="rules-list">
+            <li class="rules-list-item"><strong>Bước 1 (Bật 2FA):</strong> Vào <strong>Cài đặt người dùng</strong> (biểu tượng bánh răng ⚙️ ở góc trái phía dưới) ➔ Chọn mục <strong>My Account</strong> (Tài khoản của tôi) ➔ Cuộn xuống chọn <strong>Bật Ứng Dụng Xác Thực</strong> (Enable Two-Factor Auth).</li>
+            <li class="rules-list-item"><strong>Bước 2 (Quét mã):</strong> Nhập mật khẩu tài khoản và quét mã QR bằng ứng dụng xác thực trên điện thoại (Google Authenticator, Authy, Microsoft Authenticator,...), sau đó nhập 6 số xác thực để hoàn tất.</li>
+            <li class="rules-list-item"><strong>Bước 3 (Xem mã dự phòng):</strong> Sau khi kích hoạt thành công, nút <strong>Xem Mã Dự Phòng</strong> (View Backup Codes) sẽ hiển thị ngay tại mục đó. Nhấp vào để xem và tải về máy.</li>
+            <li class="rules-list-item"><strong>Bước 4 (Gửi cho shop):</strong> Copy 5–10 mã dự phòng chưa dùng gửi vào ticket cùng tài khoản & mật khẩu để kỹ thuật viên đăng nhập kích hoạt.</li>
+          </ul>
+        </div>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 05: Video hướng dẫn -->
+      <section class="tos-section" id="video-huong-dan">
+        <div class="section-header-row">
+          <span class="number-badge">05</span>
+          <h2 class="section-title">Video hướng dẫn trực quan</h2>
+          <a href="#video-huong-dan" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#video-huong-dan', event)">#</a>
+        </div>
+        <p class="section-lead-text">
+          Theo dõi video dưới đây để thực hiện từng bước dễ dàng nhất:
+        </p>
+
+        <div class="video-wrapper">
+          <iframe
+            src="https://www.youtube-nocookie.com/embed/_yauX5pVC8o"
+            title="Video hướng dẫn Discord Nitro Trial"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <p style="font-weight: 700; color: #fff; margin-bottom: 0.35rem;">Pade Community · Bản quyền © 2026</p>
+        <p>Trung tâm hướng dẫn và tài liệu dịch vụ khách hàng Pade Store.</p>
+      </div>
+      <ul class="footer-links">
+        <li><a href="/rules" class="footer-link">Server Rules</a></li>
+        <li><a href="/tos" class="footer-link">Terms of Service</a></li>
+        <li><a href="/tutorial" class="footer-link">Tutorial</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <div class="toast" id="toastBox">
+    <span>Đã sao chép liên kết!</span>
+  </div>
+
+  <script>
+    // Sliding pill slider
+    const navWrapper = document.getElementById('navTabsWrapper');
+    const navSlider = document.getElementById('navPillSlider');
+    const tabLinks = document.querySelectorAll('.nav-tab-link');
+
+    function positionSlider(el) {
+      if (!navWrapper || !navSlider || !el) return;
+      const wrapRect = navWrapper.getBoundingClientRect();
+      const elRect = el.getBoundingClientRect();
+      navSlider.style.left = `${elRect.left - wrapRect.left}px`;
+      navSlider.style.width = `${elRect.width}px`;
+    }
+
+    const activeTab = document.querySelector('.nav-tab-link.active') || tabLinks[2];
+    if (activeTab) positionSlider(activeTab);
+
+    tabLinks.forEach(tab => {
+      tab.addEventListener('mouseenter', () => positionSlider(tab));
+    });
+    if (navWrapper && activeTab) {
+      navWrapper.addEventListener('mouseleave', () => positionSlider(activeTab));
+    }
+    window.addEventListener('resize', () => {
+      if (activeTab) positionSlider(activeTab);
+    });
+
+    // Reading progress
+    window.addEventListener('scroll', () => {
+      const scrollTotal = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const progress = scrollTotal > 0 ? window.scrollY / scrollTotal : 0;
+      document.getElementById('readingProgress').style.transform = `scaleX(${progress})`;
+    }, { passive: true });
+
+    // ScrollSpy
+    const sections = document.querySelectorAll('.tos-section');
+    const navItems = document.querySelectorAll('.sidebar-nav-link');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      const scrollPos = window.scrollY + 140;
+      sections.forEach(sec => {
+        if (scrollPos >= sec.offsetTop && scrollPos < sec.offsetTop + sec.offsetHeight) {
+          current = sec.getAttribute('id');
+        }
+      });
+      if (current) {
+        navItems.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
+        });
+      }
+    }, { passive: true });
+
+    function copySectionLink(hash, e) {
+      if (e) e.preventDefault();
+      const url = `${window.location.origin}${window.location.pathname}${hash}`;
+      navigator.clipboard.writeText(url).then(() => {
+        const toast = document.getElementById('toastBox');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+      });
+    }
+
+    const mobileBtn = document.getElementById('mobileMenuToggle');
+    const sidebar = document.getElementById('pageSidebar');
+    const backdrop = document.getElementById('sidebarBackdrop');
+
+    if (mobileBtn && sidebar && backdrop) {
+      mobileBtn.addEventListener('click', () => {
+        sidebar.classList.add('open');
+        backdrop.classList.add('open');
+      });
+      backdrop.addEventListener('click', () => {
+        sidebar.classList.remove('open');
+        backdrop.classList.remove('open');
+      });
+    }
+  </script>
+</body>
+</html>
+

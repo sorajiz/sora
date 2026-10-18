@@ -80,7 +80,8 @@ const cspDirectives = {
   objectSrc: ["'none'"],
   baseUri: ["'self'"],
   formAction: ["'self'"],
-  frameAncestors: ["'none'"]
+  frameAncestors: ["'none'"],
+  frameSrc: ["'self'", "https://www.youtube.com", "https://www.youtube-nocookie.com"]
 };
 
 // Only upgrade insecure requests if explicitly requested and running on HTTPS in production
@@ -484,7 +485,8 @@ const PAGES = {
   pay: 'pay.html',
   menu: 'menu.html',
   tos: 'tos.html',
-  rules: 'rules.html'
+  rules: 'rules.html',
+  tutorial: 'tutorial.html'
 };
 
 function serveHtmlPage(fileName, res) {
@@ -625,6 +627,11 @@ app.use((req, res, next) => {
       return serveHtmlPage(PAGES.rules, res);
     }
   }
+  if (host.startsWith('tutorial.')) {
+    if (!req.path.startsWith('/api/') && !req.path.startsWith('/assets/') && !req.path.startsWith('/js/') && !req.path.startsWith('/music/')) {
+      return serveHtmlPage(PAGES.tutorial, res);
+    }
+  }
   next();
 });
 
@@ -663,6 +670,10 @@ app.get(['/tos', '/tos.html'], (req, res) => {
 
 app.get(['/rules', '/rules.html'], (req, res) => {
   serveHtmlPage(PAGES.rules, res);
+});
+
+app.get(['/tutorial', '/tutorial.html'], (req, res) => {
+  serveHtmlPage(PAGES.tutorial, res);
 });
 
 app.get([

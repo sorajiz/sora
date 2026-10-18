@@ -323,6 +323,31 @@ async function build() {
     console.log('  ✓ Built dist/rules.html & dist/rules/index.html');
   }
 
+  // Step 4h: Render Dedicated Tutorial Page strictly into dist/
+  const tutorialTemplate = path.join(viewsDir, 'tutorial.ejs');
+  if (fs.existsSync(tutorialTemplate)) {
+    const tutorialData = {
+      ...sharedData,
+      title: "Tutorial & Hướng Dẫn Kích Hoạt · Pade Store",
+      description: "Hướng dẫn kích hoạt Nitro Trial, bật xác thực 2 bước (2FA) và lấy mã dự phòng Discord chính thức tại Pade Store.",
+      canonicalUrl: 'https://tutorial.sorae.tokyo/',
+      siteUrl: 'https://tutorial.sorae.tokyo',
+      profileUrl: 'https://sorae.tokyo',
+      faviconDataUri,
+      buildHash
+    };
+
+    const tutorialRendered = await ejs.renderFile(tutorialTemplate, tutorialData, {
+      root: viewsDir
+    });
+
+    fs.writeFileSync(path.join(distDir, 'tutorial.html'), tutorialRendered, 'utf8');
+    const tutorialDir = path.join(distDir, 'tutorial');
+    if (!fs.existsSync(tutorialDir)) fs.mkdirSync(tutorialDir, { recursive: true });
+    fs.writeFileSync(path.join(tutorialDir, 'index.html'), tutorialRendered, 'utf8');
+    console.log('  ✓ Built dist/tutorial.html & dist/tutorial/index.html');
+  }
+
 
   // Step 5: Copy static assets to dist/assets
   const assetFiles = ['favicon.ico', 'favicon.png', 'luminous-flow.png', 'banner.png', 'banner.jpg', 'liquid-glass-bg.jpg', 'sora-store-icon.png', 'pade-guild-icon.png'];

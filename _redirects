@@ -25,6 +25,8 @@ https://rules.sorae.tokyo/* /rules.html 200
 http://rules.sorae.tokyo/* /rules.html 200
 https://tos.sorae.tokyo/* /tos.html 200
 http://tos.sorae.tokyo/* /tos.html 200
+https://tutorial.sorae.tokyo/* /tutorial.html 200
+http://tutorial.sorae.tokyo/* /tutorial.html 200
 /favicon.ico /assets/favicon.ico 200
 /favicon.png /assets/favicon.png 200
 /intro   /intro.html   200
@@ -39,6 +41,8 @@ http://tos.sorae.tokyo/* /tos.html 200
 /rules/* /rules.html   200
 /tos     /tos.html     200
 /tos/*   /tos.html     200
+/tutorial /tutorial.html 200
+/tutorial/* /tutorial.html 200
 /*       /index.html   200
 
 

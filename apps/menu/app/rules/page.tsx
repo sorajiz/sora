@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { Navbar } from '../../components/Navbar';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Server Rules · Pade Community',
@@ -13,57 +14,58 @@ export default function RulesPage() {
       <Navbar />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full flex-1">
+        {/* Subdomain Header Tabs */}
+        <div className="flex justify-center mb-8">
+          <div className="inline-flex items-center gap-1 p-1 bg-white/[0.035] border border-white/[0.08] rounded-full">
+            <Link
+              href="/rules"
+              className="px-4 py-1.5 rounded-full text-xs font-bold text-white bg-[#21232d] shadow-sm"
+            >
+              Server Rules
+            </Link>
+            <Link
+              href="/tos"
+              className="px-4 py-1.5 rounded-full text-xs font-semibold text-[#838896] hover:text-white transition-colors"
+            >
+              Terms of Service
+            </Link>
+            <Link
+              href="/tutorial"
+              className="px-4 py-1.5 rounded-full text-xs font-semibold text-[#838896] hover:text-white transition-colors"
+            >
+              Tutorial
+            </Link>
+          </div>
+        </div>
+
         <div className="flex flex-col lg:flex-row gap-12 items-start">
           {/* Left Sidebar */}
           <aside className="w-full lg:w-64 flex-shrink-0 lg:sticky lg:top-24">
             <div className="mb-6">
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#838896] block mb-3 px-3">
-                NỘI QUY CHUNG
+                MỤC LỤC NỘI QUY
               </span>
               <nav className="flex flex-col space-y-1">
-                <a href="#ung-xu" className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-semibold bg-[#21232d] text-white">
+                <a
+                  href="#luat-le-chung"
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-semibold bg-[#21232d] text-white"
+                >
                   <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
-                  <span>Ứng xử & Tôn trọng</span>
+                  <span>Luật Lệ Chung</span>
                 </a>
-                <a href="#kenh-chat" className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors">
+                <a
+                  href="#rules-ticket"
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors"
+                >
                   <span className="w-1.5 h-1.5 rounded-full bg-[#5c606e]" />
-                  <span>Quy định kênh Chat</span>
+                  <span>Rules Ticket</span>
                 </a>
-                <a href="#spam-nsfw" className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors">
+                <a
+                  href="#rules-giveaway"
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors"
+                >
                   <span className="w-1.5 h-1.5 rounded-full bg-[#5c606e]" />
-                  <span>Cấm Spam & NSFW</span>
-                </a>
-                <a href="#quang-cao" className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#5c606e]" />
-                  <span>Cấm Quảng cáo</span>
-                </a>
-                <a href="#giao-dich" className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#5c606e]" />
-                  <span>An toàn giao dịch</span>
-                </a>
-                <a href="#voice" className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#5c606e]" />
-                  <span>Kênh Voice & Âm thanh</span>
-                </a>
-              </nav>
-            </div>
-
-            <div>
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#838896] block mb-3 px-3">
-                HỖ TRỢ & XỬ PHẠT
-              </span>
-              <nav className="flex flex-col space-y-1">
-                <a href="#ticket" className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#5c606e]" />
-                  <span>Quy định Ticket</span>
-                </a>
-                <a href="#giveaway" className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#5c606e]" />
-                  <span>Giveaways & Sự kiện</span>
-                </a>
-                <a href="#hinh-phat" className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#5c606e]" />
-                  <span>Khung hình phạt</span>
+                  <span>Rules Giveaway</span>
                 </a>
               </nav>
             </div>
@@ -72,7 +74,7 @@ export default function RulesPage() {
           {/* Main Content (Right) */}
           <main className="flex-1 max-w-3xl">
             <span className="text-xs font-extrabold uppercase tracking-widest text-[#838896] block mb-2">
-              NỘI QUY CỘNG ĐỒNG
+              NỘI QUY MÁY CHỦ
             </span>
             <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight mb-4 font-display">
               Server Rules
@@ -96,131 +98,175 @@ export default function RulesPage() {
 
             <hr className="border-t border-white/[0.08] my-8" />
 
-            {/* Section 01 */}
-            <section id="ung-xu" className="scroll-mt-24 mb-10">
+            {/* Section 01: Luật Lệ Chung */}
+            <section id="luat-le-chung" className="scroll-mt-24 mb-10">
               <div className="flex items-center gap-3 mb-3">
                 <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
                   01
                 </span>
                 <h2 className="text-xl font-bold text-white tracking-tight">
-                  Ứng xử & Tôn trọng lẫn nhau
+                  Luật Lệ Chung
                 </h2>
               </div>
-              <p className="text-sm text-[#c5c8d4] leading-relaxed mb-4">
-                Pade Community là môi trường giao lưu văn minh, tích cực. Mọi hành vi thiếu tôn trọng đều không được chấp nhận.
-              </p>
-              <ul className="space-y-2 text-sm text-[#d1d5db]">
+              <ul className="space-y-2.5 text-sm text-[#d1d5db]">
                 <li className="flex items-start gap-2">
                   <span className="text-[#5c606e] font-bold">•</span>
-                  <span>Tôn trọng tất cả các thành viên và đội ngũ Điều hành viên.</span>
+                  <span>Các đơn hàng sẽ hoàn thành trong vòng <strong>48h</strong>.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#5c606e] font-bold">•</span>
-                  <span>Không công kích cá nhân, phân biệt vùng miền, giới tính, tôn giáo.</span>
+                  <span>Hoàn tiền / Bảo hành <strong>bắt buộc phải có</strong>: Lịch sử giao dịch, tin nhắn bot (DMs bot), và lịch sử ticket.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#5c606e] font-bold">•</span>
-                  <span>Tuân thủ Điều khoản Dịch vụ và Nguyên tắc cộng đồng của Discord.</span>
+                  <span>Hạn chế spam ping và hối thúc nhân sự; khi đơn hàng hoàn tất, hệ thống sẽ ping thông báo ngay cho bạn.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#5c606e] font-bold">•</span>
+                  <span>Trước khi tiến hành thanh toán hoặc mua hàng, bắt buộc phải đọc kỹ <strong>Terms of Service (ToS)</strong>.</span>
                 </li>
               </ul>
             </section>
 
             <hr className="border-t border-white/[0.08] my-8" />
 
-            {/* Section 02 */}
-            <section id="kenh-chat" className="scroll-mt-24 mb-10">
+            {/* Section 02: Rules Ticket */}
+            <section id="rules-ticket" className="scroll-mt-24 mb-10">
               <div className="flex items-center gap-3 mb-3">
                 <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
                   02
                 </span>
                 <h2 className="text-xl font-bold text-white tracking-tight">
-                  Quy định kênh Chat
+                  Rules Ticket
                 </h2>
               </div>
-              <ul className="space-y-2 text-sm text-[#d1d5db]">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e] font-bold">•</span>
-                  <span>Chat đúng kênh, đúng chủ đề của phòng chat.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e] font-bold">•</span>
-                  <span>Không spam tag vô cớ (@everyone, @here hoặc tag Admin liên tục).</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e] font-bold">•</span>
-                  <span>Hạn chế sử dụng từ ngữ thô tục, chửi thề gây khó chịu cho người khác.</span>
-                </li>
-              </ul>
+
+              <div className="space-y-4">
+                <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
+                  <h3 className="text-sm font-bold text-white mb-2">📌 Khi Tạo Ticket:</h3>
+                  <ul className="space-y-1.5 text-sm text-[#d1d5db]">
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Vui lòng điền đầy đủ thông tin vào Ticket để shop thực hiện chuẩn xác.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Tạo đúng với mục đích muốn xử lý đối với Ticket đó.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Nêu rõ nội dung &amp; văn bản cần được thực hiện.</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
+                  <h3 className="text-sm font-bold text-white mb-2">🔒 Khi Close Ticket:</h3>
+                  <ul className="space-y-1.5 text-sm text-[#d1d5db]">
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Sau khi đơn hàng hoàn thành sẽ được gửi thông báo để close ticket.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Nếu còn điều gì muốn hỏi hoặc cần giải đáp, bạn không cần đóng ticket vội.</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
+                  <h3 className="text-sm font-bold text-white mb-2">⚖️ Luật Ticket:</h3>
+                  <ul className="space-y-1.5 text-sm text-[#d1d5db]">
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Tuyệt đối không tạo ticket chơi, tạo cho vui rồi không nhắn gì.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Tạo xong hãy ping <strong>@386528085681635328</strong> (Pade Owner) để được phản hồi sớm nhất.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Nghiêm cấm hành vi spam ping gây nghẽn tiến độ.</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </section>
 
             <hr className="border-t border-white/[0.08] my-8" />
 
-            {/* Section 03 */}
-            <section id="spam-nsfw" className="scroll-mt-24 mb-10">
+            {/* Section 03: Rules Giveaway */}
+            <section id="rules-giveaway" className="scroll-mt-24 mb-10">
               <div className="flex items-center gap-3 mb-3">
                 <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
                   03
                 </span>
                 <h2 className="text-xl font-bold text-white tracking-tight">
-                  Cấm Spam & Nội dung NSFW 18+
+                  Rules Giveaway
                 </h2>
               </div>
 
-              {/* Danger Callout */}
-              <div className="bg-[#1c0e0e] border border-red-500/35 border-l-4 border-l-red-500 rounded-lg p-3.5 my-4 flex items-start gap-3">
-                <span className="text-red-500 text-lg">🚫</span>
-                <span className="text-xs sm:text-sm font-semibold text-red-100 leading-snug">
-                  Cấm 100% các hình ảnh/video 18+, đồi trụy hoặc tệp tin mã độc. Vi phạm sẽ bị BAN VĨNH VIỄN không cảnh cáo.
-                </span>
+              <div className="space-y-4">
+                <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
+                  <h3 className="text-sm font-bold text-white mb-2">🎯 Giveaway Có Yêu Cầu (Req):</h3>
+                  <ul className="space-y-1.5 text-sm text-[#d1d5db]">
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Nếu giveaway có ghi yêu cầu req, hãy gửi yêu cầu vào đúng channel req có tên tương ứng.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Phải gửi yêu cầu trước thời gian giveaway được tạo ra không dưới <strong>30 phút</strong>.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Vui lòng đọc kỹ yêu cầu để biết rõ điều kiện cần làm nhằm nhận giải hợp lệ.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Profile cá nhân vui lòng không để ở chế độ riêng tư (private) để ban quản trị kiểm tra.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Chỉ tính Profile Global của Discord, không tính profile custom riêng theo server.</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
+                  <h3 className="text-sm font-bold text-white mb-2">✨ Giveaway Không Req:</h3>
+                  <p className="text-sm text-[#d1d5db]">
+                    Nếu giveaway không có yêu cầu nào, các bạn chỉ cần tham gia (join) như bình thường.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
+                  <h3 className="text-sm font-bold text-white mb-2">📋 Quy Chế Nhận Giải Giveaway:</h3>
+                  <ul className="space-y-1.5 text-sm text-[#d1d5db]">
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Nếu bạn trúng giải, vui lòng tạo ticket đúng hạn quy định để nhận giải.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Nếu không tạo ticket đúng hạn, ban tổ chức sẽ reroll và hủy quyền nhận giải của bạn.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Thời hạn tạo ticket claim giải là <strong>6 tiếng</strong> kể từ thời điểm giveaway kết thúc.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Nếu reroll liên tiếp 5 lần mà không ai hoàn thành yêu cầu hoặc không tạo ticket, giveaway đó sẽ bị hủy.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Nếu trúng giveaway về <strong>Decor</strong>, người trúng nếu chưa có sẵn Nitro trong tài khoản thì cần cộng thêm <strong>10.000 VNĐ</strong> phụ phí kích hoạt.</span>
+                    </li>
+                  </ul>
+                </div>
               </div>
-            </section>
-
-            <hr className="border-t border-white/[0.08] my-8" />
-
-            {/* Section 04 */}
-            <section id="quang-cao" className="scroll-mt-24 mb-10">
-              <div className="flex items-center gap-3 mb-3">
-                <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
-                  04
-                </span>
-                <h2 className="text-xl font-bold text-white tracking-tight">
-                  Nghiêm cấm Quảng cáo & Chèo kéo
-                </h2>
-              </div>
-              <ul className="space-y-2 text-sm text-[#d1d5db]">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e] font-bold">•</span>
-                  <span>Không gửi link mời server Discord khác trong mọi kênh chat.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e] font-bold">•</span>
-                  <span>Cấm nhắn tin riêng (DM) cho thành viên trong server để quảng cáo dịch vụ hoặc bán đồ.</span>
-                </li>
-              </ul>
-            </section>
-
-            <hr className="border-t border-white/[0.08] my-8" />
-
-            {/* Section 05 */}
-            <section id="giao-dich" className="scroll-mt-24 mb-10">
-              <div className="flex items-center gap-3 mb-3">
-                <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
-                  05
-                </span>
-                <h2 className="text-xl font-bold text-white tracking-tight">
-                  An toàn giao dịch & Chống lừa đảo
-                </h2>
-              </div>
-              <ul className="space-y-2 text-sm text-[#d1d5db]">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e] font-bold">•</span>
-                  <span>Chỉ giao dịch qua hệ thống website menu chính thức hoặc ticket Discord.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e] font-bold">•</span>
-                  <span>Admin Pade Store không bao giờ nhắn tin trước để xin mã OTP, mật khẩu hay yêu cầu chuyển tiền ngoài.</span>
-                </li>
-              </ul>
             </section>
           </main>
         </div>
@@ -228,4 +274,3 @@ export default function RulesPage() {
     </div>
   );
 }
-
