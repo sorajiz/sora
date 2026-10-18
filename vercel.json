@@ -97,9 +97,57 @@
       ],
       "destination": "/menu",
       "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "rules.sorae.tokyo"
+        }
+      ],
+      "destination": "/rules",
+      "permanent": false
+    },
+    {
+      "source": "/((?!assets|js|music|favicon|rules|.*\\..*).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "rules.sorae.tokyo"
+        }
+      ],
+      "destination": "/rules",
+      "permanent": false
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "tos.sorae.tokyo"
+        }
+      ],
+      "destination": "/tos",
+      "permanent": false
+    },
+    {
+      "source": "/((?!assets|js|music|favicon|tos|.*\\..*).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "tos.sorae.tokyo"
+        }
+      ],
+      "destination": "/tos",
+      "permanent": false
     }
   ],
   "rewrites": [
+    { "source": "/rules", "destination": "/rules.html" },
+    { "source": "/rules/(.*)", "destination": "/rules.html" },
+    { "source": "/tos", "destination": "/tos.html" },
+    { "source": "/tos/(.*)", "destination": "/tos.html" },
     { "source": "/menu", "destination": "/menu.html" },
     { "source": "/menu/(.*)", "destination": "/menu.html" },
     { "source": "/api/menu", "destination": "/api/menu" },
@@ -275,7 +323,49 @@
     { "source": "/timework", "destination": "/timework.html" },
     { "source": "/timeworks", "destination": "/timework.html" },
     { "source": "/menu", "destination": "/menu.html" },
-    { "source": "/((?!assets|js|music|favicon|api|hooks|pay|payment|tickets|t|ORD|SR|ord|sr|menu|.*\\..*).*)", "destination": "/index.html" }
+    { "source": "/rules", "destination": "/rules.html" },
+    { "source": "/tos", "destination": "/tos.html" },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "rules.sorae.tokyo"
+        }
+      ],
+      "destination": "/rules.html"
+    },
+    {
+      "source": "/((?!assets|js|music|favicon|.*\\..*).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "rules.sorae.tokyo"
+        }
+      ],
+      "destination": "/rules.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "tos.sorae.tokyo"
+        }
+      ],
+      "destination": "/tos.html"
+    },
+    {
+      "source": "/((?!assets|js|music|favicon|.*\\..*).*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "tos.sorae.tokyo"
+        }
+      ],
+      "destination": "/tos.html"
+    },
+    { "source": "/((?!assets|js|music|favicon|api|hooks|pay|payment|tickets|t|ORD|SR|ord|sr|menu|rules|tos|.*\\..*).*)", "destination": "/index.html" }
   ],
   "headers": [
     {
@@ -334,7 +424,7 @@
       ]
     },
     {
-      "source": "/(.*\\.html|/|/intro|/skills|/contact|/discord|/timework|/menu)",
+      "source": "/(.*\\.html|/|/intro|/skills|/contact|/discord|/timework|/menu|/rules|/tos)",
       "headers": [
         {
           "key": "Cache-Control",

@@ -482,7 +482,9 @@ const PAGES = {
   discord: 'discord.html',
   timework: 'timework.html',
   pay: 'pay.html',
-  menu: 'menu.html'
+  menu: 'menu.html',
+  tos: 'tos.html',
+  rules: 'rules.html'
 };
 
 function serveHtmlPage(fileName, res) {
@@ -613,6 +615,16 @@ app.use((req, res, next) => {
       return serveHtmlPage(PAGES.menu, res);
     }
   }
+  if (host.startsWith('tos.')) {
+    if (!req.path.startsWith('/api/') && !req.path.startsWith('/assets/') && !req.path.startsWith('/js/') && !req.path.startsWith('/music/')) {
+      return serveHtmlPage(PAGES.tos, res);
+    }
+  }
+  if (host.startsWith('rules.')) {
+    if (!req.path.startsWith('/api/') && !req.path.startsWith('/assets/') && !req.path.startsWith('/js/') && !req.path.startsWith('/music/')) {
+      return serveHtmlPage(PAGES.rules, res);
+    }
+  }
   next();
 });
 
@@ -643,6 +655,14 @@ app.get(['/timework', '/timework.html', '/timeworks', '/timeworks.html'], (req, 
 
 app.get(['/menu', '/menu.html'], (req, res) => {
   serveHtmlPage(PAGES.menu, res);
+});
+
+app.get(['/tos', '/tos.html'], (req, res) => {
+  serveHtmlPage(PAGES.tos, res);
+});
+
+app.get(['/rules', '/rules.html'], (req, res) => {
+  serveHtmlPage(PAGES.rules, res);
 });
 
 app.get([

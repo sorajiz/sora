@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= typeof title !== 'undefined' ? title : 'Terms of Service · Pade Store' %></title>
+  <meta name="description" content="<%= typeof description !== 'undefined' ? description : 'Điều khoản dịch vụ và chính sách mua hàng chính thức tại Pade Store · discord.gg/pade' %>" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0c0d12" />
+  <link rel="canonical" href="<%= typeof canonicalUrl !== 'undefined' ? canonicalUrl : 'https://tos.sorae.tokyo' %>" />
+
+  <!-- OpenGraph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="vi_VN" />
+  <meta property="og:site_name" content="Pade Store" />
+  <meta property="og:title" content="Terms of Service · Pade Store" />
+  <meta property="og:description" content="Điều khoản dịch vụ và chính sách mua hàng chính thức tại Pade Store. Cập nhật mới nhất 2026." />
+  <meta property="og:url" content="https://tos.sorae.tokyo" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Terms of Service · Pade Store" />
+  <meta name="twitter:description" content="Điều khoản dịch vụ và chính sách mua hàng chính thức tại Pade Store." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="<%= typeof faviconDataUri !== 'undefined' ? faviconDataUri : '/assets/favicon.png' %>" />
+  <link rel="shortcut icon" type="image/png" href="/assets/favicon.png" />
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── RESET & DARK GRAY DESIGN SYSTEM (XÁM ĐEN THƯỢNG HẠNG) ── */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg-base: #0c0d12;
+      --bg-surface: #13141a;
+      --bg-surface-elevated: #181922;
+      --bg-sidebar-pill: #21232d;
+      --bg-badge: #1b1c24;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.16);
+      --border-focus: rgba(255, 255, 255, 0.28);
+      --text-white: #ffffff;
+      --text-main: #f1f2f6;
+      --text-sub: #c5c8d4;
+      --text-muted: #838896;
+      --text-dim: #5c606e;
+      --accent-amber: #f59e0b;
+      --accent-amber-bg: #1c160c;
+      --accent-amber-border: rgba(245, 158, 11, 0.35);
+      --accent-blue: #38bdf8;
+      --accent-red: #ef4444;
+      --color-discord: #5865F2;
+      --color-discord-hover: #4752c4;
+      --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: "JetBrains Mono", monospace;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Subtle ambient dark gradient */
+    .ambient-mesh {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at 15% 15%, rgba(33, 35, 45, 0.4) 0%, transparent 60%),
+                  radial-gradient(circle at 85% 85%, rgba(20, 21, 28, 0.6) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Reading Progress Bar */
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 100%;
+      background: linear-gradient(90deg, #5865f2, #38bdf8, #a855f7);
+      transform-origin: 0% 50%;
+      transform: scaleX(0);
+      z-index: 100;
+      transition: transform 0.08s ease-out;
+    }
+
+    /* ── HEADER / TOPBAR ── */
+    .top-header {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      z-index: 50;
+      background: rgba(12, 13, 18, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      transition: all 0.2s ease;
+    }
+
+    .top-header-inner {
+      max-width: 1260px;
+      margin: 0 auto;
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-avatar {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid var(--border-strong);
+      background: #181920;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .brand-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .brand-name {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-white);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 0.25rem;
+      border-radius: 9999px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .nav-tab-link {
+      padding: 0.35rem 0.85rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-radius: 9999px;
+      transition: all 0.15s ease;
+    }
+
+    .nav-tab-link:hover {
+      color: var(--text-white);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-tab-link.active {
+      color: var(--text-white);
+      background: var(--bg-sidebar-pill);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-discord-join {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--color-discord);
+      color: #fff;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      padding: 0.45rem 0.95rem;
+      border-radius: 0.55rem;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 14px rgba(88, 101, 242, 0.25);
+    }
+
+    .btn-discord-join:hover {
+      background: var(--color-discord-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(88, 101, 242, 0.35);
+    }
+
+    /* ── MOBILE NAV TOGGLE ── */
+    .mobile-menu-btn {
+      display: none;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 0.45rem 0.65rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* ── MAIN CONTENT LAYOUT (2-COLUMN EXACT PARITY TO IMAGE 1) ── */
+    .layout-wrapper {
+      position: relative;
+      z-index: 10;
+      max-width: 1260px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 6rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 3.5rem;
+    }
+
+    /* ── LEFT SIDEBAR ── */
+    .sidebar {
+      width: 270px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 5rem;
+      max-height: calc(100vh - 6.5rem);
+      overflow-y: auto;
+      padding-right: 0.75rem;
+      scrollbar-width: thin;
+      scrollbar-color: #2b2e3b transparent;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .sidebar::-webkit-scrollbar-thumb {
+      background: #2b2e3b;
+      border-radius: 4px;
+    }
+
+    /* Sidebar Quick Search */
+    .sidebar-search-box {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .sidebar-search-input {
+      width: 100%;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.55rem;
+      padding: 0.5rem 0.75rem 0.5rem 2.1rem;
+      color: var(--text-white);
+      font-size: 0.8125rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .sidebar-search-input:focus {
+      border-color: var(--border-strong);
+      background: var(--bg-surface-elevated);
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.06);
+    }
+
+    .sidebar-search-icon {
+      position: absolute;
+      left: 0.7rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      pointer-events: none;
+    }
+
+    .sidebar-group {
+      margin-bottom: 2rem;
+    }
+
+    .sidebar-heading {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.65rem;
+      padding-left: 0.85rem;
+    }
+
+    .sidebar-nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .sidebar-nav-item {
+      position: relative;
+    }
+
+    .sidebar-nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.55rem 0.95rem;
+      border-radius: 0.55rem;
+      color: var(--text-sub);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.12s ease;
+      user-select: none;
+    }
+
+    .sidebar-nav-link:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-white);
+    }
+
+    /* Active State (Image 1 Parity: pill background with white dot & white text) */
+    .sidebar-nav-link.active {
+      background: var(--bg-sidebar-pill);
+      color: var(--text-white);
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    .nav-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--text-dim);
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+
+    .sidebar-nav-link.active .nav-dot {
+      background-color: #ffffff;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+    }
+
+    .sidebar-nav-link:hover .nav-dot {
+      background-color: var(--text-sub);
+    }
+
+    /* ── RIGHT MAIN ARTICLE AREA ── */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 880px;
+    }
+
+    /* Eyebrow & Hero Title */
+    .content-eyebrow {
+      font-size: 0.78125rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-muted);
+      margin-bottom: 0.65rem;
+      display: inline-block;
+    }
+
+    .hero-title {
+      font-size: clamp(2.25rem, 4.5vw, 3.4rem);
+      font-weight: 900;
+      color: var(--text-white);
+      letter-spacing: -0.03em;
+      line-height: 1.12;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Pill badge below title: Cập nhật lần cuối: 2026 · discord.gg/pade */
+    .meta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid var(--border-subtle);
+      border-radius: 9999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.8125rem;
+      color: var(--text-sub);
+      margin-bottom: 2rem;
+    }
+
+    .meta-badge-icon {
+      color: var(--text-muted);
+      display: inline-flex;
+    }
+
+    .meta-badge-link {
+      color: var(--text-white);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.15s ease;
+    }
+
+    .meta-badge-link:hover {
+      text-decoration: underline;
+      color: var(--accent-blue);
+    }
+
+    /* Divider */
+    .section-divider {
+      border: 0;
+      border-top: 1px solid var(--border-subtle);
+      margin: 2.25rem 0;
+    }
+
+    /* ── SECTION ITEM (Image 1 Parity) ── */
+    .tos-section {
+      scroll-margin-top: 5.5rem;
+      position: relative;
+    }
+
+    .section-header-row {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Number badge (01, 02, etc.) */
+    .number-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      background: var(--bg-badge);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--text-white);
+      letter-spacing: -0.015em;
+      line-height: 1.3;
+    }
+
+    .section-anchor-btn {
+      opacity: 0;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 1rem;
+      margin-left: 0.35rem;
+      transition: all 0.15s ease;
+    }
+
+    .tos-section:hover .section-anchor-btn {
+      opacity: 1;
+    }
+
+    .section-anchor-btn:hover {
+      color: var(--text-white);
+    }
+
+    .section-lead-text {
+      font-size: 0.95rem;
+      color: var(--text-sub);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    /* Bullet List (Exact bullet points from image) */
+    .rules-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin: 0.85rem 0;
+    }
+
+    .rules-list-item {
+      position: relative;
+      padding-left: 1.25rem;
+      font-size: 0.9375rem;
+      color: var(--text-main);
+      line-height: 1.65;
+    }
+
+    .rules-list-item::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      top: -0.05rem;
+      color: var(--text-dim);
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .rules-list-item strong {
+      color: var(--text-white);
+      font-weight: 700;
+    }
+
+    /* ── CALLOUT BOX (Exact match to Section 02 Amber Warning in Image 1) ── */
+    .callout-box {
+      background: var(--accent-amber-bg);
+      border: 1px solid var(--accent-amber-border);
+      border-left: 4px solid var(--accent-amber);
+      border-radius: 0.65rem;
+      padding: 0.95rem 1.25rem;
+      margin: 1.15rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+    }
+
+    .callout-icon {
+      color: var(--accent-amber);
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+    }
+
+    .callout-content {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fef3c7;
+      line-height: 1.55;
+    }
+
+    /* Red / Danger Callout */
+    .callout-box.callout-danger {
+      background: #1c0e0e;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      border-left: 4px solid var(--accent-red);
+    }
+
+    .callout-box.callout-danger .callout-icon {
+      color: var(--accent-red);
+    }
+
+    .callout-box.callout-danger .callout-content {
+      color: #fee2e2;
+    }
+
+    /* Blue / Info Callout */
+    .callout-box.callout-info {
+      background: #0d1624;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-left: 4px solid var(--accent-blue);
+    }
+
+    .callout-box.callout-info .callout-icon {
+      color: var(--accent-blue);
+    }
+
+    .callout-box.callout-info .callout-content {
+      color: #e0f2fe;
+    }
+
+    /* Policy Card Grid (for Service-specific features) */
+    .policy-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+
+    .policy-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.75rem;
+      padding: 1.15rem;
+      transition: all 0.2s ease;
+    }
+
+    .policy-card:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .policy-card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .policy-card-desc {
+      font-size: 0.8125rem;
+      color: var(--text-sub);
+      line-height: 1.6;
+    }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      border-top: 1px solid var(--border-subtle);
+      background: #090a0d;
+      padding: 3rem 1.5rem;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+    }
+
+    .footer-inner {
+      max-width: 1260px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .footer-link {
+      color: var(--text-sub);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .footer-link:hover {
+      color: var(--text-white);
+    }
+
+    /* ── TOAST NOTIFICATION ── */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #1c1d26;
+      border: 1px solid var(--border-strong);
+      color: var(--text-white);
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.55rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* ── RESPONSIVE TWEAKS ── */
+    @media (max-width: 900px) {
+      .layout-wrapper {
+        flex-direction: column;
+        gap: 2rem;
+        padding-top: 1.5rem;
+      }
+
+      .mobile-menu-btn {
+        display: inline-flex;
+      }
+
+      .sidebar {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 82vw;
+        max-width: 320px;
+        height: 100vh;
+        max-height: 100vh;
+        background: #101117;
+        z-index: 200;
+        padding: 1.5rem;
+        box-shadow: 10px 0 40px rgba(0, 0, 0, 0.7);
+        border-right: 1px solid var(--border-subtle);
+      }
+
+      .sidebar.open {
+        display: block;
+      }
+
+      .sidebar-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(4px);
+        z-index: 199;
+      }
+
+      .sidebar-backdrop.open {
+        display: block;
+      }
+
+      .nav-tabs {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="reading-progress" id="readingProgress"></div>
+  <div class="ambient-mesh"></div>
+
+  <!-- Top Navigation Header -->
+  <header class="top-header">
+    <div class="top-header-inner">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <button class="mobile-menu-btn" id="mobileMenuToggle" aria-label="Mở danh mục điều khoản">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          <span>Mục Lục</span>
+        </button>
+
+        <a href="/" class="brand-group">
+          <div class="brand-avatar">
+            <img src="/assets/pade-guild-icon.png" alt="Pade Store" onerror="this.onerror=null;this.src='/assets/favicon.png';" />
+          </div>
+          <span class="brand-name">Pade Store</span>
+        </a>
+      </div>
+
+      <nav class="nav-tabs" aria-label="Subdomain Navigation">
+        <a href="/tos" class="nav-tab-link active">Terms of Service</a>
+        <a href="/rules" class="nav-tab-link">Server Rules</a>
+        <a href="https://menu.sorae.tokyo" class="nav-tab-link">Bảng Giá Menu</a>
+        <a href="https://payment.sorae.tokyo" class="nav-tab-link">Cổng Thanh Toán</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" class="btn-discord-join">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+          </svg>
+          <span>discord.gg/pade</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Backdrop -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- 2-Column Layout Wrapper -->
+  <div class="layout-wrapper">
+    <!-- Left Sidebar (Desktop Fixed / Sticky) -->
+    <aside class="sidebar" id="pageSidebar">
+      <!-- Search Filter -->
+      <div class="sidebar-search-box">
+        <svg class="sidebar-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="ruleSearchInput" class="sidebar-search-input" placeholder="Tìm kiếm điều khoản..." />
+      </div>
+
+      <!-- Group 1: ĐIỀU KHOẢN CHUNG -->
+      <div class="sidebar-group">
+        <div class="sidebar-heading">ĐIỀU KHOẢN CHUNG</div>
+        <ul class="sidebar-nav-list">
+          <li class="sidebar-nav-item">
+            <a href="#dieu-kien-su-dung" class="sidebar-nav-link active">
+              <span class="nav-dot"></span>
+              <span>Điều kiện sử dụng</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#dat-hang-thanh-toan" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Đặt hàng & thanh toán</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#chinh-sach-bao-hanh" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Chính sách bảo hành</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#hanh-vi-bi-cam" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Hành vi bị cấm</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#trach-nhiem-gioi-han" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Trách nhiệm & giới hạn</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#lien-he-ho-tro" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Liên hệ & hỗ trợ</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Group 2: THEO DỊCH VỤ -->
+      <div class="sidebar-group">
+        <div class="sidebar-heading">THEO DỊCH VỤ</div>
+        <ul class="sidebar-nav-list">
+          <li class="sidebar-nav-item">
+            <a href="#nitro-login" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Nitro Login</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#boost-server" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Boost Server</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#nitro-deco-gift" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Nitro Gift & Deco Gift</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#deco-login" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Deco Login</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#youtube-premium" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>YouTube Premium</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#spotify-premium" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Spotify Premium</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#netflix-premium" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Netflix Premium</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#canva-capcut" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Canva & CapCut Pro</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Right Main Article Area -->
+    <main class="main-content">
+      <!-- Eyebrow & Hero Title (Parity with Image 1) -->
+      <span class="content-eyebrow">ĐIỀU KHOẢN DỊCH VỤ</span>
+      <h1 class="hero-title">Terms of Service</h1>
+
+      <!-- Meta Pill (discord.gg/pade) -->
+      <div class="meta-badge">
+        <span class="meta-badge-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        </span>
+        <span>Cập nhật lần cuối: 2026 · <a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" class="meta-badge-link">discord.gg/pade</a></span>
+      </div>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 01: Điều kiện sử dụng dịch vụ -->
+      <section class="tos-section" id="dieu-kien-su-dung">
+        <div class="section-header-row">
+          <span class="number-badge">01</span>
+          <h2 class="section-title">Điều kiện sử dụng dịch vụ</h2>
+          <a href="#dieu-kien-su-dung" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#dieu-kien-su-dung', event)">#</a>
+        </div>
+        <p class="section-lead-text">
+          Bằng cách sử dụng dịch vụ của Pade Store, bạn đồng ý tuân thủ các điều khoản dưới đây. Vui lòng đọc kỹ trước khi đặt hàng.
+        </p>
+        <ul class="rules-list">
+          <li class="rules-list-item">Bạn phải từ 13 tuổi trở lên để sử dụng dịch vụ theo đúng tiêu chuẩn cộng đồng Discord.</li>
+          <li class="rules-list-item">Tài khoản Discord của bạn phải đang hoạt động bình thường và không bị khóa hoặc cấm (ban).</li>
+          <li class="rules-list-item">Bạn chịu trách nhiệm hoàn toàn về các thông tin cung cấp khi đặt hàng (email, server ID, mã kích hoạt).</li>
+          <li class="rules-list-item">Pade Store có quyền từ chối phục vụ bất kỳ khách hàng nào cố tình vi phạm điều khoản hoặc có hành vi gian lận.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 02: Quy trình đặt hàng & thanh toán -->
+      <section class="tos-section" id="dat-hang-thanh-toan">
+        <div class="section-header-row">
+          <span class="number-badge">02</span>
+          <h2 class="section-title">Quy trình đặt hàng & thanh toán</h2>
+          <a href="#dat-hang-thanh-toan" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#dat-hang-thanh-toan', event)">#</a>
+        </div>
+
+        <!-- Amber Warning Callout (Exact Image 1 Box) -->
+        <div class="callout-box">
+          <span class="callout-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          </span>
+          <div class="callout-content">
+            Thanh toán trước khi nhận hàng. Chúng tôi không hỗ trợ nợ hay trả sau dưới bất kỳ hình thức nào.
+          </div>
+        </div>
+
+        <ul class="rules-list">
+          <li class="rules-list-item"><strong>Nội dung thanh toán:</strong> Khách hàng vui lòng chuyển khoản đúng số tiền và nội dung chuyển khoản được cung cấp bởi hệ thống VietQR tự động.</li>
+          <li class="rules-list-item"><strong>Tự động xác nhận 24/7:</strong> Cổng thanh toán MBBank Napas tự động nhận diện và cập nhật trạng thái đơn trong 30 giây đến 2 phút.</li>
+          <li class="rules-list-item"><strong>Bàn giao đơn hàng:</strong> Sau khi thanh toán thành công, hệ thống bot hoặc quản trị viên sẽ gửi hàng hoặc hỗ trợ kích hoạt trực tiếp tại ticket trong Discord.</li>
+          <li class="rules-list-item"><strong>Hủy ngang đơn:</strong> Khi đơn hàng đã bắt đầu thực hiện kích hoạt hoặc link quà tặng đã xuất, đơn hàng sẽ không thể hủy ngang hoặc hoàn tiền vì lý do đổi ý.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 03: Chính sách bảo hành & Đổi trả -->
+      <section class="tos-section" id="chinh-sach-bao-hanh">
+        <div class="section-header-row">
+          <span class="number-badge">03</span>
+          <h2 class="section-title">Chính sách bảo hành</h2>
+          <a href="#chinh-sach-bao-hanh" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#chinh-sach-bao-hanh', event)">#</a>
+        </div>
+        <p class="section-lead-text">
+          Pade Store cam kết chính sách bảo hành minh bạch và uy tín tuyệt đối với quy chuẩn 1 đổi 1 xuyên suốt thời hạn gói.
+        </p>
+        <ul class="rules-list">
+          <li class="rules-list-item"><strong>Bảo hành 1 đổi 1:</strong> Cam kết đổi mới hoặc cấp lại ngay gói dịch vụ tương đương nếu phát sinh lỗi từ phía nhà cung cấp.</li>
+          <li class="rules-list-item"><strong>Thời gian xử lý:</strong> Tiếp nhận và hỗ trợ xử lý trong vòng 15 phút đến 24 giờ kể từ khi khách hàng tạo ticket báo lỗi.</li>
+          <li class="rules-list-item"><strong>Điều kiện từ chối bảo hành:</strong>
+            <ul style="list-style: circle; margin: 0.5rem 0 0.5rem 1.5rem; color: var(--text-sub);">
+              <li>Khách tự ý thay đổi email, mật khẩu của tài khoản cấp sẵn mà không thông báo cho shop.</li>
+              <li>Tài khoản bị cấm (ban) do vi phạm quy tắc ToS của Discord (như nuke, spam, chạy tool lậu).</li>
+              <li>Kick hoặc ban bot boost khỏi server đang nhận gói Boost.</li>
+            </ul>
+          </li>
+          <li class="rules-list-item"><strong>Chính sách hoàn tiền:</strong> Trong trường hợp bất khả kháng không thể bảo hành sau 48 giờ, shop sẽ hoàn tiền công bằng dựa trên số ngày sử dụng thực tế còn lại.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 04: Hành vi bị cấm -->
+      <section class="tos-section" id="hanh-vi-bi-cam">
+        <div class="section-header-row">
+          <span class="number-badge">04</span>
+          <h2 class="section-title">Hành vi bị cấm</h2>
+          <a href="#hanh-vi-bi-cam" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#hanh-vi-bi-cam', event)">#</a>
+        </div>
+
+        <div class="callout-box callout-danger">
+          <span class="callout-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+          </span>
+          <div class="callout-content">
+            Nghiêm cấm hành vi làm giả biên lai chuyển khoản (fake bill), chargeback hoặc xúc phạm nhân viên.
+          </div>
+        </div>
+
+        <ul class="rules-list">
+          <li class="rules-list-item">Không spam ticket, chửi bới, đe dọa hoặc có thái độ xúc phạm đội ngũ hỗ trợ viên.</li>
+          <li class="rules-list-item">Không chia sẻ tài khoản cấp sẵn dạng slot riêng tư cho nhiều người cùng đăng nhập trái phép.</li>
+          <li class="rules-list-item">Khách hàng cố tình gửi bill giả mạo sẽ bị cấm vĩnh viễn khỏi toàn bộ hệ thống server và đưa vào Blacklist cộng đồng.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 05: Trách nhiệm & Giới hạn -->
+      <section class="tos-section" id="trach-nhiem-gioi-han">
+        <div class="section-header-row">
+          <span class="number-badge">05</span>
+          <h2 class="section-title">Trách nhiệm & giới hạn</h2>
+          <a href="#trach-nhiem-gioi-han" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#trach-nhiem-gioi-han', event)">#</a>
+        </div>
+        <ul class="rules-list">
+          <li class="rules-list-item"><strong>Bảo mật thông tin:</strong> Pade Store cam kết giữ bí mật 100% tài khoản, email và mã dự phòng 2FA của khách hàng. Không lưu trữ mật khẩu sau khi hoàn tất đơn hàng.</li>
+          <li class="rules-list-item"><strong>Khuyến nghị an toàn:</strong> Khách hàng được khuyến khích đổi lại mật khẩu tài khoản sau khi dịch vụ được kích hoạt thành công.</li>
+          <li class="rules-list-item"><strong>Giới hạn trách nhiệm:</strong> Shop không chịu trách nhiệm đối với các sự cố xảy ra ngoài phạm vi dịch vụ (như khách bị hack do ấn link lạ, mất quyền sở hữu server do sơ suất).</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 06: Liên hệ & hỗ trợ -->
+      <section class="tos-section" id="lien-he-ho-tro">
+        <div class="section-header-row">
+          <span class="number-badge">06</span>
+          <h2 class="section-title">Liên hệ & hỗ trợ</h2>
+          <a href="#lien-he-ho-tro" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#lien-he-ho-tro', event)">#</a>
+        </div>
+        <p class="section-lead-text">
+          Đội ngũ Pade Store luôn sẵn sàng đồng hành và giải đáp mọi thắc mắc của bạn qua các kênh chính thức:
+        </p>
+
+        <div class="policy-card-grid">
+          <div class="policy-card">
+            <div class="policy-card-title">
+              <span style="color: #5865f2;">💬</span> Discord Server
+            </div>
+            <div class="policy-card-desc">
+              Tham gia tại: <a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: none; font-weight: 600;">discord.gg/pade</a><br>
+              Tạo ticket tại kênh <code>#ticket-support</code> để được hỗ trợ tức thì.
+            </div>
+          </div>
+          <div class="policy-card">
+            <div class="policy-card-title">
+              <span style="color: #f59e0b;">⏱️</span> Thời gian làm việc
+            </div>
+            <div class="policy-card-desc">
+              Phục vụ: <strong>08:00 — 24:00</strong> mỗi ngày.<br>
+              Cổng thanh toán tự động VietQR hoạt động 24/7 không gián đoạn.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 07: Nitro Login -->
+      <section class="tos-section" id="nitro-login">
+        <div class="section-header-row">
+          <span class="number-badge">07</span>
+          <h2 class="section-title">Quy định Nitro Login</h2>
+          <a href="#nitro-login" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#nitro-login', event)">#</a>
+        </div>
+        <ul class="rules-list">
+          <li class="rules-list-item"><strong>Yêu cầu đăng nhập:</strong> Cần cung cấp tài khoản, mật khẩu và 5 mã dự phòng 2FA để kỹ thuật viên kích hoạt gói.</li>
+          <li class="rules-list-item"><strong>Gói Nuôi Mail 2 Tháng:</strong> Cần nuôi mail domain trong 7 ngày đầu để duy trì Nitro ổn định theo hướng dẫn của shop.</li>
+          <li class="rules-list-item"><strong>Gói Pro VIP 2 Tháng:</strong> Sử dụng vĩnh viễn không cần nuôi mail.</li>
+          <li class="rules-list-item"><strong>Gỡ thanh toán đỏ:</strong> Yêu cầu tài khoản không nắm giữ Owner (Key) của bất kỳ máy chủ nào.</li>
+          <li class="rules-list-item">Bảo hành 1 đổi 1 xuyên suốt thời gian sử dụng.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 08: Boost Server -->
+      <section class="tos-section" id="boost-server">
+        <div class="section-header-row">
+          <span class="number-badge">08</span>
+          <h2 class="section-title">Quy định Boost Server</h2>
+          <a href="#boost-server" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#boost-server', event)">#</a>
+        </div>
+        <ul class="rules-list">
+          <li class="rules-list-item"><strong>Link Server:</strong> Phải cung cấp link mời vĩnh viễn, không giới hạn lượt dùng và không có hạn giờ.</li>
+          <li class="rules-list-item"><strong>Cấu hình Server:</strong> Server không được bật tính năng "Apply to join" (Duyệt thành viên mới) hoặc Yêu cầu xác minh SĐT.</li>
+          <li class="rules-list-item"><strong>Lịch sử Boost:</strong> Bắt buộc bật hiển thị tin nhắn Boost trong kênh cài đặt máy chủ.</li>
+          <li class="rules-list-item"><strong>Không kick/ban bot:</strong> Tuyệt đối không kick, ban hoặc timeout bất kỳ bot/acc boost nào của shop. Nếu kick bot, gói boost sẽ mất bảo hành ngay lập tức.</li>
+          <li class="rules-list-item"><strong>Thời hạn bảo hành:</strong> Gói 1 Tháng bảo hành 25 ngày. Gói 4 Tháng bảo hành 3 tháng trọn gói.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 09: Nitro Gift & Deco Gift -->
+      <section class="tos-section" id="nitro-deco-gift">
+        <div class="section-header-row">
+          <span class="number-badge">09</span>
+          <h2 class="section-title">Quy định Nitro Gift & Deco Gift</h2>
+          <a href="#nitro-deco-gift" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#nitro-deco-gift', event)">#</a>
+        </div>
+        <div class="callout-box callout-info">
+          <span class="callout-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"></path></svg>
+          </span>
+          <div class="callout-content">
+            Dạng link quà tặng Discord Gift chính hãng: Bấm vào là nhận ngay trên tài khoản của bạn, hoàn toàn không cần cung cấp tài khoản hay mật khẩu!
+          </div>
+        </div>
+        <ul class="rules-list">
+          <li class="rules-list-item">Link quà tặng chính thống từ Discord, cam kết không thu hồi, không rủi ro.</li>
+          <li class="rules-list-item">Sau khi link đã được khách nhận (claim) thành công, đơn hàng sẽ được đánh dấu hoàn thành và không áp dụng hoàn tiền.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 10: Deco Login -->
+      <section class="tos-section" id="deco-login">
+        <div class="section-header-row">
+          <span class="number-badge">10</span>
+          <h2 class="section-title">Quy định Deco Login</h2>
+          <a href="#deco-login" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#deco-login', event)">#</a>
+        </div>
+        <ul class="rules-list">
+          <li class="rules-list-item">Khách hàng cung cấp tài khoản mật khẩu để shop đăng nhập mua Avatar Decoration hoặc Profile Effect giá tiết kiệm.</li>
+          <li class="rules-list-item">Vật phẩm thuộc quyền sở hữu vĩnh viễn của tài khoản, bảo hành chính hãng không bao giờ thu hồi.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 11: YouTube Premium -->
+      <section class="tos-section" id="youtube-premium">
+        <div class="section-header-row">
+          <span class="number-badge">11</span>
+          <h2 class="section-title">Quy định YouTube Premium</h2>
+          <a href="#youtube-premium" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#youtube-premium', event)">#</a>
+        </div>
+        <ul class="rules-list">
+          <li class="rules-list-item">Nâng cấp dạng slot gia đình chính chủ trên chính email Google cá nhân của khách hàng.</li>
+          <li class="rules-list-item">Theo chính sách Google, một tài khoản chỉ được tham gia đổi nhóm gia đình 1 lần trong 12 tháng. Nếu tài khoản đã dính giới hạn này, shop có hỗ trợ gói Fix lỗi 12 tháng.</li>
+          <li class="rules-list-item">Bảo hành 1 đổi 1 trong suốt thời hạn gói đăng ký.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 12: Spotify Premium -->
+      <section class="tos-section" id="spotify-premium">
+        <div class="section-header-row">
+          <span class="number-badge">12</span>
+          <h2 class="section-title">Quy định Spotify Premium</h2>
+          <a href="#spotify-premium" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#spotify-premium', event)">#</a>
+        </div>
+        <ul class="rules-list">
+          <li class="rules-list-item">Nâng cấp trực tiếp trên tài khoản cá nhân của bạn, nghe nhạc Offline và tải nhạc ngoại tuyến không giới hạn.</li>
+          <li class="rules-list-item">Gói lần đầu: Yêu cầu tài khoản chưa từng dùng gói Premium trước đây và quốc gia tài khoản đặt tại Việt Nam.</li>
+          <li class="rules-list-item">Bảo hành trọn vẹn xuyên suốt thời hạn sử dụng.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 13: Netflix Premium 4K -->
+      <section class="tos-section" id="netflix-premium">
+        <div class="section-header-row">
+          <span class="number-badge">13</span>
+          <h2 class="section-title">Quy định Netflix Premium 4K UHD</h2>
+          <a href="#netflix-premium" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#netflix-premium', event)">#</a>
+        </div>
+        <ul class="rules-list">
+          <li class="rules-list-item"><strong>Slot Profile riêng:</strong> Mỗi khách hàng được cấp 1 Profile độc lập có mã PIN bảo vệ riêng biệt.</li>
+          <li class="rules-list-item">Chỉ xem trên 1 thiết bị tại cùng 1 thời điểm. Không được chia sẻ tài khoản cho người khác.</li>
+          <li class="rules-list-item">Không được tự ý đổi mật khẩu, email hoặc can thiệp vào các Profile của người khác.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 14: Canva Pro & CapCut Pro -->
+      <section class="tos-section" id="canva-capcut">
+        <div class="section-header-row">
+          <span class="number-badge">14</span>
+          <h2 class="section-title">Quy định Canva Pro & CapCut Pro</h2>
+          <a href="#canva-capcut" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#canva-capcut', event)">#</a>
+        </div>
+        <ul class="rules-list">
+          <li class="rules-list-item"><strong>Canva Pro:</strong> Mở khóa full tài nguyên hình ảnh, font chữ cao cấp, tính năng tách nền AI và Magic Studio. Nâng cấp trực tiếp trên email của bạn.</li>
+          <li class="rules-list-item"><strong>CapCut Pro:</strong> Sử dụng đầy đủ tính năng dựng video AI cao cấp, hiệu ứng và mẫu Pro trên điện thoại và máy tính.</li>
+          <li class="rules-list-item">Bảo hành 1 đổi 1 xuyên suốt thời hạn cam kết.</li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <p style="font-weight: 700; color: #fff; margin-bottom: 0.35rem;">Pade Store · Bản quyền © 2026</p>
+        <p>Hệ sinh thái dịch vụ bản quyền Discord và giải trí kỹ thuật số.</p>
+      </div>
+      <ul class="footer-links">
+        <li><a href="/tos" class="footer-link">Terms of Service</a></li>
+        <li><a href="/rules" class="footer-link">Server Rules</a></li>
+        <li><a href="https://menu.sorae.tokyo" class="footer-link">Bảng Giá Menu</a></li>
+        <li><a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" class="footer-link">Discord</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toastBox">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    <span id="toastMsg">Đã sao chép liên kết điều khoản!</span>
+  </div>
+
+  <script>
+    // 1. Reading Progress Bar
+    window.addEventListener('scroll', () => {
+      const scrollTotal = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const progress = scrollTotal > 0 ? window.scrollY / scrollTotal : 0;
+      document.getElementById('readingProgress').style.transform = `scaleX(${progress})`;
+    }, { passive: true });
+
+    // 2. ScrollSpy for Sidebar Active State
+    const sections = document.querySelectorAll('.tos-section');
+    const navLinks = document.querySelectorAll('.sidebar-nav-link');
+
+    function updateActiveNav() {
+      let currentSectionId = '';
+      const scrollPos = window.scrollY + 140;
+
+      sections.forEach(section => {
+        const top = section.offsetTop;
+        const height = section.offsetHeight;
+        if (scrollPos >= top && scrollPos < top + height) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      if (currentSectionId) {
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === `#${currentSectionId}`) {
+            link.classList.add('active');
+          }
+        });
+      }
+    }
+
+    window.addEventListener('scroll', updateActiveNav, { passive: true });
+    window.addEventListener('DOMContentLoaded', updateActiveNav);
+
+    // 3. Copy Section Link & Toast
+    function copySectionLink(hash, e) {
+      if (e) e.preventDefault();
+      const url = `${window.location.origin}${window.location.pathname}${hash}`;
+      navigator.clipboard.writeText(url).then(() => {
+        showToast('Đã sao chép liên kết điều khoản!');
+        window.history.pushState(null, null, hash);
+      }).catch(() => {
+        showToast('Không thể sao chép liên kết.');
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastBox');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+
+    // 4. Sidebar Instant Search Filter
+    const searchInput = document.getElementById('ruleSearchInput');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        const items = document.querySelectorAll('.sidebar-nav-item');
+        items.forEach(item => {
+          const text = item.textContent.toLowerCase();
+          item.style.display = text.includes(query) ? '' : 'none';
+        });
+      });
+    }
+
+    // 5. Mobile Sidebar Toggle
+    const mobileBtn = document.getElementById('mobileMenuToggle');
+    const sidebar = document.getElementById('pageSidebar');
+    const backdrop = document.getElementById('sidebarBackdrop');
+
+    function toggleMobileMenu(open) {
+      if (open) {
+        sidebar.classList.add('open');
+        backdrop.classList.add('open');
+      } else {
+        sidebar.classList.remove('open');
+        backdrop.classList.remove('open');
+      }
+    }
+
+    if (mobileBtn) {
+      mobileBtn.addEventListener('click', () => toggleMobileMenu(true));
+    }
+    if (backdrop) {
+      backdrop.addEventListener('click', () => toggleMobileMenu(false));
+    }
+
+    // Close mobile menu on link click
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 900) {
+          toggleMobileMenu(false);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+

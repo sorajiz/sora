@@ -2198,6 +2198,12 @@
       </div>
 
       <div class="nav-right">
+        <!-- Subdomain Navigation Quick Links (Desktop) -->
+        <nav class="nav-subdomain-links" style="display: flex; align-items: center; gap: 0.35rem; margin-right: 0.5rem;">
+          <a href="https://rules.sorae.tokyo" target="_blank" rel="noopener noreferrer" style="font-size: 0.8125rem; font-weight: 600; color: #8e929f; text-decoration: none; padding: 0.35rem 0.65rem; border-radius: 0.5rem; transition: all 0.15s ease;" onmouseover="this.style.color='#fff'; this.style.backgroundColor='rgba(255,255,255,0.06)'" onmouseout="this.style.color='#8e929f'; this.style.backgroundColor='transparent'">📜 Rules</a>
+          <a href="https://tos.sorae.tokyo" target="_blank" rel="noopener noreferrer" style="font-size: 0.8125rem; font-weight: 600; color: #8e929f; text-decoration: none; padding: 0.35rem 0.65rem; border-radius: 0.5rem; transition: all 0.15s ease;" onmouseover="this.style.color='#fff'; this.style.backgroundColor='rgba(255,255,255,0.06)'" onmouseout="this.style.color='#8e929f'; this.style.backgroundColor='transparent'">⚖️ ToS</a>
+        </nav>
+
         <!-- Authenticated Profile Chip (Shown when admin/owner is logged in) -->
         <div class="user-profile-chip" id="userProfileChip">
           <img src="/assets/favicon.png" alt="Avatar" class="user-avatar" id="userAvatarImg" />
@@ -2825,6 +2831,36 @@
             toggleMorphMenu(false);
           };
           morphContainer.appendChild(mBtn);
+        });
+
+        // Quick Subdomain Links Divider & Items (Rules, ToS, Pay, Discord)
+        const subDivider = document.createElement('div');
+        subDivider.style.borderTop = '1px solid rgba(255,255,255,0.08)';
+        subDivider.style.margin = '0.5rem 0';
+        morphContainer.appendChild(subDivider);
+
+        const sublinks = [
+          { name: 'Nội Quy Server (Rules)', href: 'https://rules.sorae.tokyo', icon: '📜' },
+          { name: 'Điều Khoản Dịch Vụ (ToS)', href: 'https://tos.sorae.tokyo', icon: '⚖️' },
+          { name: 'Cổng Thanh Toán Napas', href: 'https://payment.sorae.tokyo', icon: '💳' },
+          { name: 'Cộng Đồng Discord Pade', href: 'https://discord.gg/pade', icon: '💬' }
+        ];
+
+        sublinks.forEach(link => {
+          const a = document.createElement('a');
+          a.href = link.href;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.className = 'morph-menu-item';
+          a.style.textDecoration = 'none';
+          a.innerHTML = `
+            <div class="morph-menu-item-left">
+              <span class="morph-menu-item-icon">${link.icon}</span>
+              <span>${link.name}</span>
+            </div>
+            <span class="morph-menu-badge" style="font-size: 0.75rem;">↗</span>
+          `;
+          morphContainer.appendChild(a);
         });
       }
     }

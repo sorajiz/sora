@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= typeof title !== 'undefined' ? title : 'Server Rules · Pade Community' %></title>
+  <meta name="description" content="<%= typeof description !== 'undefined' ? description : 'Nội quy và quy chuẩn cộng đồng chính thức tại máy chủ Pade Discord · discord.gg/pade' %>" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0c0d12" />
+  <link rel="canonical" href="<%= typeof canonicalUrl !== 'undefined' ? canonicalUrl : 'https://rules.sorae.tokyo' %>" />
+
+  <!-- OpenGraph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="vi_VN" />
+  <meta property="og:site_name" content="Pade Store & Community" />
+  <meta property="og:title" content="Server Rules · Pade Community" />
+  <meta property="og:description" content="Nội quy chính thức của máy chủ Discord Pade Community. Cập nhật 2026." />
+  <meta property="og:url" content="https://rules.sorae.tokyo" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Server Rules · Pade Community" />
+  <meta name="twitter:description" content="Nội quy chính thức của máy chủ Discord Pade Community." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="<%= typeof faviconDataUri !== 'undefined' ? faviconDataUri : '/assets/favicon.png' %>" />
+  <link rel="shortcut icon" type="image/png" href="/assets/favicon.png" />
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── RESET & DARK GRAY DESIGN SYSTEM (XÁM ĐEN THƯỢNG HẠNG) ── */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --bg-base: #0c0d12;
+      --bg-surface: #13141a;
+      --bg-surface-elevated: #181922;
+      --bg-sidebar-pill: #21232d;
+      --bg-badge: #1b1c24;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.16);
+      --border-focus: rgba(255, 255, 255, 0.28);
+      --text-white: #ffffff;
+      --text-main: #f1f2f6;
+      --text-sub: #c5c8d4;
+      --text-muted: #838896;
+      --text-dim: #5c606e;
+      --accent-amber: #f59e0b;
+      --accent-amber-bg: #1c160c;
+      --accent-amber-border: rgba(245, 158, 11, 0.35);
+      --accent-blue: #38bdf8;
+      --accent-red: #ef4444;
+      --color-discord: #5865F2;
+      --color-discord-hover: #4752c4;
+      --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: "JetBrains Mono", monospace;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .ambient-mesh {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at 15% 15%, rgba(33, 35, 45, 0.4) 0%, transparent 60%),
+                  radial-gradient(circle at 85% 85%, rgba(20, 21, 28, 0.6) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 100%;
+      background: linear-gradient(90deg, #5865f2, #38bdf8, #a855f7);
+      transform-origin: 0% 50%;
+      transform: scaleX(0);
+      z-index: 100;
+      transition: transform 0.08s ease-out;
+    }
+
+    /* ── HEADER / TOPBAR ── */
+    .top-header {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      z-index: 50;
+      background: rgba(12, 13, 18, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-subtle);
+      transition: all 0.2s ease;
+    }
+
+    .top-header-inner {
+      max-width: 1260px;
+      margin: 0 auto;
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-avatar {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid var(--border-strong);
+      background: #181920;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .brand-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .brand-name {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-white);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-tabs {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 0.25rem;
+      border-radius: 9999px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .nav-tab-link {
+      padding: 0.35rem 0.85rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-radius: 9999px;
+      transition: all 0.15s ease;
+    }
+
+    .nav-tab-link:hover {
+      color: var(--text-white);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-tab-link.active {
+      color: var(--text-white);
+      background: var(--bg-sidebar-pill);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn-discord-join {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--color-discord);
+      color: #fff;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      padding: 0.45rem 0.95rem;
+      border-radius: 0.55rem;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 14px rgba(88, 101, 242, 0.25);
+    }
+
+    .btn-discord-join:hover {
+      background: var(--color-discord-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(88, 101, 242, 0.35);
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 0.45rem 0.65rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* ── MAIN CONTENT LAYOUT (2-COLUMN PARITY) ── */
+    .layout-wrapper {
+      position: relative;
+      z-index: 10;
+      max-width: 1260px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 6rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 3.5rem;
+    }
+
+    /* ── LEFT SIDEBAR ── */
+    .sidebar {
+      width: 270px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 5rem;
+      max-height: calc(100vh - 6.5rem);
+      overflow-y: auto;
+      padding-right: 0.75rem;
+      scrollbar-width: thin;
+      scrollbar-color: #2b2e3b transparent;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .sidebar::-webkit-scrollbar-thumb {
+      background: #2b2e3b;
+      border-radius: 4px;
+    }
+
+    .sidebar-search-box {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .sidebar-search-input {
+      width: 100%;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.55rem;
+      padding: 0.5rem 0.75rem 0.5rem 2.1rem;
+      color: var(--text-white);
+      font-size: 0.8125rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .sidebar-search-input:focus {
+      border-color: var(--border-strong);
+      background: var(--bg-surface-elevated);
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.06);
+    }
+
+    .sidebar-search-icon {
+      position: absolute;
+      left: 0.7rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      pointer-events: none;
+    }
+
+    .sidebar-group {
+      margin-bottom: 2rem;
+    }
+
+    .sidebar-heading {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.65rem;
+      padding-left: 0.85rem;
+    }
+
+    .sidebar-nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .sidebar-nav-item {
+      position: relative;
+    }
+
+    .sidebar-nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.55rem 0.95rem;
+      border-radius: 0.55rem;
+      color: var(--text-sub);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.12s ease;
+      user-select: none;
+    }
+
+    .sidebar-nav-link:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-white);
+    }
+
+    .sidebar-nav-link.active {
+      background: var(--bg-sidebar-pill);
+      color: var(--text-white);
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    .nav-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--text-dim);
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+
+    .sidebar-nav-link.active .nav-dot {
+      background-color: #ffffff;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+    }
+
+    .sidebar-nav-link:hover .nav-dot {
+      background-color: var(--text-sub);
+    }
+
+    /* ── RIGHT MAIN ARTICLE AREA ── */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      max-width: 880px;
+    }
+
+    .content-eyebrow {
+      font-size: 0.78125rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-muted);
+      margin-bottom: 0.65rem;
+      display: inline-block;
+    }
+
+    .hero-title {
+      font-size: clamp(2.25rem, 4.5vw, 3.4rem);
+      font-weight: 900;
+      color: var(--text-white);
+      letter-spacing: -0.03em;
+      line-height: 1.12;
+      margin-bottom: 1.25rem;
+    }
+
+    .meta-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid var(--border-subtle);
+      border-radius: 9999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.8125rem;
+      color: var(--text-sub);
+      margin-bottom: 2rem;
+    }
+
+    .meta-badge-icon {
+      color: var(--text-muted);
+      display: inline-flex;
+    }
+
+    .meta-badge-link {
+      color: var(--text-white);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.15s ease;
+    }
+
+    .meta-badge-link:hover {
+      text-decoration: underline;
+      color: var(--accent-blue);
+    }
+
+    .section-divider {
+      border: 0;
+      border-top: 1px solid var(--border-subtle);
+      margin: 2.25rem 0;
+    }
+
+    /* ── SECTION ITEM (Image 1 Parity) ── */
+    .tos-section {
+      scroll-margin-top: 5.5rem;
+      position: relative;
+    }
+
+    .section-header-row {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    .number-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      background: var(--bg-badge);
+      border: 1px solid var(--border-subtle);
+      border-radius: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--text-white);
+      letter-spacing: -0.015em;
+      line-height: 1.3;
+    }
+
+    .section-anchor-btn {
+      opacity: 0;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 1rem;
+      margin-left: 0.35rem;
+      transition: all 0.15s ease;
+    }
+
+    .tos-section:hover .section-anchor-btn {
+      opacity: 1;
+    }
+
+    .section-anchor-btn:hover {
+      color: var(--text-white);
+    }
+
+    .section-lead-text {
+      font-size: 0.95rem;
+      color: var(--text-sub);
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+
+    .rules-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      margin: 0.85rem 0;
+    }
+
+    .rules-list-item {
+      position: relative;
+      padding-left: 1.25rem;
+      font-size: 0.9375rem;
+      color: var(--text-main);
+      line-height: 1.65;
+    }
+
+    .rules-list-item::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      top: -0.05rem;
+      color: var(--text-dim);
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .rules-list-item strong {
+      color: var(--text-white);
+      font-weight: 700;
+    }
+
+    .callout-box {
+      background: var(--accent-amber-bg);
+      border: 1px solid var(--accent-amber-border);
+      border-left: 4px solid var(--accent-amber);
+      border-radius: 0.65rem;
+      padding: 0.95rem 1.25rem;
+      margin: 1.15rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+    }
+
+    .callout-icon {
+      color: var(--accent-amber);
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+    }
+
+    .callout-content {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fef3c7;
+      line-height: 1.55;
+    }
+
+    .callout-box.callout-danger {
+      background: #1c0e0e;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      border-left: 4px solid var(--accent-red);
+    }
+
+    .callout-box.callout-danger .callout-icon {
+      color: var(--accent-red);
+    }
+
+    .callout-box.callout-danger .callout-content {
+      color: #fee2e2;
+    }
+
+    .callout-box.callout-info {
+      background: #0d1624;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-left: 4px solid var(--accent-blue);
+    }
+
+    .callout-box.callout-info .callout-icon {
+      color: var(--accent-blue);
+    }
+
+    .callout-box.callout-info .callout-content {
+      color: #e0f2fe;
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--border-subtle);
+      background: #090a0d;
+      padding: 3rem 1.5rem;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+    }
+
+    .footer-inner {
+      max-width: 1260px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .footer-link {
+      color: var(--text-sub);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .footer-link:hover {
+      color: var(--text-white);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #1c1d26;
+      border: 1px solid var(--border-strong);
+      color: var(--text-white);
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.55rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 900px) {
+      .layout-wrapper {
+        flex-direction: column;
+        gap: 2rem;
+        padding-top: 1.5rem;
+      }
+
+      .mobile-menu-btn {
+        display: inline-flex;
+      }
+
+      .sidebar {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 82vw;
+        max-width: 320px;
+        height: 100vh;
+        max-height: 100vh;
+        background: #101117;
+        z-index: 200;
+        padding: 1.5rem;
+        box-shadow: 10px 0 40px rgba(0, 0, 0, 0.7);
+        border-right: 1px solid var(--border-subtle);
+      }
+
+      .sidebar.open {
+        display: block;
+      }
+
+      .sidebar-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(4px);
+        z-index: 199;
+      }
+
+      .sidebar-backdrop.open {
+        display: block;
+      }
+
+      .nav-tabs {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="reading-progress" id="readingProgress"></div>
+  <div class="ambient-mesh"></div>
+
+  <!-- Top Navigation Header -->
+  <header class="top-header">
+    <div class="top-header-inner">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <button class="mobile-menu-btn" id="mobileMenuToggle" aria-label="Mở danh mục nội quy">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          <span>Mục Lục</span>
+        </button>
+
+        <a href="/" class="brand-group">
+          <div class="brand-avatar">
+            <img src="/assets/pade-guild-icon.png" alt="Pade Store" onerror="this.onerror=null;this.src='/assets/favicon.png';" />
+          </div>
+          <span class="brand-name">Pade Community</span>
+        </a>
+      </div>
+
+      <nav class="nav-tabs" aria-label="Subdomain Navigation">
+        <a href="/rules" class="nav-tab-link active">Server Rules</a>
+        <a href="/tos" class="nav-tab-link">Terms of Service</a>
+        <a href="https://menu.sorae.tokyo" class="nav-tab-link">Bảng Giá Menu</a>
+        <a href="https://payment.sorae.tokyo" class="nav-tab-link">Cổng Thanh Toán</a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" class="btn-discord-join">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+          </svg>
+          <span>discord.gg/pade</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+  <!-- 2-Column Layout Wrapper -->
+  <div class="layout-wrapper">
+    <!-- Left Sidebar -->
+    <aside class="sidebar" id="pageSidebar">
+      <div class="sidebar-search-box">
+        <svg class="sidebar-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="ruleSearchInput" class="sidebar-search-input" placeholder="Tìm kiếm nội quy..." />
+      </div>
+
+      <!-- Group 1: NỘI QUY CHUNG -->
+      <div class="sidebar-group">
+        <div class="sidebar-heading">NỘI QUY CHUNG</div>
+        <ul class="sidebar-nav-list">
+          <li class="sidebar-nav-item">
+            <a href="#ung-xu-ton-trong" class="sidebar-nav-link active">
+              <span class="nav-dot"></span>
+              <span>Ứng xử & Tôn trọng</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#quy-dinh-kenh-chat" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Quy định kênh Chat</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#nghiem-cam-spam-nsfw" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Nghiêm cấm Spam & NSFW</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#cam-quang-cao" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Cấm Quảng cáo & Chèo kéo</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#an-toan-giao-dich" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>An toàn giao dịch</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#quy-dinh-kenh-voice" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Kênh Voice & Âm thanh</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Group 2: HỖ TRỢ & XỬ PHẠT -->
+      <div class="sidebar-group">
+        <div class="sidebar-heading">HỖ TRỢ & XỬ PHẠT</div>
+        <ul class="sidebar-nav-list">
+          <li class="sidebar-nav-item">
+            <a href="#quy-dinh-ticket" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Quy định Ticket hỗ trợ</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#giveaway-minigame" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Giveaways & Minigames</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#khung-hinh-phat" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Khung hình phạt</span>
+            </a>
+          </li>
+          <li class="sidebar-nav-item">
+            <a href="#lien-he-quan-tri" class="sidebar-nav-link">
+              <span class="nav-dot"></span>
+              <span>Liên hệ Quản trị viên</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Right Main Article Area -->
+    <main class="main-content">
+      <span class="content-eyebrow">NỘI QUY CỘNG ĐỒNG</span>
+      <h1 class="hero-title">Server Rules</h1>
+
+      <!-- Meta Pill (discord.gg/pade) -->
+      <div class="meta-badge">
+        <span class="meta-badge-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+        </span>
+        <span>Cập nhật lần cuối: 2026 · <a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" class="meta-badge-link">discord.gg/pade</a></span>
+      </div>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 01: Ứng xử & Tôn trọng -->
+      <section class="tos-section" id="ung-xu-ton-trong">
+        <div class="section-header-row">
+          <span class="number-badge">01</span>
+          <h2 class="section-title">Ứng xử & Tôn trọng lẫn nhau</h2>
+          <a href="#ung-xu-ton-trong" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#ung-xu-ton-trong', event)">#</a>
+        </div>
+        <p class="section-lead-text">
+          Pade Community là không gian lành mạnh dành cho tất cả mọi người. Mọi thành viên tham gia đều phải giữ thái độ văn minh và tôn trọng lẫn nhau.
+        </p>
+        <ul class="rules-list">
+          <li class="rules-list-item">Tôn trọng tất cả các thành viên và đội ngũ Điều hành viên (Moderator/Admin).</li>
+          <li class="rules-list-item">Tuyệt đối không phân biệt vùng miền, tôn giáo, giới tính, chủng tộc hoặc công kích cá nhân.</li>
+          <li class="rules-list-item">Không gây chia rẽ, thù ghét, toxic hoặc châm ngòi tranh cãi ác ý trong server.</li>
+          <li class="rules-list-item">Tuân thủ nghiêm ngặt Các điều khoản dịch vụ (ToS) và Nguyên tắc cộng đồng của Discord.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 02: Quy định kênh Chat -->
+      <section class="tos-section" id="quy-dinh-kenh-chat">
+        <div class="section-header-row">
+          <span class="number-badge">02</span>
+          <h2 class="section-title">Quy định sử dụng các kênh Chat</h2>
+          <a href="#quy-dinh-kenh-chat" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#quy-dinh-kenh-chat', event)">#</a>
+        </div>
+        <ul class="rules-list">
+          <li class="rules-list-item"><strong>Chat đúng kênh:</strong> Hãy gửi tin nhắn đúng chủ đề của từng kênh quy định (kênh trò chuyện chung, chia sẻ, bot lệnh, feedback, ticket).</li>
+          <li class="rules-list-item"><strong>Không lạm dụng Tag:</strong> Không tag vô cớ (ghost ping), không spam tag @everyone, @here hoặc tag dồn dập đội ngũ Admin/Mod khi chưa cần thiết.</li>
+          <li class="rules-list-item"><strong>Ngôn từ phù hợp:</strong> Hạn chế chửi thề thô tục, chèn ép thành viên mới.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 03: Nghiêm cấm Spam & NSFW -->
+      <section class="tos-section" id="nghiem-cam-spam-nsfw">
+        <div class="section-header-row">
+          <span class="number-badge">03</span>
+          <h2 class="section-title">Nghiêm cấm Spam & Nội dung NSFW</h2>
+          <a href="#nghiem-cam-spam-nsfw" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#nghiem-cam-spam-nsfw', event)">#</a>
+        </div>
+
+        <div class="callout-box callout-danger">
+          <span class="callout-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+          </span>
+          <div class="callout-content">
+            Server cấm 100% tất cả các hình ảnh, video hoặc liên kết chứa nội dung đồi trụy (18+ / NSFW) và bạo lực ghê rợn (Gore).
+          </div>
+        </div>
+
+        <ul class="rules-list">
+          <li class="rules-list-item">Không spam tin nhắn lặp lại liên tục, spam biểu tượng cảm xúc (emote), spam sticker hoặc flood chữ vô nghĩa.</li>
+          <li class="rules-list-item">Không gửi file lạ, tệp thực thi (.exe, .bat, .scr), link phishing giả mạo Steam/Discord Nitro để lừa đảo. Thành viên vi phạm sẽ bị BAN NGAY LẬP TỨC mà không cần cảnh cáo.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 04: Cấm Quảng cáo & Chèo kéo -->
+      <section class="tos-section" id="cam-quang-cao">
+        <div class="section-header-row">
+          <span class="number-badge">04</span>
+          <h2 class="section-title">Nghiêm cấm Quảng cáo & Chèo kéo</h2>
+          <a href="#cam-quang-cao" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#cam-quang-cao', event)">#</a>
+        </div>
+
+        <div class="callout-box">
+          <span class="callout-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          </span>
+          <div class="callout-content">
+            Tuyệt đối không gửi link mời server Discord khác hoặc nhắn tin riêng (DM) chèo kéo thành viên trong server.
+          </div>
+        </div>
+
+        <ul class="rules-list">
+          <li class="rules-list-item">Cấm chia sẻ link server Discord khác trong mọi kênh chat, trừ khi được Admin cho phép trong kênh đối tác.</li>
+          <li class="rules-list-item">Hành vi nhắn tin riêng (Direct Message) cho thành viên trong server để quảng cáo dịch vụ hoặc bán phá giá sẽ bị xử lý khóa tài khoản vĩnh viễn.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 05: An toàn giao dịch -->
+      <section class="tos-section" id="an-toan-giao-dich">
+        <div class="section-header-row">
+          <span class="number-badge">05</span>
+          <h2 class="section-title">An toàn giao dịch & Chống lừa đảo</h2>
+          <a href="#an-toan-giao-dich" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#an-toan-giao-dich', event)">#</a>
+        </div>
+        <ul class="rules-list">
+          <li class="rules-list-item"><strong>Giao dịch chính thống:</strong> Mọi giao dịch mua hàng tại Pade Store chỉ được thực hiện thông qua hệ thống Website chính thức <code>menu.sorae.tokyo</code> hoặc mở Ticket tại server Discord <code>discord.gg/pade</code>.</li>
+          <li class="rules-list-item"><strong>Cảnh giác tài khoản giả mạo:</strong> Đội ngũ Admin/Staff của Pade Store <strong>KHÔNG BAO GIỜ</strong> chủ động nhắn tin riêng (DM) để yêu cầu chuyển tiền vào số tài khoản lạ.</li>
+          <li class="rules-list-item">Shop chỉ nhận thanh toán qua đúng thông tin tài khoản MBBank chính thức được cấp tự động trên web.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 06: Kênh Voice -->
+      <section class="tos-section" id="quy-dinh-kenh-voice">
+        <div class="section-header-row">
+          <span class="number-badge">06</span>
+          <h2 class="section-title">Quy định Kênh Voice & Âm thanh</h2>
+          <a href="#quy-dinh-kenh-voice" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#quy-dinh-kenh-voice', event)">#</a>
+        </div>
+        <ul class="rules-list">
+          <li class="rules-list-item">Không hét lớn vào mic, không mở âm thanh rè, chói tai hoặc mic-spam gây khó chịu cho người khác.</li>
+          <li class="rules-list-item">Không lạm dụng Soundboard với âm lượng cao hoặc spam liên tục làm gián đoạn cuộc trò chuyện.</li>
+          <li class="rules-list-item">Tôn trọng không gian riêng tư của các phòng voice trò chuyện, chơi game và học tập.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 07: Quy định Ticket -->
+      <section class="tos-section" id="quy-dinh-ticket">
+        <div class="section-header-row">
+          <span class="number-badge">07</span>
+          <h2 class="section-title">Quy định mở Ticket hỗ trợ</h2>
+          <a href="#quy-dinh-ticket" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#quy-dinh-ticket', event)">#</a>
+        </div>
+        <div class="callout-box callout-info">
+          <span class="callout-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 9a3 3 0 0 1 3-3h14a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V9Z"></path><path d="m2 9 10 7 10-7"></path></svg>
+          </span>
+          <div class="callout-content">
+            Chỉ mở ticket khi bạn có nhu cầu mua dịch vụ, nhận hàng hoặc yêu cầu bảo hành/hỗ trợ kỹ thuật.
+          </div>
+        </div>
+        <ul class="rules-list">
+          <li class="rules-list-item">Không mở ticket để đùa cợt, quấy rối hoặc spam ticket vô nghĩa. Mở ticket troll sẽ bị cấm tạo ticket.</li>
+          <li class="rules-list-item">Cung cấp đầy đủ mã đơn hàng (ORD/SR), bill chuyển khoản hoặc mô tả lỗi rõ ràng để nhân viên hỗ trợ nhanh nhất.</li>
+          <li class="rules-list-item">Đóng ticket sau khi vấn đề đã được nhân viên giải quyết hoàn tất.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 08: Giveaways -->
+      <section class="tos-section" id="giveaway-minigame">
+        <div class="section-header-row">
+          <span class="number-badge">08</span>
+          <h2 class="section-title">Giveaways & Sự kiện cộng đồng</h2>
+          <a href="#giveaway-minigame" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#giveaway-minigame', event)">#</a>
+        </div>
+        <ul class="rules-list">
+          <li class="rules-list-item">Mọi thành viên đều có cơ hội tham gia Giveaways công bằng và miễn phí.</li>
+          <li class="rules-list-item">Nghiêm cấm sử dụng tài khoản ảo (clone, alt), bot tự động để gian lận quà tặng. Nếu phát hiện trúng giải bằng acc clone, kết quả sẽ bị hủy và reroll cho người khác.</li>
+          <li class="rules-list-item">Người trúng giải có tối đa 24 giờ để tạo ticket nhận thưởng kể từ thời điểm công bố kết quả.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 09: Khung hình phạt -->
+      <section class="tos-section" id="khung-hinh-phat">
+        <div class="section-header-row">
+          <span class="number-badge">09</span>
+          <h2 class="section-title">Khung hình phạt & Quy trình xử lý</h2>
+          <a href="#khung-hinh-phat" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#khung-hinh-phat', event)">#</a>
+        </div>
+        <p class="section-lead-text">
+          Tùy theo mức độ vi phạm, Ban Quản Trị sẽ áp dụng các biện pháp kỷ luật theo thang bậc sau:
+        </p>
+        <ul class="rules-list">
+          <li class="rules-list-item"><strong>Mức 1 (Nhắc nhở / Cảnh cáo):</strong> Áp dụng cho các vi phạm nhẹ như chat nhầm kênh, spam nhẹ lần đầu.</li>
+          <li class="rules-list-item"><strong>Mức 2 (Mute tạm thời 1h — 24h):</strong> Áp dụng khi cố tình tái diễn spam, gây gỗ, chửi bậy sau khi đã nhắc nhở.</li>
+          <li class="rules-list-item"><strong>Mức 3 (Kick khỏi máy chủ):</strong> Áp dụng cho các trường hợp cố tình phá hoại, quấy rối thành viên.</li>
+          <li class="rules-list-item"><strong>Mức 4 (Ban vĩnh viễn & Blacklist):</strong> Áp dụng ngay cho hành vi lừa đảo (scam), gửi link mã độc/phishing, phát tán NSFW, phá hoại bot shop.</li>
+        </ul>
+      </section>
+
+      <hr class="section-divider" />
+
+      <!-- SECTION 10: Liên hệ Quản trị viên -->
+      <section class="tos-section" id="lien-he-quan-tri">
+        <div class="section-header-row">
+          <span class="number-badge">10</span>
+          <h2 class="section-title">Liên hệ Quản trị viên & Kháng cáo</h2>
+          <a href="#lien-he-quan-tri" class="section-anchor-btn" title="Sao chép liên kết mục này" onclick="copySectionLink('#lien-he-quan-tri', event)">#</a>
+        </div>
+        <p class="section-lead-text">
+          Nếu bạn cho rằng hình phạt đưa ra chưa thỏa đáng hoặc cần khiếu nại báo cáo hành vi vi phạm của thành viên khác, vui lòng liên hệ đội ngũ Admin tại máy chủ:
+        </p>
+        <ul class="rules-list">
+          <li class="rules-list-item">Discord chính thức: <a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: none; font-weight: 700;">discord.gg/pade</a></li>
+          <li class="rules-list-item">Kênh tiếp nhận khiếu nại: <code>#ticket-khieu-nai</code> hoặc nhắn tin cho Quản trị viên cao nhất.</li>
+          <li class="rules-list-item">Mọi quyết định cuối cùng thuộc về Ban Quản Trị Pade Store & Community.</li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div>
+        <p style="font-weight: 700; color: #fff; margin-bottom: 0.35rem;">Pade Community · Bản quyền © 2026</p>
+        <p>Không gian kết nối và trao đổi dành riêng cho khách hàng Pade Store.</p>
+      </div>
+      <ul class="footer-links">
+        <li><a href="/rules" class="footer-link">Server Rules</a></li>
+        <li><a href="/tos" class="footer-link">Terms of Service</a></li>
+        <li><a href="https://menu.sorae.tokyo" class="footer-link">Bảng Giá Menu</a></li>
+        <li><a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" class="footer-link">Discord</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toastBox">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    <span id="toastMsg">Đã sao chép liên kết nội quy!</span>
+  </div>
+
+  <script>
+    window.addEventListener('scroll', () => {
+      const scrollTotal = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const progress = scrollTotal > 0 ? window.scrollY / scrollTotal : 0;
+      document.getElementById('readingProgress').style.transform = `scaleX(${progress})`;
+    }, { passive: true });
+
+    const sections = document.querySelectorAll('.tos-section');
+    const navLinks = document.querySelectorAll('.sidebar-nav-link');
+
+    function updateActiveNav() {
+      let currentSectionId = '';
+      const scrollPos = window.scrollY + 140;
+
+      sections.forEach(section => {
+        const top = section.offsetTop;
+        const height = section.offsetHeight;
+        if (scrollPos >= top && scrollPos < top + height) {
+          currentSectionId = section.getAttribute('id');
+        }
+      });
+
+      if (currentSectionId) {
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === `#${currentSectionId}`) {
+            link.classList.add('active');
+          }
+        });
+      }
+    }
+
+    window.addEventListener('scroll', updateActiveNav, { passive: true });
+    window.addEventListener('DOMContentLoaded', updateActiveNav);
+
+    function copySectionLink(hash, e) {
+      if (e) e.preventDefault();
+      const url = `${window.location.origin}${window.location.pathname}${hash}`;
+      navigator.clipboard.writeText(url).then(() => {
+        showToast('Đã sao chép liên kết nội quy!');
+        window.history.pushState(null, null, hash);
+      }).catch(() => {
+        showToast('Không thể sao chép liên kết.');
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastBox');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+
+    const searchInput = document.getElementById('ruleSearchInput');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        const items = document.querySelectorAll('.sidebar-nav-item');
+        items.forEach(item => {
+          const text = item.textContent.toLowerCase();
+          item.style.display = text.includes(query) ? '' : 'none';
+        });
+      });
+    }
+
+    const mobileBtn = document.getElementById('mobileMenuToggle');
+    const sidebar = document.getElementById('pageSidebar');
+    const backdrop = document.getElementById('sidebarBackdrop');
+
+    function toggleMobileMenu(open) {
+      if (open) {
+        sidebar.classList.add('open');
+        backdrop.classList.add('open');
+      } else {
+        sidebar.classList.remove('open');
+        backdrop.classList.remove('open');
+      }
+    }
+
+    if (mobileBtn) {
+      mobileBtn.addEventListener('click', () => toggleMobileMenu(true));
+    }
+    if (backdrop) {
+      backdrop.addEventListener('click', () => toggleMobileMenu(false));
+    }
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 900) {
+          toggleMobileMenu(false);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+

@@ -273,6 +273,56 @@ async function build() {
     console.log('  ✓ Built dist/menu.html & dist/api/menu.json');
   }
 
+  // Step 4f: Render Dedicated Terms of Service Page strictly into dist/
+  const tosTemplate = path.join(viewsDir, 'tos.ejs');
+  if (fs.existsSync(tosTemplate)) {
+    const tosData = {
+      ...sharedData,
+      title: "Terms of Service · Pade Store",
+      description: "Điều khoản dịch vụ và chính sách mua hàng chính thức tại Pade Store · discord.gg/pade",
+      canonicalUrl: 'https://tos.sorae.tokyo/',
+      siteUrl: 'https://tos.sorae.tokyo',
+      profileUrl: 'https://sorae.tokyo',
+      faviconDataUri,
+      buildHash
+    };
+
+    const tosRendered = await ejs.renderFile(tosTemplate, tosData, {
+      root: viewsDir
+    });
+
+    fs.writeFileSync(path.join(distDir, 'tos.html'), tosRendered, 'utf8');
+    const tosDir = path.join(distDir, 'tos');
+    if (!fs.existsSync(tosDir)) fs.mkdirSync(tosDir, { recursive: true });
+    fs.writeFileSync(path.join(tosDir, 'index.html'), tosRendered, 'utf8');
+    console.log('  ✓ Built dist/tos.html & dist/tos/index.html');
+  }
+
+  // Step 4g: Render Dedicated Server Rules Page strictly into dist/
+  const rulesTemplate = path.join(viewsDir, 'rules.ejs');
+  if (fs.existsSync(rulesTemplate)) {
+    const rulesData = {
+      ...sharedData,
+      title: "Server Rules · Pade Community",
+      description: "Nội quy và quy chuẩn cộng đồng chính thức tại máy chủ Pade Discord · discord.gg/pade",
+      canonicalUrl: 'https://rules.sorae.tokyo/',
+      siteUrl: 'https://rules.sorae.tokyo',
+      profileUrl: 'https://sorae.tokyo',
+      faviconDataUri,
+      buildHash
+    };
+
+    const rulesRendered = await ejs.renderFile(rulesTemplate, rulesData, {
+      root: viewsDir
+    });
+
+    fs.writeFileSync(path.join(distDir, 'rules.html'), rulesRendered, 'utf8');
+    const rulesDir = path.join(distDir, 'rules');
+    if (!fs.existsSync(rulesDir)) fs.mkdirSync(rulesDir, { recursive: true });
+    fs.writeFileSync(path.join(rulesDir, 'index.html'), rulesRendered, 'utf8');
+    console.log('  ✓ Built dist/rules.html & dist/rules/index.html');
+  }
+
 
   // Step 5: Copy static assets to dist/assets
   const assetFiles = ['favicon.ico', 'favicon.png', 'luminous-flow.png', 'banner.png', 'banner.jpg', 'liquid-glass-bg.jpg', 'sora-store-icon.png', 'pade-guild-icon.png'];

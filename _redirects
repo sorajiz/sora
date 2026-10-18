@@ -21,6 +21,10 @@ https://timeworks.sorae.tokyo/* /timework.html 200
 http://timeworks.sorae.tokyo/* /timework.html 200
 https://menu.sorae.tokyo/* /menu.html 200
 http://menu.sorae.tokyo/* /menu.html 200
+https://rules.sorae.tokyo/* /rules.html 200
+http://rules.sorae.tokyo/* /rules.html 200
+https://tos.sorae.tokyo/* /tos.html 200
+http://tos.sorae.tokyo/* /tos.html 200
 /favicon.ico /assets/favicon.ico 200
 /favicon.png /assets/favicon.png 200
 /intro   /intro.html   200
@@ -31,6 +35,10 @@ http://menu.sorae.tokyo/* /menu.html 200
 /timeworks /timework.html 200
 /menu    /menu.html    200
 /menu/*  /menu.html    200
+/rules   /rules.html   200
+/rules/* /rules.html   200
+/tos     /tos.html     200
+/tos/*   /tos.html     200
 /*       /index.html   200
 
 
