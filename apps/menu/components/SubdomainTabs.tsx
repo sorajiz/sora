@@ -48,14 +48,14 @@ export function SubdomainTabs() {
   }, [activeTab]);
 
   return (
-    <div className="flex justify-center mb-8">
+    <div className="flex justify-center mb-6 px-2 w-full">
       <div
         ref={wrapperRef}
         onMouseLeave={() => {
           const activeEl = wrapperRef.current?.querySelector<HTMLElement>(`[data-tab="${activeTab}"]`);
           if (activeEl) updateSlider(activeEl);
         }}
-        className="relative inline-flex items-center p-1 bg-white/[0.035] border border-white/[0.08] rounded-full"
+        className="relative inline-flex items-center p-1 bg-white/[0.035] border border-white/[0.08] rounded-full max-w-full overflow-x-auto scrollbar-none shadow-sm"
       >
         <div
           ref={sliderRef}
@@ -71,7 +71,7 @@ export function SubdomainTabs() {
               data-tab={tab.id}
               onMouseEnter={(e) => updateSlider(e.currentTarget)}
               onClick={() => setActiveTab(tab.id)}
-              className={`relative z-10 px-4 py-1.5 rounded-full text-xs font-semibold transition-colors duration-200 select-none ${
+              className={`relative z-10 px-3 sm:px-4 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold whitespace-nowrap transition-colors duration-200 select-none ${
                 isActive ? 'text-white font-bold' : 'text-[#838896] hover:text-white'
               }`}
             >
@@ -83,4 +83,3 @@ export function SubdomainTabs() {
     </div>
   );
 }
-

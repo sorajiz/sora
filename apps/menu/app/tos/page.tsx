@@ -13,12 +13,26 @@ export default function TosPage() {
     <div className="min-h-screen flex flex-col bg-[#0c0d12] text-[#f1f2f6]">
       <Navbar />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full flex-1">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 w-full flex-1">
         <SubdomainTabs />
 
-        <div className="flex flex-col lg:flex-row gap-12 items-start">
-          {/* Left Sidebar */}
-          <aside className="w-full lg:w-64 flex-shrink-0 lg:sticky lg:top-24">
+        {/* Mobile Horizontal Section Chips (Giống hệt Mobile Category Bar của Menu) */}
+        <div className="lg:hidden sticky top-16 z-30 -mx-4 px-4 py-2 mb-6 bg-[#0c0d12]/92 backdrop-blur-md border-b border-white/[0.08] overflow-x-auto scrollbar-none flex items-center gap-2">
+          <a href="#quy-dinh-mua-hang" className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold bg-[#21232d] text-white border border-white/[0.14] shadow-sm transition-all active:scale-95">Quy định mua hàng</a>
+          <a href="#chinh-sach-bao-hanh" className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium text-[#9ca3af] hover:text-white bg-white/[0.035] border border-white/[0.06] transition-all active:scale-95">Bảo hành</a>
+          <a href="#chinh-sach-hoan-tien" className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium text-[#9ca3af] hover:text-white bg-white/[0.035] border border-white/[0.06] transition-all active:scale-95">Hoàn tiền</a>
+          <a href="#login-nuoi-mail" className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium text-[#9ca3af] hover:text-white bg-white/[0.035] border border-white/[0.06] transition-all active:scale-95">Login / Nuôi Mail</a>
+          <a href="#policy-nitro" className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium text-[#9ca3af] hover:text-white bg-white/[0.035] border border-white/[0.06] transition-all active:scale-95">Discord Nitro</a>
+          <a href="#policy-boost" className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium text-[#9ca3af] hover:text-white bg-white/[0.035] border border-white/[0.06] transition-all active:scale-95">Boost Server</a>
+          <a href="#policy-deco" className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium text-[#9ca3af] hover:text-white bg-white/[0.035] border border-white/[0.06] transition-all active:scale-95">Decoration</a>
+          <a href="#policy-youtube" className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium text-[#9ca3af] hover:text-white bg-white/[0.035] border border-white/[0.06] transition-all active:scale-95">YouTube</a>
+          <a href="#policy-spotify" className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium text-[#9ca3af] hover:text-white bg-white/[0.035] border border-white/[0.06] transition-all active:scale-95">Spotify</a>
+          <a href="#policy-netflix" className="flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium text-[#9ca3af] hover:text-white bg-white/[0.035] border border-white/[0.06] transition-all active:scale-95">Netflix</a>
+        </div>
+
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
+          {/* Left Sidebar (Desktop Only) */}
+          <aside className="hidden lg:block w-64 flex-shrink-0 lg:sticky lg:top-24">
             <div className="mb-6">
               <span className="text-[11px] font-bold uppercase tracking-wider text-[#838896] block mb-3 px-3">
                 CHÍNH SÁCH CHUNG
@@ -107,11 +121,11 @@ export default function TosPage() {
           </aside>
 
           {/* Main Content (Right) */}
-          <main className="flex-1 max-w-3xl">
+          <main className="flex-1 max-w-3xl min-w-0 w-full">
             <span className="text-xs font-extrabold uppercase tracking-widest text-[#838896] block mb-2">
               TERM OF SERVICE (TOS)
             </span>
-            <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight mb-4 font-display">
+            <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4 font-display">
               Điều Khoản Dịch Vụ
             </h1>
 

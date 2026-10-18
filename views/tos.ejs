@@ -717,48 +717,163 @@
       opacity: 1;
     }
 
+    /* ── MOBILE CATEGORY CHIPS BAR (EXACT MENU PARITY) ── */
+    .mobile-category-bar {
+      display: none;
+      overflow-x: auto;
+      scrollbar-width: none;
+      gap: 0.5rem;
+      padding: 0.65rem 0.25rem 0.75rem;
+      margin: -0.25rem 0 1.5rem 0;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+      position: sticky;
+      top: 5.75rem;
+      z-index: 40;
+      background: rgba(12, 13, 18, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .mobile-category-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .mobile-cat-pill {
+      background: #13141a;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-sub);
+      padding: 0.45rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.78125rem;
+      font-weight: 600;
+      white-space: nowrap;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      text-decoration: none;
+      flex-shrink: 0;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .mobile-cat-pill:active {
+      transform: scale(0.96);
+    }
+    .mobile-cat-pill.active {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(201, 204, 210, 0.05));
+      border-color: rgba(201, 204, 210, 0.45);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    }
+
+    .header-discord-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.35rem 0.75rem;
+      background: rgba(88, 101, 242, 0.15);
+      border: 1px solid rgba(88, 101, 242, 0.35);
+      border-radius: 9999px;
+      color: #85b0ff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.18s ease;
+    }
+    .header-discord-badge:hover {
+      background: rgba(88, 101, 242, 0.28);
+      color: #fff;
+      border-color: rgba(88, 101, 242, 0.6);
+    }
+
     @media (max-width: 900px) {
+      .top-header {
+        position: sticky;
+        top: 0;
+        padding: 0.5rem 0.85rem;
+      }
+      .top-header-inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+        padding: 0;
+      }
+      .header-brand-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+      }
+      .nav-tabs-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 3px;
+        box-sizing: border-box;
+      }
+      .nav-tab-link {
+        flex: 1;
+        text-align: center;
+        padding: 0.38rem 0.35rem;
+        font-size: 0.75rem;
+      }
+      .mobile-category-bar {
+        display: flex !important;
+        top: 5.65rem;
+      }
+      .sidebar {
+        display: none !important;
+      }
+      .mobile-menu-btn {
+        display: none !important;
+      }
       .layout-wrapper {
         flex-direction: column;
-        gap: 2rem;
-        padding-top: 1.5rem;
+        padding: 0.75rem 0.85rem 4rem;
+        gap: 1rem;
       }
-
-      .mobile-menu-btn {
-        display: inline-flex;
+      .hero-title {
+        font-size: 2rem;
+        line-height: 1.15;
       }
-
-      .sidebar {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 82vw;
-        max-width: 320px;
-        height: 100vh;
-        max-height: 100vh;
-        background: #101117;
-        z-index: 200;
-        padding: 1.5rem;
-        box-shadow: 10px 0 40px rgba(0, 0, 0, 0.7);
-        border-right: 1px solid var(--border-subtle);
+      .rule-card {
+        padding: 1rem;
+        border-radius: 0.75rem;
       }
-
-      .sidebar.open {
-        display: block;
+      .callout-box {
+        padding: 1rem;
+        border-radius: 0.75rem;
       }
-
-      .sidebar-backdrop {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.65);
-        backdrop-filter: blur(4px);
-        z-index: 199;
+      .rules-list {
+        gap: 0.5rem;
       }
+      .rules-list-item {
+        font-size: 0.84rem;
+        line-height: 1.6;
+      }
+    }
 
-      .sidebar-backdrop.open {
-        display: block;
+    @media (max-width: 640px) {
+      .hero-title {
+        font-size: 1.65rem;
+      }
+      .brand-name {
+        font-size: 0.95rem;
+      }
+      .brand-avatar {
+        width: 2rem;
+        height: 2rem;
+      }
+      .section-title {
+        font-size: 1.15rem;
+      }
+      .number-badge {
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.75rem;
+      }
+      .header-discord-badge span {
+        font-size: 0.7rem;
       }
     }
   </style>
@@ -767,20 +882,19 @@
   <div class="reading-progress" id="readingProgress"></div>
   <div class="ambient-mesh"></div>
 
-  <!-- Header with Smooth Sliding Tabs (Ảnh 1 - Click trượt mượt mà) -->
+  <!-- Header with Smooth Sliding Tabs (Parity với Menu) -->
   <header class="top-header">
     <div class="top-header-inner">
-      <div style="display: flex; align-items: center; gap: 0.75rem;">
-        <button class="mobile-menu-btn" id="mobileMenuToggle" aria-label="Mở mục lục">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-          <span>Mục Lục</span>
-        </button>
-
+      <div class="header-brand-wrap">
         <a href="/" class="brand-group">
           <div class="brand-avatar">
             <img src="/assets/pade-guild-icon.png" alt="Pade Community" onerror="this.onerror=null;this.src='/assets/favicon.png';" />
           </div>
           <span class="brand-name">Pade Community</span>
+        </a>
+        <a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" class="header-discord-badge">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028z"/></svg>
+          <span>discord.gg/pade</span>
         </a>
       </div>
 
@@ -939,6 +1053,19 @@
     <main class="main-content">
       <!-- ==================== TAB 1: SERVER RULES ==================== -->
       <div class="tab-panel-view" data-tab-content="rules">
+        <!-- Mobile Section Chips (Giống hệt Mobile Category Bar của Menu) -->
+        <div class="mobile-category-bar">
+          <a href="#luat-le-chung" class="mobile-cat-pill active">
+            <span>Luật Lệ Chung</span>
+          </a>
+          <a href="#rules-ticket" class="mobile-cat-pill">
+            <span>Rules Ticket</span>
+          </a>
+          <a href="#rules-giveaway" class="mobile-cat-pill">
+            <span>Rules Giveaway</span>
+          </a>
+        </div>
+
         <span class="content-eyebrow">NỘI QUY CỘNG ĐỒNG</span>
         <h1 class="hero-title">Server Rules</h1>
 
@@ -1076,6 +1203,20 @@
 
       <!-- ==================== TAB 2: TERMS OF SERVICE (NÂNG CẤP ĐẦY ĐỦ THEO YÊU CẦU MỚI) ==================== -->
       <div class="tab-panel-view active" data-tab-content="tos">
+        <!-- Mobile Section Chips (Giống hệt Mobile Category Bar của Menu) -->
+        <div class="mobile-category-bar">
+          <a href="#quy-dinh-mua-hang" class="mobile-cat-pill active"><span>Quy định mua hàng</span></a>
+          <a href="#chinh-sach-bao-hanh" class="mobile-cat-pill"><span>Bảo hành</span></a>
+          <a href="#chinh-sach-hoan-tien" class="mobile-cat-pill"><span>Hoàn tiền</span></a>
+          <a href="#login-nuoi-mail" class="mobile-cat-pill"><span>Login / Nuôi Mail</span></a>
+          <a href="#policy-nitro" class="mobile-cat-pill"><span>Discord Nitro</span></a>
+          <a href="#policy-boost" class="mobile-cat-pill"><span>Boost Server</span></a>
+          <a href="#policy-deco" class="mobile-cat-pill"><span>Avatar Decoration</span></a>
+          <a href="#policy-youtube" class="mobile-cat-pill"><span>YouTube</span></a>
+          <a href="#policy-spotify" class="mobile-cat-pill"><span>Spotify</span></a>
+          <a href="#policy-netflix" class="mobile-cat-pill"><span>Netflix</span></a>
+        </div>
+
         <span class="content-eyebrow">TERM OF SERVICE (TOS)</span>
         <h1 class="hero-title">Điều Khoản Dịch Vụ</h1>
 
@@ -1346,6 +1487,14 @@
 
       <!-- ==================== TAB 3: TUTORIAL (ĐÃ XÓA MỤC 02 THEO YÊU CẦU) ==================== -->
       <div class="tab-panel-view" data-tab-content="tutorial">
+        <!-- Mobile Section Chips (Giống hệt Mobile Category Bar của Menu) -->
+        <div class="mobile-category-bar">
+          <a href="#yeu-cau-bat-buoc" class="mobile-cat-pill active"><span>Yêu cầu bắt buộc</span></a>
+          <a href="#kiem-tra-link" class="mobile-cat-pill"><span>Kiểm tra link</span></a>
+          <a href="#huong-dan-2fa" class="mobile-cat-pill"><span>Bật 2FA &amp; Mã dự phòng</span></a>
+          <a href="#video-huong-dan" class="mobile-cat-pill"><span>Video hướng dẫn</span></a>
+        </div>
+
         <span class="content-eyebrow">HƯỚNG DẪN CHI TIẾT</span>
         <h1 class="hero-title">Tutorial</h1>
 
@@ -1598,17 +1747,17 @@
       document.getElementById('readingProgress').style.transform = `scaleX(${progress})`;
     }, { passive: true });
 
-    // ScrollSpy for Active Sidebar Nav Item
+    // ScrollSpy for Active Sidebar Nav Item & Mobile Category Bar
     window.addEventListener('scroll', () => {
       const activePanel = document.querySelector('.tab-panel-view.active');
       if (!activePanel) return;
       const sections = activePanel.querySelectorAll('.tos-section');
       const activeSidebar = document.querySelector('.sidebar-panel-view.active');
-      if (!activeSidebar) return;
-      const navItems = activeSidebar.querySelectorAll('.sidebar-nav-link');
+      const navItems = activeSidebar ? activeSidebar.querySelectorAll('.sidebar-nav-link') : [];
+      const mobilePills = activePanel.querySelectorAll('.mobile-cat-pill');
 
       let current = '';
-      const scrollPos = window.scrollY + 140;
+      const scrollPos = window.scrollY + 160;
       sections.forEach(sec => {
         if (scrollPos >= sec.offsetTop && scrollPos < sec.offsetTop + sec.offsetHeight) {
           current = sec.getAttribute('id');
@@ -1618,8 +1767,42 @@
         navItems.forEach(link => {
           link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
         });
+
+        // Mobile Category Bar syncing
+        mobilePills.forEach(pill => {
+          const match = pill.getAttribute('href') === `#${current}`;
+          pill.classList.toggle('active', match);
+          if (match && window.innerWidth <= 900) {
+            pill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          }
+        });
       }
     }, { passive: true });
+
+    // Smooth click handler for mobile category pills
+    document.querySelectorAll('.mobile-cat-pill').forEach(pill => {
+      pill.addEventListener('click', (e) => {
+        const targetId = pill.getAttribute('href');
+        if (targetId && targetId.startsWith('#')) {
+          e.preventDefault();
+          const targetEl = document.querySelector(targetId);
+          if (targetEl) {
+            const headerOffset = 135;
+            const elementPosition = targetEl.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+            const parent = pill.parentElement;
+            if (parent) {
+              parent.querySelectorAll('.mobile-cat-pill').forEach(p => p.classList.remove('active'));
+              pill.classList.add('active');
+            }
+          }
+        }
+      });
+    });
 
     // Copy section link
     function copySectionLink(hash, e) {
@@ -1629,22 +1812,6 @@
         const toast = document.getElementById('toastBox');
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 2000);
-      });
-    }
-
-    // Mobile sidebar
-    const mobileBtn = document.getElementById('mobileMenuToggle');
-    const sidebar = document.getElementById('pageSidebar');
-    const backdrop = document.getElementById('sidebarBackdrop');
-
-    if (mobileBtn && sidebar && backdrop) {
-      mobileBtn.addEventListener('click', () => {
-        sidebar.classList.add('open');
-        backdrop.classList.add('open');
-      });
-      backdrop.addEventListener('click', () => {
-        sidebar.classList.remove('open');
-        backdrop.classList.remove('open');
       });
     }
   </script>
