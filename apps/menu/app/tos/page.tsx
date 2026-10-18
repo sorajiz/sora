@@ -188,20 +188,6 @@ export default function TosPage() {
                 </p>
                 <div className="space-y-2 text-[#fde68a] text-xs sm:text-sm">
                   <p>
-                    • Bảo hành chỉ có hiệu lực khi bạn đã để lại feedback tại kênh phản hồi chính thức:
-                  </p>
-                  <div>
-                    <a
-                      href="https://discord.com/channels/1443976106536341627/1443976111791935735"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#f59e0b]/20 hover:bg-[#f59e0b]/30 text-[#fde68a] font-semibold text-xs border border-[#f59e0b]/40 transition-colors"
-                    >
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                      <span>Kênh Gửi Feedback Tại Đây ↗</span>
-                    </a>
-                  </div>
-                  <p>
                     • <strong>Bắt buộc phải feedback trong vòng 24h</strong> kể từ khi đơn hoàn thành. Không feedback = đóng ticket và từ chối bảo hành.
                   </p>
                   <p>
@@ -210,7 +196,7 @@ export default function TosPage() {
                 </div>
               </div>
 
-              <ul className="space-y-2 text-sm text-[#d1d5db] mb-4">
+              <ul className="space-y-2 text-sm text-[#d1d5db]">
                 <li className="flex items-start gap-2">
                   <span className="text-[#5c606e] font-bold">•</span>
                   <span>Sau khi seller đưa sản phẩm và báo done đơn, khách sẽ có <strong>24h</strong> để hoàn thành và kiểm tra đơn. Nếu quá thời gian mà không vouch hoặc không phản hồi thêm gì về sản phẩm thì shop không chịu trách nhiệm bảo hành.</span>
@@ -220,17 +206,6 @@ export default function TosPage() {
                   <span><strong>Bù ngày bảo hành:</strong> Bù lại số ngày bị mất đối với các đơn hàng cần thời gian dài để bảo hành.</span>
                 </li>
               </ul>
-
-              {/* Formula Box */}
-              <div className="p-4 rounded-xl bg-[#111622] border border-[#2563eb]/30 text-sm">
-                <div className="flex items-center gap-2 text-xs font-bold text-[#60a5fa] mb-2 uppercase tracking-wider">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path></svg>
-                  <span>Công thức hoàn tiền khi không có hàng thay thế:</span>
-                </div>
-                <div className="font-mono text-xs sm:text-sm text-[#93c5fd] bg-[#0c1017] p-2.5 rounded-lg border border-[#2563eb]/20 overflow-x-auto">
-                  Số tiền refund = (Giá mua) - [(Giá mua) / (Số ngày mua)] × (Số ngày đã sử dụng)
-                </div>
-              </div>
             </section>
 
             <hr className="border-t border-white/[0.08] my-8" />
