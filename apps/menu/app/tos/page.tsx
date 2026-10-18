@@ -25,25 +25,32 @@ export default function TosPage() {
               </span>
               <nav className="flex flex-col space-y-1">
                 <a
-                  href="#hoan-tien"
+                  href="#quy-dinh-mua-hang"
                   className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-semibold bg-[#21232d] text-white"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
+                  <span>Quy định mua hàng</span>
+                </a>
+                <a
+                  href="#chinh-sach-bao-hanh"
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#5c606e]" />
+                  <span>Chính sách Bảo hành</span>
+                </a>
+                <a
+                  href="#chinh-sach-hoan-tien"
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#5c606e]" />
                   <span>Chính sách Hoàn tiền</span>
                 </a>
                 <a
-                  href="#bao-hanh"
+                  href="#login-nuoi-mail"
                   className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-[#5c606e]" />
-                  <span>Bảo hành &amp; Feedback</span>
-                </a>
-                <a
-                  href="#dieu-khoan-01-07"
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#5c606e]" />
-                  <span>Điều khoản 01–07</span>
+                  <span>Login &amp; Nuôi Mail</span>
                 </a>
               </nav>
             </div>
@@ -75,11 +82,25 @@ export default function TosPage() {
                   <span>Avatar Decoration</span>
                 </a>
                 <a
-                  href="#policy-streaming"
+                  href="#policy-youtube"
                   className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-[#5c606e]" />
-                  <span>Streaming Services</span>
+                  <span>YouTube Premium</span>
+                </a>
+                <a
+                  href="#policy-spotify"
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#5c606e]" />
+                  <span>Spotify Premium</span>
+                </a>
+                <a
+                  href="#policy-netflix"
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#5c606e]" />
+                  <span>Netflix Premium</span>
                 </a>
               </nav>
             </div>
@@ -88,10 +109,10 @@ export default function TosPage() {
           {/* Main Content (Right) */}
           <main className="flex-1 max-w-3xl">
             <span className="text-xs font-extrabold uppercase tracking-widest text-[#838896] block mb-2">
-              ĐIỀU KHOẢN &amp; CHÍNH SÁCH
+              TERM OF SERVICE (TOS)
             </span>
             <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight mb-4 font-display">
-              Terms of Service
+              Điều Khoản Dịch Vụ
             </h1>
 
             {/* Meta Badge with SVG Icon */}
@@ -101,7 +122,7 @@ export default function TosPage() {
                 <polyline points="12 6 12 12 16 14" />
               </svg>
               <span>
-                Cập nhật lần cuối: 2026 ·{' '}
+                Quy định mua hàng chính thức ·{' '}
                 <a
                   href="https://discord.gg/pade"
                   target="_blank"
@@ -115,14 +136,113 @@ export default function TosPage() {
 
             <hr className="border-t border-white/[0.08] my-8" />
 
-            {/* Section 01: Chính sách Hoàn tiền */}
-            <section id="hoan-tien" className="scroll-mt-24 mb-10">
+            {/* Section 01: Quy định mua hàng */}
+            <section id="quy-dinh-mua-hang" className="scroll-mt-24 mb-10">
               <div className="flex items-center gap-3 mb-3">
                 <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
                   01
                 </span>
                 <h2 className="text-xl font-bold text-white tracking-tight">
-                  Chính Sách Hoàn Tiền (Refund Policy)
+                  Quy Định Mua Hàng Tại Server
+                </h2>
+              </div>
+              <ul className="space-y-2.5 text-sm text-[#d1d5db]">
+                <li className="flex items-start gap-2">
+                  <span className="text-[#5c606e] font-bold">•</span>
+                  <span>Tất cả các sản phẩm đều được cam kết hoàn thành trong vòng <strong>24h</strong>.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#5c606e] font-bold">•</span>
+                  <span>Một khi đã đặt đơn, khách hàng bắt buộc phải chấp hành tất cả điều khoản dịch vụ của shop.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#5c606e] font-bold">•</span>
+                  <span>Hạn chế hối / giục người làm đơn; khi done đơn được lúc nào nhân viên sẽ chủ động thông báo lại ngay cho bạn.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#5c606e] font-bold">•</span>
+                  <span>Vui lòng đọc kỹ ToS trước khi đặt đơn để tránh các tình huống phát sinh không mong muốn.</span>
+                </li>
+              </ul>
+            </section>
+
+            <hr className="border-t border-white/[0.08] my-8" />
+
+            {/* Section 02: Chính Sách Bảo Hành */}
+            <section id="chinh-sach-bao-hanh" className="scroll-mt-24 mb-10">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
+                  02
+                </span>
+                <h2 className="text-xl font-bold text-white tracking-tight">
+                  Chính Sách Bảo Hành (Warranty)
+                </h2>
+              </div>
+
+              <div className="p-4 rounded-xl bg-[#1c160c] border border-[rgba(245,158,11,0.35)] text-sm mb-4">
+                <p className="text-[#fef3c7] font-semibold mb-2 flex items-center gap-2">
+                  <span className="text-[#f59e0b]">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                  </span>
+                  <span>Điều Kiện Kích Hoạt Bảo Hành Bắt Buộc:</span>
+                </p>
+                <div className="space-y-2 text-[#fde68a] text-xs sm:text-sm">
+                  <p>
+                    • Bảo hành chỉ có hiệu lực khi bạn đã để lại feedback tại kênh phản hồi chính thức:
+                  </p>
+                  <div>
+                    <a
+                      href="https://discord.com/channels/1443976106536341627/1443976111791935735"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#f59e0b]/20 hover:bg-[#f59e0b]/30 text-[#fde68a] font-semibold text-xs border border-[#f59e0b]/40 transition-colors"
+                    >
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                      <span>Kênh Gửi Feedback Tại Đây ↗</span>
+                    </a>
+                  </div>
+                  <p>
+                    • <strong>Bắt buộc phải feedback trong vòng 24h</strong> kể từ khi đơn hoàn thành. Không feedback = đóng ticket và từ chối bảo hành.
+                  </p>
+                  <p>
+                    • Tuyệt đối <strong>không bảo hành</strong> khi khách hàng không để lại feedback, hoặc <strong>out server</strong> trong thời gian sử dụng.
+                  </p>
+                </div>
+              </div>
+
+              <ul className="space-y-2 text-sm text-[#d1d5db] mb-4">
+                <li className="flex items-start gap-2">
+                  <span className="text-[#5c606e] font-bold">•</span>
+                  <span>Sau khi seller đưa sản phẩm và báo done đơn, khách sẽ có <strong>24h</strong> để hoàn thành và kiểm tra đơn. Nếu quá thời gian mà không vouch hoặc không phản hồi thêm gì về sản phẩm thì shop không chịu trách nhiệm bảo hành.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#5c606e] font-bold">•</span>
+                  <span><strong>Bù ngày bảo hành:</strong> Bù lại số ngày bị mất đối với các đơn hàng cần thời gian dài để bảo hành.</span>
+                </li>
+              </ul>
+
+              {/* Formula Box */}
+              <div className="p-4 rounded-xl bg-[#111622] border border-[#2563eb]/30 text-sm">
+                <div className="flex items-center gap-2 text-xs font-bold text-[#60a5fa] mb-2 uppercase tracking-wider">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path></svg>
+                  <span>Công thức hoàn tiền khi không có hàng thay thế:</span>
+                </div>
+                <div className="font-mono text-xs sm:text-sm text-[#93c5fd] bg-[#0c1017] p-2.5 rounded-lg border border-[#2563eb]/20 overflow-x-auto">
+                  Số tiền refund = (Giá mua) - [(Giá mua) / (Số ngày mua)] × (Số ngày đã sử dụng)
+                </div>
+              </div>
+            </section>
+
+            <hr className="border-t border-white/[0.08] my-8" />
+
+            {/* Section 03: Chính Sách Hoàn Tiền */}
+            <section id="chinh-sach-hoan-tien" className="scroll-mt-24 mb-10">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
+                  03
+                </span>
+                <h2 className="text-xl font-bold text-white tracking-tight">
+                  Chính Sách Hoàn Tiền (Refund)
                 </h2>
               </div>
 
@@ -132,24 +252,20 @@ export default function TosPage() {
                     <span className="w-6 h-6 rounded bg-[#22c55e]/10 text-[#22c55e] flex items-center justify-center border border-[#22c55e]/20">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                     </span>
-                    <span>Các trường hợp ĐƯỢC hoàn tiền:</span>
+                    <span>Điều Kiện Hoàn Tiền:</span>
                   </h3>
                   <ul className="space-y-1.5 text-sm text-[#d1d5db]">
                     <li className="flex items-start gap-2">
                       <span className="text-[#5c606e]">•</span>
-                      <span>Shop vi phạm quá thời hạn giao hàng (quá 48h) hoặc không xử lý được sự cố bảo hành theo cam kết.</span>
+                      <span><strong>Hoàn 100%:</strong> Nếu lỗi phát sinh từ Store, hoặc quá <strong>3 ngày</strong> chưa done đơn.</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-[#5c606e]">•</span>
-                      <span>Sản phẩm bị lỗi từ phía nhà cung cấp và shop không còn giải pháp thay thế tương đương.</span>
+                      <span><strong>Đơn đã xác nhận (Ticket được Rename):</strong> Không hoàn tiền; nếu trường hợp đặc biệt được duyệt hoàn thì chỉ hoàn tối đa <strong>60%</strong>.</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-[#5c606e]">•</span>
-                      <span>Thời gian bảo hành xử lý kéo dài bất thường không có lý do chính đáng thông báo trước.</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-[#5c606e]">•</span>
-                      <span>Tiền hoàn được tính chính xác theo tỷ lệ thời gian chưa sử dụng của dịch vụ.</span>
+                      <span><strong>Hoàn 50% – 70%:</strong> Áp dụng đối với các trường hợp lỗi phát sinh từ phía khách hàng (tùy theo lý do cụ thể).</span>
                     </li>
                   </ul>
                 </div>
@@ -159,24 +275,16 @@ export default function TosPage() {
                     <span className="w-6 h-6 rounded bg-[#ef4444]/10 text-[#ef4444] flex items-center justify-center border border-[#ef4444]/20">
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
                     </span>
-                    <span>Các trường hợp KHÔNG hoàn tiền:</span>
+                    <span>Tuyệt Đối Không Hoàn Tiền Với Các Trường Hợp:</span>
                   </h3>
                   <ul className="space-y-1.5 text-sm text-[#d1d5db]">
                     <li className="flex items-start gap-2">
                       <span className="text-[#5c606e]">•</span>
-                      <span>Khách hàng đổi ý, không có nhu cầu sử dụng tiếp sau khi đơn đã xử lý hoàn tất.</span>
+                      <span>Đơn hàng không để lại feedback tại kênh phản hồi chính thức của server.</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="text-[#5c606e]">•</span>
-                      <span>Tự ý thay đổi thông tin tài khoản (đối với gói yêu cầu giữ nguyên thông tin hoặc nuôi mail).</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-[#5c606e]">•</span>
-                      <span>Vi phạm ToS của Discord hoặc nền tảng gốc dẫn đến việc bị vô hiệu hóa hoặc bị khóa vĩnh viễn.</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="text-[#5c606e]">•</span>
-                      <span>Khách hàng mua nhầm sản phẩm do không đọc kỹ mô tả và yêu cầu.</span>
+                      <span>Khách hàng làm sai quy định của sản phẩm khi thực hiện bảo hành.</span>
                     </li>
                   </ul>
                 </div>
@@ -185,32 +293,36 @@ export default function TosPage() {
 
             <hr className="border-t border-white/[0.08] my-8" />
 
-            {/* Section 02: Bảo Hành & Feedback */}
-            <section id="bao-hanh" className="scroll-mt-24 mb-10">
+            {/* Section 04: Login & Nuôi Mail */}
+            <section id="login-nuoi-mail" className="scroll-mt-24 mb-10">
               <div className="flex items-center gap-3 mb-3">
                 <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
-                  02
+                  04
                 </span>
                 <h2 className="text-xl font-bold text-white tracking-tight">
-                  Chính Sách Bảo Hành &amp; Feedback
+                  Sản Phẩm Cần Login / Nuôi Mail
                 </h2>
               </div>
 
-              <div className="p-4 rounded-xl bg-[#1c160c] border border-[rgba(245,158,11,0.35)] text-sm mb-4">
-                <p className="text-[#fef3c7] font-semibold mb-2 flex items-center gap-2">
-                  <span className="text-[#f59e0b]">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+              <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
+                <h3 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
+                  <span className="w-6 h-6 rounded bg-[#38bdf8]/10 text-[#38bdf8] flex items-center justify-center border border-[#38bdf8]/20">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
                   </span>
-                  <span>Lưu ý quan trọng về Điều kiện Bảo hành:</span>
-                </p>
-                <ul className="space-y-2 text-[#fde68a]">
+                  <span>Quy Định Tài Khoản Gmail &amp; Login:</span>
+                </h3>
+                <ul className="space-y-2 text-sm text-[#d1d5db]">
                   <li className="flex items-start gap-2">
-                    <span>1.</span>
-                    <span><strong>Không Feedback = Không Bảo Hành:</strong> Sau khi hoàn thành đơn, khách hàng bắt buộc phải gửi feedback tại kênh phản hồi chính thức của server mới được kích hoạt chế độ bảo hành.</span>
+                    <span className="text-[#5c606e]">•</span>
+                    <span>Các đơn cấp tài khoản Gmail khách cần <strong>tự nuôi mail</strong>. Trường hợp để chết mail hoặc mất tài khoản do không nuôi thì shop không bảo hành.</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span>2.</span>
-                    <span><strong>Rời Server = Hủy Bảo Hành:</strong> Nếu khách hàng tự ý rời khỏi server (out server) trong thời gian sử dụng gói, quyền bảo hành sẽ tự động chấm dứt ngay lập tức.</span>
+                    <span className="text-[#5c606e]">•</span>
+                    <span>Đối với những đơn cần login acc, khi done xong <strong>vui lòng thay đổi mật khẩu và thay cả mã dự phòng 2FA</strong> để tránh phát sinh vấn đề không cần thiết.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#5c606e]">•</span>
+                    <span>Khi hoàn thành đơn, shop đều chủ động logout tài khoản và không còn can thiệp đơn đó. Mọi vấn đề phát sinh sau <strong>12h</strong> kể từ khi done đơn, shop xin phép miễn trừ trách nhiệm.</span>
                   </li>
                 </ul>
               </div>
@@ -218,154 +330,241 @@ export default function TosPage() {
 
             <hr className="border-t border-white/[0.08] my-8" />
 
-            {/* Section 03: Điều khoản 01–07 */}
-            <section id="dieu-khoan-01-07" className="scroll-mt-24 mb-10">
-              <div className="flex items-center gap-3 mb-3">
-                <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
-                  03
-                </span>
-                <h2 className="text-xl font-bold text-white tracking-tight">
-                  Điều Khoản Dịch Vụ Cốt Lõi (01 – 07)
-                </h2>
-              </div>
-
-              <ul className="space-y-3 text-sm text-[#d1d5db]">
-                <li className="flex items-start gap-3 p-3 rounded-lg bg-[#13141a] border border-white/[0.06]">
-                  <span className="font-mono text-xs font-bold text-[#838896] px-1.5 py-0.5 rounded bg-[#1b1c24]">01</span>
-                  <span>Đơn hàng được cam kết hoàn thành tối đa trong vòng <strong>48 giờ</strong> kể từ lúc nhận đủ thông tin.</span>
-                </li>
-                <li className="flex items-start gap-3 p-3 rounded-lg bg-[#13141a] border border-white/[0.06]">
-                  <span className="font-mono text-xs font-bold text-[#838896] px-1.5 py-0.5 rounded bg-[#1b1c24]">02</span>
-                  <span>Khách hàng có trách nhiệm tuân thủ đầy đủ các hướng dẫn kích hoạt do nhân viên kỹ thuật cung cấp.</span>
-                </li>
-                <li className="flex items-start gap-3 p-3 rounded-lg bg-[#13141a] border border-white/[0.06]">
-                  <span className="font-mono text-xs font-bold text-[#838896] px-1.5 py-0.5 rounded bg-[#1b1c24]">03</span>
-                  <span>Tuyệt đối không chia sẻ tài khoản cho bên thứ ba trong quá trình đang thực hiện đơn hàng.</span>
-                </li>
-                <li className="flex items-start gap-3 p-3 rounded-lg bg-[#13141a] border border-white/[0.06]">
-                  <span className="font-mono text-xs font-bold text-[#838896] px-1.5 py-0.5 rounded bg-[#1b1c24]">04</span>
-                  <span>Đơn hàng sau khi đã xử lý thành công sẽ không được hủy hoặc đổi trả sang mặt hàng khác.</span>
-                </li>
-                <li className="flex items-start gap-3 p-3 rounded-lg bg-[#13141a] border border-white/[0.06]">
-                  <span className="font-mono text-xs font-bold text-[#838896] px-1.5 py-0.5 rounded bg-[#1b1c24]">05</span>
-                  <span>Giữ thái độ lịch sự, tôn trọng nhân sự hỗ trợ trong suốt quá trình trao đổi tại ticket.</span>
-                </li>
-                <li className="flex items-start gap-3 p-3 rounded-lg bg-[#13141a] border border-white/[0.06]">
-                  <span className="font-mono text-xs font-bold text-[#838896] px-1.5 py-0.5 rounded bg-[#1b1c24]">06</span>
-                  <span>Mọi hành vi gian lận thông tin, tranh chấp giả mạo hoặc cố tình chargeback sẽ bị đưa vào danh sách đen (Blacklist) vĩnh viễn trên toàn hệ sinh thái.</span>
-                </li>
-                <li className="flex items-start gap-3 p-3 rounded-lg bg-[#13141a] border border-white/[0.06]">
-                  <span className="font-mono text-xs font-bold text-[#838896] px-1.5 py-0.5 rounded bg-[#1b1c24]">07</span>
-                  <span>Trong mọi tình huống tranh chấp phát sinh, quyền quyết định cuối cùng thuộc về Ban quản trị Pade Community.</span>
-                </li>
-              </ul>
-            </section>
-
-            <hr className="border-t border-white/[0.08] my-8" />
-
-            {/* Section 04: Theo từng dịch vụ */}
+            {/* Section 05: Discord Nitro */}
             <section id="policy-nitro" className="scroll-mt-24 mb-10">
-              <div className="flex items-center gap-3 mb-3">
-                <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
-                  04
-                </span>
-                <h2 className="text-xl font-bold text-white tracking-tight">
-                  Chính Sách Discord Nitro (Login / Trial / Gift)
-                </h2>
-              </div>
-              <ul className="space-y-2 text-sm text-[#d1d5db]">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e]">•</span>
-                  <span><strong>Nitro Login:</strong> Cần cung cấp tài khoản, mật khẩu và 5–10 mã dự phòng 2FA chưa sử dụng. Không đổi mật khẩu trong lúc shop đang thao tác.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e]">•</span>
-                  <span><strong>Gói Nuôi Mail (2 tháng):</strong> Cần nuôi mail trong 7 ngày đầu để duy trì trạng thái đăng ký của Discord.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e]">•</span>
-                  <span><strong>Nitro Trial:</strong> Tài khoản phải tạo trên 1 tháng, chưa từng dùng Nitro hoặc đã hết hạn trên 12 tháng. Không liên kết thẻ thanh toán.</span>
-                </li>
-              </ul>
-            </section>
-
-            <hr className="border-t border-white/[0.08] my-8" />
-
-            <section id="policy-boost" className="scroll-mt-24 mb-10">
               <div className="flex items-center gap-3 mb-3">
                 <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
                   05
                 </span>
                 <h2 className="text-xl font-bold text-white tracking-tight">
-                  Chính Sách Server Boost
+                  Chính Sách Discord Nitro (Login &amp; Gift)
                 </h2>
               </div>
-              <ul className="space-y-2 text-sm text-[#d1d5db]">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e]">•</span>
-                  <span>Cung cấp đúng link mời vĩnh viễn của server. Không mở xét duyệt vào (Apply to Join) hoặc xác minh SĐT khắt khe trong lúc bot boost join.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e]">•</span>
-                  <span>Không kick hoặc ban bot boost của shop. Nếu bot bị kick/ban bởi server, shop từ chối bảo hành gói boost đó.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e]">•</span>
-                  <span>Bắt buộc phải bật tính năng <strong>Lịch sử Boost</strong> trong server settings.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e]">•</span>
-                  <span>Boost 1 tháng bảo hành 25 ngày; Boost 4 tháng bảo hành 3 tháng.</span>
-                </li>
-              </ul>
+
+              <div className="space-y-4">
+                <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
+                  <h3 className="text-sm font-bold text-[#a855f7] mb-2 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded bg-[#a855f7]/10 text-[#a855f7] flex items-center justify-center border border-[#a855f7]/20">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </span>
+                    <span>Nitro Login:</span>
+                  </h3>
+                  <ul className="space-y-1.5 text-sm text-[#d1d5db]">
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span><strong>100% Bảo Hành</strong> trong suốt thời gian sử dụng gói.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Hàng chính hãng có bill thanh toán rõ ràng, không lo chuyện bị thu hồi.</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
+                  <h3 className="text-sm font-bold text-[#ec4899] mb-2 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded bg-[#ec4899]/10 text-[#ec4899] flex items-center justify-center border border-[#ec4899]/20">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>
+                    </span>
+                    <span>Nitro Gift:</span>
+                  </h3>
+                  <ul className="space-y-1.5 text-sm text-[#d1d5db]">
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Không bảo hành khi link bị Discord revoke.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Không bảo hành khi shop đã bàn giao link cho bạn (trước khi gửi shop đã kiểm tra kỹ lưỡng 100%).</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Không bảo hành khi bạn không tiến hành claim quà trong vòng <strong>48h</strong>.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Không regen lại link trong mọi trường hợp.</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </section>
 
             <hr className="border-t border-white/[0.08] my-8" />
 
-            <section id="policy-deco" className="scroll-mt-24 mb-10">
+            {/* Section 06: Boost Server */}
+            <section id="policy-boost" className="scroll-mt-24 mb-10">
               <div className="flex items-center gap-3 mb-3">
                 <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
                   06
                 </span>
                 <h2 className="text-xl font-bold text-white tracking-tight">
-                  Chính Sách Avatar Decoration &amp; Gift
+                  Chính Sách Boost Server
+                </h2>
+              </div>
+
+              <div className="space-y-4">
+                <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
+                  <h3 className="text-sm font-bold text-[#f59e0b] mb-2 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded bg-[#f59e0b]/10 text-[#f59e0b] flex items-center justify-center border border-[#f59e0b]/20">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m13 2-2 10h5L11 22l2-10H8l5-10z"/></svg>
+                    </span>
+                    <span>Thời Gian Giữ Boost:</span>
+                  </h3>
+                  <ul className="space-y-1.5 text-sm text-[#d1d5db]">
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Có <strong>25 – 31 ngày</strong> bảo hành đối với gói 1 tháng.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Có <strong>75 – 90 ngày</strong> bảo hành đối với gói 3 tháng (4 tháng).</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
+                  <h3 className="text-sm font-bold text-[#ef4444] mb-2 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded bg-[#ef4444]/10 text-[#ef4444] flex items-center justify-center border border-[#ef4444]/20">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                    </span>
+                    <span>Sẽ KHÔNG hoàn tiền hoặc thay thế trong các trường hợp sau:</span>
+                  </h3>
+                  <ul className="space-y-1.5 text-sm text-[#d1d5db]">
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Boost bị Discord thu hồi do quét nền tảng chung.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Khách hàng hoặc thành viên ban quản trị kick/ban tài khoản boost của shop.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Đưa nhầm link server cần boost.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Server vẫn bật chế độ Antiraid hoặc các lớp bot lọc chặn bot mới.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#5c606e]">•</span>
+                      <span>Server bị Discord gắn cờ giới hạn (Limited).</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            <hr className="border-t border-white/[0.08] my-8" />
+
+            {/* Section 07: Avatar Decoration */}
+            <section id="policy-deco" className="scroll-mt-24 mb-10">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
+                  07
+                </span>
+                <h2 className="text-xl font-bold text-white tracking-tight">
+                  Chính Sách Avatar Decoration
+                </h2>
+              </div>
+
+              <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
+                <h3 className="text-sm font-bold text-[#38bdf8] mb-2 flex items-center gap-2">
+                  <span className="w-6 h-6 rounded bg-[#38bdf8]/10 text-[#38bdf8] flex items-center justify-center border border-[#38bdf8]/20">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path></svg>
+                  </span>
+                  <span>Quy Định Nhận &amp; Bảo Hành Decoration:</span>
+                </h3>
+                <ul className="space-y-2 text-sm text-[#d1d5db]">
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#5c606e]">•</span>
+                    <span>Sau khi shop dùng bot gửi bill và có link decoration gift, <strong>bạn phải claim ngay</strong>. Sau đó shop không chịu trách nhiệm vì link quà là dạng private chỉ mình bạn và shop biết.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#5c606e]">•</span>
+                    <span>Khuyến khích bạn <strong>quay video khi claim</strong> để bảo vệ tối đa quyền lợi của mình.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#5c606e]">•</span>
+                    <span>Nếu đã gửi quá <strong>48h</strong> mà link bị hết hạn, shop xin phép sẽ không bảo hành nữa.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#5c606e]">•</span>
+                    <span>Hàng thuộc dạng <strong>Legal Paid</strong> nên không lo bị revoke. <strong>100% đổi mới</strong> nếu phát sinh sự cố bị revoke.</span>
+                  </li>
+                </ul>
+              </div>
+            </section>
+
+            <hr className="border-t border-white/[0.08] my-8" />
+
+            {/* Section 08: YouTube Premium */}
+            <section id="policy-youtube" className="scroll-mt-24 mb-10">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
+                  08
+                </span>
+                <h2 className="text-xl font-bold text-white tracking-tight">
+                  Chính Sách YouTube Premium
                 </h2>
               </div>
               <ul className="space-y-2 text-sm text-[#d1d5db]">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e]">•</span>
-                  <span>Deco Login: Kỹ thuật viên login vào tài khoản để mua decor lưu vĩnh viễn vào kho đồ.</span>
+                  <span className="text-[#5c606e] font-bold">•</span>
+                  <span>Bảo hành toàn bộ thời gian theo đúng gói dịch vụ bạn đã mua.</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e]">•</span>
-                  <span>Deco Gift: Gửi thẳng dưới dạng quà tặng trực tiếp hoặc link gift từ shop, bảo hành link claim an toàn 100%.</span>
+                  <span className="text-[#5c606e] font-bold">•</span>
+                  <span>Khi bị lỗi, yêu cầu cung cấp đầy đủ: <strong>Bill từ bot, email của bạn, và email chủ family</strong> để shop tiến hành hỗ trợ bảo hành.</span>
                 </li>
               </ul>
             </section>
 
             <hr className="border-t border-white/[0.08] my-8" />
 
-            <section id="policy-streaming" className="scroll-mt-24 mb-10">
+            {/* Section 09: Spotify Premium */}
+            <section id="policy-spotify" className="scroll-mt-24 mb-10">
               <div className="flex items-center gap-3 mb-3">
                 <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
-                  07
+                  09
                 </span>
                 <h2 className="text-xl font-bold text-white tracking-tight">
-                  Chính Sách YouTube / Spotify / Netflix
+                  Chính Sách Spotify Premium
                 </h2>
               </div>
               <ul className="space-y-2 text-sm text-[#d1d5db]">
                 <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e]">•</span>
-                  <span>YouTube Premium: Nâng cấp tài khoản chính chủ qua nhóm gia đình Google hoặc cấp acc riêng, bảo hành suốt thời hạn gói.</span>
+                  <span className="text-[#5c606e] font-bold">•</span>
+                  <span>Bảo hành toàn bộ thời gian theo đúng gói dịch vụ bạn đã mua.</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e]">•</span>
-                  <span>Spotify Premium: Nâng cấp trực tiếp trên tài khoản cá nhân, giữ trọn vẹn danh sách bài hát và playlist.</span>
+                  <span className="text-[#5c606e] font-bold">•</span>
+                  <span>Khi bị lỗi, yêu cầu cung cấp: <strong>Bill từ bot và hình ảnh chụp màn hình bị mất Premium</strong> để shop bảo hành nhanh chóng.</span>
+                </li>
+              </ul>
+            </section>
+
+            <hr className="border-t border-white/[0.08] my-8" />
+
+            {/* Section 10: Netflix Premium */}
+            <section id="policy-netflix" className="scroll-mt-24 mb-10">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
+                  10
+                </span>
+                <h2 className="text-xl font-bold text-white tracking-tight">
+                  Chính Sách Netflix Premium
+                </h2>
+              </div>
+              <ul className="space-y-2 text-sm text-[#d1d5db]">
+                <li className="flex items-start gap-2">
+                  <span className="text-[#5c606e] font-bold">•</span>
+                  <span>Tài khoản được <strong>bảo hành đúng số tháng (số ngày)</strong> bạn mua kể từ ngày giao dịch.</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e]">•</span>
-                  <span>Netflix: Cấp tài khoản profile riêng có mã PIN bảo mật, chất lượng chuẩn 4K UHD. Không thay đổi mật khẩu hoặc thông tin thanh toán gốc.</span>
+                  <span className="text-[#5c606e] font-bold">•</span>
+                  <span>Cam kết bảo hành full time cho tài khoản của bạn trong suốt quá trình đăng ký gói.</span>
                 </li>
               </ul>
             </section>

@@ -5,7 +5,7 @@ import { SubdomainTabs } from '../../components/SubdomainTabs';
 
 export const metadata: Metadata = {
   title: 'Tutorial & Hướng Dẫn Kích Hoạt · Pade Store',
-  description: 'Hướng dẫn kích hoạt Nitro Trial, bật 2FA, lấy mã dự phòng và kiểm tra link Trial tại Pade Store.',
+  description: 'Hướng dẫn kích hoạt Nitro Trial, kiểm tra link Trial, bật 2FA và lấy mã dự phòng tại Pade Store.',
 };
 
 export default function TutorialPage() {
@@ -32,13 +32,6 @@ export default function TutorialPage() {
                   <span>Yêu cầu bắt buộc</span>
                 </a>
                 <a
-                  href="#mua-tu-dong"
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#5c606e]" />
-                  <span>Yêu cầu mua tự động</span>
-                </a>
-                <a
                   href="#kiem-tra-link"
                   className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors"
                 >
@@ -50,7 +43,7 @@ export default function TutorialPage() {
                   className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-[#5c606e]" />
-                  <span>Bật 2FA & Mã dự phòng</span>
+                  <span>Bật 2FA &amp; Mã dự phòng</span>
                 </a>
                 <a
                   href="#video-huong-dan"
@@ -93,7 +86,7 @@ export default function TutorialPage() {
 
             <hr className="border-t border-white/[0.08] my-8" />
 
-            {/* Section 01 */}
+            {/* Section 01: Yêu cầu bắt buộc */}
             <section id="yeu-cau-bat-buoc" className="scroll-mt-24 mb-10">
               <div className="flex items-center gap-3 mb-3">
                 <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
@@ -128,43 +121,11 @@ export default function TutorialPage() {
 
             <hr className="border-t border-white/[0.08] my-8" />
 
-            {/* Section 02 */}
-            <section id="mua-tu-dong" className="scroll-mt-24 mb-10">
-              <div className="flex items-center gap-3 mb-3">
-                <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
-                  02
-                </span>
-                <h2 className="text-xl font-bold text-white tracking-tight">
-                  Yêu cầu khi mua tự động
-                </h2>
-              </div>
-              <ul className="space-y-2.5 text-sm text-[#d1d5db]">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e] font-bold">•</span>
-                  <span>Tài khoản cần mua <strong>không được liên kết bất cứ thẻ thanh toán nào</strong> (Nếu có thẻ sẵn thì tạo ticket để nhân viên hỗ trợ mua thủ công).</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e] font-bold">•</span>
-                  <span>Tài khoản bị gắn cờ (Flagged) cũng phải tạo ticket để mua thủ công.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e] font-bold">•</span>
-                  <span>Tài khoản <strong>bắt buộc phải có ảnh đại diện (Avatar)</strong>.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#5c606e] font-bold">•</span>
-                  <span>Tài khoản cần mua đã từng sử dụng trial (hơn 1 năm trước) <strong>bắt buộc tạo ticket để mua</strong>.</span>
-                </li>
-              </ul>
-            </section>
-
-            <hr className="border-t border-white/[0.08] my-8" />
-
-            {/* Section 03 */}
+            {/* Section 02: Kiểm tra link Trial */}
             <section id="kiem-tra-link" className="scroll-mt-24 mb-10">
               <div className="flex items-center gap-3 mb-3">
                 <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
-                  03
+                  02
                 </span>
                 <h2 className="text-xl font-bold text-white tracking-tight">
                   Kiểm tra tính hợp lệ của tài khoản
@@ -189,65 +150,74 @@ export default function TutorialPage() {
 
             <hr className="border-t border-white/[0.08] my-8" />
 
-            {/* Section 04 */}
+            {/* Section 03: Hướng dẫn Bật 2FA */}
             <section id="huong-dan-2fa" className="scroll-mt-24 mb-10">
               <div className="flex items-center gap-3 mb-3">
                 <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
-                  04
+                  03
                 </span>
                 <h2 className="text-xl font-bold text-white tracking-tight">
                   Hướng dẫn Bật 2FA &amp; Lấy Mã Dự Phòng
                 </h2>
               </div>
-              <div className="p-5 rounded-xl bg-[#13141a] border border-white/[0.08] mb-4">
-                <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-2">
-                  <span className="w-6 h-6 rounded bg-[#38bdf8]/10 text-[#38bdf8] flex items-center justify-center border border-[#38bdf8]/20">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-                  </span>
-                  <span>Các bước thực hiện trên Máy tính (PC / Web):</span>
-                </h3>
-                <ul className="space-y-2.5 text-sm text-[#d1d5db]">
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#5c606e] font-bold">•</span>
-                    <span><strong>Bước 1 (Bật 2FA):</strong> Vào <strong>Cài đặt người dùng</strong> (biểu tượng Cài đặt ở góc trái phía dưới) ➔ Chọn mục <strong>My Account</strong> (Tài khoản của tôi) ➔ Cuộn xuống chọn <strong>Bật Ứng Dụng Xác Thực</strong> (Enable Two-Factor Auth).</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#5c606e] font-bold">•</span>
-                    <span><strong>Bước 2 (Quét mã):</strong> Nhập mật khẩu tài khoản và quét mã QR bằng ứng dụng xác thực trên điện thoại (Google Authenticator, Authy, Microsoft Authenticator,...), sau đó nhập 6 số xác thực để hoàn tất.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#5c606e] font-bold">•</span>
-                    <span><strong>Bước 3 (Xem mã dự phòng):</strong> Sau khi kích hoạt thành công, nút <strong>Xem Mã Dự Phòng</strong> (View Backup Codes) sẽ hiển thị ngay tại mục đó. Nhấp vào để xem và tải về máy.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#5c606e] font-bold">•</span>
-                    <span><strong>Bước 4 (Gửi cho shop):</strong> Copy 5–10 mã dự phòng chưa dùng gửi vào ticket cùng tài khoản &amp; mật khẩu để kỹ thuật viên đăng nhập kích hoạt.</span>
-                  </li>
-                </ul>
+              <p className="text-sm text-[#c5c8d4] leading-relaxed mb-4">
+                Đối với các gói dịch vụ cần thao tác trực tiếp trên tài khoản (như Nitro Login, Nitro Trial nạp trực tiếp), việc cung cấp mã dự phòng giúp nhân viên xử lý đơn nhanh chóng mà không cần làm phiền bạn gửi mã OTP nhiều lần:
+              </p>
+              <div className="space-y-3 text-sm text-[#d1d5db]">
+                <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
+                  <h3 className="font-bold text-white mb-1.5 flex items-center gap-2">
+                    <span className="w-5 h-5 rounded bg-[#6366f1]/20 text-[#818cf8] flex items-center justify-center font-mono text-xs">1</span>
+                    <span>Truy cập Cài đặt Người dùng (User Settings)</span>
+                  </h3>
+                  <p className="text-xs text-[#9ca3af] leading-relaxed pl-7">
+                    Mở Discord trên máy tính hoặc trình duyệt web &gt; Nhấn vào biểu tượng Bánh răng (Cài đặt) ở góc dưới bên trái &gt; Chọn mục <strong>Tài khoản của tôi (My Account)</strong>.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
+                  <h3 className="font-bold text-white mb-1.5 flex items-center gap-2">
+                    <span className="w-5 h-5 rounded bg-[#6366f1]/20 text-[#818cf8] flex items-center justify-center font-mono text-xs">2</span>
+                    <span>Bật Xác thực 2 yếu tố (Enable Two-Factor Auth)</span>
+                  </h3>
+                  <p className="text-xs text-[#9ca3af] leading-relaxed pl-7">
+                    Cuộn xuống phần Mật khẩu và Xác thực &gt; Nhấn nút <strong>Bật ứng dụng xác thực (Enable Authenticator App)</strong> &gt; Dùng app Google Authenticator hoặc Authy quét mã QR và nhập mã xác nhận 6 số.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
+                  <h3 className="font-bold text-white mb-1.5 flex items-center gap-2">
+                    <span className="w-5 h-5 rounded bg-[#6366f1]/20 text-[#818cf8] flex items-center justify-center font-mono text-xs">3</span>
+                    <span>Lấy Danh sách Mã Dự Phòng (Backup Codes)</span>
+                  </h3>
+                  <p className="text-xs text-[#9ca3af] leading-relaxed pl-7">
+                    Sau khi kích hoạt 2FA thành công, chọn mục <strong>Xem mã dự phòng (View Backup Codes)</strong> &gt; Nhập lại mật khẩu Discord &gt; Sao chép toàn bộ dãy 8-10 mã số hiển thị và gửi vào ticket hỗ trợ.
+                  </p>
+                </div>
               </div>
             </section>
 
             <hr className="border-t border-white/[0.08] my-8" />
 
-            {/* Section 05 */}
+            {/* Section 04: Video hướng dẫn */}
             <section id="video-huong-dan" className="scroll-mt-24 mb-10">
               <div className="flex items-center gap-3 mb-3">
                 <span className="w-9 h-9 rounded-lg bg-[#1b1c24] border border-white/[0.08] flex items-center justify-center font-mono text-sm font-bold text-[#838896]">
-                  05
+                  04
                 </span>
                 <h2 className="text-xl font-bold text-white tracking-tight">
                   Video hướng dẫn trực quan
                 </h2>
               </div>
               <p className="text-sm text-[#c5c8d4] leading-relaxed mb-4">
-                Theo dõi video dưới đây để thực hiện từng bước dễ dàng nhất:
+                Nếu bạn gặp khó khăn trong quá trình kích hoạt hoặc lấy mã, vui lòng theo dõi video hướng dẫn từng bước chi tiết bên dưới:
               </p>
-              <div className="relative w-full aspect-video rounded-xl overflow-hidden border border-white/[0.1] bg-[#13141a]">
+
+              <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/[0.1] bg-[#12131a] shadow-2xl">
                 <iframe
-                  className="absolute inset-0 w-full h-full"
-                  src="https://www.youtube-nocookie.com/embed/_yauX5pVC8o"
-                  title="Video hướng dẫn Discord Nitro Trial"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  className="w-full h-full"
+                  src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                  title="Tutorial Video Pade Store"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />
               </div>

@@ -105,7 +105,7 @@
       transition: transform 0.08s ease-out;
     }
 
-    /* ── HEADER / TOPBAR (ẢNH 1 & 2 CHUẨN ĐẸP) ── */
+    /* ── HEADER / TOPBAR ── */
     .top-header {
       position: sticky;
       top: 0;
@@ -548,6 +548,63 @@
       line-height: 1.55;
     }
 
+    /* Formula Box for Refund Calculation */
+    .formula-box {
+      background: #10121a;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 0.75rem;
+      padding: 1.15rem 1.35rem;
+      margin: 1rem 0;
+    }
+
+    .formula-title {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: #38bdf8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .formula-code {
+      font-family: var(--font-mono);
+      font-size: 0.925rem;
+      font-weight: 700;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .feedback-channel-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.35rem 0.75rem;
+      background: rgba(88, 101, 242, 0.15);
+      border: 1px solid rgba(88, 101, 242, 0.35);
+      border-radius: 0.45rem;
+      color: #85b0ff;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.15s ease;
+      margin: 0.25rem 0;
+    }
+
+    .feedback-channel-badge:hover {
+      background: rgba(88, 101, 242, 0.25);
+      color: #fff;
+      border-color: rgba(88, 101, 242, 0.6);
+      transform: translateY(-1px);
+    }
+
     .promo-checker-box {
       background: linear-gradient(135deg, #181922 0%, #13141a 100%);
       border: 1px solid var(--border-strong);
@@ -710,7 +767,7 @@
   <div class="reading-progress" id="readingProgress"></div>
   <div class="ambient-mesh"></div>
 
-  <!-- Header with Smooth Sliding Tabs (Ảnh 1 & 2 - Click trượt mượt mà) -->
+  <!-- Header with Smooth Sliding Tabs (Ảnh 1 - Click trượt mượt mà) -->
   <header class="top-header">
     <div class="top-header-inner">
       <div style="display: flex; align-items: center; gap: 0.75rem;">
@@ -770,27 +827,33 @@
         </div>
       </div>
 
-      <!-- Sidebar ToS -->
+      <!-- Sidebar ToS (Ảnh 1 Phân Tích: Đầy đủ các mục chi tiết) -->
       <div class="sidebar-panel-view" data-tab-sidebar="tos">
         <div class="sidebar-group">
           <div class="sidebar-heading">CHÍNH SÁCH CHUNG</div>
           <ul class="sidebar-nav-list">
             <li class="sidebar-nav-item">
-              <a href="#hoan-tien" class="sidebar-nav-link active">
+              <a href="#quy-dinh-mua-hang" class="sidebar-nav-link active">
+                <span class="nav-dot"></span>
+                <span>Quy định mua hàng</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item">
+              <a href="#chinh-sach-bao-hanh" class="sidebar-nav-link">
+                <span class="nav-dot"></span>
+                <span>Chính sách Bảo hành</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item">
+              <a href="#chinh-sach-hoan-tien" class="sidebar-nav-link">
                 <span class="nav-dot"></span>
                 <span>Chính sách Hoàn tiền</span>
               </a>
             </li>
             <li class="sidebar-nav-item">
-              <a href="#bao-hanh" class="sidebar-nav-link">
+              <a href="#login-nuoi-mail" class="sidebar-nav-link">
                 <span class="nav-dot"></span>
-                <span>Bảo hành & Feedback</span>
-              </a>
-            </li>
-            <li class="sidebar-nav-item">
-              <a href="#dieu-khoan-01-07" class="sidebar-nav-link">
-                <span class="nav-dot"></span>
-                <span>Điều khoản 01–07</span>
+                <span>Login &amp; Nuôi Mail</span>
               </a>
             </li>
           </ul>
@@ -817,16 +880,28 @@
               </a>
             </li>
             <li class="sidebar-nav-item">
-              <a href="#policy-streaming" class="sidebar-nav-link">
+              <a href="#policy-youtube" class="sidebar-nav-link">
                 <span class="nav-dot"></span>
-                <span>Streaming Services</span>
+                <span>YouTube Premium</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item">
+              <a href="#policy-spotify" class="sidebar-nav-link">
+                <span class="nav-dot"></span>
+                <span>Spotify Premium</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item">
+              <a href="#policy-netflix" class="sidebar-nav-link">
+                <span class="nav-dot"></span>
+                <span>Netflix Premium</span>
               </a>
             </li>
           </ul>
         </div>
       </div>
 
-      <!-- Sidebar Tutorial -->
+      <!-- Sidebar Tutorial (Đã xóa mục 02 Yêu cầu khi mua tự động theo yêu cầu) -->
       <div class="sidebar-panel-view active" data-tab-sidebar="tutorial">
         <div class="sidebar-group">
           <div class="sidebar-heading">MỤC LỤC HƯỚNG DẪN</div>
@@ -838,12 +913,6 @@
               </a>
             </li>
             <li class="sidebar-nav-item">
-              <a href="#mua-tu-dong" class="sidebar-nav-link">
-                <span class="nav-dot"></span>
-                <span>Yêu cầu mua tự động</span>
-              </a>
-            </li>
-            <li class="sidebar-nav-item">
               <a href="#kiem-tra-link" class="sidebar-nav-link">
                 <span class="nav-dot"></span>
                 <span>Kiểm tra link Trial</span>
@@ -852,7 +921,7 @@
             <li class="sidebar-nav-item">
               <a href="#huong-dan-2fa" class="sidebar-nav-link">
                 <span class="nav-dot"></span>
-                <span>Bật 2FA & Mã dự phòng</span>
+                <span>Bật 2FA &amp; Mã dự phòng</span>
               </a>
             </li>
             <li class="sidebar-nav-item">
@@ -890,7 +959,7 @@
             <a href="#luat-le-chung" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#luat-le-chung', event)">#</a>
           </div>
           <ul class="rules-list">
-            <li class="rules-list-item">Các đơn hàng sẽ hoàn thành trong vòng <strong>48h</strong>.</li>
+            <li class="rules-list-item">Các đơn hàng sẽ hoàn thành trong vòng <strong>24h</strong>.</li>
             <li class="rules-list-item">Hoàn tiền / Bảo hành <strong>bắt buộc phải có</strong>: Lịch sử giao dịch, tin nhắn bot (DMs bot), và lịch sử ticket.</li>
             <li class="rules-list-item">Hạn chế spam ping và hối thúc nhân viên hỗ trợ; khi đơn hoàn thành, shop sẽ ping thông báo ngay cho bạn.</li>
             <li class="rules-list-item">Trước khi mua hàng, khách hàng bắt buộc phải đọc kỹ <strong>Terms of Service (ToS)</strong>.</li>
@@ -1005,26 +1074,85 @@
         </section>
       </div>
 
-      <!-- ==================== TAB 2: TERMS OF SERVICE ==================== -->
+      <!-- ==================== TAB 2: TERMS OF SERVICE (NÂNG CẤP ĐẦY ĐỦ THEO YÊU CẦU MỚI) ==================== -->
       <div class="tab-panel-view" data-tab-content="tos">
-        <span class="content-eyebrow">ĐIỀU KHOẢN & CHÍNH SÁCH</span>
-        <h1 class="hero-title">Terms of Service</h1>
+        <span class="content-eyebrow">TERM OF SERVICE (TOS)</span>
+        <h1 class="hero-title">Điều Khoản Dịch Vụ</h1>
 
         <div class="meta-badge">
           <span class="meta-icon-svg">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
           </span>
-          <span>Cập nhật lần cuối: 2026 · <a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" class="meta-badge-link">discord.gg/pade</a></span>
+          <span>Quy định mua hàng chính thức · <a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" class="meta-badge-link">discord.gg/pade</a></span>
         </div>
 
         <hr class="section-divider" />
 
-        <!-- SECTION 01: Hoàn tiền -->
-        <section class="tos-section" id="hoan-tien">
+        <!-- SECTION 01: Quy định mua hàng tại server -->
+        <section class="tos-section" id="quy-dinh-mua-hang">
           <div class="section-header-row">
             <span class="number-badge">01</span>
-            <h2 class="section-title">Chính Sách Hoàn Tiền</h2>
-            <a href="#hoan-tien" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#hoan-tien', event)">#</a>
+            <h2 class="section-title">Quy Định Mua Hàng Tại Server</h2>
+            <a href="#quy-dinh-mua-hang" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#quy-dinh-mua-hang', event)">#</a>
+          </div>
+          <ul class="rules-list">
+            <li class="rules-list-item">Tất cả các sản phẩm đều được cam kết hoàn thành trong vòng <strong>24h</strong>.</li>
+            <li class="rules-list-item">Một khi đã đặt đơn, khách hàng bắt buộc phải chấp hành tất cả điều khoản dịch vụ của shop.</li>
+            <li class="rules-list-item">Hạn chế hối / giục người làm đơn; khi done đơn được lúc nào nhân viên sẽ chủ động thông báo lại ngay cho bạn.</li>
+            <li class="rules-list-item">Vui lòng đọc kỹ ToS trước khi đặt đơn để tránh các tình huống phát sinh không mong muốn.</li>
+          </ul>
+        </section>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 02: Warranty / Bảo hành -->
+        <section class="tos-section" id="chinh-sach-bao-hanh">
+          <div class="section-header-row">
+            <span class="number-badge">02</span>
+            <h2 class="section-title">Chính Sách Bảo Hành (Warranty)</h2>
+            <a href="#chinh-sach-bao-hanh" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#chinh-sach-bao-hanh', event)">#</a>
+          </div>
+
+          <div class="callout-box">
+            <div class="callout-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            </div>
+            <div class="callout-content">
+              <strong>Điều Kiện Kích Hoạt Bảo Hành Bắt Buộc:</strong><br />
+              • Bảo hành chỉ có hiệu lực khi bạn đã để lại feedback tại kênh phản hồi:
+              <div>
+                <a href="https://discord.com/channels/1443976106536341627/1443976111791935735" target="_blank" rel="noopener noreferrer" class="feedback-channel-badge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                  <span>Kênh Gửi Feedback Tại Đây ↗</span>
+                </a>
+              </div>
+              • <strong>Bắt buộc phải feedback trong vòng 24h</strong> kể từ khi đơn hoàn thành. Không feedback = đóng ticket và từ chối bảo hành.<br />
+              • Tuyệt đối <strong>không bảo hành</strong> khi khách hàng không để lại feedback, hoặc <strong>out server</strong> trong thời gian sử dụng.
+            </div>
+          </div>
+
+          <ul class="rules-list" style="margin-top: 1rem;">
+            <li class="rules-list-item">Sau khi seller đưa sản phẩm và báo done đơn, khách sẽ có <strong>24h</strong> để hoàn thành và kiểm tra đơn. Nếu quá thời gian mà không vouch hoặc không phản hồi thêm gì về sản phẩm thì shop không chịu trách nhiệm bảo hành.</li>
+            <li class="rules-list-item"><strong>Bù ngày bảo hành:</strong> Bù lại số ngày bị mất đối với các đơn hàng cần thời gian dài để bảo hành.</li>
+          </ul>
+
+          <div class="formula-box">
+            <div class="formula-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path></svg>
+              <span>Công thức hoàn tiền khi không có hàng thay thế:</span>
+            </div>
+            <div class="formula-code">Số tiền refund = (Giá mua) - [(Giá mua) / (Số ngày mua)] × (Số ngày đã sử dụng)</div>
+          </div>
+        </section>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 03: Refund / Hoàn tiền -->
+        <section class="tos-section" id="chinh-sach-hoan-tien">
+          <div class="section-header-row">
+            <span class="number-badge">03</span>
+            <h2 class="section-title">Chính Sách Hoàn Tiền (Refund)</h2>
+            <a href="#chinh-sach-hoan-tien" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#chinh-sach-hoan-tien', event)">#</a>
           </div>
 
           <div class="rule-card">
@@ -1032,13 +1160,12 @@
               <span class="icon-badge text-green">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
               </span>
-              <span>Các trường hợp ĐƯỢC hoàn tiền:</span>
+              <span>Điều Kiện Hoàn Tiền:</span>
             </div>
             <ul class="rules-list">
-              <li class="rules-list-item">Shop vi phạm quá thời hạn giao hàng (quá 48h) hoặc không xử lý được bảo hành như đã cam kết.</li>
-              <li class="rules-list-item">Sản phẩm phát sinh lỗi từ phía nhà cung cấp và shop không còn giải pháp thay thế tương đương.</li>
-              <li class="rules-list-item">Thời gian xử lý bảo hành kéo dài bất thường không có lý do chính đáng thông báo trước.</li>
-              <li class="rules-list-item">Tiền hoàn được tính chính xác theo tỷ lệ thời gian chưa sử dụng của dịch vụ.</li>
+              <li class="rules-list-item"><strong>Hoàn 100%:</strong> Nếu lỗi phát sinh từ Store, hoặc quá <strong>3 ngày</strong> chưa done đơn.</li>
+              <li class="rules-list-item"><strong>Đơn đã xác nhận (Ticket được Rename):</strong> Không hoàn tiền; nếu trường hợp đặc biệt được duyệt hoàn thì chỉ hoàn tối đa <strong>60%</strong>.</li>
+              <li class="rules-list-item"><strong>Hoàn 50% – 70%:</strong> Áp dụng đối với các trường hợp lỗi phát sinh từ phía khách hàng (tùy theo lý do cụ thể).</li>
             </ul>
           </div>
 
@@ -1047,126 +1174,192 @@
               <span class="icon-badge text-red">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
               </span>
-              <span>Các trường hợp KHÔNG hoàn tiền:</span>
+              <span>Tuyệt Đối Không Hoàn Tiền Với Các Trường Hợp:</span>
             </div>
             <ul class="rules-list">
-              <li class="rules-list-item">Khách hàng đổi ý, không muốn tiếp tục sử dụng dịch vụ sau khi đơn đã xử lý hoàn tất.</li>
-              <li class="rules-list-item">Tự ý thay đổi thông tin tài khoản (đối với gói yêu cầu giữ nguyên thông tin hoặc nuôi mail).</li>
-              <li class="rules-list-item">Vi phạm ToS của Discord hoặc nền tảng gốc dẫn đến tài khoản bị khóa vĩnh viễn.</li>
-              <li class="rules-list-item">Khách hàng mua nhầm sản phẩm do không đọc kỹ mô tả và yêu cầu.</li>
+              <li class="rules-list-item">Đơn hàng không để lại feedback tại kênh phản hồi chính thức của server.</li>
+              <li class="rules-list-item">Khách hàng làm sai quy định của sản phẩm khi thực hiện bảo hành.</li>
             </ul>
           </div>
         </section>
 
         <hr class="section-divider" />
 
-        <!-- SECTION 02: Bảo hành & Feedback -->
-        <section class="tos-section" id="bao-hanh">
-          <div class="section-header-row">
-            <span class="number-badge">02</span>
-            <h2 class="section-title">Chính Sách Bảo Hành & Feedback</h2>
-            <a href="#bao-hanh" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#bao-hanh', event)">#</a>
-          </div>
-
-          <div class="callout-box">
-            <div class="callout-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-            </div>
-            <div class="callout-content">
-              <strong>Điều kiện tiên quyết để được Bảo Hành:</strong><br />
-              1. <strong>Không Feedback = Không Bảo Hành:</strong> Sau khi hoàn thành đơn, khách hàng bắt buộc phải gửi feedback tại kênh phản hồi chính thức của server mới được kích hoạt chế độ bảo hành.<br />
-              2. <strong>Rời Server = Hủy Bảo Hành:</strong> Nếu khách hàng tự ý rời khỏi server (out server) trong thời gian sử dụng gói, quyền bảo hành sẽ tự động chấm dứt ngay lập tức.
-            </div>
-          </div>
-        </section>
-
-        <hr class="section-divider" />
-
-        <!-- SECTION 03: Điều khoản 01-07 -->
-        <section class="tos-section" id="dieu-khoan-01-07">
-          <div class="section-header-row">
-            <span class="number-badge">03</span>
-            <h2 class="section-title">Điều Khoản Dịch Vụ Cốt Lõi (01 – 07)</h2>
-            <a href="#dieu-khoan-01-07" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#dieu-khoan-01-07', event)">#</a>
-          </div>
-
-          <ul class="rules-list">
-            <li class="rules-list-item"><strong>Điều 01:</strong> Các đơn hàng được cam kết hoàn thành tối đa trong vòng <strong>48 giờ</strong> kể từ lúc tiếp nhận đủ thông tin.</li>
-            <li class="rules-list-item"><strong>Điều 02:</strong> Khách hàng có trách nhiệm tuân thủ đầy đủ các hướng dẫn kích hoạt do nhân viên kỹ thuật cung cấp.</li>
-            <li class="rules-list-item"><strong>Điều 03:</strong> Tuyệt đối không chia sẻ tài khoản cho bên thứ ba trong quá trình shop đang thao tác thực hiện đơn hàng.</li>
-            <li class="rules-list-item"><strong>Điều 04:</strong> Đơn hàng sau khi đã xử lý thành công sẽ không được hủy hoặc chuyển đổi sang mặt hàng khác.</li>
-            <li class="rules-list-item"><strong>Điều 05:</strong> Giữ thái độ văn minh, tôn trọng đội ngũ hỗ trợ trong suốt quá trình trao đổi tại ticket.</li>
-            <li class="rules-list-item"><strong>Điều 06:</strong> Mọi hành vi gian lận thông tin, tranh chấp giả mạo hoặc cố tình chargeback sẽ bị đưa vào danh sách đen (Blacklist) vĩnh viễn trên toàn hệ sinh thái Pade.</li>
-            <li class="rules-list-item"><strong>Điều 07:</strong> Trong mọi tình huống tranh chấp phát sinh, quyền quyết định cuối cùng thuộc về Ban quản trị Pade Community.</li>
-          </ul>
-        </section>
-
-        <hr class="section-divider" />
-
-        <!-- SECTION 04: Nitro -->
-        <section class="tos-section" id="policy-nitro">
+        <!-- SECTION 04: Login & Nuôi Mail -->
+        <section class="tos-section" id="login-nuoi-mail">
           <div class="section-header-row">
             <span class="number-badge">04</span>
+            <h2 class="section-title">Sản Phẩm Cần Login / Nuôi Mail</h2>
+            <a href="#login-nuoi-mail" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#login-nuoi-mail', event)">#</a>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-title">
+              <span class="icon-badge text-cyan">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+              </span>
+              <span>Quy Định Tài Khoản Gmail &amp; Login:</span>
+            </div>
+            <ul class="rules-list">
+              <li class="rules-list-item">Các đơn cấp tài khoản Gmail khách cần <strong>tự nuôi mail</strong>. Trường hợp để chết mail hoặc mất tài khoản do không nuôi thì shop không bảo hành.</li>
+              <li class="rules-list-item">Đối với những đơn cần login acc, khi done xong <strong>vui lòng thay đổi mật khẩu và thay cả mã dự phòng 2FA</strong> để tránh phát sinh vấn đề không cần thiết.</li>
+              <li class="rules-list-item">Khi hoàn thành đơn, shop đều chủ động logout tài khoản và không còn can thiệp đơn đó. Mọi vấn đề phát sinh sau <strong>12h</strong> kể từ khi done đơn, shop xin phép miễn trừ trách nhiệm.</li>
+            </ul>
+          </div>
+        </section>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 05: Discord Nitro (Login & Gift) -->
+        <section class="tos-section" id="policy-nitro">
+          <div class="section-header-row">
+            <span class="number-badge">05</span>
             <h2 class="section-title">Chính Sách Discord Nitro</h2>
             <a href="#policy-nitro" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#policy-nitro', event)">#</a>
           </div>
-          <ul class="rules-list">
-            <li class="rules-list-item"><strong>Nitro Login:</strong> Cung cấp tài khoản, mật khẩu và 5–10 mã dự phòng 2FA chưa sử dụng. Tuyệt đối không thay đổi mật khẩu trong lúc shop đang tiến hành kích hoạt.</li>
-            <li class="rules-list-item"><strong>Gói Nuôi Mail (2 tháng):</strong> Cần nuôi mail trong 7 ngày đầu để duy trì trạng thái đăng ký của Discord.</li>
-            <li class="rules-list-item"><strong>Nitro Trial:</strong> Tài khoản phải tạo trên 1 tháng, chưa từng dùng Nitro hoặc đã hết hạn trên 12 tháng. Không liên kết bất kỳ thẻ thanh toán nào trước đó.</li>
-          </ul>
+
+          <div class="rule-card">
+            <div class="rule-card-title">
+              <span class="icon-badge text-purple">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </span>
+              <span>Nitro Login:</span>
+            </div>
+            <ul class="rules-list">
+              <li class="rules-list-item"><strong>100% Bảo Hành</strong> trong suốt thời gian sử dụng gói.</li>
+              <li class="rules-list-item">Hàng chính hãng có bill thanh toán rõ ràng, không lo chuyện bị thu hồi.</li>
+            </ul>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-title">
+              <span class="icon-badge text-pink">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>
+              </span>
+              <span>Nitro Gift:</span>
+            </div>
+            <ul class="rules-list">
+              <li class="rules-list-item">Không bảo hành khi link bị Discord revoke.</li>
+              <li class="rules-list-item">Không bảo hành khi shop đã bàn giao link cho bạn (trước khi gửi shop đã kiểm tra kỹ lưỡng 100%).</li>
+              <li class="rules-list-item">Không bảo hành khi bạn không tiến hành claim quà trong vòng <strong>48h</strong>.</li>
+              <li class="rules-list-item">Không regen lại link trong mọi trường hợp.</li>
+            </ul>
+          </div>
         </section>
 
         <hr class="section-divider" />
 
-        <!-- SECTION 05: Boost -->
+        <!-- SECTION 06: Boost Server -->
         <section class="tos-section" id="policy-boost">
           <div class="section-header-row">
-            <span class="number-badge">05</span>
+            <span class="number-badge">06</span>
             <h2 class="section-title">Chính Sách Boost Server</h2>
             <a href="#policy-boost" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#policy-boost', event)">#</a>
           </div>
-          <ul class="rules-list">
-            <li class="rules-list-item">Cung cấp đúng link mời vĩnh viễn của server. Không mở xét duyệt vào (Apply to Join) hoặc xác minh số điện thoại khắt khe trong lúc bot boost join server.</li>
-            <li class="rules-list-item">Tuyệt đối không kick hoặc ban bot boost của shop. Nếu bot bị kick/ban bởi server của bạn, shop từ chối bảo hành gói boost đó.</li>
-            <li class="rules-list-item">Bắt buộc phải bật tính năng <strong>Lịch sử Boost</strong> trong cài đặt máy chủ.</li>
-            <li class="rules-list-item">Boost 1 tháng bảo hành 25 ngày; Boost 4 tháng bảo hành 3 tháng.</li>
-          </ul>
+
+          <div class="rule-card">
+            <div class="rule-card-title">
+              <span class="icon-badge text-amber">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m13 2-2 10h5L11 22l2-10H8l5-10z"/></svg>
+              </span>
+              <span>Thời Gian Giữ Boost:</span>
+            </div>
+            <ul class="rules-list">
+              <li class="rules-list-item">Có <strong>25 – 31 ngày</strong> bảo hành đối với gói 1 tháng.</li>
+              <li class="rules-list-item">Có <strong>75 – 90 ngày</strong> bảo hành đối với gói 3 tháng (4 tháng).</li>
+            </ul>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-title">
+              <span class="icon-badge text-red">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+              </span>
+              <span>Sẽ KHÔNG hoàn tiền hoặc thay thế trong các trường hợp sau:</span>
+            </div>
+            <ul class="rules-list">
+              <li class="rules-list-item">Boost bị Discord thu hồi do quét nền tảng chung.</li>
+              <li class="rules-list-item">Khách hàng hoặc thành viên ban quản trị kick/ban tài khoản boost của shop.</li>
+              <li class="rules-list-item">Đưa nhầm link server cần boost.</li>
+              <li class="rules-list-item">Server vẫn bật chế độ Antiraid hoặc các lớp bot lọc chặn bot mới.</li>
+              <li class="rules-list-item">Server bị Discord gắn cờ giới hạn (Limited).</li>
+            </ul>
+          </div>
         </section>
 
         <hr class="section-divider" />
 
-        <!-- SECTION 06: Deco -->
+        <!-- SECTION 07: Decoration -->
         <section class="tos-section" id="policy-deco">
           <div class="section-header-row">
-            <span class="number-badge">06</span>
+            <span class="number-badge">07</span>
             <h2 class="section-title">Chính Sách Avatar Decoration</h2>
             <a href="#policy-deco" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#policy-deco', event)">#</a>
           </div>
+
+          <div class="rule-card">
+            <div class="rule-card-title">
+              <span class="icon-badge text-blue">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path></svg>
+              </span>
+              <span>Quy Định Nhận &amp; Bảo Hành Decoration:</span>
+            </div>
+            <ul class="rules-list">
+              <li class="rules-list-item">Sau khi shop dùng bot gửi bill và có link decoration gift, <strong>bạn phải claim ngay</strong>. Sau đó shop không chịu trách nhiệm vì link quà là dạng private chỉ mình bạn và shop biết.</li>
+              <li class="rules-list-item">Khuyến khích bạn <strong>quay video khi claim</strong> để bảo vệ tối đa quyền lợi của mình.</li>
+              <li class="rules-list-item">Nếu đã gửi quá <strong>48h</strong> mà link bị hết hạn, shop xin phép sẽ không bảo hành nữa.</li>
+              <li class="rules-list-item">Hàng thuộc dạng <strong>Legal Paid</strong> nên không lo bị revoke. <strong>100% đổi mới</strong> nếu phát sinh sự cố bị revoke.</li>
+            </ul>
+          </div>
+        </section>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 08: YouTube Premium -->
+        <section class="tos-section" id="policy-youtube">
+          <div class="section-header-row">
+            <span class="number-badge">08</span>
+            <h2 class="section-title">Chính Sách YouTube Premium</h2>
+            <a href="#policy-youtube" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#policy-youtube', event)">#</a>
+          </div>
           <ul class="rules-list">
-            <li class="rules-list-item"><strong>Deco Login:</strong> Kỹ thuật viên đăng nhập vào tài khoản để mua decor lưu vĩnh viễn vào kho đồ tài khoản của bạn.</li>
-            <li class="rules-list-item"><strong>Deco Gift:</strong> Gửi trực tiếp dưới dạng quà tặng hoặc gift link, bảo hành link claim an toàn 100%.</li>
+            <li class="rules-list-item">Bảo hành toàn bộ thời gian theo đúng gói dịch vụ bạn đã mua.</li>
+            <li class="rules-list-item">Khi bị lỗi, yêu cầu cung cấp đầy đủ: <strong>Bill từ bot, email của bạn, và email chủ family</strong> để shop tiến hành hỗ trợ bảo hành.</li>
           </ul>
         </section>
 
         <hr class="section-divider" />
 
-        <!-- SECTION 07: Streaming -->
-        <section class="tos-section" id="policy-streaming">
+        <!-- SECTION 09: Spotify Premium -->
+        <section class="tos-section" id="policy-spotify">
           <div class="section-header-row">
-            <span class="number-badge">07</span>
-            <h2 class="section-title">Chính Sách YouTube / Spotify / Netflix</h2>
-            <a href="#policy-streaming" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#policy-streaming', event)">#</a>
+            <span class="number-badge">09</span>
+            <h2 class="section-title">Chính Sách Spotify Premium</h2>
+            <a href="#policy-spotify" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#policy-spotify', event)">#</a>
           </div>
           <ul class="rules-list">
-            <li class="rules-list-item"><strong>YouTube Premium:</strong> Nâng cấp tài khoản chính chủ qua nhóm gia đình Google hoặc cấp tài khoản riêng, bảo hành suốt thời hạn sử dụng gói.</li>
-            <li class="rules-list-item"><strong>Spotify Premium:</strong> Nâng cấp trực tiếp trên tài khoản cá nhân, giữ nguyên toàn bộ playlist và bài hát đã lưu.</li>
-            <li class="rules-list-item"><strong>Netflix:</strong> Cung cấp tài khoản profile riêng có mã PIN bảo mật, chất lượng chuẩn 4K UHD. Không thay đổi mật khẩu hoặc thông tin thanh toán gốc.</li>
+            <li class="rules-list-item">Bảo hành toàn bộ thời gian theo đúng gói dịch vụ bạn đã mua.</li>
+            <li class="rules-list-item">Khi bị lỗi, yêu cầu cung cấp: <strong>Bill từ bot và hình ảnh chụp màn hình bị mất Premium</strong> để shop bảo hành nhanh chóng.</li>
+          </ul>
+        </section>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 10: Netflix Premium -->
+        <section class="tos-section" id="policy-netflix">
+          <div class="section-header-row">
+            <span class="number-badge">10</span>
+            <h2 class="section-title">Chính Sách Netflix Premium</h2>
+            <a href="#policy-netflix" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#policy-netflix', event)">#</a>
+          </div>
+          <ul class="rules-list">
+            <li class="rules-list-item">Tài khoản được <strong>bảo hành đúng số tháng (số ngày)</strong> bạn mua kể từ ngày giao dịch.</li>
+            <li class="rules-list-item">Cam kết bảo hành full time cho tài khoản của bạn trong suốt quá trình đăng ký gói.</li>
           </ul>
         </section>
       </div>
 
-      <!-- ==================== TAB 3: TUTORIAL ==================== -->
+      <!-- ==================== TAB 3: TUTORIAL (ĐÃ XÓA MỤC 02 THEO YÊU CẦU) ==================== -->
       <div class="tab-panel-view active" data-tab-content="tutorial">
         <span class="content-eyebrow">HƯỚNG DẪN CHI TIẾT</span>
         <h1 class="hero-title">Tutorial</h1>
@@ -1200,27 +1393,10 @@
 
         <hr class="section-divider" />
 
-        <!-- SECTION 02: Mua tự động -->
-        <section class="tos-section" id="mua-tu-dong">
-          <div class="section-header-row">
-            <span class="number-badge">02</span>
-            <h2 class="section-title">Yêu cầu khi mua tự động</h2>
-            <a href="#mua-tu-dong" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#mua-tu-dong', event)">#</a>
-          </div>
-          <ul class="rules-list">
-            <li class="rules-list-item">Tài khoản cần mua <strong>không được liên kết bất cứ thẻ thanh toán nào</strong> (Nếu có thẻ sẵn thì tạo ticket để nhân viên hỗ trợ mua thủ công).</li>
-            <li class="rules-list-item">Tài khoản bị gắn cờ (Flagged) cũng phải tạo ticket để mua thủ công.</li>
-            <li class="rules-list-item">Tài khoản <strong>bắt buộc phải có ảnh đại diện (Avatar)</strong>.</li>
-            <li class="rules-list-item">Tài khoản cần mua đã từng sử dụng trial (hơn 1 năm trước) <strong>bắt buộc tạo ticket để mua</strong>.</li>
-          </ul>
-        </section>
-
-        <hr class="section-divider" />
-
-        <!-- SECTION 03: Kiểm tra link -->
+        <!-- SECTION 02: Kiểm tra link (Đã đánh số lại sau khi xóa mục Mua tự động) -->
         <section class="tos-section" id="kiem-tra-link">
           <div class="section-header-row">
-            <span class="number-badge">03</span>
+            <span class="number-badge">02</span>
             <h2 class="section-title">Kiểm tra tính hợp lệ của tài khoản</h2>
             <a href="#kiem-tra-link" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#kiem-tra-link', event)">#</a>
           </div>
@@ -1239,11 +1415,11 @@
 
         <hr class="section-divider" />
 
-        <!-- SECTION 04: Bật 2FA -->
+        <!-- SECTION 03: Bật 2FA -->
         <section class="tos-section" id="huong-dan-2fa">
           <div class="section-header-row">
-            <span class="number-badge">04</span>
-            <h2 class="section-title">Hướng dẫn Bật 2FA & Lấy Mã Dự Phòng</h2>
+            <span class="number-badge">03</span>
+            <h2 class="section-title">Hướng dẫn Bật 2FA &amp; Lấy Mã Dự Phòng</h2>
             <a href="#huong-dan-2fa" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#huong-dan-2fa', event)">#</a>
           </div>
 
@@ -1258,17 +1434,17 @@
               <li class="rules-list-item"><strong>Bước 1 (Bật 2FA):</strong> Vào <strong>Cài đặt người dùng</strong> (biểu tượng Cài đặt ở góc trái phía dưới) ➔ Chọn mục <strong>My Account</strong> (Tài khoản của tôi) ➔ Cuộn xuống chọn <strong>Bật Ứng Dụng Xác Thực</strong> (Enable Two-Factor Auth).</li>
               <li class="rules-list-item"><strong>Bước 2 (Quét mã):</strong> Nhập mật khẩu tài khoản và quét mã QR bằng ứng dụng xác thực trên điện thoại (Google Authenticator, Authy, Microsoft Authenticator,...), sau đó nhập 6 số xác thực để hoàn tất.</li>
               <li class="rules-list-item"><strong>Bước 3 (Xem mã dự phòng):</strong> Sau khi kích hoạt thành công, nút <strong>Xem Mã Dự Phòng</strong> (View Backup Codes) sẽ hiển thị ngay tại mục đó. Nhấp vào để xem và tải về máy.</li>
-              <li class="rules-list-item"><strong>Bước 4 (Gửi cho shop):</strong> Copy 5–10 mã dự phòng chưa dùng gửi vào ticket cùng tài khoản & mật khẩu để kỹ thuật viên đăng nhập kích hoạt.</li>
+              <li class="rules-list-item"><strong>Bước 4 (Gửi cho shop):</strong> Copy 5–10 mã dự phòng chưa dùng gửi vào ticket cùng tài khoản &amp; mật khẩu để kỹ thuật viên đăng nhập kích hoạt.</li>
             </ul>
           </div>
         </section>
 
         <hr class="section-divider" />
 
-        <!-- SECTION 05: Video -->
+        <!-- SECTION 04: Video trực quan -->
         <section class="tos-section" id="video-huong-dan">
           <div class="section-header-row">
-            <span class="number-badge">05</span>
+            <span class="number-badge">04</span>
             <h2 class="section-title">Video hướng dẫn trực quan</h2>
             <a href="#video-huong-dan" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#video-huong-dan', event)">#</a>
           </div>

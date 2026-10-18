@@ -92,7 +92,7 @@ export default function RulesPage() {
               <ul className="space-y-2.5 text-sm text-[#d1d5db]">
                 <li className="flex items-start gap-2">
                   <span className="text-[#5c606e] font-bold">•</span>
-                  <span>Các đơn hàng sẽ hoàn thành trong vòng <strong>48h</strong>.</span>
+                  <span>Các đơn hàng sẽ hoàn thành trong vòng <strong>24h</strong>.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#5c606e] font-bold">•</span>
