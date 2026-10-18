@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { Navbar } from '../../components/Navbar';
-import Link from 'next/link';
+import { SubdomainTabs } from '../../components/SubdomainTabs';
 
 export const metadata: Metadata = {
   title: 'Server Rules · Pade Community',
@@ -14,29 +14,7 @@ export default function RulesPage() {
       <Navbar />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full flex-1">
-        {/* Subdomain Header Tabs */}
-        <div className="flex justify-center mb-8">
-          <div className="inline-flex items-center gap-1 p-1 bg-white/[0.035] border border-white/[0.08] rounded-full">
-            <Link
-              href="/rules"
-              className="px-4 py-1.5 rounded-full text-xs font-bold text-white bg-[#21232d] shadow-sm"
-            >
-              Server Rules
-            </Link>
-            <Link
-              href="/tos"
-              className="px-4 py-1.5 rounded-full text-xs font-semibold text-[#838896] hover:text-white transition-colors"
-            >
-              Terms of Service
-            </Link>
-            <Link
-              href="/tutorial"
-              className="px-4 py-1.5 rounded-full text-xs font-semibold text-[#838896] hover:text-white transition-colors"
-            >
-              Tutorial
-            </Link>
-          </div>
-        </div>
+        <SubdomainTabs />
 
         <div className="flex flex-col lg:flex-row gap-12 items-start">
           {/* Left Sidebar */}
@@ -80,9 +58,12 @@ export default function RulesPage() {
               Server Rules
             </h1>
 
-            {/* Meta Pill with discord.gg/pade */}
+            {/* Meta Badge with SVG Icon */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.035] border border-white/[0.08] text-xs text-[#c5c8d4] mb-8">
-              <span>🎂</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#838896]">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
               <span>
                 Cập nhật lần cuối: 2026 ·{' '}
                 <a
@@ -143,7 +124,12 @@ export default function RulesPage() {
 
               <div className="space-y-4">
                 <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
-                  <h3 className="text-sm font-bold text-white mb-2">📌 Khi Tạo Ticket:</h3>
+                  <h3 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded bg-[#38bdf8]/10 text-[#38bdf8] flex items-center justify-center border border-[#38bdf8]/20">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                    </span>
+                    <span>Khi Tạo Ticket:</span>
+                  </h3>
                   <ul className="space-y-1.5 text-sm text-[#d1d5db]">
                     <li className="flex items-start gap-2">
                       <span className="text-[#5c606e]">•</span>
@@ -161,7 +147,12 @@ export default function RulesPage() {
                 </div>
 
                 <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
-                  <h3 className="text-sm font-bold text-white mb-2">🔒 Khi Close Ticket:</h3>
+                  <h3 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded bg-[#c084fc]/10 text-[#c084fc] flex items-center justify-center border border-[#c084fc]/20">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    </span>
+                    <span>Khi Close Ticket:</span>
+                  </h3>
                   <ul className="space-y-1.5 text-sm text-[#d1d5db]">
                     <li className="flex items-start gap-2">
                       <span className="text-[#5c606e]">•</span>
@@ -175,7 +166,12 @@ export default function RulesPage() {
                 </div>
 
                 <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
-                  <h3 className="text-sm font-bold text-white mb-2">⚖️ Luật Ticket:</h3>
+                  <h3 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded bg-[#f59e0b]/10 text-[#f59e0b] flex items-center justify-center border border-[#f59e0b]/20">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    </span>
+                    <span>Luật Ticket:</span>
+                  </h3>
                   <ul className="space-y-1.5 text-sm text-[#d1d5db]">
                     <li className="flex items-start gap-2">
                       <span className="text-[#5c606e]">•</span>
@@ -209,7 +205,12 @@ export default function RulesPage() {
 
               <div className="space-y-4">
                 <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
-                  <h3 className="text-sm font-bold text-white mb-2">🎯 Giveaway Có Yêu Cầu (Req):</h3>
+                  <h3 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded bg-[#f472b6]/10 text-[#f472b6] flex items-center justify-center border border-[#f472b6]/20">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>
+                    </span>
+                    <span>Giveaway Có Yêu Cầu (Req):</span>
+                  </h3>
                   <ul className="space-y-1.5 text-sm text-[#d1d5db]">
                     <li className="flex items-start gap-2">
                       <span className="text-[#5c606e]">•</span>
@@ -235,14 +236,24 @@ export default function RulesPage() {
                 </div>
 
                 <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
-                  <h3 className="text-sm font-bold text-white mb-2">✨ Giveaway Không Req:</h3>
+                  <h3 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded bg-[#facc15]/10 text-[#facc15] flex items-center justify-center border border-[#facc15]/20">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                    </span>
+                    <span>Giveaway Không Req:</span>
+                  </h3>
                   <p className="text-sm text-[#d1d5db]">
                     Nếu giveaway không có yêu cầu nào, các bạn chỉ cần tham gia (join) như bình thường.
                   </p>
                 </div>
 
                 <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
-                  <h3 className="text-sm font-bold text-white mb-2">📋 Quy Chế Nhận Giải Giveaway:</h3>
+                  <h3 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded bg-[#60a5fa]/10 text-[#60a5fa] flex items-center justify-center border border-[#60a5fa]/20">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+                    </span>
+                    <span>Quy Chế Nhận Giải Giveaway:</span>
+                  </h3>
                   <ul className="space-y-1.5 text-sm text-[#d1d5db]">
                     <li className="flex items-start gap-2">
                       <span className="text-[#5c606e]">•</span>

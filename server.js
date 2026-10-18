@@ -618,16 +618,22 @@ app.use((req, res, next) => {
     }
   }
   if (host.startsWith('tos.')) {
+    if (req.path.startsWith('/rules')) return serveHtmlPage(PAGES.rules, res);
+    if (req.path.startsWith('/tutorial')) return serveHtmlPage(PAGES.tutorial, res);
     if (!req.path.startsWith('/api/') && !req.path.startsWith('/assets/') && !req.path.startsWith('/js/') && !req.path.startsWith('/music/')) {
       return serveHtmlPage(PAGES.tos, res);
     }
   }
   if (host.startsWith('rules.')) {
+    if (req.path.startsWith('/tos')) return serveHtmlPage(PAGES.tos, res);
+    if (req.path.startsWith('/tutorial')) return serveHtmlPage(PAGES.tutorial, res);
     if (!req.path.startsWith('/api/') && !req.path.startsWith('/assets/') && !req.path.startsWith('/js/') && !req.path.startsWith('/music/')) {
       return serveHtmlPage(PAGES.rules, res);
     }
   }
   if (host.startsWith('tutorial.')) {
+    if (req.path.startsWith('/rules')) return serveHtmlPage(PAGES.rules, res);
+    if (req.path.startsWith('/tos')) return serveHtmlPage(PAGES.tos, res);
     if (!req.path.startsWith('/api/') && !req.path.startsWith('/assets/') && !req.path.startsWith('/js/') && !req.path.startsWith('/music/')) {
       return serveHtmlPage(PAGES.tutorial, res);
     }

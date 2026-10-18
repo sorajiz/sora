@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import { Navbar } from '../../components/Navbar';
-import Link from 'next/link';
+import { SubdomainTabs } from '../../components/SubdomainTabs';
 
 export const metadata: Metadata = {
   title: 'Terms of Service · Pade Store',
@@ -14,29 +14,7 @@ export default function TosPage() {
       <Navbar />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full flex-1">
-        {/* Subdomain Header Tabs */}
-        <div className="flex justify-center mb-8">
-          <div className="inline-flex items-center gap-1 p-1 bg-white/[0.035] border border-white/[0.08] rounded-full">
-            <Link
-              href="/rules"
-              className="px-4 py-1.5 rounded-full text-xs font-semibold text-[#838896] hover:text-white transition-colors"
-            >
-              Server Rules
-            </Link>
-            <Link
-              href="/tos"
-              className="px-4 py-1.5 rounded-full text-xs font-bold text-white bg-[#21232d] shadow-sm"
-            >
-              Terms of Service
-            </Link>
-            <Link
-              href="/tutorial"
-              className="px-4 py-1.5 rounded-full text-xs font-semibold text-[#838896] hover:text-white transition-colors"
-            >
-              Tutorial
-            </Link>
-          </div>
-        </div>
+        <SubdomainTabs />
 
         <div className="flex flex-col lg:flex-row gap-12 items-start">
           {/* Left Sidebar */}
@@ -101,7 +79,7 @@ export default function TosPage() {
                   className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#9ca3af] hover:text-white hover:bg-white/[0.04] transition-colors"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-[#5c606e]" />
-                  <span>YouTube / Spotify / Netflix</span>
+                  <span>Streaming Services</span>
                 </a>
               </nav>
             </div>
@@ -116,9 +94,12 @@ export default function TosPage() {
               Terms of Service
             </h1>
 
-            {/* Meta Pill with discord.gg/pade */}
+            {/* Meta Badge with SVG Icon */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.035] border border-white/[0.08] text-xs text-[#c5c8d4] mb-8">
-              <span>🎂</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#838896]">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
               <span>
                 Cập nhật lần cuối: 2026 ·{' '}
                 <a
@@ -147,7 +128,12 @@ export default function TosPage() {
 
               <div className="space-y-4">
                 <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
-                  <h3 className="text-sm font-bold text-[#22c55e] mb-2">✅ Các trường hợp ĐƯỢC hoàn tiền:</h3>
+                  <h3 className="text-sm font-bold text-[#22c55e] mb-2 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded bg-[#22c55e]/10 text-[#22c55e] flex items-center justify-center border border-[#22c55e]/20">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    </span>
+                    <span>Các trường hợp ĐƯỢC hoàn tiền:</span>
+                  </h3>
                   <ul className="space-y-1.5 text-sm text-[#d1d5db]">
                     <li className="flex items-start gap-2">
                       <span className="text-[#5c606e]">•</span>
@@ -169,7 +155,12 @@ export default function TosPage() {
                 </div>
 
                 <div className="p-4 rounded-xl bg-[#13141a] border border-white/[0.08]">
-                  <h3 className="text-sm font-bold text-[#ef4444] mb-2">❌ Các trường hợp KHÔNG hoàn tiền:</h3>
+                  <h3 className="text-sm font-bold text-[#ef4444] mb-2 flex items-center gap-2">
+                    <span className="w-6 h-6 rounded bg-[#ef4444]/10 text-[#ef4444] flex items-center justify-center border border-[#ef4444]/20">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+                    </span>
+                    <span>Các trường hợp KHÔNG hoàn tiền:</span>
+                  </h3>
                   <ul className="space-y-1.5 text-sm text-[#d1d5db]">
                     <li className="flex items-start gap-2">
                       <span className="text-[#5c606e]">•</span>
@@ -206,8 +197,11 @@ export default function TosPage() {
               </div>
 
               <div className="p-4 rounded-xl bg-[#1c160c] border border-[rgba(245,158,11,0.35)] text-sm mb-4">
-                <p className="text-[#fef3c7] font-semibold mb-2">
-                  ⚠️ Lưu ý quan trọng về Điều kiện Bảo hành:
+                <p className="text-[#fef3c7] font-semibold mb-2 flex items-center gap-2">
+                  <span className="text-[#f59e0b]">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                  </span>
+                  <span>Lưu ý quan trọng về Điều kiện Bảo hành:</span>
                 </p>
                 <ul className="space-y-2 text-[#fde68a]">
                   <li className="flex items-start gap-2">

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title><%= typeof title !== 'undefined' ? title : 'Server Rules · Pade Community' %></title>
-  <meta name="description" content="Nội quy và quy chuẩn cộng đồng chính thức tại máy chủ Pade Discord · discord.gg/pade" />
+  <meta name="description" content="Nội quy, điều khoản dịch vụ và hướng dẫn sử dụng chính thức tại Pade Community · discord.gg/pade" />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0d12" />
   <link rel="canonical" href="<%= typeof canonicalUrl !== 'undefined' ? canonicalUrl : 'https://rules.sorae.tokyo' %>" />
@@ -13,14 +13,14 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="vi_VN" />
   <meta property="og:site_name" content="Pade Community" />
-  <meta property="og:title" content="Server Rules · Pade Community" />
-  <meta property="og:description" content="Nội quy chính thức của máy chủ Discord Pade Community. Cập nhật 2026." />
+  <meta property="og:title" content="Pade Community · Rules & ToS & Tutorial" />
+  <meta property="og:description" content="Nội quy, điều khoản và tài liệu hướng dẫn Discord Nitro chính thức của Pade Community." />
   <meta property="og:url" content="https://rules.sorae.tokyo" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Server Rules · Pade Community" />
-  <meta name="twitter:description" content="Nội quy chính thức của máy chủ Discord Pade Community." />
+  <meta name="twitter:title" content="Pade Community · Rules, ToS & Tutorial" />
+  <meta name="twitter:description" content="Nội quy, điều khoản và tài liệu hướng dẫn chính thức của Pade Community." />
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="<%= typeof faviconDataUri !== 'undefined' ? faviconDataUri : '/assets/favicon.png' %>" />
@@ -32,7 +32,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
 
   <style>
-    /* ── RESET & DARK GRAY DESIGN SYSTEM (XÁM ĐEN THƯỢNG HẠNG) ── */
+    /* ── RESET & DARK GRAY DESIGN SYSTEM ── */
     *, *::before, *::after {
       margin: 0;
       padding: 0;
@@ -59,6 +59,7 @@
       --accent-amber-border: rgba(245, 158, 11, 0.35);
       --accent-blue: #38bdf8;
       --accent-red: #ef4444;
+      --accent-green: #22c55e;
       --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: "JetBrains Mono", monospace;
     }
@@ -104,13 +105,13 @@
       transition: transform 0.08s ease-out;
     }
 
-    /* ── HEADER / TOPBAR (ẢNH 2 CHUẨN ĐẸP) ── */
+    /* ── HEADER / TOPBAR (ẢNH 1 & 2 CHUẨN ĐẸP) ── */
     .top-header {
       position: sticky;
       top: 0;
       width: 100%;
       z-index: 50;
-      background: rgba(12, 13, 18, 0.82);
+      background: rgba(12, 13, 18, 0.85);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border-subtle);
@@ -160,7 +161,7 @@
       letter-spacing: -0.02em;
     }
 
-    /* ── SLIDING TABS IN HEADER (ẢNH 2 DI CHUYỂN MƯỢT MÀ) ── */
+    /* ── SLIDING TABS IN HEADER (ẢNH 1 - DI CHUYỂN MƯỢT MÀ KHI NHẤN) ── */
     .nav-tabs-wrapper {
       position: relative;
       display: inline-flex;
@@ -169,6 +170,7 @@
       border: 1px solid var(--border-subtle);
       border-radius: 9999px;
       padding: 4px;
+      user-select: none;
     }
 
     .nav-pill-slider {
@@ -178,16 +180,17 @@
       left: 4px;
       width: 0;
       background: var(--bg-sidebar-pill);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.16);
       border-radius: 9999px;
-      transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: left 0.28s cubic-bezier(0.16, 1, 0.3, 1), width 0.28s cubic-bezier(0.16, 1, 0.3, 1);
       pointer-events: none;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+      z-index: 1;
     }
 
     .nav-tab-link {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       padding: 0.45rem 1.15rem;
       font-size: 0.8125rem;
       font-weight: 600;
@@ -196,6 +199,10 @@
       border-radius: 9999px;
       transition: color 0.18s ease;
       white-space: nowrap;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      font-family: inherit;
     }
 
     .nav-tab-link.active {
@@ -221,7 +228,7 @@
       gap: 0.4rem;
     }
 
-    /* ── MAIN CONTENT LAYOUT (2-COLUMN) ── */
+    /* ── MAIN CONTENT LAYOUT ── */
     .layout-wrapper {
       position: relative;
       z-index: 10;
@@ -239,19 +246,18 @@
       flex-shrink: 0;
       position: sticky;
       top: 5rem;
-      max-height: calc(100vh - 6.5rem);
+      max-height: calc(100vh - 6rem);
       overflow-y: auto;
-      padding-right: 0.75rem;
-      scrollbar-width: thin;
-      scrollbar-color: #2b2e3b transparent;
+      padding-right: 0.5rem;
     }
 
-    .sidebar::-webkit-scrollbar {
-      width: 4px;
+    .sidebar-panel-view {
+      display: none;
     }
-    .sidebar::-webkit-scrollbar-thumb {
-      background: #2b2e3b;
-      border-radius: 4px;
+
+    .sidebar-panel-view.active {
+      display: block;
+      animation: fadeIn 0.22s ease-out forwards;
     }
 
     .sidebar-group {
@@ -259,114 +265,128 @@
     }
 
     .sidebar-heading {
-      font-size: 0.75rem;
+      font-size: 0.6875rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--text-muted);
-      margin-bottom: 0.65rem;
-      padding-left: 0.85rem;
+      margin-bottom: 0.75rem;
+      padding: 0 0.75rem;
     }
 
     .sidebar-nav-list {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 0.2rem;
-    }
-
-    .sidebar-nav-item {
-      position: relative;
+      gap: 0.25rem;
     }
 
     .sidebar-nav-link {
       display: flex;
       align-items: center;
-      gap: 0.6rem;
-      padding: 0.55rem 0.95rem;
-      border-radius: 0.55rem;
-      color: var(--text-sub);
-      text-decoration: none;
+      gap: 0.65rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
       font-size: 0.875rem;
       font-weight: 500;
-      transition: all 0.12s ease;
-      user-select: none;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: all 0.15s ease;
     }
 
     .sidebar-nav-link:hover {
-      background: rgba(255, 255, 255, 0.04);
       color: var(--text-white);
+      background: rgba(255, 255, 255, 0.04);
     }
 
     .sidebar-nav-link.active {
       background: var(--bg-sidebar-pill);
       color: var(--text-white);
-      font-weight: 700;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      font-weight: 600;
     }
 
-    .nav-dot {
-      display: inline-block;
+    .sidebar-nav-link .nav-dot {
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background-color: var(--text-dim);
+      background: var(--text-dim);
       flex-shrink: 0;
       transition: all 0.15s ease;
     }
 
     .sidebar-nav-link.active .nav-dot {
-      background-color: #ffffff;
+      background: var(--text-white);
       box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
-    }
-
-    .sidebar-nav-link:hover .nav-dot {
-      background-color: var(--text-sub);
     }
 
     /* ── RIGHT MAIN ARTICLE AREA ── */
     .main-content {
       flex: 1;
       min-width: 0;
-      max-width: 880px;
+      max-width: 820px;
+    }
+
+    .tab-panel-view {
+      display: none;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+
+    .tab-panel-view.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .content-eyebrow {
-      font-size: 0.78125rem;
+      font-size: 0.75rem;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.1em;
       color: var(--text-muted);
-      margin-bottom: 0.65rem;
-      display: inline-block;
+      display: block;
+      margin-bottom: 0.5rem;
     }
 
     .hero-title {
-      font-size: clamp(2.25rem, 4.5vw, 3.4rem);
+      font-size: 2.75rem;
       font-weight: 900;
       color: var(--text-white);
-      letter-spacing: -0.03em;
-      line-height: 1.12;
-      margin-bottom: 1.25rem;
+      letter-spacing: -0.035em;
+      line-height: 1.15;
+      margin-bottom: 1rem;
     }
 
+    /* Meta Badge with SVG Icon */
     .meta-badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.55rem;
+      gap: 0.5rem;
+      padding: 0.35rem 0.85rem;
       background: rgba(255, 255, 255, 0.035);
       border: 1px solid var(--border-subtle);
       border-radius: 9999px;
-      padding: 0.4rem 1rem;
-      font-size: 0.8125rem;
+      font-size: 0.75rem;
       color: var(--text-sub);
       margin-bottom: 2rem;
     }
 
+    .meta-icon-svg {
+      display: inline-flex;
+      align-items: center;
+      color: var(--text-muted);
+    }
+
     .meta-badge-link {
       color: var(--text-white);
+      font-weight: 700;
       text-decoration: none;
-      font-weight: 600;
       transition: color 0.15s ease;
     }
 
@@ -449,36 +469,59 @@
     .rules-list-item::before {
       content: "•";
       position: absolute;
-      left: 0;
-      top: -0.05rem;
+      left: 0.25rem;
       color: var(--text-dim);
-      font-size: 1.25rem;
-      line-height: 1;
+      font-weight: bold;
     }
 
     .rules-list-item strong {
       color: var(--text-white);
-      font-weight: 700;
     }
 
-    /* Sub-section Title Cards */
+    /* Rule Card with Clean SVG Icon */
     .rule-card {
       background: var(--bg-surface);
       border: 1px solid var(--border-subtle);
-      border-radius: 0.75rem;
-      padding: 1.15rem 1.35rem;
+      border-radius: 0.85rem;
+      padding: 1.25rem 1.35rem;
       margin: 1rem 0;
+      transition: border-color 0.15s ease;
+    }
+
+    .rule-card:hover {
+      border-color: var(--border-strong);
     }
 
     .rule-card-title {
       font-size: 0.95rem;
       font-weight: 700;
       color: var(--text-white);
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.75rem;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.55rem;
     }
+
+    .icon-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.65rem;
+      height: 1.65rem;
+      border-radius: 0.4rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      flex-shrink: 0;
+    }
+
+    .icon-badge.text-cyan { color: #38bdf8; background: rgba(56, 189, 248, 0.08); border-color: rgba(56, 189, 248, 0.2); }
+    .icon-badge.text-purple { color: #c084fc; background: rgba(192, 132, 252, 0.08); border-color: rgba(192, 132, 252, 0.2); }
+    .icon-badge.text-amber { color: #f59e0b; background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.2); }
+    .icon-badge.text-pink { color: #f472b6; background: rgba(244, 114, 182, 0.08); border-color: rgba(244, 114, 182, 0.2); }
+    .icon-badge.text-yellow { color: #facc15; background: rgba(250, 204, 21, 0.08); border-color: rgba(250, 204, 21, 0.2); }
+    .icon-badge.text-blue { color: #60a5fa; background: rgba(96, 165, 250, 0.08); border-color: rgba(96, 165, 250, 0.2); }
+    .icon-badge.text-green { color: #22c55e; background: rgba(34, 197, 94, 0.08); border-color: rgba(34, 197, 94, 0.2); }
+    .icon-badge.text-red { color: #ef4444; background: rgba(239, 68, 68, 0.08); border-color: rgba(239, 68, 68, 0.2); }
 
     .callout-box {
       background: var(--accent-amber-bg);
@@ -503,6 +546,60 @@
       font-weight: 600;
       color: #fef3c7;
       line-height: 1.55;
+    }
+
+    .promo-checker-box {
+      background: linear-gradient(135deg, #181922 0%, #13141a 100%);
+      border: 1px solid var(--border-strong);
+      border-radius: 0.85rem;
+      padding: 1.35rem 1.5rem;
+      margin: 1.25rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .promo-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.25rem;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 0.5rem;
+      color: #fff;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.18s ease;
+      align-self: flex-start;
+    }
+
+    .promo-link-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+    }
+
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      height: 0;
+      border-radius: 0.85rem;
+      overflow: hidden;
+      border: 1px solid var(--border-strong);
+      background: #111218;
+      margin: 1.25rem 0;
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
     }
 
     .site-footer {
@@ -613,11 +710,11 @@
   <div class="reading-progress" id="readingProgress"></div>
   <div class="ambient-mesh"></div>
 
-  <!-- Header with Smooth Sliding Tabs (Ảnh 2) -->
+  <!-- Header with Smooth Sliding Tabs (Ảnh 1 & 2 - Click trượt mượt mà) -->
   <header class="top-header">
     <div class="top-header-inner">
       <div style="display: flex; align-items: center; gap: 0.75rem;">
-        <button class="mobile-menu-btn" id="mobileMenuToggle" aria-label="Mở danh mục nội quy">
+        <button class="mobile-menu-btn" id="mobileMenuToggle" aria-label="Mở mục lục">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
           <span>Mục Lục</span>
         </button>
@@ -630,148 +727,565 @@
         </a>
       </div>
 
-      <!-- Sliding Tabs Navigation -->
-      <nav class="nav-tabs-wrapper" id="navTabsWrapper" aria-label="Main Subdomain Navigation">
+      <!-- Sliding Tabs Navigation (Di chuyển mượt mà khi nhấn) -->
+      <nav class="nav-tabs-wrapper" id="navTabsWrapper" aria-label="Main Navigation">
         <div class="nav-pill-slider" id="navPillSlider"></div>
-        <a href="/rules" class="nav-tab-link active" data-tab="rules">Server Rules</a>
-        <a href="/tos" class="nav-tab-link" data-tab="tos">Terms of Service</a>
-        <a href="/tutorial" class="nav-tab-link" data-tab="tutorial">Tutorial</a>
+        <a href="/rules" class="nav-tab-link active" data-tab="rules" data-path="/rules">Server Rules</a>
+        <a href="/tos" class="nav-tab-link" data-tab="tos" data-path="/tos">Terms of Service</a>
+        <a href="/tutorial" class="nav-tab-link" data-tab="tutorial" data-path="/tutorial">Tutorial</a>
       </nav>
     </div>
   </header>
 
   <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
-  <!-- 2-Column Layout Wrapper -->
+  <!-- Layout Wrapper -->
   <div class="layout-wrapper">
-    <!-- Left Sidebar -->
+    <!-- Left Sidebar (Tự động thay đổi tương ứng với Tab) -->
     <aside class="sidebar" id="pageSidebar">
-      <div class="sidebar-group">
-        <div class="sidebar-heading">NỘI QUY MÁY CHỦ</div>
-        <ul class="sidebar-nav-list">
-          <li class="sidebar-nav-item">
-            <a href="#luat-le-chung" class="sidebar-nav-link active">
-              <span class="nav-dot"></span>
-              <span>Luật Lệ Chung</span>
-            </a>
-          </li>
-          <li class="sidebar-nav-item">
-            <a href="#rules-ticket" class="sidebar-nav-link">
-              <span class="nav-dot"></span>
-              <span>Rules Ticket</span>
-            </a>
-          </li>
-          <li class="sidebar-nav-item">
-            <a href="#rules-giveaway" class="sidebar-nav-link">
-              <span class="nav-dot"></span>
-              <span>Rules Giveaway</span>
-            </a>
-          </li>
-        </ul>
+      <!-- Sidebar Rules -->
+      <div class="sidebar-panel-view active" data-tab-sidebar="rules">
+        <div class="sidebar-group">
+          <div class="sidebar-heading">NỘI QUY MÁY CHỦ</div>
+          <ul class="sidebar-nav-list">
+            <li class="sidebar-nav-item">
+              <a href="#luat-le-chung" class="sidebar-nav-link active">
+                <span class="nav-dot"></span>
+                <span>Luật Lệ Chung</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item">
+              <a href="#rules-ticket" class="sidebar-nav-link">
+                <span class="nav-dot"></span>
+                <span>Rules Ticket</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item">
+              <a href="#rules-giveaway" class="sidebar-nav-link">
+                <span class="nav-dot"></span>
+                <span>Rules Giveaway</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Sidebar ToS -->
+      <div class="sidebar-panel-view" data-tab-sidebar="tos">
+        <div class="sidebar-group">
+          <div class="sidebar-heading">CHÍNH SÁCH CHUNG</div>
+          <ul class="sidebar-nav-list">
+            <li class="sidebar-nav-item">
+              <a href="#hoan-tien" class="sidebar-nav-link active">
+                <span class="nav-dot"></span>
+                <span>Chính sách Hoàn tiền</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item">
+              <a href="#bao-hanh" class="sidebar-nav-link">
+                <span class="nav-dot"></span>
+                <span>Bảo hành & Feedback</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item">
+              <a href="#dieu-khoan-01-07" class="sidebar-nav-link">
+                <span class="nav-dot"></span>
+                <span>Điều khoản 01–07</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="sidebar-group">
+          <div class="sidebar-heading">THEO TỪNG DỊCH VỤ</div>
+          <ul class="sidebar-nav-list">
+            <li class="sidebar-nav-item">
+              <a href="#policy-nitro" class="sidebar-nav-link">
+                <span class="nav-dot"></span>
+                <span>Discord Nitro</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item">
+              <a href="#policy-boost" class="sidebar-nav-link">
+                <span class="nav-dot"></span>
+                <span>Boost Server</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item">
+              <a href="#policy-deco" class="sidebar-nav-link">
+                <span class="nav-dot"></span>
+                <span>Avatar Decoration</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item">
+              <a href="#policy-streaming" class="sidebar-nav-link">
+                <span class="nav-dot"></span>
+                <span>Streaming Services</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Sidebar Tutorial -->
+      <div class="sidebar-panel-view" data-tab-sidebar="tutorial">
+        <div class="sidebar-group">
+          <div class="sidebar-heading">MỤC LỤC HƯỚNG DẪN</div>
+          <ul class="sidebar-nav-list">
+            <li class="sidebar-nav-item">
+              <a href="#yeu-cau-bat-buoc" class="sidebar-nav-link active">
+                <span class="nav-dot"></span>
+                <span>Yêu cầu bắt buộc</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item">
+              <a href="#mua-tu-dong" class="sidebar-nav-link">
+                <span class="nav-dot"></span>
+                <span>Yêu cầu mua tự động</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item">
+              <a href="#kiem-tra-link" class="sidebar-nav-link">
+                <span class="nav-dot"></span>
+                <span>Kiểm tra link Trial</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item">
+              <a href="#huong-dan-2fa" class="sidebar-nav-link">
+                <span class="nav-dot"></span>
+                <span>Bật 2FA & Mã dự phòng</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item">
+              <a href="#video-huong-dan" class="sidebar-nav-link">
+                <span class="nav-dot"></span>
+                <span>Video hướng dẫn</span>
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </aside>
 
     <!-- Right Main Article Area -->
     <main class="main-content">
-      <span class="content-eyebrow">QUY CHUẨN CỘNG ĐỒNG</span>
-      <h1 class="hero-title">Server Rules</h1>
+      <!-- ==================== TAB 1: SERVER RULES ==================== -->
+      <div class="tab-panel-view active" data-tab-content="rules">
+        <span class="content-eyebrow">NỘI QUY CỘNG ĐỒNG</span>
+        <h1 class="hero-title">Server Rules</h1>
 
-      <!-- Meta Pill (discord.gg/pade) -->
-      <div class="meta-badge">
-        <span>🎂 Cập nhật lần cuối: 2026 · <a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" class="meta-badge-link">discord.gg/pade</a></span>
+        <div class="meta-badge">
+          <span class="meta-icon-svg">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </span>
+          <span>Cập nhật lần cuối: 2026 · <a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" class="meta-badge-link">discord.gg/pade</a></span>
+        </div>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 01: Luật Lệ Chung -->
+        <section class="tos-section" id="luat-le-chung">
+          <div class="section-header-row">
+            <span class="number-badge">01</span>
+            <h2 class="section-title">Luật Lệ Chung</h2>
+            <a href="#luat-le-chung" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#luat-le-chung', event)">#</a>
+          </div>
+          <ul class="rules-list">
+            <li class="rules-list-item">Các đơn hàng sẽ hoàn thành trong vòng <strong>48h</strong>.</li>
+            <li class="rules-list-item">Hoàn tiền / Bảo hành <strong>bắt buộc phải có</strong>: Lịch sử giao dịch, tin nhắn bot (DMs bot), và lịch sử ticket.</li>
+            <li class="rules-list-item">Hạn chế spam ping và hối thúc nhân viên hỗ trợ; khi đơn hoàn thành, shop sẽ ping thông báo ngay cho bạn.</li>
+            <li class="rules-list-item">Trước khi mua hàng, khách hàng bắt buộc phải đọc kỹ <strong>Terms of Service (ToS)</strong>.</li>
+          </ul>
+        </section>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 02: Rules Ticket -->
+        <section class="tos-section" id="rules-ticket">
+          <div class="section-header-row">
+            <span class="number-badge">02</span>
+            <h2 class="section-title">Rules Ticket</h2>
+            <a href="#rules-ticket" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#rules-ticket', event)">#</a>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-title">
+              <span class="icon-badge text-cyan">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+              </span>
+              <span>Khi Tạo Ticket:</span>
+            </div>
+            <ul class="rules-list">
+              <li class="rules-list-item">Vui lòng điền đầy đủ nội dung vào Ticket để shop thực hiện chính xác.</li>
+              <li class="rules-list-item">Tạo đúng với mục đích muốn xử lý đối với Ticket đó.</li>
+              <li class="rules-list-item">Nêu rõ nội dung & văn bản cần được thực hiện.</li>
+            </ul>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-title">
+              <span class="icon-badge text-purple">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              </span>
+              <span>Khi Close Ticket:</span>
+            </div>
+            <ul class="rules-list">
+              <li class="rules-list-item">Sau khi hoàn thành, nhân viên sẽ gửi thông báo trong ticket để bạn tiến hành đóng.</li>
+              <li class="rules-list-item">Nếu vẫn còn điều muốn hỏi hoặc cần giải đáp, bạn không cần đóng ticket vội.</li>
+            </ul>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-title">
+              <span class="icon-badge text-amber">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              </span>
+              <span>Luật Ticket:</span>
+            </div>
+            <ul class="rules-list">
+              <li class="rules-list-item">Nghiêm cấm tạo ticket chơi hay tạo cho vui rồi không nhắn gì.</li>
+              <li class="rules-list-item">Tạo xong hãy ping <strong>@386528085681635328</strong> để được phản hồi hỗ trợ.</li>
+              <li class="rules-list-item">Tuyệt đối không spam ping làm gián đoạn tiến độ chung.</li>
+            </ul>
+          </div>
+        </section>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 03: Rules Giveaway -->
+        <section class="tos-section" id="rules-giveaway">
+          <div class="section-header-row">
+            <span class="number-badge">03</span>
+            <h2 class="section-title">Rules Giveaway</h2>
+            <a href="#rules-giveaway" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#rules-giveaway', event)">#</a>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-title">
+              <span class="icon-badge text-pink">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>
+              </span>
+              <span>Giveaway Có Yêu Cầu (Req):</span>
+            </div>
+            <ul class="rules-list">
+              <li class="rules-list-item">Nếu giveaway có ghi yêu cầu req, hãy gửi yêu cầu vào đúng channel req có tên tương ứng với giveaway đó.</li>
+              <li class="rules-list-item">Phải gửi yêu cầu trước thời gian giveaway được tạo ra không dưới <strong>30 phút</strong>.</li>
+              <li class="rules-list-item">Vui lòng đọc kỹ yêu cầu để biết rõ điều kiện cần làm nhằm nhận giải hợp lệ.</li>
+              <li class="rules-list-item">Profile cá nhân vui lòng không để ở chế độ riêng tư (private) để ban quản trị check.</li>
+              <li class="rules-list-item">Chỉ tính Profile Global của Discord, không tính profile server custom riêng lẻ.</li>
+            </ul>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-title">
+              <span class="icon-badge text-yellow">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+              </span>
+              <span>Giveaway Không Yêu Cầu:</span>
+            </div>
+            <p style="font-size: 0.9375rem; color: var(--text-main); line-height: 1.65;">
+              Nếu giveaway không yêu cầu về req, bạn chỉ cần tham gia (join) như bình thường.
+            </p>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-title">
+              <span class="icon-badge text-blue">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+              </span>
+              <span>Quy Chế Nhận Giải Giveaway:</span>
+            </div>
+            <ul class="rules-list">
+              <li class="rules-list-item">Nếu bạn trúng giải giveaway, vui lòng tạo ticket đúng thời hạn quy định.</li>
+              <li class="rules-list-item">Nếu ticket của bạn tạo không đúng hạn, ban tổ chức sẽ tiến hành reroll coi như bạn chưa từng trúng giải.</li>
+              <li class="rules-list-item">Thời hạn tạo ticket claim giải là <strong>6 tiếng</strong> kể từ thời điểm giveaway kết thúc.</li>
+              <li class="rules-list-item">Nếu reroll liên tiếp 5 lần mà không có ai hoàn thành yêu cầu hoặc không tạo ticket, giveaway đó sẽ bị hủy.</li>
+              <li class="rules-list-item">Nếu trúng giveaway về <strong>Decor</strong>, người trúng nếu chưa có sẵn Nitro trong tài khoản thì cần cộng thêm <strong>10.000 VNĐ</strong> phụ phí kích hoạt.</li>
+            </ul>
+          </div>
+        </section>
       </div>
 
-      <hr class="section-divider" />
+      <!-- ==================== TAB 2: TERMS OF SERVICE ==================== -->
+      <div class="tab-panel-view" data-tab-content="tos">
+        <span class="content-eyebrow">ĐIỀU KHOẢN & CHÍNH SÁCH</span>
+        <h1 class="hero-title">Terms of Service</h1>
 
-      <!-- SECTION 01: Luật Lệ Chung -->
-      <section class="tos-section" id="luat-le-chung">
-        <div class="section-header-row">
-          <span class="number-badge">01</span>
-          <h2 class="section-title">Luật Lệ Chung</h2>
-          <a href="#luat-le-chung" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#luat-le-chung', event)">#</a>
-        </div>
-        <ul class="rules-list">
-          <li class="rules-list-item">Các đơn hàng sẽ hoàn thành trong vòng <strong>48h</strong> kể từ thời điểm thanh toán và tiếp nhận.</li>
-          <li class="rules-list-item">Hoàn tiền / Bảo hành bắt buộc phải có đầy đủ: <strong>Lịch sử giao dịch</strong>, <strong>tin nhắn xác nhận từ bot (DMs bot)</strong> và <strong>lịch sử ticket</strong>.</li>
-          <li class="rules-list-item">Hạn chế spam ping và hối đơn, khi xử lý xong nhân viên sẽ chủ động ping bạn ngay lập tức.</li>
-          <li class="rules-list-item">Trước khi mua hàng, quý khách bắt buộc phải đọc kỹ <a href="/tos" style="color: var(--accent-blue); text-decoration: none; font-weight: 700;">ToS (Điều khoản dịch vụ)</a>.</li>
-        </ul>
-      </section>
-
-      <hr class="section-divider" />
-
-      <!-- SECTION 02: Rules Ticket -->
-      <section class="tos-section" id="rules-ticket">
-        <div class="section-header-row">
-          <span class="number-badge">02</span>
-          <h2 class="section-title">Rules Ticket</h2>
-          <a href="#rules-ticket" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#rules-ticket', event)">#</a>
+        <div class="meta-badge">
+          <span class="meta-icon-svg">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </span>
+          <span>Cập nhật lần cuối: 2026 · <a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" class="meta-badge-link">discord.gg/pade</a></span>
         </div>
 
-        <div class="rule-card">
-          <div class="rule-card-title">📌 Khi Tạo Ticket:</div>
-          <ul class="rules-list">
-            <li class="rules-list-item">Vui lòng điền rõ nội dung vào Ticket để shop thực hiện nhanh chóng.</li>
-            <li class="rules-list-item">Tạo đúng với mục đích muốn xử lý đối với Ticket đó (Mua hàng / Bảo hành / Khiếu nại).</li>
-            <li class="rules-list-item">Nêu rõ nội dung & văn bản cần được thực hiện.</li>
-          </ul>
-        </div>
+        <hr class="section-divider" />
 
-        <div class="rule-card">
-          <div class="rule-card-title">🔒 Khi Close Ticket:</div>
-          <ul class="rules-list">
-            <li class="rules-list-item">Sau khi đơn hàng hoàn thành, nhân viên sẽ gửi yêu cầu để đóng ticket.</li>
-            <li class="rules-list-item">Nếu vẫn còn điều thắc mắc cần hỗ trợ, bạn không cần đóng ticket và có thể nhắn tiếp.</li>
-          </ul>
-        </div>
-
-        <div class="callout-box">
-          <span class="callout-icon">⚠️</span>
-          <div class="callout-content">
-            <strong>Quy tắc ứng xử Ticket:</strong> Không tạo ticket để chơi hay tạo cho vui và không nhắn gì. Tạo xong hãy ping Quản trị viên để được hỗ trợ. Nghiêm cấm spam ping.
+        <!-- SECTION 01: Hoàn tiền -->
+        <section class="tos-section" id="hoan-tien">
+          <div class="section-header-row">
+            <span class="number-badge">01</span>
+            <h2 class="section-title">Chính Sách Hoàn Tiền</h2>
+            <a href="#hoan-tien" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#hoan-tien', event)">#</a>
           </div>
-        </div>
-      </section>
 
-      <hr class="section-divider" />
+          <div class="rule-card">
+            <div class="rule-card-title">
+              <span class="icon-badge text-green">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </span>
+              <span>Các trường hợp ĐƯỢC hoàn tiền:</span>
+            </div>
+            <ul class="rules-list">
+              <li class="rules-list-item">Shop vi phạm quá thời hạn giao hàng (quá 48h) hoặc không xử lý được bảo hành như đã cam kết.</li>
+              <li class="rules-list-item">Sản phẩm phát sinh lỗi từ phía nhà cung cấp và shop không còn giải pháp thay thế tương đương.</li>
+              <li class="rules-list-item">Thời gian xử lý bảo hành kéo dài bất thường không có lý do chính đáng thông báo trước.</li>
+              <li class="rules-list-item">Tiền hoàn được tính chính xác theo tỷ lệ thời gian chưa sử dụng của dịch vụ.</li>
+            </ul>
+          </div>
 
-      <!-- SECTION 03: Rules Giveaway -->
-      <section class="tos-section" id="rules-giveaway">
-        <div class="section-header-row">
-          <span class="number-badge">03</span>
-          <h2 class="section-title">Rules Giveaway</h2>
-          <a href="#rules-giveaway" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#rules-giveaway', event)">#</a>
-        </div>
+          <div class="rule-card">
+            <div class="rule-card-title">
+              <span class="icon-badge text-red">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+              </span>
+              <span>Các trường hợp KHÔNG hoàn tiền:</span>
+            </div>
+            <ul class="rules-list">
+              <li class="rules-list-item">Khách hàng đổi ý, không muốn tiếp tục sử dụng dịch vụ sau khi đơn đã xử lý hoàn tất.</li>
+              <li class="rules-list-item">Tự ý thay đổi thông tin tài khoản (đối với gói yêu cầu giữ nguyên thông tin hoặc nuôi mail).</li>
+              <li class="rules-list-item">Vi phạm ToS của Discord hoặc nền tảng gốc dẫn đến tài khoản bị khóa vĩnh viễn.</li>
+              <li class="rules-list-item">Khách hàng mua nhầm sản phẩm do không đọc kỹ mô tả và yêu cầu.</li>
+            </ul>
+          </div>
+        </section>
 
-        <div class="rule-card">
-          <div class="rule-card-title">🎁 Giveaway Có Yêu Cầu (Req):</div>
+        <hr class="section-divider" />
+
+        <!-- SECTION 02: Bảo hành & Feedback -->
+        <section class="tos-section" id="bao-hanh">
+          <div class="section-header-row">
+            <span class="number-badge">02</span>
+            <h2 class="section-title">Chính Sách Bảo Hành & Feedback</h2>
+            <a href="#bao-hanh" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#bao-hanh', event)">#</a>
+          </div>
+
+          <div class="callout-box">
+            <div class="callout-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            </div>
+            <div class="callout-content">
+              <strong>Điều kiện tiên quyết để được Bảo Hành:</strong><br />
+              1. <strong>Không Feedback = Không Bảo Hành:</strong> Sau khi hoàn thành đơn, khách hàng bắt buộc phải gửi feedback tại kênh phản hồi chính thức của server mới được kích hoạt chế độ bảo hành.<br />
+              2. <strong>Rời Server = Hủy Bảo Hành:</strong> Nếu khách hàng tự ý rời khỏi server (out server) trong thời gian sử dụng gói, quyền bảo hành sẽ tự động chấm dứt ngay lập tức.
+            </div>
+          </div>
+        </section>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 03: Điều khoản 01-07 -->
+        <section class="tos-section" id="dieu-khoan-01-07">
+          <div class="section-header-row">
+            <span class="number-badge">03</span>
+            <h2 class="section-title">Điều Khoản Dịch Vụ Cốt Lõi (01 – 07)</h2>
+            <a href="#dieu-khoan-01-07" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#dieu-khoan-01-07', event)">#</a>
+          </div>
+
           <ul class="rules-list">
-            <li class="rules-list-item">Nếu giveaway có ghi yêu cầu req, bạn hãy gửi req vào đúng kênh channels req tương ứng với tên giveaway đó.</li>
-            <li class="rules-list-item">Phải gửi req trước thời gian giveaway được tạo ra không dưới <strong>30 phút</strong>.</li>
-            <li class="rules-list-item">Vui lòng đọc kỹ req yêu cầu vấn đề gì và cần làm gì để có thể nhận được giveaway.</li>
-            <li class="rules-list-item">Profile Discord vui lòng không đặt chế độ riêng tư (Private) để shop kiểm tra tính hợp lệ.</li>
-            <li class="rules-list-item">Chỉ tính profile Global, không tính profile server custom.</li>
+            <li class="rules-list-item"><strong>Điều 01:</strong> Các đơn hàng được cam kết hoàn thành tối đa trong vòng <strong>48 giờ</strong> kể từ lúc tiếp nhận đủ thông tin.</li>
+            <li class="rules-list-item"><strong>Điều 02:</strong> Khách hàng có trách nhiệm tuân thủ đầy đủ các hướng dẫn kích hoạt do nhân viên kỹ thuật cung cấp.</li>
+            <li class="rules-list-item"><strong>Điều 03:</strong> Tuyệt đối không chia sẻ tài khoản cho bên thứ ba trong quá trình shop đang thao tác thực hiện đơn hàng.</li>
+            <li class="rules-list-item"><strong>Điều 04:</strong> Đơn hàng sau khi đã xử lý thành công sẽ không được hủy hoặc chuyển đổi sang mặt hàng khác.</li>
+            <li class="rules-list-item"><strong>Điều 05:</strong> Giữ thái độ văn minh, tôn trọng đội ngũ hỗ trợ trong suốt quá trình trao đổi tại ticket.</li>
+            <li class="rules-list-item"><strong>Điều 06:</strong> Mọi hành vi gian lận thông tin, tranh chấp giả mạo hoặc cố tình chargeback sẽ bị đưa vào danh sách đen (Blacklist) vĩnh viễn trên toàn hệ sinh thái Pade.</li>
+            <li class="rules-list-item"><strong>Điều 07:</strong> Trong mọi tình huống tranh chấp phát sinh, quyền quyết định cuối cùng thuộc về Ban quản trị Pade Community.</li>
           </ul>
+        </section>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 04: Nitro -->
+        <section class="tos-section" id="policy-nitro">
+          <div class="section-header-row">
+            <span class="number-badge">04</span>
+            <h2 class="section-title">Chính Sách Discord Nitro</h2>
+            <a href="#policy-nitro" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#policy-nitro', event)">#</a>
+          </div>
+          <ul class="rules-list">
+            <li class="rules-list-item"><strong>Nitro Login:</strong> Cung cấp tài khoản, mật khẩu và 5–10 mã dự phòng 2FA chưa sử dụng. Tuyệt đối không thay đổi mật khẩu trong lúc shop đang tiến hành kích hoạt.</li>
+            <li class="rules-list-item"><strong>Gói Nuôi Mail (2 tháng):</strong> Cần nuôi mail trong 7 ngày đầu để duy trì trạng thái đăng ký của Discord.</li>
+            <li class="rules-list-item"><strong>Nitro Trial:</strong> Tài khoản phải tạo trên 1 tháng, chưa từng dùng Nitro hoặc đã hết hạn trên 12 tháng. Không liên kết bất kỳ thẻ thanh toán nào trước đó.</li>
+          </ul>
+        </section>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 05: Boost -->
+        <section class="tos-section" id="policy-boost">
+          <div class="section-header-row">
+            <span class="number-badge">05</span>
+            <h2 class="section-title">Chính Sách Boost Server</h2>
+            <a href="#policy-boost" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#policy-boost', event)">#</a>
+          </div>
+          <ul class="rules-list">
+            <li class="rules-list-item">Cung cấp đúng link mời vĩnh viễn của server. Không mở xét duyệt vào (Apply to Join) hoặc xác minh số điện thoại khắt khe trong lúc bot boost join server.</li>
+            <li class="rules-list-item">Tuyệt đối không kick hoặc ban bot boost của shop. Nếu bot bị kick/ban bởi server của bạn, shop từ chối bảo hành gói boost đó.</li>
+            <li class="rules-list-item">Bắt buộc phải bật tính năng <strong>Lịch sử Boost</strong> trong cài đặt máy chủ.</li>
+            <li class="rules-list-item">Boost 1 tháng bảo hành 25 ngày; Boost 4 tháng bảo hành 3 tháng.</li>
+          </ul>
+        </section>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 06: Deco -->
+        <section class="tos-section" id="policy-deco">
+          <div class="section-header-row">
+            <span class="number-badge">06</span>
+            <h2 class="section-title">Chính Sách Avatar Decoration</h2>
+            <a href="#policy-deco" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#policy-deco', event)">#</a>
+          </div>
+          <ul class="rules-list">
+            <li class="rules-list-item"><strong>Deco Login:</strong> Kỹ thuật viên đăng nhập vào tài khoản để mua decor lưu vĩnh viễn vào kho đồ tài khoản của bạn.</li>
+            <li class="rules-list-item"><strong>Deco Gift:</strong> Gửi trực tiếp dưới dạng quà tặng hoặc gift link, bảo hành link claim an toàn 100%.</li>
+          </ul>
+        </section>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 07: Streaming -->
+        <section class="tos-section" id="policy-streaming">
+          <div class="section-header-row">
+            <span class="number-badge">07</span>
+            <h2 class="section-title">Chính Sách YouTube / Spotify / Netflix</h2>
+            <a href="#policy-streaming" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#policy-streaming', event)">#</a>
+          </div>
+          <ul class="rules-list">
+            <li class="rules-list-item"><strong>YouTube Premium:</strong> Nâng cấp tài khoản chính chủ qua nhóm gia đình Google hoặc cấp tài khoản riêng, bảo hành suốt thời hạn sử dụng gói.</li>
+            <li class="rules-list-item"><strong>Spotify Premium:</strong> Nâng cấp trực tiếp trên tài khoản cá nhân, giữ nguyên toàn bộ playlist và bài hát đã lưu.</li>
+            <li class="rules-list-item"><strong>Netflix:</strong> Cung cấp tài khoản profile riêng có mã PIN bảo mật, chất lượng chuẩn 4K UHD. Không thay đổi mật khẩu hoặc thông tin thanh toán gốc.</li>
+          </ul>
+        </section>
+      </div>
+
+      <!-- ==================== TAB 3: TUTORIAL ==================== -->
+      <div class="tab-panel-view" data-tab-content="tutorial">
+        <span class="content-eyebrow">HƯỚNG DẪN CHI TIẾT</span>
+        <h1 class="hero-title">Tutorial</h1>
+
+        <div class="meta-badge">
+          <span class="meta-icon-svg">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </span>
+          <span>Cập nhật lần cuối: 2026 · <a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" class="meta-badge-link">discord.gg/pade</a></span>
         </div>
 
-        <div class="rule-card">
-          <div class="rule-card-title">🎉 Giveaway Không Yêu Cầu (Không Req):</div>
-          <ul class="rules-list">
-            <li class="rules-list-item">Nếu giveaway không yêu cầu req, tất cả thành viên chỉ cần bấm tham gia như bình thường.</li>
-          </ul>
-        </div>
+        <hr class="section-divider" />
 
-        <div class="rule-card">
-          <div class="rule-card-title">⚖️ Quy Chế Nhận Giải & Reroll:</div>
+        <!-- SECTION 01: Yêu cầu bắt buộc -->
+        <section class="tos-section" id="yeu-cau-bat-buoc">
+          <div class="section-header-row">
+            <span class="number-badge">01</span>
+            <h2 class="section-title">Yêu cầu bắt buộc</h2>
+            <a href="#yeu-cau-bat-buoc" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#yeu-cau-bat-buoc', event)">#</a>
+          </div>
+          <p style="font-size: 0.95rem; color: var(--text-sub); margin-bottom: 0.75rem;">
+            Để đủ điều kiện đăng ký và kích hoạt gói Discord Nitro Trial, tài khoản của bạn cần đáp ứng các tiêu chuẩn sau:
+          </p>
           <ul class="rules-list">
-            <li class="rules-list-item">Nếu trúng giải, vui lòng tạo ticket nhận thưởng đúng thời hạn shop đã đề ra.</li>
-            <li class="rules-list-item">Nếu ticket tạo không đúng hạn quy định, shop sẽ reroll và coi như bạn chưa từng trúng giải.</li>
-            <li class="rules-list-item">Mỗi giveaway có thời hạn nhận thưởng khoảng <strong>6 tiếng</strong> kể từ khi giveaway kết thúc (END).</li>
-            <li class="rules-list-item">Nếu reroll đủ 5 lần mà không ai đáp ứng yêu cầu / không ai tạo ticket, giveaway đó sẽ bị hủy bỏ.</li>
-            <li class="rules-list-item"><strong>Lưu ý về Decor Giveaway:</strong> Đối với giveaway về Decoration, các bạn trúng giải nếu tài khoản chưa có Nitro thì sẽ cần cộng thêm phụ phí <strong>10.000 VNĐ</strong> để tiếp tục nhận Decor.</li>
+            <li class="rules-list-item">Tài khoản cần mua Nitro Trial <strong>phải tạo được trên 1 tháng</strong>.</li>
+            <li class="rules-list-item">Tài khoản <strong>không sử dụng Nitro</strong> (mua thẳng, quà tặng Gift Link hoặc Random) từ Discord trong vòng <strong>12 tháng trở lại đây</strong>.</li>
+            <li class="rules-list-item">Tài khoản chưa từng sử dụng Nitro lần nào (hoặc đã hết hạn hoàn toàn hơn 1 năm).</li>
+            <li class="rules-list-item">Tài khoản đã từng dùng các gói Nitro dùng thử 3 ngày / 7 ngày / Orbs <strong>vẫn có thể sử dụng được Trial bình thường</strong>.</li>
           </ul>
-        </div>
-      </section>
+        </section>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 02: Mua tự động -->
+        <section class="tos-section" id="mua-tu-dong">
+          <div class="section-header-row">
+            <span class="number-badge">02</span>
+            <h2 class="section-title">Yêu cầu khi mua tự động</h2>
+            <a href="#mua-tu-dong" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#mua-tu-dong', event)">#</a>
+          </div>
+          <ul class="rules-list">
+            <li class="rules-list-item">Tài khoản cần mua <strong>không được liên kết bất cứ thẻ thanh toán nào</strong> (Nếu có thẻ sẵn thì tạo ticket để nhân viên hỗ trợ mua thủ công).</li>
+            <li class="rules-list-item">Tài khoản bị gắn cờ (Flagged) cũng phải tạo ticket để mua thủ công.</li>
+            <li class="rules-list-item">Tài khoản <strong>bắt buộc phải có ảnh đại diện (Avatar)</strong>.</li>
+            <li class="rules-list-item">Tài khoản cần mua đã từng sử dụng trial (hơn 1 năm trước) <strong>bắt buộc tạo ticket để mua</strong>.</li>
+          </ul>
+        </section>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 03: Kiểm tra link -->
+        <section class="tos-section" id="kiem-tra-link">
+          <div class="section-header-row">
+            <span class="number-badge">03</span>
+            <h2 class="section-title">Kiểm tra tính hợp lệ của tài khoản</h2>
+            <a href="#kiem-tra-link" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#kiem-tra-link', event)">#</a>
+          </div>
+
+          <div class="promo-checker-box">
+            <p style="font-size: 0.95rem; color: #fff; font-weight: 600; line-height: 1.6;">
+              Ấn vào link kiểm tra bên dưới, nếu Discord thông báo:<br />
+              <span style="color: #38bdf8; font-weight: 700;">"Xin lỗi, có vẻ như mã đã được đổi"</span> (Sorry, looks like this code has been redeemed)<br />
+              thì tài khoản của bạn <strong>hoàn toàn đủ điều kiện</strong> sử dụng Nitro Trial!
+            </p>
+            <a href="https://promos.discord.gg/HCxVfuJt9AbXzXtSw5yRnv9J" target="_blank" rel="noopener noreferrer" class="promo-link-btn">
+              <span>Kiểm tra link Nitro Trial ngay ↗</span>
+            </a>
+          </div>
+        </section>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 04: Bật 2FA -->
+        <section class="tos-section" id="huong-dan-2fa">
+          <div class="section-header-row">
+            <span class="number-badge">04</span>
+            <h2 class="section-title">Hướng dẫn Bật 2FA & Lấy Mã Dự Phòng</h2>
+            <a href="#huong-dan-2fa" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#huong-dan-2fa', event)">#</a>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-title">
+              <span class="icon-badge text-cyan">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+              </span>
+              <span>Các bước thực hiện trên Máy tính (PC / Web):</span>
+            </div>
+            <ul class="rules-list">
+              <li class="rules-list-item"><strong>Bước 1 (Bật 2FA):</strong> Vào <strong>Cài đặt người dùng</strong> (biểu tượng Cài đặt ở góc trái phía dưới) ➔ Chọn mục <strong>My Account</strong> (Tài khoản của tôi) ➔ Cuộn xuống chọn <strong>Bật Ứng Dụng Xác Thực</strong> (Enable Two-Factor Auth).</li>
+              <li class="rules-list-item"><strong>Bước 2 (Quét mã):</strong> Nhập mật khẩu tài khoản và quét mã QR bằng ứng dụng xác thực trên điện thoại (Google Authenticator, Authy, Microsoft Authenticator,...), sau đó nhập 6 số xác thực để hoàn tất.</li>
+              <li class="rules-list-item"><strong>Bước 3 (Xem mã dự phòng):</strong> Sau khi kích hoạt thành công, nút <strong>Xem Mã Dự Phòng</strong> (View Backup Codes) sẽ hiển thị ngay tại mục đó. Nhấp vào để xem và tải về máy.</li>
+              <li class="rules-list-item"><strong>Bước 4 (Gửi cho shop):</strong> Copy 5–10 mã dự phòng chưa dùng gửi vào ticket cùng tài khoản & mật khẩu để kỹ thuật viên đăng nhập kích hoạt.</li>
+            </ul>
+          </div>
+        </section>
+
+        <hr class="section-divider" />
+
+        <!-- SECTION 05: Video -->
+        <section class="tos-section" id="video-huong-dan">
+          <div class="section-header-row">
+            <span class="number-badge">05</span>
+            <h2 class="section-title">Video hướng dẫn trực quan</h2>
+            <a href="#video-huong-dan" class="section-anchor-btn" title="Sao chép liên kết" onclick="copySectionLink('#video-huong-dan', event)">#</a>
+          </div>
+          <p style="font-size: 0.95rem; color: var(--text-sub); margin-bottom: 0.75rem;">
+            Theo dõi video dưới đây để thực hiện từng bước dễ dàng nhất:
+          </p>
+
+          <div class="video-wrapper">
+            <iframe
+              src="https://www.youtube-nocookie.com/embed/_yauX5pVC8o"
+              title="Video hướng dẫn Discord Nitro Trial"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </section>
+      </div>
     </main>
   </div>
 
@@ -780,12 +1294,12 @@
     <div class="footer-inner">
       <div>
         <p style="font-weight: 700; color: #fff; margin-bottom: 0.35rem;">Pade Community · Bản quyền © 2026</p>
-        <p>Quy chuẩn cộng đồng và dịch vụ chính thức tại Pade Discord.</p>
+        <p>Trung tâm tài liệu, nội quy và hướng dẫn dịch vụ khách hàng Pade Community.</p>
       </div>
       <ul class="footer-links">
-        <li><a href="/rules" class="footer-link">Server Rules</a></li>
-        <li><a href="/tos" class="footer-link">Terms of Service</a></li>
-        <li><a href="/tutorial" class="footer-link">Tutorial</a></li>
+        <li><a href="/rules" class="footer-link tab-switcher-link" data-tab="rules">Server Rules</a></li>
+        <li><a href="/tos" class="footer-link tab-switcher-link" data-tab="tos">Terms of Service</a></li>
+        <li><a href="/tutorial" class="footer-link tab-switcher-link" data-tab="tutorial">Tutorial</a></li>
       </ul>
     </div>
   </footer>
@@ -795,10 +1309,12 @@
   </div>
 
   <script>
-    // Smooth sliding pill indicator for header tabs (Ảnh 2 Parity)
+    // ── SLIDING TABS WITH HARDWARE ACCELERATION ──
     const navWrapper = document.getElementById('navTabsWrapper');
     const navSlider = document.getElementById('navPillSlider');
     const tabLinks = document.querySelectorAll('.nav-tab-link');
+    const tabPanels = document.querySelectorAll('.tab-panel-view');
+    const sidebarPanels = document.querySelectorAll('.sidebar-panel-view');
 
     function positionSlider(el) {
       if (!navWrapper || !navSlider || !el) return;
@@ -808,18 +1324,111 @@
       navSlider.style.width = `${elRect.width}px`;
     }
 
-    const activeTab = document.querySelector('.nav-tab-link.active') || tabLinks[0];
-    if (activeTab) positionSlider(activeTab);
+    function switchTab(tabName, updateHistory) {
+      if (!tabName) return;
+      const targetBtn = document.querySelector(`.nav-tab-link[data-tab="${tabName}"]`);
+      if (!targetBtn) return;
 
-    tabLinks.forEach(tab => {
-      tab.addEventListener('mouseenter', () => positionSlider(tab));
-    });
-    if (navWrapper && activeTab) {
-      navWrapper.addEventListener('mouseleave', () => positionSlider(activeTab));
+      tabLinks.forEach(link => link.classList.remove('active'));
+      targetBtn.classList.add('active');
+      positionSlider(targetBtn);
+
+      tabPanels.forEach(panel => {
+        const isMatch = panel.getAttribute('data-tab-content') === tabName;
+        panel.classList.toggle('active', isMatch);
+      });
+
+      sidebarPanels.forEach(sb => {
+        const isMatch = sb.getAttribute('data-tab-sidebar') === tabName;
+        sb.classList.toggle('active', isMatch);
+      });
+
+      const targetPath = targetBtn.getAttribute('data-path') || `/${tabName}`;
+      if (updateHistory) {
+        if (window.location.pathname !== targetPath) {
+          window.history.pushState({ tab: tabName }, '', targetPath);
+        }
+      }
+
+      // Update document title dynamically
+      if (tabName === 'rules') {
+        document.title = 'Server Rules · Pade Community';
+      } else if (tabName === 'tos') {
+        document.title = 'Terms of Service · Pade Store';
+      } else if (tabName === 'tutorial') {
+        document.title = 'Tutorial & Hướng Dẫn · Pade Store';
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    window.addEventListener('resize', () => {
-      if (activeTab) positionSlider(activeTab);
+
+    // Attach click and hover events to tab buttons
+    tabLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tab = link.getAttribute('data-tab');
+        switchTab(tab, true);
+      });
+      link.addEventListener('mouseenter', () => {
+        positionSlider(link);
+      });
     });
+
+    if (navWrapper) {
+      navWrapper.addEventListener('mouseleave', () => {
+        const activeLink = document.querySelector('.nav-tab-link.active');
+        if (activeLink) positionSlider(activeLink);
+      });
+    }
+
+    // Footer switcher links
+    document.querySelectorAll('.tab-switcher-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tab = link.getAttribute('data-tab');
+        switchTab(tab, true);
+      });
+    });
+
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', (e) => {
+      determineInitialTab(false);
+    });
+
+    function determineInitialTab(updateHistory) {
+      const path = (window.location.pathname || '').toLowerCase();
+      const host = (window.location.hostname || '').toLowerCase();
+      let defaultTab = '<%= typeof activeTab !== "undefined" ? activeTab : "rules" %>';
+
+      if (path.includes('tos') || host.startsWith('tos.')) {
+        defaultTab = 'tos';
+      } else if (path.includes('tutorial') || host.startsWith('tutorial.')) {
+        defaultTab = 'tutorial';
+      } else if (path.includes('rules') || host.startsWith('rules.')) {
+        defaultTab = 'rules';
+      }
+
+      switchTab(defaultTab, !!updateHistory);
+    }
+
+    // Initialize layout
+    window.addEventListener('DOMContentLoaded', () => {
+      determineInitialTab(false);
+    });
+    window.addEventListener('load', () => {
+      const activeLink = document.querySelector('.nav-tab-link.active');
+      if (activeLink) positionSlider(activeLink);
+    });
+    window.addEventListener('resize', () => {
+      const activeLink = document.querySelector('.nav-tab-link.active');
+      if (activeLink) positionSlider(activeLink);
+    });
+    if (document.fonts) {
+      document.fonts.ready.then(() => {
+        const activeLink = document.querySelector('.nav-tab-link.active');
+        if (activeLink) positionSlider(activeLink);
+      });
+    }
 
     // Reading progress
     window.addEventListener('scroll', () => {
@@ -828,11 +1437,15 @@
       document.getElementById('readingProgress').style.transform = `scaleX(${progress})`;
     }, { passive: true });
 
-    // ScrollSpy
-    const sections = document.querySelectorAll('.tos-section');
-    const navItems = document.querySelectorAll('.sidebar-nav-link');
-
+    // ScrollSpy for Active Sidebar Nav Item
     window.addEventListener('scroll', () => {
+      const activePanel = document.querySelector('.tab-panel-view.active');
+      if (!activePanel) return;
+      const sections = activePanel.querySelectorAll('.tos-section');
+      const activeSidebar = document.querySelector('.sidebar-panel-view.active');
+      if (!activeSidebar) return;
+      const navItems = activeSidebar.querySelectorAll('.sidebar-nav-link');
+
       let current = '';
       const scrollPos = window.scrollY + 140;
       sections.forEach(sec => {
