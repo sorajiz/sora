@@ -123,7 +123,14 @@ check('long single-line code does not need a horizontal scrollbar', () => {
   const long = 'x'.repeat(400);
   const html = render('```\n' + long + '\n```');
   assert.ok(html.includes(long), 'long code body lost');
-  assert.ok(!/code-block[^>]*overflow-x/.test(html), 'code block must wrap instead of overflowing');
+  // Only the rendered <pre> tag matters here: a CSS rule may legitimately use
+  // overflow-x elsewhere on the page.
+  assert.ok(!/<pre[^>]*overflow-x/.test(html), 'code block must wrap instead of overflowing');
+  const css = html.slice(html.indexOf('<style>'), html.indexOf('</style>'));
+  assert.ok(
+    /\.code-block code\s*\{[^}]*white-space:\s*pre-wrap/.test(css),
+    'code block CSS must wrap long lines'
+  );
 });
 
 check('inline code still renders', () => {
