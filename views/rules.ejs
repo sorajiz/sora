@@ -2,12 +2,28 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title><%= typeof title !== 'undefined' ? title : 'Server Rules · Pade Community' %></title>
   <meta name="description" content="Nội quy, điều khoản dịch vụ và hướng dẫn sử dụng chính thức tại Pade Community · discord.gg/pade" />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0d12" />
   <link rel="canonical" href="<%= typeof canonicalUrl !== 'undefined' ? canonicalUrl : 'https://rules.sorae.tokyo' %>" />
+
+  <!-- Theme bootstrap: resolved before first paint so there is never a flash of the wrong palette. -->
+  <script>
+    (function () {
+      var theme = 'dark';
+      try {
+        var stored = window.localStorage.getItem('pade-docs-theme');
+        if (stored === 'light' || stored === 'dark') {
+          theme = stored;
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+          theme = 'light';
+        }
+      } catch (err) { /* storage blocked — stay on the brand default */ }
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
 
   <!-- OpenGraph -->
   <meta property="og:type" content="website" />
@@ -29,7 +45,7 @@
   <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
 
   <style>
     /* ── RESET & DARK GRAY DESIGN SYSTEM ── */
@@ -62,10 +78,17 @@
       --accent-green: #22c55e;
       --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: "JetBrains Mono", monospace;
+      /* Sticky offsets — updated at runtime from the real header height. */
+      --header-h: 68px;
+      --chips-h: 56px;
+      --page-pad: clamp(0.9rem, 3.4vw, 1.5rem);
+      color-scheme: dark;
     }
 
     html {
       scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
     }
 
     body {
@@ -73,11 +96,21 @@
       color: var(--text-main);
       font-family: var(--font-sans);
       min-height: 100vh;
+      min-height: 100dvh;
       line-height: 1.65;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
+      overflow-wrap: break-word;
       position: relative;
+    }
+
+    /* Keyboard focus is always visible, mouse clicks stay clean. */
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--accent-blue);
+      outline-offset: 3px;
+      border-radius: 8px;
     }
 
     .ambient-mesh {
@@ -115,6 +148,7 @@
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border-subtle);
+      padding-top: env(safe-area-inset-top, 0px);
     }
 
     .top-header-inner {
@@ -125,6 +159,14 @@
       align-items: center;
       justify-content: space-between;
       gap: 1.5rem;
+      min-width: 0;
+    }
+
+    .header-brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: 0;
     }
 
     .brand-group {
@@ -159,6 +201,9 @@
       font-weight: 800;
       color: var(--text-white);
       letter-spacing: -0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     /* ── SLIDING TABS IN HEADER (ẢNH 1 - DI CHUYỂN MƯỢT MÀ KHI NHẤN) ── */
@@ -171,6 +216,9 @@
       border-radius: 9999px;
       padding: 4px;
       user-select: none;
+      max-width: 100%;
+      min-width: 0;
+      flex-shrink: 0;
     }
 
     .nav-pill-slider {
@@ -192,6 +240,7 @@
       position: relative;
       z-index: 2;
       padding: 0.45rem 1.15rem;
+      min-height: 36px;
       font-size: 0.8125rem;
       font-weight: 600;
       color: var(--text-muted);
@@ -203,6 +252,11 @@
       border: none;
       background: transparent;
       font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-width: 0;
     }
 
     .nav-tab-link.active {
@@ -212,6 +266,10 @@
 
     .nav-tab-link:hover {
       color: var(--text-white);
+    }
+
+    .tab-label-short {
+      display: none;
     }
 
     .mobile-menu-btn {
@@ -234,10 +292,11 @@
       z-index: 10;
       max-width: 1260px;
       margin: 0 auto;
-      padding: 2.5rem 1.5rem 6rem;
+      padding: 2.5rem clamp(1rem, 4vw, 1.5rem) 6rem;
       display: flex;
       align-items: flex-start;
       gap: 3.5rem;
+      min-width: 0;
     }
 
     /* ── LEFT SIDEBAR ── */
@@ -245,10 +304,22 @@
       width: 270px;
       flex-shrink: 0;
       position: sticky;
-      top: 5rem;
-      max-height: calc(100vh - 6rem);
+      top: calc(var(--header-h) + 1.25rem);
+      max-height: calc(100dvh - var(--header-h) - 2.5rem);
       overflow-y: auto;
+      overscroll-behavior: contain;
       padding-right: 0.5rem;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
     }
 
     .sidebar-panel-view {
@@ -286,6 +357,7 @@
       align-items: center;
       gap: 0.65rem;
       padding: 0.5rem 0.75rem;
+      min-height: 40px;
       border-radius: 0.5rem;
       font-size: 0.875rem;
       font-weight: 500;
@@ -323,6 +395,7 @@
     .main-content {
       flex: 1;
       min-width: 0;
+      width: 100%;
       max-width: 820px;
     }
 
@@ -355,19 +428,22 @@
     }
 
     .hero-title {
-      font-size: 2.75rem;
+      font-size: clamp(1.65rem, 5.2vw, 2.75rem);
       font-weight: 900;
       color: var(--text-white);
       letter-spacing: -0.035em;
       line-height: 1.15;
       margin-bottom: 1rem;
+      overflow-wrap: anywhere;
     }
 
     /* Meta Badge with SVG Icon */
     .meta-badge {
       display: inline-flex;
       align-items: center;
+      flex-wrap: wrap;
       gap: 0.5rem;
+      max-width: 100%;
       padding: 0.35rem 0.85rem;
       background: rgba(255, 255, 255, 0.035);
       border: 1px solid var(--border-subtle);
@@ -375,6 +451,7 @@
       font-size: 0.75rem;
       color: var(--text-sub);
       margin-bottom: 2rem;
+      overflow-wrap: anywhere;
     }
 
     .meta-icon-svg {
@@ -402,15 +479,17 @@
     }
 
     .tos-section {
-      scroll-margin-top: 5.5rem;
+      scroll-margin-top: calc(var(--header-h) + 1.5rem);
       position: relative;
+      min-width: 0;
     }
 
     .section-header-row {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 0.85rem;
       margin-bottom: 1rem;
+      min-width: 0;
     }
 
     .number-badge {
@@ -430,20 +509,27 @@
     }
 
     .section-title {
-      font-size: 1.35rem;
+      font-size: clamp(1.12rem, 3.6vw, 1.35rem);
       font-weight: 800;
       color: var(--text-white);
       letter-spacing: -0.015em;
       line-height: 1.3;
+      min-width: 0;
+      overflow-wrap: anywhere;
+      padding-top: 0.2rem;
     }
 
     .section-anchor-btn {
       opacity: 0;
       color: var(--text-dim);
       text-decoration: none;
-      font-size: 1rem;
+      font-size: 1.1rem;
+      line-height: 1;
       margin-left: 0.35rem;
+      padding: 0.3rem;
+      border-radius: 6px;
       transition: all 0.15s ease;
+      flex-shrink: 0;
     }
 
     .tos-section:hover .section-anchor-btn {
@@ -464,6 +550,8 @@
       font-size: 0.9375rem;
       color: var(--text-main);
       line-height: 1.65;
+      overflow-wrap: anywhere;
+      min-width: 0;
     }
 
     .rules-list-item::before {
@@ -486,6 +574,7 @@
       padding: 1.25rem 1.35rem;
       margin: 1rem 0;
       transition: border-color 0.15s ease;
+      min-width: 0;
     }
 
     .rule-card:hover {
@@ -498,8 +587,10 @@
       color: var(--text-white);
       margin-bottom: 0.75rem;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 0.55rem;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
     }
 
     .icon-badge {
@@ -533,6 +624,7 @@
       display: flex;
       align-items: flex-start;
       gap: 0.85rem;
+      min-width: 0;
     }
 
     .callout-icon {
@@ -546,6 +638,8 @@
       font-weight: 600;
       color: #fef3c7;
       line-height: 1.55;
+      min-width: 0;
+      overflow-wrap: anywhere;
     }
 
     /* Formula Box for Refund Calculation */
@@ -579,7 +673,9 @@
       border-radius: 0.5rem;
       border: 1px solid rgba(255, 255, 255, 0.08);
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       white-space: nowrap;
+      max-width: 100%;
     }
 
     .feedback-channel-badge {
@@ -614,12 +710,15 @@
       display: flex;
       flex-direction: column;
       gap: 1rem;
+      min-width: 0;
     }
 
     .promo-link-btn {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 0.5rem;
+      min-height: 42px;
       padding: 0.65rem 1.25rem;
       background: rgba(255, 255, 255, 0.07);
       border: 1px solid rgba(255, 255, 255, 0.14);
@@ -627,9 +726,11 @@
       color: #fff;
       font-size: 0.8125rem;
       font-weight: 700;
+      text-align: center;
       text-decoration: none;
       transition: all 0.18s ease;
       align-self: flex-start;
+      max-width: 100%;
     }
 
     .promo-link-btn:hover {
@@ -641,8 +742,8 @@
     .video-wrapper {
       position: relative;
       width: 100%;
-      padding-bottom: 56.25%;
-      height: 0;
+      aspect-ratio: 16 / 9;
+      height: auto;
       border-radius: 0.85rem;
       overflow: hidden;
       border: 1px solid var(--border-strong);
@@ -662,7 +763,8 @@
     .site-footer {
       border-top: 1px solid var(--border-subtle);
       background: #090a0d;
-      padding: 3rem 1.5rem;
+      padding: 3rem clamp(1rem, 4vw, 1.5rem);
+      padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px));
       color: var(--text-muted);
       font-size: 0.8125rem;
     }
@@ -675,19 +777,25 @@
       justify-content: space-between;
       align-items: center;
       gap: 1.5rem;
+      min-width: 0;
     }
 
     .footer-links {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
-      gap: 1.5rem;
+      gap: 1rem 1.5rem;
       list-style: none;
+      padding: 0;
     }
 
     .footer-link {
       color: var(--text-sub);
       text-decoration: none;
       transition: color 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
     }
 
     .footer-link:hover {
@@ -696,8 +804,9 @@
 
     .toast {
       position: fixed;
-      bottom: 2rem;
-      right: 2rem;
+      bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+      right: calc(2rem + env(safe-area-inset-right, 0px));
+      max-width: calc(100vw - 2rem);
       background: #1c1d26;
       border: 1px solid var(--border-strong);
       color: var(--text-white);
@@ -709,6 +818,7 @@
       z-index: 1000;
       transform: translateY(100px);
       opacity: 0;
+      pointer-events: none;
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -717,20 +827,60 @@
       opacity: 1;
     }
 
-    /* ── MOBILE CATEGORY CHIPS BAR (EXACT MENU PARITY) ── */
+    /* ── BACK TO TOP (long reading pages on touch devices) ── */
+    .back-to-top {
+      position: fixed;
+      right: calc(1.1rem + env(safe-area-inset-right, 0px));
+      bottom: calc(1.1rem + env(safe-area-inset-bottom, 0px));
+      width: 44px;
+      height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(28, 29, 38, 0.92);
+      border: 1px solid var(--border-strong);
+      color: var(--text-white);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      cursor: pointer;
+      z-index: 90;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(12px) scale(0.92);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    }
+
+    .back-to-top.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+    }
+
+    .back-to-top:active {
+      transform: scale(0.94);
+    }
+
+    /* ── MOBILE / TABLET SECTION CHIPS BAR ── */
     .mobile-category-bar {
       display: none;
       overflow-x: auto;
+      overflow-y: hidden;
       scrollbar-width: none;
       gap: 0.5rem;
-      padding: 0.65rem 0.25rem 0.75rem;
-      margin: -0.25rem 0 1.5rem 0;
+      padding: 0.55rem 0.25rem 0.65rem;
+      margin: -0.35rem 0 1.35rem 0;
       -webkit-overflow-scrolling: touch;
       scroll-behavior: smooth;
+      scroll-snap-type: x proximity;
+      scroll-padding-inline: 0.25rem;
+      overscroll-behavior-x: contain;
+      touch-action: pan-x;
       position: sticky;
-      top: 5.75rem;
+      top: var(--header-h);
       z-index: 40;
-      background: rgba(12, 13, 18, 0.94);
+      background: rgba(12, 13, 18, 0.97);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -744,6 +894,7 @@
       border: 1px solid rgba(255, 255, 255, 0.08);
       color: var(--text-sub);
       padding: 0.45rem 0.85rem;
+      min-height: 38px;
       border-radius: 9999px;
       font-size: 0.78125rem;
       font-weight: 600;
@@ -754,6 +905,7 @@
       gap: 0.4rem;
       text-decoration: none;
       flex-shrink: 0;
+      scroll-snap-align: center;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .mobile-cat-pill:active {
@@ -786,11 +938,52 @@
       border-color: rgba(88, 101, 242, 0.6);
     }
 
+    /* ── RESPONSIVE: LARGE TABLET / SMALL LAPTOP ── */
+    @media (max-width: 1180px) {
+      .layout-wrapper {
+        gap: 2.5rem;
+      }
+      .sidebar {
+        width: 240px;
+      }
+    }
+
+    /* ── RESPONSIVE: TABLET PORTRAIT & BELOW — sidebar collapses to chips ── */
+    @media (max-width: 1024px) {
+      .sidebar {
+        display: none !important;
+      }
+      .mobile-menu-btn {
+        display: none !important;
+      }
+      .mobile-category-bar {
+        display: flex !important;
+      }
+      .layout-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+        max-width: 880px;
+        padding: 1rem calc(var(--page-pad) + env(safe-area-inset-right, 0px)) 4.5rem calc(var(--page-pad) + env(safe-area-inset-left, 0px));
+        gap: 0;
+      }
+      .main-content {
+        max-width: 100%;
+        width: 100%;
+      }
+      .mobile-category-bar {
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 0.85rem;
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+      }
+      .tos-section {
+        scroll-margin-top: calc(var(--header-h) + var(--chips-h) + 0.75rem);
+      }
+    }
+
+    /* ── RESPONSIVE: PHONE / SMALL TABLET HEADER ── */
     @media (max-width: 900px) {
       .top-header {
-        position: sticky;
-        top: 0;
-        padding: 0.5rem 0.85rem;
+        padding: 0.5rem clamp(0.7rem, 3vw, 0.85rem);
       }
       .top-header-inner {
         flex-direction: column;
@@ -802,7 +995,9 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: 0.75rem;
         width: 100%;
+        min-width: 0;
       }
       .nav-tabs-wrapper {
         width: 100%;
@@ -812,29 +1007,15 @@
         box-sizing: border-box;
       }
       .nav-tab-link {
-        flex: 1;
+        flex: 1 1 0;
         text-align: center;
         padding: 0.38rem 0.35rem;
         font-size: 0.75rem;
+        min-height: 38px;
       }
-      .mobile-category-bar {
-        display: flex !important;
-        top: 5.65rem;
-      }
-      .sidebar {
-        display: none !important;
-      }
-      .mobile-menu-btn {
-        display: none !important;
-      }
-      .layout-wrapper {
-        flex-direction: column;
-        padding: 0.75rem 0.85rem 4rem;
-        gap: 1rem;
-      }
-      .hero-title {
-        font-size: 2rem;
-        line-height: 1.15;
+      .nav-pill-slider {
+        top: 3px;
+        bottom: 3px;
       }
       .rule-card {
         padding: 1rem;
@@ -848,15 +1029,13 @@
         gap: 0.5rem;
       }
       .rules-list-item {
-        font-size: 0.84rem;
+        font-size: 0.875rem;
         line-height: 1.6;
       }
     }
 
+    /* ── RESPONSIVE: PHONE ── */
     @media (max-width: 640px) {
-      .hero-title {
-        font-size: 1.65rem;
-      }
       .brand-name {
         font-size: 0.95rem;
       }
@@ -864,56 +1043,1759 @@
         width: 2rem;
         height: 2rem;
       }
-      .section-title {
-        font-size: 1.15rem;
+      .brand-group {
+        gap: 0.55rem;
+      }
+      .header-discord-badge {
+        padding: 0.32rem 0.6rem;
+      }
+      .header-discord-badge span {
+        font-size: 0.7rem;
+      }
+      .content-eyebrow {
+        font-size: 0.6875rem;
+        letter-spacing: 0.08em;
+      }
+      .hero-title {
+        margin-bottom: 0.75rem;
+      }
+      .meta-badge {
+        font-size: 0.7rem;
+        padding: 0.35rem 0.7rem;
+        margin-bottom: 1.5rem;
+        border-radius: 0.85rem;
+        line-height: 1.45;
+      }
+      .section-divider {
+        margin: 1.75rem 0;
+      }
+      .section-header-row {
+        gap: 0.65rem;
       }
       .number-badge {
         width: 2rem;
         height: 2rem;
         font-size: 0.75rem;
+        border-radius: 0.45rem;
+      }
+      .rule-card {
+        padding: 0.95rem;
+        margin: 0.85rem 0;
+      }
+      .rule-card-title {
+        font-size: 0.9rem;
+      }
+      .callout-box {
+        padding: 0.85rem 0.9rem;
+        gap: 0.6rem;
+      }
+      .callout-content {
+        font-size: 0.84rem;
+      }
+      .promo-checker-box {
+        padding: 1rem;
+      }
+      .promo-link-btn {
+        align-self: stretch;
+        width: 100%;
+      }
+      .mobile-cat-pill {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.75rem;
+      }
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      .footer-links {
+        gap: 0.5rem 1.1rem;
+      }
+      .toast {
+        left: calc(1rem + env(safe-area-inset-left, 0px));
+        right: calc(1rem + env(safe-area-inset-right, 0px));
+        bottom: calc(4.75rem + env(safe-area-inset-bottom, 0px));
+        max-width: none;
+        text-align: center;
+      }
+    }
+
+    /* ── RESPONSIVE: VERY NARROW PHONES ── */
+    @media (max-width: 480px) {
+      .tab-label-full {
+        display: none;
+      }
+      .tab-label-short {
+        display: inline;
+      }
+      .nav-tab-link {
+        padding: 0.38rem 0.2rem;
+        font-size: 0.72rem;
+        letter-spacing: -0.01em;
       }
       .header-discord-badge span {
-        font-size: 0.7rem;
+        display: none;
       }
+      .header-discord-badge {
+        padding: 0.42rem;
+        border-radius: 50%;
+      }
+      .meta-badge {
+        display: flex;
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 380px) {
+      :root {
+        --page-pad: 0.7rem;
+      }
+      .nav-tab-link {
+        font-size: 0.66rem;
+      }
+      .mobile-cat-pill {
+        font-size: 0.7rem;
+        padding: 0.38rem 0.65rem;
+      }
+      .rules-list-item {
+        font-size: 0.84rem;
+      }
+    }
+
+    /* ── TOUCH DEVICES: section anchors are always reachable ── */
+    @media (hover: none), (pointer: coarse) {
+      .section-anchor-btn {
+        opacity: 0.55;
+      }
+      .tos-section:hover .section-anchor-btn {
+        opacity: 0.55;
+      }
+    }
+
+    /* ── RESPECT USERS WHO PREFER LESS MOTION ── */
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .nav-pill-slider {
+        transition: none !important;
+      }
+    }
+    /* ══════════════════════════════════════════════════════════════════
+       PADE · SILVER CHROME DOCS LAYER
+       Palette discipline: void / graphite / silver.
+       No neon, no RGB light shows, no purple SaaS gradients.
+       ══════════════════════════════════════════════════════════════════ */
+    :root {
+      --void: #050506;
+      --ink: #0b0b0e;
+      --graphite: #131317;
+      --steel: #1c1c22;
+      --elevated: #212128;
+      --line: #2a2a32;
+      --line-soft: rgba(255, 255, 255, 0.06);
+      --line-strong: rgba(255, 255, 255, 0.14);
+      --white: #fbfbfd;
+      --off-white: #edeef2;
+      --text-2: #b8b9c2;
+      --ash: #85868f;
+      --silver-accent: #d0d3d9;
+      --silver-dim: #9a9da5;
+      --silver-deep: #6a6d75;
+      --glow-soft: rgba(208, 211, 217, 0.1);
+      --glow-mid: rgba(208, 211, 217, 0.18);
+      --glow-strong: rgba(255, 255, 255, 0.3);
+      --shadow-deep: 0 26px 64px -30px rgba(0, 0, 0, 0.95);
+      --grad-silver: linear-gradient(180deg, #ffffff 0%, #e7e8ec 44%, #a7aab2 100%);
+      --grad-panel: linear-gradient(180deg, rgba(24, 24, 30, 0.92) 0%, rgba(11, 11, 14, 0.96) 100%);
+      --grad-line: linear-gradient(120deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 42%, rgba(208, 211, 217, 0.16) 100%);
+      --ease-out-quint: cubic-bezier(0.16, 1, 0.3, 1);
+      --font-display: "Outfit", "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+
+      /* Legacy aliases — the original sheet now inherits the brand palette. */
+      --bg-base: var(--void);
+      --bg-surface: var(--ink);
+      --bg-surface-elevated: var(--graphite);
+      --bg-sidebar-pill: var(--steel);
+      --bg-badge: var(--graphite);
+      --border-subtle: var(--line-soft);
+      --border-strong: var(--line-strong);
+      --border-focus: rgba(208, 211, 217, 0.5);
+      --text-white: var(--white);
+      --text-main: var(--off-white);
+      --text-sub: var(--text-2);
+      --text-muted: var(--ash);
+      --text-dim: #5c5f68;
+      --accent-amber: #d9b877;
+      --accent-amber-bg: rgba(217, 184, 119, 0.06);
+      --accent-amber-border: rgba(217, 184, 119, 0.22);
+      --accent-blue: var(--silver-dim);
+      --accent-red: #d98d8d;
+      --accent-green: #9ed3b4;
+    }
+
+    body {
+      background-color: var(--void);
+      color: var(--off-white);
+      text-rendering: optimizeLegibility;
+    }
+
+    ::selection {
+      background: rgba(208, 211, 217, 0.24);
+      color: #ffffff;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--void);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, var(--steel), var(--line));
+      border-radius: 9999px;
+      border: 2px solid var(--void);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, var(--line), var(--silver-deep));
+    }
+
+    /* ── AMBIENT: static silver wash, no full-page blur ── */
+    .ambient-mesh {
+      background:
+        radial-gradient(ellipse 90% 60% at 50% -15%, rgba(208, 211, 217, 0.1), transparent 70%),
+        radial-gradient(circle at 82% 22%, rgba(255, 255, 255, 0.03), transparent 45%),
+        radial-gradient(circle at 12% 62%, rgba(154, 157, 165, 0.05), transparent 48%);
+    }
+
+    .reading-progress {
+      height: 2px;
+      background: linear-gradient(90deg, rgba(208, 211, 217, 0) 0%, var(--silver-dim) 55%, #ffffff 100%);
+      box-shadow: 0 0 12px rgba(208, 211, 217, 0.35);
+    }
+
+    /* ── SKIP LINK ── */
+    .skip-link {
+      position: fixed;
+      top: -80px;
+      left: 1rem;
+      z-index: 200;
+      padding: 0.6rem 0.9rem;
+      border-radius: 0.6rem;
+      background: var(--grad-silver);
+      color: var(--void);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: top 0.2s var(--ease-out-quint);
+    }
+    .skip-link:focus {
+      top: calc(0.75rem + env(safe-area-inset-top, 0px));
+    }
+
+    /* ── HEADER ── */
+    .top-header {
+      background: linear-gradient(180deg, rgba(13, 13, 17, 0.9) 0%, rgba(8, 8, 11, 0.94) 100%);
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .top-header::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 1px;
+      background: var(--grad-line);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .brand-group {
+      gap: 0.8rem;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 2.4rem;
+      height: 2.4rem;
+      padding: 2px;
+      border-radius: 50%;
+      background: var(--grad-line);
+      box-shadow: 0 10px 26px -16px rgba(0, 0, 0, 0.95);
+      flex-shrink: 0;
+    }
+    .brand-mark img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid rgba(0, 0, 0, 0.6);
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      min-width: 0;
+      line-height: 1.05;
+    }
+    .brand-name {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: var(--grad-silver);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-sub {
+      font-size: 0.5625rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--silver-deep);
+      white-space: nowrap;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    .icon-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      height: 2.35rem;
+      min-width: 2.35rem;
+      padding: 0 0.65rem;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--line-soft);
+      color: var(--silver-dim);
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    }
+    .icon-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.06);
+      border-color: var(--line-strong);
+    }
+    .icon-btn kbd {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      padding: 0.1rem 0.3rem;
+      border-radius: 4px;
+      border: 1px solid var(--line);
+      background: rgba(0, 0, 0, 0.35);
+      color: var(--silver-deep);
+    }
+
+    .header-discord-badge {
+      background: rgba(255, 255, 255, 0.03);
+      border-color: var(--line-soft);
+      color: var(--silver-accent);
+      min-height: 2.35rem;
+    }
+    .header-discord-badge:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: var(--line-strong);
+      color: #ffffff;
+    }
+
+    /* ── NAV TABS: silver slider ── */
+    .nav-tabs-wrapper {
+      background: rgba(255, 255, 255, 0.03);
+      border-color: var(--line-soft);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+    }
+    .nav-pill-slider {
+      background: var(--grad-silver);
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.7) inset,
+        0 8px 20px -12px rgba(208, 211, 217, 0.55);
+    }
+    .nav-tab-link {
+      letter-spacing: 0.01em;
+    }
+    .nav-tabs-wrapper.has-slider .nav-tab-link.active {
+      color: var(--void);
+      font-weight: 700;
+    }
+
+    /* ── HERO ── */
+    .doc-hero {
+      position: relative;
+      padding-top: 0.15rem;
+      min-width: 0;
+    }
+    .doc-hero::before {
+      content: "";
+      position: absolute;
+      top: -2.5rem;
+      left: -1.5rem;
+      width: 22rem;
+      height: 14rem;
+      max-width: 100%;
+      background: radial-gradient(ellipse at 30% 40%, rgba(208, 211, 217, 0.08), transparent 68%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    .doc-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.95rem;
+      font-size: 0.625rem;
+      font-weight: 700;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--silver-dim);
+    }
+    .doc-kicker::before {
+      content: "";
+      width: 22px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--silver-dim));
+    }
+    .doc-title {
+      margin: 0 0 0.9rem;
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5.2vw, 3.15rem);
+      font-weight: 800;
+      line-height: 1.03;
+      letter-spacing: -0.04em;
+      background: linear-gradient(180deg, #ffffff 0%, #e9eaee 46%, #a9acb4 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      overflow-wrap: anywhere;
+    }
+    .doc-lead {
+      max-width: 62ch;
+      margin: 0 0 1.35rem;
+      color: var(--text-2);
+      font-size: 0.96rem;
+      line-height: 1.7;
+    }
+    .doc-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 0.8rem;
+      margin-bottom: 1.5rem;
+      color: var(--ash);
+      font-size: 0.75rem;
+    }
+    .doc-meta__item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .doc-meta__item svg {
+      color: var(--silver-deep);
+      flex-shrink: 0;
+    }
+    .doc-meta__sep {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--silver-deep);
+    }
+    .doc-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      margin-bottom: 0.35rem;
+    }
+
+    /* ── CONTROLS ── */
+    .pade-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      min-height: 40px;
+      padding: 0.55rem 1rem;
+      border-radius: 0.7rem;
+      border: 1px solid transparent;
+      font-family: inherit;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: transform 0.2s var(--ease-out-quint), box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+    }
+    .pade-btn:active {
+      transform: scale(0.97);
+    }
+    .pade-btn-primary {
+      background: var(--grad-silver);
+      color: var(--void);
+      border-color: rgba(255, 255, 255, 0.6);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.7) inset,
+        0 10px 26px -14px rgba(208, 211, 217, 0.5);
+    }
+    .pade-btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.85) inset,
+        0 14px 30px -14px rgba(208, 211, 217, 0.6);
+    }
+    .pade-btn-ghost {
+      background: rgba(255, 255, 255, 0.03);
+      border-color: var(--line-soft);
+      color: var(--off-white);
+    }
+    .pade-btn-ghost:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.06);
+      border-color: var(--line-strong);
+      color: #ffffff;
+    }
+    .pade-btn kbd {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      padding: 0.1rem 0.32rem;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 0, 0, 0.35);
+      background: rgba(0, 0, 0, 0.08);
+      color: inherit;
+      opacity: 0.7;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 286px;
+    }
+    .sidebar-progress {
+      height: 2px;
+      margin: 0 0.75rem 1.1rem;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+    }
+    .sidebar-progress span {
+      display: block;
+      width: 0;
+      height: 100%;
+      background: var(--grad-silver);
+      transition: width 0.12s linear;
+    }
+    .sidebar-heading {
+      color: var(--silver-deep);
+      font-size: 0.625rem;
+      letter-spacing: 0.16em;
+    }
+    .sidebar-nav-link {
+      position: relative;
+      color: var(--ash);
+      border: 1px solid transparent;
+      border-radius: 0.6rem;
+    }
+    .sidebar-nav-link::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 2px;
+      height: 18px;
+      border-radius: 2px;
+      background: var(--grad-silver);
+      opacity: 0;
+      transform: translateY(-50%) scaleY(0.3);
+      transition: opacity 0.2s ease, transform 0.25s var(--ease-out-quint);
+    }
+    .sidebar-nav-link:hover {
+      color: var(--off-white);
+      background: rgba(255, 255, 255, 0.035);
+    }
+    .sidebar-nav-link.active {
+      color: #ffffff;
+      background: linear-gradient(180deg, rgba(33, 33, 40, 0.9) 0%, rgba(19, 19, 23, 0.9) 100%);
+      border-color: var(--line-soft);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+    }
+    .sidebar-nav-link.active::before {
+      opacity: 1;
+      transform: translateY(-50%) scaleY(1);
+    }
+    .sidebar-nav-link .nav-dot {
+      background: var(--silver-deep);
+    }
+    .sidebar-nav-link.active .nav-dot {
+      background: #ffffff;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+    }
+
+    /* ── SECTIONS ── */
+    .section-divider {
+      border-top: 1px solid transparent;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14) 22%, rgba(208, 211, 217, 0.28) 50%, rgba(255, 255, 255, 0.14) 78%, transparent);
+      opacity: 0.55;
+      margin: 2.5rem 0;
+    }
+    .number-badge {
+      width: 2.4rem;
+      height: 2.4rem;
+      border-radius: 0.65rem;
+      background: linear-gradient(180deg, rgba(28, 28, 34, 0.92) 0%, rgba(11, 11, 14, 0.92) 100%);
+      border-color: var(--line);
+      color: var(--silver-dim);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      letter-spacing: -0.022em;
+    }
+    .section-anchor-btn {
+      color: var(--silver-deep);
+      border-radius: 6px;
+    }
+    .section-anchor-btn:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .rules-list {
+      gap: 0.7rem;
+    }
+    .rules-list-item {
+      padding-left: 1.35rem;
+      color: var(--text-2);
+    }
+    .rules-list-item::before {
+      content: "";
+      top: 0.62em;
+      left: 0.25rem;
+      width: 5px;
+      height: 5px;
+      border-radius: 1.5px;
+      background: var(--silver-deep);
+      transform: rotate(45deg);
+    }
+    .rules-list-item strong {
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    /* ── CARDS: gradient hairline + pointer spotlight ── */
+    .rule-card {
+      position: relative;
+      overflow: hidden;
+      padding: 1.35rem 1.5rem;
+      border-radius: 1rem;
+      border: 1px solid transparent;
+      background: var(--grad-panel) padding-box, var(--grad-line) border-box;
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.02) inset,
+        0 10px 30px -24px rgba(0, 0, 0, 0.9);
+      transition: transform 0.32s var(--ease-out-quint), box-shadow 0.32s ease, background 0.32s ease;
+    }
+    .rule-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, 0.08), transparent 62%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .rule-card:hover {
+        transform: translateY(-3px);
+        background:
+          linear-gradient(180deg, rgba(30, 30, 37, 0.96) 0%, rgba(14, 14, 18, 0.98) 100%) padding-box,
+          linear-gradient(120deg, rgba(255, 255, 255, 0.3) 0%, rgba(208, 211, 217, 0.14) 48%, rgba(255, 255, 255, 0.26) 100%) border-box;
+        box-shadow:
+          0 1px 0 rgba(255, 255, 255, 0.04) inset,
+          var(--shadow-deep),
+          0 0 34px -14px var(--glow-mid);
+      }
+      .rule-card:hover::before {
+        opacity: 1;
+      }
+    }
+    .rule-card-title {
+      gap: 0.7rem;
+      font-size: 0.975rem;
+    }
+    .icon-badge {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 0.55rem;
+      background: linear-gradient(180deg, rgba(33, 33, 40, 0.95) 0%, rgba(15, 15, 19, 0.95) 100%);
+      border-color: var(--line);
+      color: var(--silver-accent);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset;
+    }
+    .icon-badge.text-cyan,
+    .icon-badge.text-purple,
+    .icon-badge.text-amber,
+    .icon-badge.text-pink,
+    .icon-badge.text-yellow,
+    .icon-badge.text-blue,
+    .icon-badge.text-green,
+    .icon-badge.text-red {
+      color: var(--silver-accent);
+      background: linear-gradient(180deg, rgba(33, 33, 40, 0.95) 0%, rgba(15, 15, 19, 0.95) 100%);
+      border-color: var(--line);
+    }
+
+    /* ── CALLOUT / FORMULA / PROMO / VIDEO ── */
+    .callout-box {
+      background: linear-gradient(180deg, rgba(217, 184, 119, 0.055) 0%, rgba(11, 11, 14, 0.6) 100%);
+      border: 1px solid var(--accent-amber-border);
+      border-left: 2px solid var(--accent-amber);
+      border-radius: 0.9rem;
+      padding: 1rem 1.15rem;
+    }
+    .callout-content {
+      color: #e9e2d2;
+      font-weight: 500;
+    }
+    .callout-content strong {
+      color: #ffffff;
+    }
+    .formula-box {
+      background: var(--grad-panel);
+      border: 1px solid var(--line);
+      border-radius: 0.9rem;
+    }
+    .formula-title {
+      color: var(--silver-dim);
+    }
+    .formula-code {
+      background: rgba(5, 5, 6, 0.65);
+      border-color: var(--line-soft);
+      color: var(--off-white);
+    }
+    .promo-checker-box {
+      background: var(--grad-panel);
+      border: 1px solid var(--line);
+      border-radius: 1rem;
+      box-shadow: 0 14px 34px -28px rgba(0, 0, 0, 0.95);
+    }
+    .promo-link-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: var(--line-strong);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+    }
+    .promo-link-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(208, 211, 217, 0.35);
+    }
+    .video-wrapper {
+      border-color: var(--line-strong);
+      background: #000000;
+      box-shadow:
+        0 20px 50px -30px rgba(0, 0, 0, 0.95),
+        0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+    }
+
+    /* ── MOBILE / TABLET CHIPS ── */
+    .mobile-category-bar {
+      background: rgba(9, 9, 12, 0.96);
+      border-color: var(--line-soft);
+      border-radius: 0.9rem;
+      box-shadow: 0 12px 30px -22px rgba(0, 0, 0, 0.95);
+    }
+    .mobile-cat-pill {
+      background: rgba(255, 255, 255, 0.03);
+      border-color: var(--line-soft);
+      color: var(--ash);
+    }
+    .mobile-cat-pill:hover {
+      color: #ffffff;
+      border-color: var(--line-strong);
+    }
+    .mobile-cat-pill.active {
+      background: var(--grad-silver);
+      border-color: rgba(255, 255, 255, 0.55);
+      color: var(--void);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.7) inset,
+        0 6px 18px -10px rgba(208, 211, 217, 0.45);
+    }
+
+    /* ── COPYABLE ID CHIP ── */
+    .doc-id {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.05rem 0.4rem;
+      margin: 0 0.05rem;
+      border-radius: 0.35rem;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--silver-accent);
+      font-family: var(--font-mono);
+      font-size: 0.86em;
+      font-weight: 600;
+      cursor: pointer;
+      vertical-align: baseline;
+      transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+    .doc-id:hover {
+      color: #ffffff;
+      border-color: var(--line-strong);
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .doc-id svg {
+      opacity: 0.6;
+      flex-shrink: 0;
+    }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      background: linear-gradient(180deg, rgba(5, 5, 6, 0) 0%, rgba(0, 0, 0, 0.35) 100%);
+      border-top: 1px solid var(--line-soft);
+    }
+    .site-footer p:first-child {
+      font-family: var(--font-display);
+      letter-spacing: -0.01em;
+    }
+    .footer-link {
+      color: var(--ash);
+    }
+    .footer-link:hover {
+      color: #ffffff;
+    }
+
+    /* ── TOAST / BACK TO TOP ── */
+    .toast {
+      background: linear-gradient(180deg, rgba(18, 18, 23, 0.98) 0%, rgba(9, 9, 12, 0.98) 100%);
+      border-color: var(--line-strong);
+      box-shadow: var(--shadow-deep), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+    }
+    .back-to-top {
+      background: linear-gradient(180deg, rgba(33, 33, 40, 0.94) 0%, rgba(15, 15, 19, 0.94) 100%);
+      border-color: var(--line-strong);
+      color: var(--silver-accent);
+    }
+    .back-to-top:hover {
+      color: #ffffff;
+      border-color: rgba(208, 211, 217, 0.4);
+      box-shadow: 0 10px 30px -12px rgba(208, 211, 217, 0.35);
+    }
+
+    /* ── COMMAND PALETTE ── */
+    body.cmdk-open {
+      overflow: hidden;
+    }
+    .cmdk {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: min(13vh, 7rem) 1rem 2rem;
+    }
+    .cmdk[hidden] {
+      display: none;
+    }
+    .cmdk__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(3, 3, 5, 0.72);
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+    }
+    .cmdk__panel {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      width: min(620px, 100%);
+      max-height: min(70vh, 560px);
+      overflow: hidden;
+      border-radius: 1rem;
+      border: 1px solid transparent;
+      background:
+        linear-gradient(180deg, rgba(18, 18, 23, 0.99) 0%, rgba(9, 9, 12, 0.99) 100%) padding-box,
+        linear-gradient(140deg, rgba(255, 255, 255, 0.24) 0%, rgba(208, 211, 217, 0.08) 46%, rgba(255, 255, 255, 0.18) 100%) border-box;
+      box-shadow: var(--shadow-deep), 0 0 70px -34px rgba(208, 211, 217, 0.38);
+      animation: cmdkIn 0.22s var(--ease-out-quint);
+    }
+    @keyframes cmdkIn {
+      from { opacity: 0; transform: translateY(-8px) scale(0.985); }
+      to { opacity: 1; transform: none; }
+    }
+    .cmdk__search {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid var(--line-soft);
+      color: var(--silver-dim);
+    }
+    .cmdk__search input {
+      flex: 1;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: #ffffff;
+      font-family: inherit;
+      font-size: 0.95rem;
+    }
+    .cmdk__search input::placeholder {
+      color: var(--silver-deep);
+    }
+    .cmdk__list {
+      list-style: none;
+      margin: 0;
+      padding: 0.4rem;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+    .cmdk__group {
+      padding: 0.55rem 0.75rem 0.3rem;
+      font-size: 0.625rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--silver-deep);
+    }
+    .cmdk__item {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.6rem 0.7rem;
+      border-radius: 0.6rem;
+      color: var(--text-2);
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    .cmdk__item:hover,
+    .cmdk__item[aria-selected="true"] {
+      background: rgba(255, 255, 255, 0.06);
+      color: #ffffff;
+    }
+    .cmdk__num {
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      color: var(--silver-deep);
+      min-width: 1.4rem;
+    }
+    .cmdk__tab {
+      margin-left: auto;
+      padding: 0.1rem 0.45rem;
+      border: 1px solid var(--line-soft);
+      border-radius: 9999px;
+      font-size: 0.625rem;
+      color: var(--silver-deep);
+      white-space: nowrap;
+    }
+    .cmdk__empty {
+      padding: 1.2rem 0.8rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--ash);
+    }
+    .cmdk__hint {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 1rem;
+      padding: 0.55rem 1rem;
+      border-top: 1px solid var(--line-soft);
+      font-size: 0.6875rem;
+      color: var(--silver-deep);
+    }
+    .cmdk__hint kbd {
+      padding: 0.05rem 0.3rem;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.35);
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+    }
+    .cmdk__close {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.9rem;
+      height: 1.9rem;
+      flex-shrink: 0;
+      border: 1px solid var(--line-soft);
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--silver-dim);
+      cursor: pointer;
+      transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+    .cmdk__close:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.07);
+      border-color: var(--line-strong);
+    }
+
+    /* ── SCROLL REVEAL (JS progressive enhancement only) ── */
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.5s var(--ease-out-quint), transform 0.5s var(--ease-out-quint);
+    }
+    [data-reveal].is-in {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── RESPONSIVE REFINEMENTS ── */
+    @media (max-width: 1024px) {
+      .doc-title {
+        font-size: clamp(1.9rem, 5.6vw, 2.6rem);
+      }
+      .doc-hero::before {
+        left: -0.5rem;
+      }
+      .mobile-category-bar {
+        border-radius: 0.9rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .brand-mark {
+        width: 2.1rem;
+        height: 2.1rem;
+      }
+      .brand-name {
+        font-size: 0.95rem;
+      }
+      .doc-title {
+        font-size: clamp(1.75rem, 8.6vw, 2.25rem);
+      }
+      .doc-lead {
+        font-size: 0.9rem;
+        line-height: 1.65;
+      }
+      .doc-kicker {
+        font-size: 0.5625rem;
+        letter-spacing: 0.2em;
+        margin-bottom: 0.75rem;
+      }
+      .doc-actions {
+        width: 100%;
+        gap: 0.5rem;
+      }
+      .doc-actions .pade-btn {
+        flex: 1 1 calc(50% - 0.25rem);
+      }
+      .doc-actions .pade-btn-primary {
+        flex-basis: 100%;
+      }
+      .doc-meta {
+        font-size: 0.7rem;
+        margin-bottom: 1.25rem;
+      }
+      .rule-card {
+        padding: 1rem;
+        border-radius: 0.85rem;
+      }
+      .rule-card-title {
+        font-size: 0.9rem;
+      }
+      .mobile-cat-pill {
+        color: var(--ash);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .brand-sub {
+        display: none;
+      }
+      .icon-btn {
+        width: 2.2rem;
+        height: 2.2rem;
+        min-width: 2.2rem;
+        padding: 0;
+      }
+      .icon-btn kbd {
+        display: none;
+      }
+      .header-actions {
+        gap: 0.4rem;
+      }
+      .doc-actions .pade-btn {
+        font-size: 0.78rem;
+        padding: 0.5rem 0.8rem;
+      }
+      .cmdk {
+        padding: 4.5rem 0.6rem 1rem;
+      }
+      .cmdk__panel {
+        max-height: calc(100dvh - 6rem);
+      }
+    }
+
+    @media (hover: none), (pointer: coarse) {
+      .rule-card:hover {
+        transform: none;
+      }
+    }
+
+    /* ── PRINT: clean paper version of the docs ── */
+    @media print {
+      .top-header,
+      .sidebar,
+      .sidebar-progress,
+      .mobile-category-bar,
+      .back-to-top,
+      .toast,
+      .cmdk,
+      .reading-progress,
+      .ambient-mesh,
+      .site-footer,
+      .doc-actions,
+      .section-anchor-btn,
+      .skip-link {
+        display: none !important;
+      }
+      body {
+        background: #ffffff !important;
+        color: #111111 !important;
+      }
+      .layout-wrapper {
+        display: block;
+        max-width: none;
+        padding: 0;
+      }
+      .main-content {
+        max-width: none;
+      }
+      .tab-panel-view {
+        display: none !important;
+      }
+      .tab-panel-view.active {
+        display: block !important;
+      }
+      .doc-title {
+        background: none;
+        color: #111111;
+        -webkit-text-fill-color: #111111;
+      }
+      .doc-lead,
+      .doc-meta,
+      .section-title,
+      .rule-card-title,
+      .rules-list-item,
+      .callout-content {
+        color: #111111 !important;
+      }
+      .rules-list-item strong {
+        color: #000000 !important;
+      }
+      .rule-card,
+      .callout-box,
+      .promo-checker-box,
+      .formula-box {
+        background: #ffffff !important;
+        border: 1px solid #cccccc !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+      }
+      /* Code + pills would otherwise send a solid ink block to the printer. */
+      .formula-code,
+      .number-badge,
+      .icon-badge,
+      .doc-id {
+        background: #ffffff !important;
+        border: 1px solid #cccccc !important;
+        color: #111111 !important;
+        box-shadow: none !important;
+      }
+      [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+      .section-divider {
+        background: #dddddd !important;
+        opacity: 1;
+      }
+      a {
+        color: #111111 !important;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+      .cmdk__panel {
+        animation: none;
+      }
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+       PADE · DOCS EXTRAS
+       Theme switch, command palette commands, progress ring, section
+       focus flash, sidebar read times and the shortcut sheet.
+       ══════════════════════════════════════════════════════════════════ */
+
+    /* ── THEME TOGGLE ── */
+    .theme-toggle .icon-moon {
+      display: none;
+    }
+    html[data-theme="light"] .theme-toggle .icon-sun {
+      display: none;
+    }
+    html[data-theme="light"] .theme-toggle .icon-moon {
+      display: block;
+    }
+
+    /* ── SIDEBAR READ-TIME BADGE ── */
+    .nav-time {
+      margin-left: auto;
+      padding-left: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      font-weight: 500;
+      color: var(--silver-deep);
+      opacity: 0.85;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+    .sidebar-nav-link.active .nav-time {
+      color: var(--off-white);
+      opacity: 0.92;
+    }
+
+    /* ── BACK-TO-TOP PROGRESS RING ── */
+    .back-to-top {
+      overflow: visible;
+    }
+    .back-to-top__ring {
+      position: absolute;
+      inset: -5px;
+      width: calc(100% + 10px);
+      height: calc(100% + 10px);
+      transform: rotate(-90deg);
+      pointer-events: none;
+    }
+    .back-to-top__track,
+    .back-to-top__meter {
+      fill: none;
+      stroke-width: 2;
+    }
+    .back-to-top__track {
+      stroke: var(--line-strong);
+    }
+    .back-to-top__meter {
+      stroke: var(--silver-accent);
+      stroke-linecap: round;
+      stroke-dasharray: 119.4;
+      stroke-dashoffset: 119.4;
+      transition: stroke-dashoffset 0.15s linear;
+    }
+
+    /* ── SECTION FOCUS FLASH (after jumping from the palette / sidebar) ── */
+    @keyframes padeSectionFlash {
+      0%   { box-shadow: 0 0 0 0 rgba(208, 211, 217, 0); }
+      18%  { box-shadow: 0 0 0 3px var(--glow-mid); }
+      100% { box-shadow: 0 0 0 0 rgba(208, 211, 217, 0); }
+    }
+    .tos-section.is-flashing {
+      border-radius: 1rem;
+      animation: padeSectionFlash 1.6s var(--ease-out-quint) 1;
+    }
+
+    /* ── COMMAND PALETTE: COMMAND ROWS ── */
+    .cmdk__icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: none;
+      width: 1.4rem;
+      color: var(--silver-deep);
+    }
+    .cmdk__item:hover .cmdk__icon,
+    .cmdk__item[aria-selected="true"] .cmdk__icon {
+      color: var(--silver-accent);
+    }
+    .cmdk__key {
+      margin-left: auto;
+      padding: 0.1rem 0.45rem;
+      border: 1px solid var(--line);
+      border-radius: 0.35rem;
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      color: var(--silver-deep);
+      white-space: nowrap;
+    }
+
+    /* ── SHORTCUT SHEET ── */
+    @keyframes padeSheetIn {
+      from { opacity: 0; transform: translateY(10px) scale(0.985); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .kbd-sheet {
+      position: fixed;
+      inset: 0;
+      z-index: 160;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+    }
+    .kbd-sheet[hidden] {
+      display: none;
+    }
+    .kbd-sheet__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(3, 3, 5, 0.72);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    .kbd-sheet__panel {
+      position: relative;
+      width: min(27rem, 100%);
+      padding: 1.1rem 1.2rem 1.2rem;
+      border: 1px solid var(--line-soft);
+      border-radius: 1rem;
+      background: var(--grad-panel);
+      box-shadow: var(--shadow-deep);
+      animation: padeSheetIn 0.24s var(--ease-out-quint) both;
+    }
+    .kbd-sheet__title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.9rem;
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+    .kbd-sheet__list {
+      display: grid;
+      gap: 0.5rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .kbd-sheet__list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-size: 0.8125rem;
+      color: var(--text-2);
+    }
+    .kbd-sheet__keys {
+      display: inline-flex;
+      gap: 0.25rem;
+    }
+    .kbd-sheet__keys kbd {
+      min-width: 1.5rem;
+      padding: 0.1rem 0.4rem;
+      border: 1px solid var(--line);
+      border-radius: 0.35rem;
+      background: rgba(255, 255, 255, 0.04);
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+      text-align: center;
+      color: var(--silver-accent);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .kbd-sheet__panel,
+      .tos-section.is-flashing {
+        animation: none !important;
+      }
+      .back-to-top__meter {
+        transition: none !important;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .theme-toggle {
+        display: none;
+      }
+      .kbd-sheet__panel {
+        padding: 1rem 0.95rem 1.05rem;
+      }
+    }
+
+    /* ══════════════════════════════════════════════════════════════════
+       LIGHT THEME — "SILVER PAPER"
+       Same monochrome brand (void / graphite / silver), inverted.
+       Every rule below is scoped to html[data-theme="light"], so the
+       verified dark design is untouched.
+       ══════════════════════════════════════════════════════════════════ */
+    html[data-theme="light"] {
+      --void: #f1f2f4;
+      --ink: #ffffff;
+      --graphite: #f7f8fa;
+      --steel: #e9ebef;
+      --elevated: #ffffff;
+      --line: #dbdde3;
+      --line-soft: rgba(12, 12, 16, 0.09);
+      --line-strong: rgba(12, 12, 16, 0.17);
+      --white: #0b0b0e;
+      --off-white: #14151a;
+      --text-2: #45474f;
+      --ash: #5f626b;
+      --silver-accent: #3f424a;
+      --silver-dim: #4f525a;
+      --silver-deep: #83868f;
+      --glow-soft: rgba(12, 12, 16, 0.06);
+      --glow-mid: rgba(12, 12, 16, 0.12);
+      --glow-strong: rgba(12, 12, 16, 0.22);
+      --shadow-deep: 0 24px 60px -34px rgba(12, 12, 20, 0.32);
+      --grad-silver: linear-gradient(180deg, #1c1d22 0%, #3b3d45 46%, #6d707a 100%);
+      --grad-panel: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(243, 244, 247, 0.97) 100%);
+      --grad-line: linear-gradient(120deg, rgba(12, 12, 16, 0.16) 0%, rgba(12, 12, 16, 0.03) 42%, rgba(12, 12, 16, 0.14) 100%);
+      --border-focus: rgba(12, 12, 16, 0.45);
+      --accent-amber: #9a7420;
+      --accent-amber-bg: rgba(154, 116, 32, 0.08);
+      --accent-amber-border: rgba(154, 116, 32, 0.28);
+      --accent-red: #a8322c;
+      --accent-green: #1f7a44;
+      color-scheme: light;
+    }
+
+    html[data-theme="light"] ::selection {
+      background: rgba(12, 12, 16, 0.16);
+      color: #0b0b0e;
+    }
+
+    /* Ambient wash — warm paper light instead of the void. */
+    html[data-theme="light"] .ambient-mesh {
+      background:
+        radial-gradient(ellipse 90% 60% at 50% -15%, rgba(255, 255, 255, 0.95), transparent 70%),
+        radial-gradient(circle at 82% 22%, rgba(120, 124, 136, 0.12), transparent 45%),
+        radial-gradient(circle at 12% 62%, rgba(140, 144, 156, 0.1), transparent 48%);
+    }
+    html[data-theme="light"] .reading-progress {
+      background: linear-gradient(90deg, rgba(12, 12, 16, 0) 0%, var(--silver-dim) 55%, #16171c 100%);
+      box-shadow: 0 0 12px rgba(12, 12, 16, 0.2);
+    }
+
+    /* Header */
+    html[data-theme="light"] .top-header {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(246, 247, 249, 0.94) 100%);
+      box-shadow: 0 1px 0 rgba(12, 12, 16, 0.05);
+    }
+    html[data-theme="light"] .brand-mark {
+      box-shadow: 0 10px 24px -16px rgba(12, 12, 20, 0.45);
+    }
+    html[data-theme="light"] .brand-mark img {
+      border-color: rgba(12, 12, 16, 0.12);
+    }
+    html[data-theme="light"] .nav-tabs-wrapper {
+      background: rgba(12, 12, 16, 0.04);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+    }
+    html[data-theme="light"] .nav-pill-slider {
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.55) inset, 0 8px 20px -14px rgba(12, 12, 20, 0.45);
+    }
+    html[data-theme="light"] .icon-btn {
+      background: rgba(12, 12, 16, 0.04);
+    }
+    html[data-theme="light"] .icon-btn:hover {
+      color: #0b0b0e;
+      background: rgba(12, 12, 16, 0.08);
+    }
+    html[data-theme="light"] .icon-btn kbd {
+      background: rgba(12, 12, 16, 0.07);
+    }
+    html[data-theme="light"] .header-discord-badge {
+      background: rgba(12, 12, 16, 0.04);
+    }
+    html[data-theme="light"] .header-discord-badge:hover {
+      color: #0b0b0e;
+      background: rgba(12, 12, 16, 0.08);
+    }
+
+    /* Sidebar */
+    html[data-theme="light"] .sidebar::-webkit-scrollbar-thumb {
+      background: rgba(12, 12, 16, 0.2);
+    }
+    html[data-theme="light"] .sidebar-progress {
+      background: rgba(12, 12, 16, 0.08);
+    }
+    html[data-theme="light"] .sidebar-nav-link:hover {
+      background: rgba(12, 12, 16, 0.045);
+    }
+    html[data-theme="light"] .sidebar-nav-link.active {
+      color: #0b0b0e;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(232, 234, 239, 0.98) 100%);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 6px 16px -14px rgba(12, 12, 20, 0.4);
+    }
+    html[data-theme="light"] .sidebar-nav-link.active .nav-dot {
+      background: #16171c;
+      box-shadow: 0 0 8px rgba(12, 12, 16, 0.4);
+    }
+
+    /* Hero */
+    html[data-theme="light"] .doc-hero::before {
+      background: radial-gradient(ellipse at 30% 40%, rgba(12, 12, 16, 0.05), transparent 68%);
+    }
+    html[data-theme="light"] .doc-title {
+      background: linear-gradient(180deg, #16171c 0%, #34363e 46%, #6b6e78 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    /* Controls */
+    html[data-theme="light"] .pade-btn-primary {
+      border-color: rgba(12, 12, 16, 0.45);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.22) inset, 0 10px 24px -16px rgba(12, 12, 20, 0.6);
+    }
+    html[data-theme="light"] .pade-btn-primary:hover {
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 14px 28px -16px rgba(12, 12, 20, 0.62);
+    }
+    html[data-theme="light"] .pade-btn-ghost {
+      background: rgba(12, 12, 16, 0.035);
+    }
+    html[data-theme="light"] .pade-btn-ghost:hover {
+      color: #0b0b0e;
+      background: rgba(12, 12, 16, 0.07);
+    }
+    html[data-theme="light"] .pade-btn kbd {
+      border-color: rgba(12, 12, 16, 0.22);
+      background: rgba(12, 12, 16, 0.06);
+    }
+
+    /* Sections & cards */
+    html[data-theme="light"] .section-divider {
+      background: linear-gradient(90deg, transparent, rgba(12, 12, 16, 0.12) 22%, rgba(12, 12, 16, 0.22) 50%, rgba(12, 12, 16, 0.12) 78%, transparent);
+    }
+    html[data-theme="light"] .number-badge {
+      background: linear-gradient(180deg, #ffffff 0%, #eceef2 100%);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 4px 12px -10px rgba(12, 12, 20, 0.45);
+    }
+    html[data-theme="light"] .section-anchor-btn:hover {
+      color: #0b0b0e;
+      background: rgba(12, 12, 16, 0.06);
+    }
+    html[data-theme="light"] .rules-list-item strong {
+      color: #0b0b0e;
+    }
+    html[data-theme="light"] .rule-card {
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, 0 10px 30px -26px rgba(12, 12, 20, 0.45);
+    }
+    html[data-theme="light"] .rule-card::before {
+      background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 0%), rgba(12, 12, 16, 0.05), transparent 62%);
+    }
+    html[data-theme="light"] .rule-card:hover {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.99) 0%, rgba(240, 241, 245, 0.99) 100%) padding-box,
+        linear-gradient(120deg, rgba(12, 12, 16, 0.22) 0%, rgba(12, 12, 16, 0.06) 48%, rgba(12, 12, 16, 0.18) 100%) border-box;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset, var(--shadow-deep), 0 0 34px -18px var(--glow-mid);
+    }
+    html[data-theme="light"] .icon-badge {
+      background: linear-gradient(180deg, #ffffff 0%, #eceef2 100%);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+    }
+    html[data-theme="light"] .icon-badge.text-cyan { color: #0e6f86; }
+    html[data-theme="light"] .icon-badge.text-purple { color: #6d28a8; }
+    html[data-theme="light"] .icon-badge.text-amber { color: #96610a; }
+    html[data-theme="light"] .icon-badge.text-pink { color: #b0276b; }
+    html[data-theme="light"] .icon-badge.text-yellow { color: #8a6b06; }
+    html[data-theme="light"] .icon-badge.text-blue { color: #1f4fc4; }
+    html[data-theme="light"] .icon-badge.text-green { color: #14713c; }
+    html[data-theme="light"] .icon-badge.text-red { color: #a52a24; }
+
+    /* Callouts, code & promo panels */
+    html[data-theme="light"] .callout-box {
+      background: linear-gradient(180deg, rgba(154, 116, 32, 0.09) 0%, rgba(255, 255, 255, 0.92) 100%);
+    }
+    html[data-theme="light"] .callout-content {
+      color: #4a4132;
+    }
+    html[data-theme="light"] .callout-content strong {
+      color: #14151a;
+    }
+    html[data-theme="light"] .formula-box {
+      background: #f6f7f9;
+    }
+    html[data-theme="light"] .formula-code {
+      color: #16171c;
+      background: rgba(12, 12, 16, 0.045);
+    }
+    html[data-theme="light"] .promo-checker-box {
+      background: linear-gradient(135deg, #ffffff 0%, #f0f1f4 100%);
+      box-shadow: 0 14px 34px -30px rgba(12, 12, 20, 0.4);
+    }
+    html[data-theme="light"] .promo-link-btn {
+      color: #14151a;
+      background: rgba(12, 12, 16, 0.045);
+      border-color: rgba(12, 12, 16, 0.16);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+    }
+    html[data-theme="light"] .promo-link-btn:hover {
+      color: #0b0b0e;
+      background: rgba(12, 12, 16, 0.09);
+      border-color: rgba(12, 12, 16, 0.28);
+    }
+
+    /* Mobile chips rail */
+    html[data-theme="light"] .mobile-category-bar {
+      background: rgba(247, 248, 250, 0.96);
+      box-shadow: 0 12px 30px -24px rgba(12, 12, 20, 0.4);
+    }
+    html[data-theme="light"] .mobile-cat-pill:not(.active) {
+      background: rgba(12, 12, 16, 0.04);
+    }
+    html[data-theme="light"] .mobile-cat-pill:hover {
+      color: #0b0b0e;
+    }
+    /* Re-assert the active pill: the rule above is one class more specific
+       than `.mobile-cat-pill.active` in the base sheet. */
+    html[data-theme="light"] .mobile-cat-pill.active {
+      background: var(--grad-silver);
+      border-color: rgba(12, 12, 16, 0.45);
+      color: var(--void);
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.28) inset,
+        0 6px 18px -10px rgba(12, 12, 20, 0.55);
+    }
+
+    /* Copyable ID chip */
+    html[data-theme="light"] .doc-id {
+      background: rgba(12, 12, 16, 0.05);
+    }
+    html[data-theme="light"] .doc-id:hover {
+      color: #0b0b0e;
+      background: rgba(12, 12, 16, 0.1);
+    }
+
+    /* Footer & overlays */
+    html[data-theme="light"] .site-footer {
+      background: linear-gradient(180deg, rgba(241, 242, 244, 0) 0%, rgba(12, 12, 16, 0.05) 100%);
+    }
+    html[data-theme="light"] .footer-link:hover {
+      color: #0b0b0e;
+    }
+    html[data-theme="light"] .toast {
+      color: #14151a;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.99) 0%, rgba(240, 241, 245, 0.99) 100%);
+      box-shadow: 0 12px 32px -18px rgba(12, 12, 20, 0.45), 0 0 0 1px var(--line-soft) inset;
+    }
+    html[data-theme="light"] .back-to-top {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(236, 238, 242, 0.98) 100%);
+      box-shadow: 0 10px 28px -18px rgba(12, 12, 20, 0.45);
+    }
+    html[data-theme="light"] .back-to-top:hover {
+      color: #0b0b0e;
+      border-color: rgba(12, 12, 16, 0.3);
+      box-shadow: 0 10px 30px -14px rgba(12, 12, 20, 0.4);
+    }
+    html[data-theme="light"] .kbd-sheet__backdrop {
+      background: rgba(20, 21, 26, 0.4);
+    }
+    html[data-theme="light"] .kbd-sheet__keys kbd {
+      background: rgba(12, 12, 16, 0.05);
+    }
+
+    /* Command palette */
+    html[data-theme="light"] .cmdk__backdrop {
+      background: rgba(20, 21, 26, 0.4);
+    }
+    html[data-theme="light"] .cmdk__panel {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.995) 0%, rgba(243, 244, 247, 0.995) 100%) padding-box,
+        linear-gradient(140deg, rgba(12, 12, 16, 0.2) 0%, rgba(12, 12, 16, 0.06) 46%, rgba(12, 12, 16, 0.16) 100%) border-box;
+      box-shadow: 0 26px 60px -34px rgba(12, 12, 20, 0.4), 0 0 70px -40px rgba(12, 12, 20, 0.28);
+    }
+    html[data-theme="light"] .cmdk__search input {
+      color: #0b0b0e;
+    }
+    html[data-theme="light"] .cmdk__item:hover,
+    html[data-theme="light"] .cmdk__item[aria-selected="true"] {
+      color: #0b0b0e;
+      background: rgba(12, 12, 16, 0.06);
+    }
+    html[data-theme="light"] .cmdk__hint kbd {
+      background: rgba(12, 12, 16, 0.06);
+    }
+    html[data-theme="light"] .cmdk__close {
+      background: rgba(12, 12, 16, 0.04);
+    }
+    html[data-theme="light"] .cmdk__close:hover {
+      color: #0b0b0e;
+      background: rgba(12, 12, 16, 0.08);
     }
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#docMain">Bỏ qua tới nội dung</a>
   <div class="reading-progress" id="readingProgress"></div>
   <div class="ambient-mesh"></div>
 
-  <!-- Header with Smooth Sliding Tabs (Parity với Menu) -->
+  <!-- Header -->
   <header class="top-header">
     <div class="top-header-inner">
       <div class="header-brand-wrap">
-        <a href="/" class="brand-group">
-          <div class="brand-avatar">
-            <img src="/assets/pade-guild-icon.png" alt="Pade Community" onerror="this.onerror=null;this.src='/assets/favicon.png';" />
-          </div>
-          <span class="brand-name">Pade Community</span>
+        <a href="/" class="brand-group" aria-label="Pade Community — trang chủ">
+          <span class="brand-mark">
+            <img src="/assets/pade-guild-icon.png" alt="" onerror="this.onerror=null;this.src='/assets/favicon.png';" />
+          </span>
+          <span class="brand-text">
+            <span class="brand-name">Pade Community</span>
+            <span class="brand-sub">Docs &amp; Policies</span>
+          </span>
         </a>
-        <a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" class="header-discord-badge">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028z"/></svg>
-          <span>discord.gg/pade</span>
-        </a>
+        <div class="header-actions">
+          <button type="button" class="icon-btn theme-toggle" data-theme-toggle aria-label="Đổi giao diện sáng / tối" title="Đổi giao diện sáng / tối" aria-pressed="false">
+            <svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>
+            <svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          </button>
+          <button type="button" class="icon-btn" data-open-palette aria-label="Tìm kiếm mục trong tài liệu" aria-keyshortcuts="Meta+K Control+K">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+            <kbd>⌘K</kbd>
+          </button>
+          <a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" class="header-discord-badge" aria-label="Tham gia Discord discord.gg/pade">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028z"/></svg>
+            <span>discord.gg/pade</span>
+          </a>
+        </div>
       </div>
 
-      <!-- Sliding Tabs Navigation (Di chuyển mượt mà khi nhấn) -->
-      <nav class="nav-tabs-wrapper" id="navTabsWrapper" aria-label="Main Navigation">
+      <!-- Sliding Tabs Navigation -->
+      <nav class="nav-tabs-wrapper" id="navTabsWrapper" aria-label="Tài liệu Pade">
         <div class="nav-pill-slider" id="navPillSlider"></div>
-        <a href="/rules" class="nav-tab-link active" data-tab="rules" data-path="/rules">Server Rules</a>
-        <a href="/tos" class="nav-tab-link" data-tab="tos" data-path="/tos">Terms of Service</a>
-        <a href="/tutorial" class="nav-tab-link" data-tab="tutorial" data-path="/tutorial">Tutorial</a>
+        <a href="/rules" class="nav-tab-link active" data-tab="rules" data-path="/rules"><span class="tab-label-full">Server Rules</span><span class="tab-label-short">Rules</span></a>
+        <a href="/tos" class="nav-tab-link" data-tab="tos" data-path="/tos"><span class="tab-label-full">Terms of Service</span><span class="tab-label-short">ToS</span></a>
+        <a href="/tutorial" class="nav-tab-link" data-tab="tutorial" data-path="/tutorial"><span class="tab-label-full">Tutorial</span><span class="tab-label-short">Tutorial</span></a>
       </nav>
     </div>
   </header>
-
-  <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
   <!-- Layout Wrapper -->
   <div class="layout-wrapper">
     <!-- Left Sidebar (Tự động thay đổi tương ứng với Tab) -->
     <aside class="sidebar" id="pageSidebar">
+      <div class="sidebar-progress" aria-hidden="true"><span id="sidebarProgressFill"></span></div>
       <!-- Sidebar Rules -->
       <div class="sidebar-panel-view active" data-tab-sidebar="rules">
         <div class="sidebar-group">
@@ -1050,7 +2932,7 @@
     </aside>
 
     <!-- Right Main Article Area -->
-    <main class="main-content">
+    <main class="main-content" id="docMain" tabindex="-1">
       <!-- ==================== TAB 1: SERVER RULES ==================== -->
       <div class="tab-panel-view active" data-tab-content="rules">
         <!-- Mobile Section Chips (Giống hệt Mobile Category Bar của Menu) -->
@@ -1066,15 +2948,39 @@
           </a>
         </div>
 
-        <span class="content-eyebrow">NỘI QUY CỘNG ĐỒNG</span>
-        <h1 class="hero-title">Server Rules</h1>
-
-        <div class="meta-badge">
-          <span class="meta-icon-svg">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-          </span>
-          <span>Cập nhật lần cuối: 2026 · <a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" class="meta-badge-link">discord.gg/pade</a></span>
-        </div>
+        <header class="doc-hero">
+          <span class="doc-kicker">Nội quy cộng đồng</span>
+          <h1 class="doc-title">Server Rules</h1>
+          <p class="doc-lead">Quy tắc ứng xử, quy trình mở ticket và thể lệ giveaway áp dụng cho toàn bộ thành viên Pade Community.</p>
+          <div class="doc-meta">
+            <span class="doc-meta__item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              Cập nhật 2026
+            </span>
+            <span class="doc-meta__sep" aria-hidden="true"></span>
+            <span class="doc-meta__item" data-reading-time>~2 phút đọc</span>
+            <span class="doc-meta__sep" aria-hidden="true"></span>
+            <span class="doc-meta__item" data-section-count>3 mục</span>
+          </div>
+          <div class="doc-actions">
+            <a class="pade-btn pade-btn-primary" href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028z"/></svg>
+              Tham gia Discord
+            </a>
+            <button type="button" class="pade-btn pade-btn-ghost" data-copy-page>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+              Copy liên kết
+            </button>
+            <button type="button" class="pade-btn pade-btn-ghost" data-open-palette>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+              Tìm mục
+            </button>
+            <button type="button" class="pade-btn pade-btn-ghost" data-print-page>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"></path><path d="M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8" rx="1"></rect></svg>
+              In trang
+            </button>
+          </div>
+        </header>
 
         <hr class="section-divider" />
 
@@ -1217,15 +3123,39 @@
           <a href="#policy-netflix" class="mobile-cat-pill"><span>Netflix</span></a>
         </div>
 
-        <span class="content-eyebrow">TERM OF SERVICE (TOS)</span>
-        <h1 class="hero-title">Điều Khoản Dịch Vụ</h1>
-
-        <div class="meta-badge">
-          <span class="meta-icon-svg">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-          </span>
-          <span>Quy định mua hàng chính thức · <a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" class="meta-badge-link">discord.gg/pade</a></span>
-        </div>
+        <header class="doc-hero">
+          <span class="doc-kicker">Điều khoản &amp; chính sách</span>
+          <h1 class="doc-title">Điều Khoản Dịch Vụ</h1>
+          <p class="doc-lead">Điều khoản mua hàng, bảo hành, hoàn tiền và chính sách riêng cho từng dịch vụ tại Pade Store.</p>
+          <div class="doc-meta">
+            <span class="doc-meta__item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              Cập nhật 2026
+            </span>
+            <span class="doc-meta__sep" aria-hidden="true"></span>
+            <span class="doc-meta__item" data-reading-time>~6 phút đọc</span>
+            <span class="doc-meta__sep" aria-hidden="true"></span>
+            <span class="doc-meta__item" data-section-count>10 mục</span>
+          </div>
+          <div class="doc-actions">
+            <a class="pade-btn pade-btn-primary" href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028z"/></svg>
+              Tham gia Discord
+            </a>
+            <button type="button" class="pade-btn pade-btn-ghost" data-copy-page>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+              Copy liên kết
+            </button>
+            <button type="button" class="pade-btn pade-btn-ghost" data-open-palette>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+              Tìm mục
+            </button>
+            <button type="button" class="pade-btn pade-btn-ghost" data-print-page>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"></path><path d="M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8" rx="1"></rect></svg>
+              In trang
+            </button>
+          </div>
+        </header>
 
         <hr class="section-divider" />
 
@@ -1495,15 +3425,39 @@
           <a href="#video-huong-dan" class="mobile-cat-pill"><span>Video hướng dẫn</span></a>
         </div>
 
-        <span class="content-eyebrow">HƯỚNG DẪN CHI TIẾT</span>
-        <h1 class="hero-title">Tutorial</h1>
-
-        <div class="meta-badge">
-          <span class="meta-icon-svg">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-          </span>
-          <span>Cập nhật lần cuối: 2026 · <a href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer" class="meta-badge-link">discord.gg/pade</a></span>
-        </div>
+        <header class="doc-hero">
+          <span class="doc-kicker">Hướng dẫn kích hoạt</span>
+          <h1 class="doc-title">Tutorial</h1>
+          <p class="doc-lead">Các bước kiểm tra điều kiện, bật 2FA và lấy mã dự phòng để kích hoạt Nitro Trial an toàn.</p>
+          <div class="doc-meta">
+            <span class="doc-meta__item">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              Cập nhật 2026
+            </span>
+            <span class="doc-meta__sep" aria-hidden="true"></span>
+            <span class="doc-meta__item" data-reading-time>~3 phút đọc</span>
+            <span class="doc-meta__sep" aria-hidden="true"></span>
+            <span class="doc-meta__item" data-section-count>4 mục</span>
+          </div>
+          <div class="doc-actions">
+            <a class="pade-btn pade-btn-primary" href="https://discord.gg/pade" target="_blank" rel="noopener noreferrer">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028z"/></svg>
+              Tham gia Discord
+            </a>
+            <button type="button" class="pade-btn pade-btn-ghost" data-copy-page>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+              Copy liên kết
+            </button>
+            <button type="button" class="pade-btn pade-btn-ghost" data-open-palette>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+              Tìm mục
+            </button>
+            <button type="button" class="pade-btn pade-btn-ghost" data-print-page>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"></path><path d="M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8" rx="1"></rect></svg>
+              In trang
+            </button>
+          </div>
+        </header>
 
         <hr class="section-divider" />
 
@@ -1536,9 +3490,9 @@
           </div>
 
           <div class="promo-checker-box">
-            <p style="font-size: 0.95rem; color: #fff; font-weight: 600; line-height: 1.6;">
+            <p style="font-size: 0.95rem; color: var(--text-white); font-weight: 600; line-height: 1.6;">
               Ấn vào link kiểm tra bên dưới, nếu Discord thông báo:<br />
-              <span style="color: #38bdf8; font-weight: 700;">"Xin lỗi, có vẻ như mã đã được đổi"</span> (Sorry, looks like this code has been redeemed)<br />
+              <span style="color: var(--silver-accent); font-weight: 700;">"Xin lỗi, có vẻ như mã đã được đổi"</span> (Sorry, looks like this code has been redeemed)<br />
               thì tài khoản của bạn <strong>hoàn toàn đủ điều kiện</strong> sử dụng Nitro Trial!
             </p>
             <a href="https://promos.discord.gg/HCxVfuJt9AbXzXtSw5yRnv9J" target="_blank" rel="noopener noreferrer" class="promo-link-btn">
@@ -1590,6 +3544,7 @@
             <iframe
               src="https://www.youtube-nocookie.com/embed/_yauX5pVC8o"
               title="Video hướng dẫn Discord Nitro Trial"
+              loading="lazy"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowfullscreen
             ></iframe>
@@ -1603,7 +3558,7 @@
   <footer class="site-footer">
     <div class="footer-inner">
       <div>
-        <p style="font-weight: 700; color: #fff; margin-bottom: 0.35rem;">Pade Community · Bản quyền © 2026</p>
+        <p style="font-weight: 700; color: var(--text-white); margin-bottom: 0.35rem;">Pade Community · Bản quyền © 2026</p>
         <p>Trung tâm tài liệu, nội quy và hướng dẫn dịch vụ khách hàng Pade Community.</p>
       </div>
       <ul class="footer-links">
@@ -1614,33 +3569,141 @@
     </div>
   </footer>
 
-  <div class="toast" id="toastBox">
+  <!-- Command palette — jump to any section across all three documents -->
+  <div class="cmdk" id="cmdk" hidden>
+    <div class="cmdk__backdrop" data-cmdk-close></div>
+    <div class="cmdk__panel" role="dialog" aria-modal="true" aria-label="Tìm mục trong tài liệu">
+      <div class="cmdk__search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <input id="cmdkInput" type="text" role="combobox" aria-expanded="true" aria-controls="cmdkList" aria-autocomplete="list" placeholder="Tìm mục — Rules, ToS, Tutorial…" autocomplete="off" spellcheck="false" />
+        <button type="button" class="cmdk__close" data-cmdk-close aria-label="Đóng tìm kiếm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+        </button>
+      </div>
+      <ul class="cmdk__list" id="cmdkList" role="listbox" aria-label="Kết quả tìm kiếm"></ul>
+      <div class="cmdk__hint">
+        <span><kbd>↑</kbd><kbd>↓</kbd> di chuyển</span>
+        <span><kbd>Enter</kbd> mở</span>
+        <span><kbd>Esc</kbd> đóng</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shortcut sheet — reachable with ? and from the command palette -->
+  <div class="kbd-sheet" id="kbdSheet" hidden>
+    <div class="kbd-sheet__backdrop" data-kbd-close></div>
+    <div class="kbd-sheet__panel" role="dialog" aria-modal="true" aria-label="Phím tắt và trợ giúp">
+      <div class="kbd-sheet__title">
+        <span>Phím tắt &amp; trợ giúp</span>
+        <button type="button" class="cmdk__close" data-kbd-close aria-label="Đóng bảng phím tắt">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+        </button>
+      </div>
+      <ul class="kbd-sheet__list">
+        <li><span>Tìm mục trong tài liệu</span><span class="kbd-sheet__keys"><kbd>⌘</kbd><kbd>K</kbd></span></li>
+        <li><span>Tìm mục nhanh</span><span class="kbd-sheet__keys"><kbd>/</kbd></span></li>
+        <li><span>Đổi giao diện sáng / tối</span><span class="kbd-sheet__keys"><kbd>Shift</kbd><kbd>D</kbd></span></li>
+        <li><span>In trang</span><span class="kbd-sheet__keys"><kbd>⌘</kbd><kbd>P</kbd></span></li>
+        <li><span>Về đầu trang</span><span class="kbd-sheet__keys"><kbd>g</kbd><kbd>g</kbd></span></li>
+        <li><span>Mở bảng phím tắt này</span><span class="kbd-sheet__keys"><kbd>?</kbd></span></li>
+      </ul>
+    </div>
+  </div>
+
+  <button class="back-to-top" id="backToTop" type="button" aria-label="Quay lại đầu trang" title="Quay lại đầu trang">
+    <svg class="back-to-top__ring" viewBox="0 0 44 44" aria-hidden="true">
+      <circle class="back-to-top__track" cx="22" cy="22" r="19"></circle>
+      <circle class="back-to-top__meter" id="backToTopMeter" cx="22" cy="22" r="19"></circle>
+    </svg>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+  </button>
+
+  <div class="toast" id="toastBox" role="status" aria-live="polite">
     <span>Đã sao chép liên kết!</span>
   </div>
 
   <script>
-    // ── SLIDING TABS WITH HARDWARE ACCELERATION ──
+    // ── SHARED ELEMENTS ──
+    const rootEl = document.documentElement;
+    const headerEl = document.querySelector('.top-header');
     const navWrapper = document.getElementById('navTabsWrapper');
     const navSlider = document.getElementById('navPillSlider');
     const tabLinks = document.querySelectorAll('.nav-tab-link');
     const tabPanels = document.querySelectorAll('.tab-panel-view');
     const sidebarPanels = document.querySelectorAll('.sidebar-panel-view');
+    const backToTopBtn = document.getElementById('backToTop');
+    const backToTopMeter = document.getElementById('backToTopMeter');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    // Keep the sticky offsets in sync with the real rendered header / chips bar.
+    function syncStickyMetrics() {
+      if (headerEl) {
+        rootEl.style.setProperty('--header-h', `${Math.round(headerEl.getBoundingClientRect().height)}px`);
+      }
+      const activeBar = document.querySelector('.tab-panel-view.active .mobile-category-bar');
+      const barVisible = activeBar && window.getComputedStyle(activeBar).display !== 'none';
+      rootEl.style.setProperty('--chips-h', barVisible ? `${Math.round(activeBar.getBoundingClientRect().height)}px` : '0px');
+    }
+
+    function stickyOffset() {
+      const headerH = headerEl ? headerEl.getBoundingClientRect().height : 0;
+      const activeBar = document.querySelector('.tab-panel-view.active .mobile-category-bar');
+      const barVisible = activeBar && window.getComputedStyle(activeBar).display !== 'none';
+      const barH = barVisible ? activeBar.getBoundingClientRect().height : 0;
+      return headerH + barH + 12;
+    }
+
+    function scrollToSection(hash, behavior) {
+      if (!hash || hash.charAt(0) !== '#') return false;
+      let targetEl = null;
+      try {
+        targetEl = document.querySelector(hash);
+      } catch (err) {
+        targetEl = null;
+      }
+      if (!targetEl) return false;
+      const top = targetEl.getBoundingClientRect().top + window.pageYOffset - stickyOffset();
+      window.scrollTo({ top: Math.max(0, top), behavior: behavior || 'smooth' });
+      flashSection(targetEl);
+      return true;
+    }
+
+    // Ring the section the reader just jumped to, so a deep link or a
+    // palette jump is instantly obvious.
+    let flashTimer = null;
+    function flashSection(el) {
+      if (!el || !el.classList || !el.classList.contains('tos-section') || reduceMotion.matches) return;
+      el.classList.remove('is-flashing');
+      void el.offsetWidth; // restart the animation
+      el.classList.add('is-flashing');
+      window.clearTimeout(flashTimer);
+      flashTimer = window.setTimeout(() => el.classList.remove('is-flashing'), 1800);
+    }
 
     function positionSlider(el) {
       if (!navWrapper || !navSlider || !el) return;
       const wrapRect = navWrapper.getBoundingClientRect();
       const elRect = el.getBoundingClientRect();
+      if (!elRect.width) return;
       navSlider.style.left = `${elRect.left - wrapRect.left}px`;
       navSlider.style.width = `${elRect.width}px`;
+      // Only paint the silver slider once it is actually measured, so a
+      // no-JS / pre-measure render never hides the active tab label.
+      navWrapper.classList.add('has-slider');
     }
 
-    function switchTab(tabName, updateHistory) {
+    function switchTab(tabName, updateHistory, options) {
       if (!tabName) return;
+      const opts = options || {};
       const targetBtn = document.querySelector(`.nav-tab-link[data-tab="${tabName}"]`);
       if (!targetBtn) return;
 
-      tabLinks.forEach(link => link.classList.remove('active'));
+      tabLinks.forEach(link => {
+        link.classList.remove('active');
+        link.removeAttribute('aria-current');
+      });
       targetBtn.classList.add('active');
+      targetBtn.setAttribute('aria-current', 'page');
       positionSlider(targetBtn);
 
       tabPanels.forEach(panel => {
@@ -1652,6 +3715,8 @@
         const isMatch = sb.getAttribute('data-tab-sidebar') === tabName;
         sb.classList.toggle('active', isMatch);
       });
+
+      revealInViewNow(document.querySelector('.tab-panel-view.active'));
 
       const targetPath = targetBtn.getAttribute('data-path') || `/${tabName}`;
       if (updateHistory) {
@@ -1669,7 +3734,11 @@
         document.title = 'Tutorial & Hướng Dẫn · Pade Store';
       }
 
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      syncStickyMetrics();
+      updateHeroMeta();
+      if (!opts.preserveScroll) {
+        window.scrollTo({ top: 0, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+      }
     }
 
     // Attach click and hover events to tab buttons
@@ -1680,6 +3749,9 @@
         switchTab(tab, true);
       });
       link.addEventListener('mouseenter', () => {
+        positionSlider(link);
+      });
+      link.addEventListener('focus', () => {
         positionSlider(link);
       });
     });
@@ -1701,11 +3773,11 @@
     });
 
     // Handle browser back/forward buttons
-    window.addEventListener('popstate', (e) => {
-      determineInitialTab(false);
+    window.addEventListener('popstate', () => {
+      determineInitialTab(false, true);
     });
 
-    function determineInitialTab(updateHistory) {
+    function determineInitialTab(updateHistory, preserveScroll) {
       const path = (window.location.pathname || '').toLowerCase();
       const host = (window.location.hostname || '').toLowerCase();
       let defaultTab = '<%= typeof activeTab !== "undefined" ? activeTab : "rules" %>';
@@ -1718,65 +3790,135 @@
         defaultTab = 'rules';
       }
 
-      switchTab(defaultTab, !!updateHistory);
+      switchTab(defaultTab, !!updateHistory, { preserveScroll: !!preserveScroll });
     }
 
-    // Initialize layout
-    window.addEventListener('DOMContentLoaded', () => {
-      determineInitialTab(false);
-    });
+    function initPage() {
+      syncStickyMetrics();
+      const initialHash = window.location.hash;
+      determineInitialTab(false, !!initialHash);
+      if (initialHash) {
+        // Wait for the target tab to be displayed before measuring it.
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => scrollToSection(initialHash, 'auto'));
+        });
+      }
+      updateScrollUi();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPage, { once: true });
+    } else {
+      initPage();
+    }
+
     window.addEventListener('load', () => {
+      syncStickyMetrics();
       const activeLink = document.querySelector('.nav-tab-link.active');
       if (activeLink) positionSlider(activeLink);
+      updateScrollUi();
     });
+
+    let resizeTimer = null;
     window.addEventListener('resize', () => {
+      syncStickyMetrics();
       const activeLink = document.querySelector('.nav-tab-link.active');
       if (activeLink) positionSlider(activeLink);
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(updateScrollUi, 120);
     });
-    if (document.fonts) {
+
+    window.addEventListener('orientationchange', () => {
+      window.setTimeout(() => {
+        syncStickyMetrics();
+        const activeLink = document.querySelector('.nav-tab-link.active');
+        if (activeLink) positionSlider(activeLink);
+        updateScrollUi();
+      }, 180);
+    });
+
+    if (window.ResizeObserver && headerEl) {
+      new ResizeObserver(syncStickyMetrics).observe(headerEl);
+    }
+
+    if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(() => {
+        syncStickyMetrics();
         const activeLink = document.querySelector('.nav-tab-link.active');
         if (activeLink) positionSlider(activeLink);
       });
     }
 
-    // Reading progress
-    window.addEventListener('scroll', () => {
-      const scrollTotal = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const progress = scrollTotal > 0 ? window.scrollY / scrollTotal : 0;
-      document.getElementById('readingProgress').style.transform = `scaleX(${progress})`;
-    }, { passive: true });
+    // ── SCROLL UI (reading progress + scrollspy + back-to-top) ──
+    function updateScrollUi() {
+      // Reading progress
+      const progressEl = document.getElementById('readingProgress');
+      const scrollTotal = rootEl.scrollHeight - rootEl.clientHeight;
+      const progress = scrollTotal > 0 ? Math.min(1, window.scrollY / scrollTotal) : 0;
+      if (progressEl) {
+        progressEl.style.transform = `scaleX(${progress})`;
+      }
+      if (backToTopMeter) {
+        backToTopMeter.style.strokeDashoffset = String(119.4 * (1 - progress));
+      }
 
-    // ScrollSpy for Active Sidebar Nav Item & Mobile Category Bar
-    window.addEventListener('scroll', () => {
+      // Back-to-top visibility
+      if (backToTopBtn) {
+        backToTopBtn.classList.toggle('show', window.scrollY > 640);
+      }
+
+      // ScrollSpy for active sidebar nav item & mobile chips
       const activePanel = document.querySelector('.tab-panel-view.active');
       if (!activePanel) return;
       const sections = activePanel.querySelectorAll('.tos-section');
+      if (!sections.length) return;
       const activeSidebar = document.querySelector('.sidebar-panel-view.active');
       const navItems = activeSidebar ? activeSidebar.querySelectorAll('.sidebar-nav-link') : [];
       const mobilePills = activePanel.querySelectorAll('.mobile-cat-pill');
 
+      const anchorLine = stickyOffset() + 12;
       let current = '';
-      const scrollPos = window.scrollY + 160;
       sections.forEach(sec => {
-        if (scrollPos >= sec.offsetTop && scrollPos < sec.offsetTop + sec.offsetHeight) {
+        if (sec.getBoundingClientRect().top <= anchorLine) {
           current = sec.getAttribute('id');
         }
       });
-      if (current) {
-        navItems.forEach(link => {
-          link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
-        });
-
-        // Mobile Category Bar syncing
-        mobilePills.forEach(pill => {
-          const match = pill.getAttribute('href') === `#${current}`;
-          pill.classList.toggle('active', match);
-          if (match && window.innerWidth <= 900) {
-            pill.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-          }
-        });
+      // At the very bottom of the document, highlight the last section.
+      if (window.innerHeight + window.scrollY >= rootEl.scrollHeight - 8) {
+        current = sections[sections.length - 1].getAttribute('id');
       }
+      if (!current) return;
+
+      navItems.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
+      });
+
+      mobilePills.forEach(pill => {
+        const match = pill.getAttribute('href') === `#${current}`;
+        pill.classList.toggle('active', match);
+        if (match && pill.parentElement && window.innerWidth <= 1024) {
+          const bar = pill.parentElement;
+          if (bar.scrollWidth > bar.clientWidth) {
+            const targetLeft = pill.offsetLeft - (bar.clientWidth - pill.offsetWidth) / 2;
+            bar.scrollTo({
+              left: Math.max(0, targetLeft),
+              behavior: reduceMotion.matches ? 'auto' : 'smooth'
+            });
+          }
+        }
+      });
+
+      updateSidebarMeter(activePanel);
+    }
+
+    let scrollTicking = false;
+    window.addEventListener('scroll', () => {
+      if (scrollTicking) return;
+      scrollTicking = true;
+      requestAnimationFrame(() => {
+        updateScrollUi();
+        scrollTicking = false;
+      });
     }, { passive: true });
 
     // Smooth click handler for mobile category pills
@@ -1785,15 +3927,7 @@
         const targetId = pill.getAttribute('href');
         if (targetId && targetId.startsWith('#')) {
           e.preventDefault();
-          const targetEl = document.querySelector(targetId);
-          if (targetEl) {
-            const headerOffset = 135;
-            const elementPosition = targetEl.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-            window.scrollTo({
-              top: offsetPosition,
-              behavior: 'smooth'
-            });
+          if (scrollToSection(targetId, reduceMotion.matches ? 'auto' : 'smooth')) {
             const parent = pill.parentElement;
             if (parent) {
               parent.querySelectorAll('.mobile-cat-pill').forEach(p => p.classList.remove('active'));
@@ -1804,16 +3938,611 @@
       });
     });
 
-    // Copy section link
-    function copySectionLink(hash, e) {
-      if (e) e.preventDefault();
-      const url = `${window.location.origin}${window.location.pathname}${hash}`;
-      navigator.clipboard.writeText(url).then(() => {
-        const toast = document.getElementById('toastBox');
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2000);
+    // Back to top
+    if (backToTopBtn) {
+      backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
       });
     }
+
+    // Copy section link (with fallback for older / non-secure contexts)
+    let toastTimer = null;
+    function showToast(message) {
+      const toast = document.getElementById('toastBox');
+      if (!toast) return;
+      const label = toast.querySelector('span');
+      if (label && typeof message === 'string' && message) {
+        label.textContent = message;
+      }
+      toast.classList.add('show');
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    function copyText(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(text);
+      }
+      return new Promise((resolve, reject) => {
+        const area = document.createElement('textarea');
+        area.value = text;
+        area.setAttribute('readonly', '');
+        area.style.position = 'fixed';
+        area.style.top = '-9999px';
+        document.body.appendChild(area);
+        area.select();
+        try {
+          document.execCommand('copy') ? resolve() : reject(new Error('copy failed'));
+        } catch (err) {
+          reject(err);
+        } finally {
+          document.body.removeChild(area);
+        }
+      });
+    }
+
+    function copySectionLink(hash, e) {
+      if (e) e.preventDefault();
+      let base = `${window.location.origin}${window.location.pathname}`;
+      const panel = e && e.currentTarget && e.currentTarget.closest ? e.currentTarget.closest('.tab-panel-view') : null;
+      const tab = panel ? panel.getAttribute('data-tab-content') : null;
+      if (tab) base = `${window.location.origin}/${tab}`;
+      const url = `${base}${hash}`;
+      copyText(url)
+        .then(() => showToast('Đã sao chép liên kết mục!'))
+        .catch(() => showToast('Không sao chép được liên kết.'));
+    }
+    // ══════════════════════════════════════════════════════════════════
+    // PREMIUM LAYER — hero stats, doc search palette, micro-interactions
+    // ══════════════════════════════════════════════════════════════════
+
+    const TAB_LABELS = { rules: 'Rules', tos: 'ToS', tutorial: 'Tutorial' };
+
+    function activeTabName() {
+      const link = document.querySelector('.nav-tab-link.active');
+      return link ? link.getAttribute('data-tab') : 'rules';
+    }
+
+    // ── Hero meta: reading time + section count, measured per tab ──
+    function updateHeroMeta() {
+      const panel = document.querySelector('.tab-panel-view.active');
+      if (!panel) return;
+      const hero = panel.querySelector('.doc-hero');
+      if (!hero) return;
+
+      const words = (panel.textContent || '').trim().split(/\s+/).filter(Boolean).length;
+      const minutes = Math.max(1, Math.round(words / 210));
+      const readingEl = hero.querySelector('[data-reading-time]');
+      if (readingEl) readingEl.textContent = `~${minutes} phút đọc`;
+
+      const countEl = hero.querySelector('[data-section-count]');
+      if (countEl) {
+        const total = panel.querySelectorAll('.tos-section').length;
+        countEl.textContent = `${total} mục`;
+      }
+    }
+
+    // ── Sidebar reading meter ──
+    const sidebarFill = document.getElementById('sidebarProgressFill');
+    function updateSidebarMeter(panel) {
+      if (!sidebarFill || !panel) return;
+      const top = panel.getBoundingClientRect().top + window.pageYOffset;
+      const height = Math.max(1, panel.offsetHeight);
+      const viewed = window.scrollY + window.innerHeight - top;
+      const ratio = Math.max(0, Math.min(1, viewed / height));
+      sidebarFill.style.width = `${(ratio * 100).toFixed(1)}%`;
+    }
+
+    // ── Pointer spotlight on surfaces (fine pointers only) ──
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      document.querySelectorAll('.rule-card').forEach(card => {
+        card.addEventListener('pointermove', (event) => {
+          const rect = card.getBoundingClientRect();
+          card.style.setProperty('--mx', `${event.clientX - rect.left}px`);
+          card.style.setProperty('--my', `${event.clientY - rect.top}px`);
+        });
+      });
+    }
+
+    // ── Scroll reveal (progressive enhancement; JS-off keeps everything visible) ──
+    function revealInViewNow(panel) {
+      if (!panel) return;
+      panel.querySelectorAll('[data-reveal]').forEach(el => {
+        if (el.classList.contains('is-in')) return;
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          // Reveal without animating: prevents a fade-in flash on tab switches.
+          el.style.transition = 'none';
+          el.classList.add('is-in');
+          requestAnimationFrame(() => { el.style.transition = ''; });
+        }
+      });
+    }
+
+    if ('IntersectionObserver' in window && !reduceMotion.matches) {
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-in');
+          revealObserver.unobserve(entry.target);
+        });
+      }, { rootMargin: '0px 0px -6% 0px', threshold: 0.04 });
+
+      document.querySelectorAll('.tab-panel-view .rule-card, .tab-panel-view .callout-box, .tab-panel-view .promo-checker-box, .tab-panel-view .video-wrapper').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        // Anything already on screen at boot stays visible — we only animate
+        // surfaces the reader scrolls down to, which avoids any first-paint flash.
+        if (rect.top < window.innerHeight && rect.bottom > 0) return;
+        el.setAttribute('data-reveal', '');
+        revealObserver.observe(el);
+      });
+    }
+
+    // ── Copyable Discord snowflake IDs (17–20 digits) ──
+    function enhanceCopyableIds() {
+      const scope = document.getElementById('docMain');
+      if (!scope || !window.NodeFilter) return;
+      const walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          if (!node.nodeValue || !/\b\d{17,20}\b/.test(node.nodeValue)) return NodeFilter.FILTER_REJECT;
+          const parent = node.parentElement;
+          if (!parent || parent.closest('script, style, a, button')) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+
+      const targets = [];
+      while (walker.nextNode()) targets.push(walker.currentNode);
+
+      targets.forEach(node => {
+        const parts = node.nodeValue.split(/(\b\d{17,20}\b)/);
+        if (parts.length < 3) return;
+        const frag = document.createDocumentFragment();
+        parts.forEach(part => {
+          if (/^\d{17,20}$/.test(part)) {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'doc-id';
+            btn.dataset.copy = part;
+            btn.title = 'Sao chép ID';
+            btn.setAttribute('aria-label', `Sao chép ID ${part}`);
+            const label = document.createElement('span');
+            label.textContent = part;
+            btn.appendChild(label);
+            btn.insertAdjacentHTML('beforeend', '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg>');
+            frag.appendChild(btn);
+          } else if (part) {
+            frag.appendChild(document.createTextNode(part));
+          }
+        });
+        node.parentNode.replaceChild(frag, node);
+      });
+    }
+
+    // ── Copy affordances: section IDs and page links ──
+    document.addEventListener('click', (event) => {
+      if (!(event.target instanceof Element)) return;
+      const copyTarget = event.target.closest('[data-copy]');
+      if (!copyTarget) return;
+      event.preventDefault();
+      copyText(copyTarget.dataset.copy)
+        .then(() => showToast('Đã sao chép ID!'))
+        .catch(() => showToast('Không sao chép được.'));
+    });
+
+    function copyPageLink() {
+      return copyText(window.location.href)
+        .then(() => showToast('Đã sao chép liên kết trang!'))
+        .catch(() => showToast('Không sao chép được liên kết.'));
+    }
+
+    document.querySelectorAll('[data-copy-page]').forEach(btn => {
+      btn.addEventListener('click', () => { copyPageLink(); });
+    });
+
+    document.querySelectorAll('.sidebar-nav-link').forEach(link => {
+      link.addEventListener('click', (event) => {
+        const href = link.getAttribute('href');
+        if (!href || href.charAt(0) !== '#') return;
+        event.preventDefault();
+        scrollToSection(href, reduceMotion.matches ? 'auto' : 'smooth');
+        try {
+          window.history.replaceState({ tab: activeTabName() }, '', href);
+        } catch (err) { /* ignore history limits */ }
+      });
+    });
+
+    // Arrow-key navigation across the top document tabs.
+    if (navWrapper) {
+      navWrapper.addEventListener('keydown', (event) => {
+        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+        const links = Array.from(tabLinks);
+        const index = links.indexOf(document.activeElement);
+        if (index === -1) return;
+        event.preventDefault();
+        const step = event.key === 'ArrowRight' ? 1 : -1;
+        links[(index + step + links.length) % links.length].focus();
+      });
+    }
+
+    // ── Command palette: search every section of all three documents ──
+    const cmdk = document.getElementById('cmdk');
+    const cmdkInput = document.getElementById('cmdkInput');
+    const cmdkList = document.getElementById('cmdkList');
+    let paletteIndex = [];
+    let paletteResults = [];
+    let paletteActive = -1;
+    let paletteReturnFocus = null;
+
+    // Palette commands — the palette doubles as a command bar.
+    const PALETTE_ICONS = {
+      theme: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"></path></svg>',
+      print: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"></path><path d="M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8" rx="1"></rect></svg>',
+      link: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>',
+      keys: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"></rect><path d="M7 10h.01"></path><path d="M11 10h.01"></path><path d="M15 10h.01"></path><path d="M7 14h10"></path></svg>',
+      discord: '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028z"/></svg>',
+      up: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"></path><path d="m5 12 7-7 7 7"></path></svg>'
+    };
+
+    const PALETTE_COMMANDS = [
+      { id: 'cmd-theme', title: 'Đổi giao diện sáng / tối', key: 'Shift D', icon: 'theme', run: () => toggleTheme() },
+      { id: 'cmd-print', title: 'In trang này', key: '⌘P', icon: 'print', run: () => window.print() },
+      { id: 'cmd-copy', title: 'Sao chép liên kết trang', key: '', icon: 'link', run: () => { copyPageLink(); } },
+      { id: 'cmd-shortcuts', title: 'Xem bảng phím tắt', key: '?', icon: 'keys', run: () => openShortcuts() },
+      { id: 'cmd-discord', title: 'Tham gia Discord Pade', key: '', icon: 'discord', run: () => window.open('https://discord.gg/pade', '_blank', 'noopener') },
+      { id: 'cmd-top', title: 'Về đầu trang', key: 'g g', icon: 'up', run: () => window.scrollTo({ top: 0, behavior: reduceMotion.matches ? 'auto' : 'smooth' }) }
+    ];
+
+    function normalizeSearch(value) {
+      return (value || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd')
+        .replace(/Đ/g, 'D')
+        .toLowerCase();
+    }
+
+    function buildPaletteIndex() {
+      paletteIndex = [];
+      document.querySelectorAll('.tab-panel-view').forEach(panel => {
+        const tab = panel.getAttribute('data-tab-content');
+        panel.querySelectorAll('.tos-section').forEach(section => {
+          const titleEl = section.querySelector('.section-title');
+          const numEl = section.querySelector('.number-badge');
+          paletteIndex.push({
+            id: section.id,
+            tab: tab,
+            num: numEl ? numEl.textContent.trim() : '',
+            title: (titleEl ? titleEl.textContent : section.id).replace(/\s+/g, ' ').trim()
+          });
+        });
+      });
+    }
+
+    function setPaletteActive(index) {
+      paletteActive = index;
+      cmdkList.querySelectorAll('.cmdk__item').forEach(el => {
+        const isActive = Number(el.dataset.index) === index;
+        el.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        if (!isActive) return;
+        const listRect = cmdkList.getBoundingClientRect();
+        const itemRect = el.getBoundingClientRect();
+        if (itemRect.top < listRect.top) cmdkList.scrollTop -= (listRect.top - itemRect.top);
+        else if (itemRect.bottom > listRect.bottom) cmdkList.scrollTop += (itemRect.bottom - listRect.bottom);
+      });
+    }
+
+    function movePalette(delta) {
+      if (!paletteResults.length) return;
+      setPaletteActive((paletteActive + delta + paletteResults.length) % paletteResults.length);
+    }
+
+    function choosePaletteResult(index) {
+      const item = paletteResults[index];
+      if (!item) return;
+      closePalette();
+      if (item.kind === 'command') {
+        requestAnimationFrame(() => {
+          if (typeof item.run === 'function') item.run();
+        });
+        return;
+      }
+      requestAnimationFrame(() => {
+        switchTab(item.tab, true, { preserveScroll: true });
+        requestAnimationFrame(() => {
+          scrollToSection(`#${item.id}`, reduceMotion.matches ? 'auto' : 'smooth');
+          try {
+            window.history.replaceState({ tab: item.tab }, '', `#${item.id}`);
+          } catch (err) { /* ignore history limits */ }
+        });
+      });
+    }
+
+    function renderPalette(query) {
+      if (!cmdkList) return;
+      const q = normalizeSearch(query.trim());
+      const matches = (item, label) => !q
+        || normalizeSearch(item.title).includes(q)
+        || normalizeSearch(label).includes(q)
+        || (item.num || '').toLowerCase().includes(q);
+
+      const sectionResults = paletteIndex
+        .map(item => ({ ...item, kind: 'section' }))
+        .filter(item => matches(item, TAB_LABELS[item.tab] || item.tab));
+      const commandResults = PALETTE_COMMANDS
+        .map(item => ({ ...item, kind: 'command' }))
+        .filter(item => matches(item, 'Lệnh'));
+
+      paletteResults = sectionResults.concat(commandResults);
+
+      cmdkList.innerHTML = '';
+      if (!paletteResults.length) {
+        const empty = document.createElement('li');
+        empty.className = 'cmdk__empty';
+        empty.textContent = 'Không tìm thấy mục phù hợp.';
+        cmdkList.appendChild(empty);
+        paletteActive = -1;
+        return;
+      }
+
+      let lastGroup = null;
+      paletteResults.forEach((item, index) => {
+        const groupName = item.kind === 'command' ? 'Lệnh' : (TAB_LABELS[item.tab] || item.tab);
+        if (groupName !== lastGroup) {
+          const group = document.createElement('li');
+          group.className = 'cmdk__group';
+          group.textContent = groupName;
+          cmdkList.appendChild(group);
+          lastGroup = groupName;
+        }
+        const row = document.createElement('li');
+        row.className = 'cmdk__item';
+        row.setAttribute('role', 'option');
+        row.dataset.index = String(index);
+
+        if (item.kind === 'command') {
+          const icon = document.createElement('span');
+          icon.className = 'cmdk__icon';
+          icon.innerHTML = PALETTE_ICONS[item.icon] || '';
+          const label = document.createElement('span');
+          label.textContent = item.title;
+          row.append(icon, label);
+          if (item.key) {
+            const key = document.createElement('span');
+            key.className = 'cmdk__key';
+            key.textContent = item.key;
+            row.appendChild(key);
+          }
+        } else {
+          const num = document.createElement('span');
+          num.className = 'cmdk__num';
+          num.textContent = item.num;
+          const label = document.createElement('span');
+          label.textContent = item.title;
+          const tag = document.createElement('span');
+          tag.className = 'cmdk__tab';
+          tag.textContent = TAB_LABELS[item.tab] || item.tab;
+          row.append(num, label, tag);
+        }
+
+        row.addEventListener('click', () => choosePaletteResult(index));
+        row.addEventListener('mousemove', () => setPaletteActive(index));
+        cmdkList.appendChild(row);
+      });
+
+      setPaletteActive(0);
+    }
+
+    function openPalette() {
+      if (!cmdk || !cmdkInput) return;
+      paletteReturnFocus = document.activeElement;
+      buildPaletteIndex();
+      cmdk.hidden = false;
+      document.body.classList.add('cmdk-open');
+      // Compensate for the disappearing scrollbar so the page never shifts.
+      const scrollbarGap = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.paddingRight = scrollbarGap > 0 ? `${scrollbarGap}px` : '';
+      cmdkInput.value = '';
+      renderPalette('');
+      requestAnimationFrame(() => cmdkInput.focus());
+    }
+
+    function closePalette() {
+      if (!cmdk) return;
+      cmdk.hidden = true;
+      document.body.classList.remove('cmdk-open');
+      document.body.style.paddingRight = '';
+      if (paletteReturnFocus && typeof paletteReturnFocus.focus === 'function') {
+        paletteReturnFocus.focus({ preventScroll: true });
+      }
+      paletteReturnFocus = null;
+    }
+
+    document.querySelectorAll('[data-open-palette]').forEach(btn => {
+      btn.addEventListener('click', openPalette);
+    });
+
+    if (cmdk) {
+      cmdk.addEventListener('click', (event) => {
+        if (event.target instanceof Element && event.target.closest('[data-cmdk-close]')) closePalette();
+      });
+    }
+
+    if (cmdkInput) {
+      cmdkInput.addEventListener('input', () => renderPalette(cmdkInput.value));
+      cmdkInput.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          movePalette(1);
+        } else if (event.key === 'ArrowUp') {
+          event.preventDefault();
+          movePalette(-1);
+        } else if (event.key === 'Enter') {
+          event.preventDefault();
+          if (paletteActive >= 0) choosePaletteResult(paletteActive);
+        } else if (event.key === 'Escape') {
+          event.preventDefault();
+          closePalette();
+        }
+      });
+    }
+
+    function isTypingTarget(el) {
+      if (!el) return false;
+      const tag = el.tagName;
+      return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el.isContentEditable;
+    }
+
+    document.addEventListener('keydown', (event) => {
+      const key = (event.key || '').toLowerCase();
+      if ((event.metaKey || event.ctrlKey) && key === 'k') {
+        event.preventDefault();
+        if (cmdk && !cmdk.hidden) closePalette();
+        else openPalette();
+        return;
+      }
+      if (key === 'escape' && cmdk && !cmdk.hidden) {
+        closePalette();
+        return;
+      }
+      if (key === '/' && (!cmdk || cmdk.hidden) && !isTypingTarget(event.target)) {
+        event.preventDefault();
+        openPalette();
+        return;
+      }
+      if (key === '?' && (!cmdk || cmdk.hidden) && !isTypingTarget(event.target)) {
+        event.preventDefault();
+        openShortcuts();
+        return;
+      }
+      if (event.shiftKey && !event.metaKey && !event.ctrlKey && event.code === 'KeyD' && !isTypingTarget(event.target)) {
+        event.preventDefault();
+        toggleTheme();
+        return;
+      }
+      if (key === 'g' && (!cmdk || cmdk.hidden) && !isTypingTarget(event.target)) {
+        const now = Date.now();
+        if (now - lastGPress < 900) {
+          lastGPress = 0;
+          window.scrollTo({ top: 0, behavior: reduceMotion.matches ? 'auto' : 'smooth' });
+          return;
+        }
+        lastGPress = now;
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && kbdSheet && !kbdSheet.hidden) closeShortcuts();
+    });
+
+    // ══════════════════════════════════════════════════════════════════
+    // THEME, SHORTCUTS, PRINT & READING EXTRAS
+    // ══════════════════════════════════════════════════════════════════
+    const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+    let lastGPress = 0;
+
+    function currentTheme() {
+      return rootEl.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    }
+
+    function syncThemeChrome() {
+      const isLight = currentTheme() === 'light';
+      document.querySelectorAll('[data-theme-toggle]').forEach(btn => {
+        btn.setAttribute('aria-pressed', isLight ? 'true' : 'false');
+        const label = isLight ? 'Chuyển sang giao diện tối' : 'Chuyển sang giao diện sáng';
+        btn.setAttribute('aria-label', label);
+        btn.setAttribute('title', label);
+      });
+      if (themeColorMeta) {
+        themeColorMeta.setAttribute('content', isLight ? '#f1f2f4' : '#0c0d12');
+      }
+    }
+
+    function setTheme(theme, persist) {
+      rootEl.setAttribute('data-theme', theme === 'light' ? 'light' : 'dark');
+      if (persist) {
+        try { window.localStorage.setItem('pade-docs-theme', theme); } catch (err) { /* ignore */ }
+      }
+      syncThemeChrome();
+    }
+
+    function toggleTheme() {
+      const next = currentTheme() === 'light' ? 'dark' : 'light';
+      setTheme(next, true);
+      showToast(next === 'light' ? 'Đã bật giao diện sáng' : 'Đã bật giao diện tối');
+    }
+
+    document.querySelectorAll('[data-theme-toggle]').forEach(btn => {
+      btn.addEventListener('click', toggleTheme);
+    });
+    syncThemeChrome();
+
+    // ── Shortcut sheet ──
+    const kbdSheet = document.getElementById('kbdSheet');
+    let kbdReturnFocus = null;
+
+    function openShortcuts() {
+      if (!kbdSheet || !kbdSheet.hidden) return;
+      kbdReturnFocus = document.activeElement;
+      kbdSheet.hidden = false;
+      const closeBtn = kbdSheet.querySelector('.cmdk__close');
+      requestAnimationFrame(() => { if (closeBtn) closeBtn.focus(); });
+    }
+
+    function closeShortcuts() {
+      if (!kbdSheet || kbdSheet.hidden) return;
+      kbdSheet.hidden = true;
+      if (kbdReturnFocus && typeof kbdReturnFocus.focus === 'function') {
+        kbdReturnFocus.focus({ preventScroll: true });
+      }
+      kbdReturnFocus = null;
+    }
+
+    if (kbdSheet) {
+      kbdSheet.addEventListener('click', (event) => {
+        if (event.target instanceof Element && event.target.closest('[data-kbd-close]')) closeShortcuts();
+      });
+    }
+
+    // ── Print ──
+    document.querySelectorAll('[data-print-page]').forEach(btn => {
+      btn.addEventListener('click', () => window.print());
+    });
+
+    // ── Sidebar read-time badges (measured, so they stay true) ──
+    function enhanceSidebarReadTimes() {
+      document.querySelectorAll('.sidebar-panel-view').forEach(sidebar => {
+        const tab = sidebar.getAttribute('data-tab-sidebar');
+        let panel = null;
+        try { panel = document.querySelector(`.tab-panel-view[data-tab-content="${tab}"]`); } catch (err) { panel = null; }
+        if (!panel) return;
+        sidebar.querySelectorAll('.sidebar-nav-link').forEach(link => {
+          if (link.querySelector('.nav-time')) return;
+          const href = link.getAttribute('href');
+          if (!href || href.charAt(0) !== '#') return;
+          let section = null;
+          try { section = panel.querySelector(href); } catch (err) { section = null; }
+          if (!section) return;
+          const words = (section.textContent || '').trim().split(/\s+/).filter(Boolean).length;
+          const seconds = Math.max(10, Math.round((words / 210) * 60));
+          const badge = document.createElement('span');
+          badge.className = 'nav-time';
+          badge.textContent = seconds < 60 ? `${seconds}s` : `${Math.round(seconds / 60)}p`;
+          badge.setAttribute('aria-hidden', 'true');
+          link.appendChild(badge);
+        });
+      });
+    }
+
+    // ── Boot the premium layer ──
+    updateHeroMeta();
+    enhanceCopyableIds();
+    enhanceSidebarReadTimes();
+    window.addEventListener('load', () => {
+      updateHeroMeta();
+      const activePanel = document.querySelector('.tab-panel-view.active');
+      if (activePanel) updateSidebarMeter(activePanel);
+    });
   </script>
 </body>
 </html>

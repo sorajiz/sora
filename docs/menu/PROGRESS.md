@@ -206,11 +206,13 @@ braces balanced 325/325; 5 `data:image/svg+xml` payloads; `--wp` declared 3×; `
 list, and the per-breakpoint wave geometry (155 / 215 / 275px tall deltas for 620 / 860 / 1100px
 periods). Mobile, desktop and morph-open screenshots were visually reviewed.
 
-**Known pre-existing test failure (not caused by this change):** `scripts/test-menu-api.js` step 7
-asserts the audit log contains `PRODUCT_CREATE` / `PRODUCT_EDIT` / `PRODUCT_ARCHIVE`, but the server
-writes `CREATE` / `EDIT` / `ARCHIVE` (`lib/menu/admin.js`), and the legacy rows carrying the old names
-have dropped out of the endpoint's `LIMIT 50` window. Steps 1–6 pass; `test-build.js` (41/41) and
-`test-server.js` pass. The API code and the test were left untouched (out of scope).
+**Audit-vocabulary note (resolved):** `scripts/test-menu-api.js` step 7 originally asserted
+`PRODUCT_CREATE` / `PRODUCT_EDIT` / `PRODUCT_ARCHIVE`, while the Express admin API writes the bare
+`CREATE` / `EDIT` / `ARCHIVE` (`lib/menu/admin.js`) and the Next admin app writes yet another dialect
+(`CREATE_PRODUCT` / `UPDATE_PRODUCT` / `ARCHIVE_CATEGORY`). Commit `f57ea95` aligned the test with what
+the API and store actually record (the entity is implied by `product_id` / `category_id` on the same
+row), so `npm test` is green again. The remaining three-dialect drift in `menu_audit_logs` is
+historical and left as-is (audit rows are immutable); new write paths should pick one vocabulary.
 
 **Uncommitted but untouched:** `scripts/catalog.json` and `scripts/seed-catalog.js` have pending
 working-tree changes (a database catalog export, v30 → v67) that predate this work and are unrelated
