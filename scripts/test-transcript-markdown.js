@@ -153,6 +153,17 @@ check('stashed emoji tokens survive italics (no placeholder leak)', () => {
   assert.ok(html.includes('>Pade Store</a>'), 'banner link must render');
 });
 
+check('timestamps are rendered in the store time zone', () => {
+  // 2026-01-01T00:05:00Z is 07:05 in Asia/Ho_Chi_Minh. Rendering with the host
+  // time zone showed 00:05 on Vercel (UTC), which is what shipped before.
+  const html = render('hello');
+  assert.ok(html.includes('01/01/2026 07:05'), 'message time must use Asia/Ho_Chi_Minh');
+  assert.ok(
+    html.includes('Mở 01/01/2026 07:00') && html.includes('Đóng 01/01/2026 07:10'),
+    'ticket range chips must use Asia/Ho_Chi_Minh'
+  );
+});
+
 check('spoiler content is wrapped for hiding', () => {
   const html = render('||@everyone @here||');
   assert.ok(html.includes('<span class="spoiler"'), 'spoiler wrapper missing');
