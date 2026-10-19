@@ -138,6 +138,21 @@ check('inline code still renders', () => {
   assert.ok(html.includes('<code class="code-inline">npm test</code>'), 'inline code broken');
 });
 
+check('stashed emoji tokens survive italics (no placeholder leak)', () => {
+  // Regression: the storefront banner starts with "# _ _ <a:emoji:id> [name](url)
+  // <a:emoji:id>" and the italic rule used to eat the underscore of the internal
+  // "@@@TOKEN_n@@@" marker, printing the placeholder on the page.
+  const html = render('# _ _ <a:71839_white:1556167370651729930> [Pade Store](https://discord.gg/rsANNHwE64) <a:71839_white:1556167370651729930>');
+  assert.ok(!/@@@TOKEN|@@TOKEN/.test(html), 'internal placeholder leaked into the page');
+  assert.ok(!/[\uE000\uE001]/.test(html), 'internal token marker leaked into the page');
+  assert.strictEqual(
+    (html.match(/class="custom-emoji"/g) || []).length,
+    2,
+    'both custom emojis must render'
+  );
+  assert.ok(html.includes('>Pade Store</a>'), 'banner link must render');
+});
+
 check('spoiler content is wrapped for hiding', () => {
   const html = render('||@everyone @here||');
   assert.ok(html.includes('<span class="spoiler"'), 'spoiler wrapper missing');
