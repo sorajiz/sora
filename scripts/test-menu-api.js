@@ -182,9 +182,11 @@ async function runTests() {
     assert.strictEqual(auditRes.status, 200);
     assert(Array.isArray(auditRes.body.logs), 'Logs must be array');
     const actions = auditRes.body.logs.map(l => l.action);
-    assert(actions.includes('PRODUCT_CREATE'), 'Audit log must record PRODUCT_CREATE');
-    assert(actions.includes('PRODUCT_EDIT'), 'Audit log must record PRODUCT_EDIT');
-    assert(actions.includes('PRODUCT_ARCHIVE'), 'Audit log must record PRODUCT_ARCHIVE');
+    // The API and the admin store the bare operation; the entity is implied by
+    // product_id / category_id on the same row.
+    assert(actions.includes('CREATE'), 'Audit log must record CREATE');
+    assert(actions.includes('EDIT'), 'Audit log must record EDIT');
+    assert(actions.includes('ARCHIVE'), 'Audit log must record ARCHIVE');
     console.log('  ✓ Audit Trail: Verified logs for CREATE, EDIT, and ARCHIVE');
 
     // Cleanup session and test product
