@@ -158,10 +158,185 @@ check('timestamps are rendered in the store time zone', () => {
   // time zone showed 00:05 on Vercel (UTC), which is what shipped before.
   const html = render('hello');
   assert.ok(html.includes('01/01/2026 07:05'), 'message time must use Asia/Ho_Chi_Minh');
-  assert.ok(
-    html.includes('Mở 01/01/2026 07:00') && html.includes('Đóng 01/01/2026 07:10'),
-    'ticket range chips must use Asia/Ho_Chi_Minh'
+  assert.ok(html.includes('Mở lúc</span>'), 'intro must show the open-date stat');
+  assert.ok(html.includes('01/01/2026 07:00'), 'open date must use Asia/Ho_Chi_Minh');
+  assert.ok(html.includes('Đóng 01/01/2026 07:10'), 'close time must use Asia/Ho_Chi_Minh');
+});
+
+check('channel intro shows exactly the three requested facts', () => {
+  const html = render('hello');
+  assert.strictEqual(
+    (html.match(/class="ci-stat"/g) || []).length,
+    3,
+    'intro must render exactly three stats'
   );
+  assert.ok(html.includes('#contract-1'), 'ticket name stat missing');
+  assert.ok(html.includes('Tin nhắn</span>'), 'message-count stat missing');
+  assert.ok(html.includes('Mở lúc</span>'), 'open-date stat missing');
+  assert.ok(!html.includes('ci-chip'), 'legacy chip row must be gone');
+});
+
+check('member rail has no role-icon badges and neutralises decorative roles', () => {
+  const payload = {
+    transcript: {
+      public_id: 'tr_rail',
+      ticket_name: 'rail-1',
+      guild_id: '1',
+      opened_at: new Date('2026-01-01T00:00:00Z'),
+      closed_at: new Date('2026-01-01T00:10:00Z')
+    },
+    users: {
+      u1: {
+        username: 'decorated',
+        guild_display_name: 'Decorated',
+        avatar_url: '',
+        display_color_role: '~1',
+        display_color: 0x6ed3cc,
+        display_icon_role: '~1',
+        display_icon_url: 'https://cdn.discordapp.com/emojis/1.png',
+        is_bot: false
+      },
+      u2: {
+        username: 'director',
+        guild_display_name: 'Director',
+        avatar_url: '',
+        display_color_role: 'director',
+        is_bot: false
+      }
+    },
+    roles: {},
+    channels: {},
+    messages: [
+      { discord_message_id: 'm1', author_id: 'u1', content_original: 'a', timestamp: new Date('2026-01-01T00:01:00Z'), message_type: 0 },
+      { discord_message_id: 'm2', author_id: 'u2', content_original: 'b', timestamp: new Date('2026-01-01T00:02:00Z'), message_type: 0 }
+    ]
+  };
+  const html = renderPadeTranscriptPage(payload);
+  assert.ok(!html.includes('class="rail-role-icon"'), 'member rows must not carry role icons');
+  assert.ok(!html.includes('rail-group-count'), 'role groups must not show a count');
+  assert.ok(!html.includes('>~1<'), 'decorative role names must be neutralised');
+  assert.ok(html.includes('>Thành viên</div>'), 'decorative role must fall back to the neutral group');
+  assert.ok(html.includes('>DIRECTOR</div>') || html.includes('>director</div>'), 'readable role name kept');
+});
+
+check('components v2 render container, section, gallery, file and buttons', () => {
+  const html = renderMessages([
+    {
+      discord_message_id: 'm1',
+      author_id: 'u1',
+      content_original: '',
+      timestamp: new Date('2026-01-01T00:01:00Z'),
+      message_type: 0,
+      components: [
+        {
+          type: 17,
+          accent_color: 0x5865f2,
+          components: [
+            { type: 10, content: '## Welcome' },
+            { type: 14, divider: true, spacing: 2 },
+            {
+              type: 9,
+              components: [{ type: 10, content: 'section body' }],
+              accessory: { type: 11, media: { url: 'https://cdn.discordapp.com/attachments/1/2/pic.png' } }
+            },
+            {
+              type: 12,
+              items: [
+                { media: { url: 'https://cdn.discordapp.com/attachments/1/2/clip.mp4', content_type: 'video/mp4' } },
+                { media: { url: 'https://cdn.discordapp.com/attachments/1/2/pic.png' } }
+              ]
+            },
+            { type: 13, file: { name: 'report.pdf', size: 2048, url: 'https://cdn.discordapp.com/attachments/1/2/report.pdf' } },
+            { type: 1, components: [{ type: 2, style: 5, label: 'Docs', url: 'https://example.com' }] }
+          ]
+        }
+      ]
+    }
+  ]);
+  assert.ok(html.includes('--dvc-accent: #5865f2'), 'container accent must be applied');
+  assert.ok(html.includes('discord-component-separator divider spacing-large'), 'separator options lost');
+  assert.ok(html.includes('<video'), 'video gallery item must use a player');
+  assert.ok(html.includes('class="dvc-file"'), 'file component card missing');
+  assert.ok(html.includes('report.pdf'), 'file component name missing');
+  assert.ok(html.includes('btn-link'), 'link button style missing');
+});
+
+check('offline export inlines archived media and drops external fonts', () => {
+  const payload = {
+    transcript: {
+      public_id: 'tr_export',
+      ticket_name: 'export-1',
+      guild_id: '1',
+      opened_at: new Date('2026-01-01T00:00:00Z'),
+      closed_at: new Date('2026-01-01T00:10:00Z')
+    },
+    users: { u1: { username: 'tester', global_name: 'Tester', avatar_url: '' } },
+    roles: {},
+    channels: {},
+    assets: ['att-1', 'att-2'],
+    messages: [
+      {
+        discord_message_id: 'm1',
+        author_id: 'u1',
+        content_original: 'media',
+        timestamp: new Date('2026-01-01T00:01:00Z'),
+        message_type: 0,
+        attachments: [
+          {
+            filename: 'pic.png',
+            content_type: 'image/png',
+            size_bytes: 1024,
+            source_url: 'https://cdn.discordapp.com/attachments/1/1/pic.png',
+            r2_url: 'https://transcript.sorae.tokyo/t/tr_export/media/att-1'
+          },
+          {
+            filename: 'clip.mp4',
+            content_type: 'video/mp4',
+            size_bytes: 4096,
+            source_url: 'https://cdn.discordapp.com/attachments/1/1/clip.mp4',
+            r2_url: 'https://transcript.sorae.tokyo/t/tr_export/media/att-2'
+          }
+        ]
+      }
+    ]
+  };
+  const inlineMedia = new Map([
+    ['att-1', 'data:image/png;base64,AAAA'],
+    ['att-2', 'data:video/mp4;base64,BBBB']
+  ]);
+  const html = renderPadeTranscriptPage(payload, { exportMode: true, inlineMedia });
+  assert.ok(!html.includes('fonts.googleapis.com'), 'export must not depend on Google Fonts');
+  assert.ok(html.includes('data:image/png;base64,AAAA'), 'image must be inlined');
+  assert.ok(html.includes('data:video/mp4;base64,BBBB'), 'video must be inlined');
+});
+
+check('offline export keeps absolute URLs for media above the budget', () => {
+  const payload = {
+    transcript: {
+      public_id: 'tr_export2',
+      ticket_name: 'export-2',
+      guild_id: '1',
+      opened_at: new Date('2026-01-01T00:00:00Z'),
+      closed_at: new Date('2026-01-01T00:10:00Z')
+    },
+    users: { u1: { username: 'tester', global_name: 'Tester', avatar_url: 'https://cdn.discordapp.com/avatars/123456789012345678/hash.png' } },
+    roles: {},
+    channels: {},
+    assets: ['avatar-123456789012345678'],
+    messages: [
+      { discord_message_id: 'm1', author_id: 'u1', content_original: 'hello', timestamp: new Date('2026-01-01T00:01:00Z'), message_type: 0 }
+    ]
+  };
+  const html = renderPadeTranscriptPage(payload, { exportMode: true, inlineMedia: new Map() });
+  assert.ok(html.includes('https://transcript.sorae.tokyo/t/tr_export2/media/avatar-123456789012345678'), 'export must absolutise archive URLs');
+});
+
+check('custom emoji carry a readable fallback and an emoji font stack', () => {
+  const html = render('<:wave:123456789012345678>');
+  assert.ok(html.includes('class="custom-emoji"'), 'custom emoji image missing');
+  assert.ok(html.includes('data-emoji=":wave:"'), 'custom emoji must carry its :name: for the fallback');
+  assert.ok(html.includes('emoji-fallback'), 'fallback chip style missing');
+  assert.ok(html.includes("'Apple Color Emoji'") && html.includes("'Noto Color Emoji'"), 'emoji font families missing');
 });
 
 check('spoiler content is wrapped for hiding', () => {

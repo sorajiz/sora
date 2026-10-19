@@ -14,7 +14,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { getTranscriptFromDB, getMediaAssetFromDB } = require('../../lib/tickets/db');
+const { getTranscriptFromDB, getMediaAssetFromDB, getTranscriptMediaForExport } = require('../../lib/tickets/db');
 const { renderPadeTranscriptPage } = require('../../lib/tickets/render');
 
 function renderLandingPage() {
@@ -420,6 +420,93 @@ function renderProcessingPage({ ticketId, status }) {
 </html>`;
 }
 
+// --- standalone HTML export ------------------------------------------------
+// Vercel caps a function response at 4.5 MB, and base64 adds 33%. The archived
+// bytes therefore travel under a budget (avatars/icons/emoji first, because the
+// rows arrive smallest-first); anything above it keeps its absolute URL.
+const EXPORT_MEDIA_BUDGET = 3_200_000;
+const EXPORT_REMOTE_BUDGET = 500_000;
+const EXPORT_REMOTE_LIMIT = 60;
+const EXPORT_MAX_BYTES = 4_400_000; // Vercel caps function responses at 4.5 MB
+const EXPORT_BASE = 'https://transcript.sorae.tokyo';
+
+/**
+ * Data URIs repeat once per occurrence (an avatar in 40 messages is 40 copies),
+ * so the budget is charged per reference found in the rendered document rather
+ * than once per asset.
+ */
+function buildInlineMedia(rows, html, budget = EXPORT_MEDIA_BUDGET) {
+  const map = new Map();
+  const sizes = new Map();
+  let left = budget;
+  for (const row of rows || []) {
+    const data = row && row.data;
+    if (!data || !data.length) continue;
+    const occurrences = Math.max(1, html.split(`/media/${row.asset_id}`).length - 1);
+    const encoded = Math.ceil(data.length / 3) * 4;
+    const cost = encoded * occurrences;
+    if (cost > left) continue;
+    left -= cost;
+    const type = row.content_type || 'application/octet-stream';
+    map.set(row.asset_id, `data:${type};base64,${data.toString('base64')}`);
+    sizes.set(row.asset_id, encoded * occurrences);
+  }
+  return { map, sizes };
+}
+
+/**
+ * Emoji and other Discord CDN images are not part of the archive, so they would
+ * be broken in an offline copy. Fetch what is still live (bounded time, count
+ * and bytes) and inline it; failures keep the original URL.
+ */
+async function inlineRemoteImages(html, { budgetBytes = EXPORT_REMOTE_BUDGET, maxItems = EXPORT_REMOTE_LIMIT } = {}) {
+  const found = [];
+  const seen = new Set();
+  const re = /\s(?:src|poster)="(https?:\/\/[^"]+)"/g;
+  let m;
+  while ((m = re.exec(html)) && found.length < maxItems) {
+    const raw = m[1];
+    const url = raw.replace(/&amp;/g, '&');
+    if (seen.has(url)) continue;
+    seen.add(url);
+    if (!/(cdn\.discordapp\.com|media\.discordapp\.net)/i.test(url)) continue;
+    found.push({ raw, url });
+  }
+  if (found.length === 0) return html;
+
+  const replacements = new Map();
+  let left = budgetBytes;
+  let idx = 0;
+  const workers = Array.from({ length: 6 }, async () => {
+    while (idx < found.length) {
+      if (left <= 0) return;
+      const item = found[idx++];
+      try {
+        const response = await fetch(item.url, {
+          signal: AbortSignal.timeout(2500),
+          headers: { 'User-Agent': 'Pade-Store-Export/1.0 (+https://sorae.tokyo)' }
+        });
+        if (!response.ok) continue;
+        const type = String(response.headers.get('content-type') || '').split(';')[0].trim();
+        if (!/^image\//i.test(type)) continue;
+        const buf = Buffer.from(await response.arrayBuffer());
+        if (!buf.length || buf.length > left) continue;
+        left -= buf.length;
+        replacements.set(item.raw, `data:${type};base64,${buf.toString('base64')}`);
+      } catch (e) {
+        // Offline export is best effort: keep the remote URL on any failure.
+      }
+    }
+  });
+  await Promise.all(workers);
+
+  let out = html;
+  for (const [raw, dataUri] of replacements) {
+    out = out.split(`"${raw}"`).join(`"${dataUri}"`);
+  }
+  return out;
+}
+
 module.exports = async (req, res) => {
   // CORS & Security Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -552,6 +639,7 @@ module.exports = async (req, res) => {
       }
 
       const isDownload = queryParams.get('action') === 'download' || (req.url && req.url.includes('/download'));
+      let htmlPage;
       if (isDownload) {
         const displayCode = dbData.transcript.public_id ? dbData.transcript.public_id.substring(0, 8) : 'export';
         let safeSlug = (dbData.transcript.ticket_name || 'ticket')
@@ -566,12 +654,66 @@ module.exports = async (req, res) => {
         if (!safeSlug) safeSlug = 'ticket';
         const filename = `ticket-${safeSlug}-${displayCode}.html`;
         res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+        // Offline export: inline archived media (images, GIF, video, audio) as
+        // data URIs, then inline still-live CDN images such as custom emoji.
+        try {
+          const rows = await getTranscriptMediaForExport(ticketId);
+          const baseline = renderPadeTranscriptPage(dbData, {
+            exportMode: true,
+            inlineMedia: new Map(),
+            baseUrl: EXPORT_BASE
+          });
+          const built = buildInlineMedia(rows, baseline);
+          const inlineMedia = built.map;
+          const sizes = built.sizes;
+          htmlPage = renderPadeTranscriptPage(dbData, {
+            exportMode: true,
+            inlineMedia,
+            baseUrl: EXPORT_BASE
+          });
+
+          // Vercel rejects responses above 4.5 MB. Drop the heaviest inlined
+          // assets (they repeat per occurrence) until the document fits; the
+          // dropped ones keep their absolute live URL.
+          let guard = 0;
+          while (Buffer.byteLength(htmlPage) > EXPORT_MAX_BYTES && inlineMedia.size > 0 && guard++ < 12) {
+            let heaviest = null;
+            for (const [assetId, cost] of sizes) {
+              if (!inlineMedia.has(assetId)) continue;
+              if (!heaviest || cost > heaviest[1]) heaviest = [assetId, cost];
+            }
+            if (!heaviest) break;
+            inlineMedia.delete(heaviest[0]);
+            htmlPage = renderPadeTranscriptPage(dbData, {
+              exportMode: true,
+              inlineMedia,
+              baseUrl: EXPORT_BASE
+            });
+          }
+
+          // Remote emoji are a bonus: if inlining them would push the response
+          // over the cap, keep the version that only has archive bytes.
+          const beforeRemote = htmlPage;
+          const withRemote = await inlineRemoteImages(htmlPage);
+          htmlPage = Buffer.byteLength(withRemote) <= EXPORT_MAX_BYTES ? withRemote : beforeRemote;
+        } catch (mediaErr) {
+          console.warn('[TRANSCRIPT] Export media notice:', mediaErr.message);
+          htmlPage = renderPadeTranscriptPage(dbData, {
+            exportMode: true,
+            inlineMedia: new Map(),
+            baseUrl: EXPORT_BASE
+          });
+        }
+      } else {
+        htmlPage = renderPadeTranscriptPage(dbData);
       }
 
-      const htmlPage = renderPadeTranscriptPage(dbData);
       res.status(200);
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
-      if (!isDownload) {
+      if (isDownload) {
+        res.setHeader('Cache-Control', 'no-store');
+      } else {
         res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
       }
       return res.send(htmlPage);

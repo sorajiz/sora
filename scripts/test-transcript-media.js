@@ -204,13 +204,11 @@ check('reaction and button emoji resolved through the archive', () => {
   assert.ok(html.includes(media('emoji-1560012295654866944')), 'button emoji not archived');
 });
 
-check('guild icon resolved through the archive when archived', () => {
+check('channel intro renders the three stats instead of the guild chip', () => {
   const icon = `https://cdn.discordapp.com/icons/${GUILD_ID}/9c07b41c9403f41d779867722d30ad2c.png?size=128`;
-  const withAsset = render({ assets: [`guild-icon-${GUILD_ID}`], guildIconUrl: icon });
-  assert.ok(withAsset.includes(media(`guild-icon-${GUILD_ID}`)), 'guild icon not archived');
-
-  const withoutAsset = render({ assets: [], guildIconUrl: icon });
-  assert.ok(withoutAsset.includes(icon), 'guild icon should stay hotlinked when not archived');
+  const html = render({ assets: [`guild-icon-${GUILD_ID}`], guildIconUrl: icon });
+  assert.ok(!html.includes('ci-guild'), 'guild chip must be gone from the intro');
+  assert.strictEqual((html.match(/class="ci-stat"/g) || []).length, 3, 'intro must render three stats');
 });
 
 check('omitting the asset list keeps the previous behaviour exactly', () => {
