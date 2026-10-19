@@ -422,36 +422,73 @@ function renderProcessingPage({ ticketId, status }) {
 
 // --- standalone HTML export ------------------------------------------------
 // Vercel caps a function response at 4.5 MB, and base64 adds 33%. The archived
-// bytes therefore travel under a budget (avatars/icons/emoji first, because the
-// rows arrive smallest-first); anything above it keeps its absolute URL.
-const EXPORT_MEDIA_BUDGET = 3_200_000;
-const EXPORT_REMOTE_BUDGET = 500_000;
-const EXPORT_REMOTE_LIMIT = 60;
+// bytes travel under a budget (smallest rows first); anything above it keeps its
+// absolute URL. Before the document is returned, repeated data URIs are folded
+// into a single manifest entry so avatars and emoji cost their bytes once, not
+// once per message.
+const EXPORT_MEDIA_BUDGET = 3_000_000;
+const EXPORT_REMOTE_BUDGET = 700_000;
+const EXPORT_REMOTE_LIMIT = 80;
 const EXPORT_MAX_BYTES = 4_400_000; // Vercel caps function responses at 4.5 MB
 const EXPORT_BASE = 'https://transcript.sorae.tokyo';
+const EXPORT_PIXEL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
-/**
- * Data URIs repeat once per occurrence (an avatar in 40 messages is 40 copies),
- * so the budget is charged per reference found in the rendered document rather
- * than once per asset.
- */
-function buildInlineMedia(rows, html, budget = EXPORT_MEDIA_BUDGET) {
+function buildInlineMedia(rows, budget = EXPORT_MEDIA_BUDGET) {
   const map = new Map();
   const sizes = new Map();
   let left = budget;
   for (const row of rows || []) {
     const data = row && row.data;
     if (!data || !data.length) continue;
-    const occurrences = Math.max(1, html.split(`/media/${row.asset_id}`).length - 1);
     const encoded = Math.ceil(data.length / 3) * 4;
-    const cost = encoded * occurrences;
-    if (cost > left) continue;
-    left -= cost;
+    if (encoded + 96 > left) continue;
+    left -= encoded + 96;
     const type = row.content_type || 'application/octet-stream';
     map.set(row.asset_id, `data:${type};base64,${data.toString('base64')}`);
-    sizes.set(row.asset_id, encoded * occurrences);
+    sizes.set(row.asset_id, encoded + 96);
   }
   return { map, sizes };
+}
+
+/**
+ * Fold every inline `data:` URI into one JSON manifest referenced by id.
+ *
+ * Without this an avatar used in 40 messages ships 40 base64 copies. With it the
+ * document carries each byte once and a small script rehydrates the attributes
+ * before the user interacts. The exported file therefore contains every image,
+ * GIF and video while staying far below the serverless response cap.
+ */
+function dedupeDataUris(html) {
+  const attrRe = /\b(src|href|poster|data-full-url)="(data:[^"]+)"/g;
+  const ids = new Map(); // data URI -> short id
+  const compact = html.replace(attrRe, (full, attr, uri) => {
+    let id = ids.get(uri);
+    if (!id) {
+      id = 'm' + (ids.size + 1);
+      ids.set(uri, id);
+    }
+    if (attr === 'src') return `src="${EXPORT_PIXEL}" data-pade-src="${id}"`;
+    if (attr === 'href') return `href="#" data-pade-href="${id}"`;
+    if (attr === 'poster') return `poster="${EXPORT_PIXEL}" data-pade-poster="${id}"`;
+    return `data-full-url="" data-pade-full="${id}"`;
+  });
+  if (ids.size === 0) return compact;
+
+  const manifest = {};
+  for (const [uri, id] of ids) manifest[id] = uri;
+
+  const hydrate = `<script type="application/json" id="pade-media-manifest">${JSON.stringify(manifest)}</script>` +
+    `<script>(function(){var n=document.getElementById('pade-media-manifest');if(!n)return;` +
+    `var map={};try{map=JSON.parse(n.textContent||'{}')}catch(e){return}` +
+    `function pick(attr,apply){var nodes=document.querySelectorAll('['+attr+']');` +
+    `for(var i=0;i<nodes.length;i++){var v=map[nodes[i].getAttribute(attr)];if(v)apply(nodes[i],v)}}` +
+    `pick('data-pade-src',function(el,v){el.src=v});` +
+    `pick('data-pade-href',function(el,v){el.href=v});` +
+    `pick('data-pade-poster',function(el,v){el.poster=v});` +
+    `pick('data-pade-full',function(el,v){el.setAttribute('data-full-url',v)});` +
+    `})();</script>`;
+
+  return compact.replace('</body>', `${hydrate}</body>`);
 }
 
 /**
@@ -659,25 +696,24 @@ module.exports = async (req, res) => {
         // data URIs, then inline still-live CDN images such as custom emoji.
         try {
           const rows = await getTranscriptMediaForExport(ticketId);
-          const baseline = renderPadeTranscriptPage(dbData, {
-            exportMode: true,
-            inlineMedia: new Map(),
-            baseUrl: EXPORT_BASE
-          });
-          const built = buildInlineMedia(rows, baseline);
+          const built = buildInlineMedia(rows);
           const inlineMedia = built.map;
           const sizes = built.sizes;
-          htmlPage = renderPadeTranscriptPage(dbData, {
+
+          const renderRaw = () => renderPadeTranscriptPage(dbData, {
             exportMode: true,
             inlineMedia,
             baseUrl: EXPORT_BASE
           });
 
-          // Vercel rejects responses above 4.5 MB. Drop the heaviest inlined
-          // assets (they repeat per occurrence) until the document fits; the
-          // dropped ones keep their absolute live URL.
+          let rawHtml = renderRaw();
+          let compact = dedupeDataUris(rawHtml);
+
+          // Vercel rejects responses above 4.5 MB: drop the heaviest inlined
+          // assets until the deduplicated document fits. The dropped assets keep
+          // their absolute live URL, so nothing renders as broken.
           let guard = 0;
-          while (Buffer.byteLength(htmlPage) > EXPORT_MAX_BYTES && inlineMedia.size > 0 && guard++ < 12) {
+          while (Buffer.byteLength(compact) > EXPORT_MAX_BYTES - EXPORT_REMOTE_BUDGET && inlineMedia.size > 0 && guard++ < 12) {
             let heaviest = null;
             for (const [assetId, cost] of sizes) {
               if (!inlineMedia.has(assetId)) continue;
@@ -685,18 +721,20 @@ module.exports = async (req, res) => {
             }
             if (!heaviest) break;
             inlineMedia.delete(heaviest[0]);
-            htmlPage = renderPadeTranscriptPage(dbData, {
-              exportMode: true,
-              inlineMedia,
-              baseUrl: EXPORT_BASE
-            });
+            rawHtml = renderRaw();
+            compact = dedupeDataUris(rawHtml);
           }
 
-          // Remote emoji are a bonus: if inlining them would push the response
-          // over the cap, keep the version that only has archive bytes.
-          const beforeRemote = htmlPage;
-          const withRemote = await inlineRemoteImages(htmlPage);
-          htmlPage = Buffer.byteLength(withRemote) <= EXPORT_MAX_BYTES ? withRemote : beforeRemote;
+          // Remote emoji are a bonus: fetch them from the original markup (where
+          // CDN URLs are still visible), then fold everything into one manifest.
+          htmlPage = compact;
+          if (Buffer.byteLength(compact) <= EXPORT_MAX_BYTES - EXPORT_REMOTE_BUDGET) {
+            const withRemote = await inlineRemoteImages(rawHtml);
+            const compactRemote = dedupeDataUris(withRemote);
+            if (Buffer.byteLength(compactRemote) <= EXPORT_MAX_BYTES) {
+              htmlPage = compactRemote;
+            }
+          }
         } catch (mediaErr) {
           console.warn('[TRANSCRIPT] Export media notice:', mediaErr.message);
           htmlPage = renderPadeTranscriptPage(dbData, {
@@ -794,3 +832,6 @@ module.exports = async (req, res) => {
     message: 'Bản ghi transcript bạn đang tìm kiếm không tồn tại hoặc đã được gỡ bỏ khỏi hệ thống Pade Store.'
   }));
 };
+
+// Exposed for the export contract tests.
+module.exports.dedupeDataUris = dedupeDataUris;
