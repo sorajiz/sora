@@ -32,7 +32,7 @@
     "@vercel/analytics": "^2.0.1",
     "compression": "^1.8.2",
     "dotenv": "^18.0.8",
-    "ejs": "^6.0.1",
+    "ejs": "^7.0.2",
     "express": "^5.2.1",
     "express-rate-limit": "^8.7.0",
     "helmet": "^8.3.0",
